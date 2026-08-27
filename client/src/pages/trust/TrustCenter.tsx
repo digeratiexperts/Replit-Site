@@ -1,11 +1,15 @@
 import { PageTemplate } from "@/components/PageTemplate";
-import { Shield, Lock, FileCheck, Award, Eye, Server, CheckCircle, Mail, Phone } from "lucide-react";
+import { Shield, Lock, FileCheck, Award, Eye, Server, CheckCircle, Mail, Phone, Check } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useSEO } from "@/hooks/useSEO";
 import { Button } from "@/components/ui/button";
 import { PRIMARY_PHONE } from "@/data/companyContact";
+import { ProofChip } from "@/components/evidence/ProofChip";
+import { EvidenceFrame } from "@/components/evidence/EvidenceFrame";
+import { HUDFrame } from "@/components/evidence/HUDFrame";
+import { StatusToken } from "@/components/evidence/StatusToken";
 
-const cardClass = "rounded-2xl border border-de-hairline bg-de-raised";
+const cardClass = "de-hud-card p-6 transition-all duration-200 hover:border-[#D3126A]/40";
 
 export default function TrustCenter() {
   const prefersReducedMotion = useReducedMotion() ?? false;
@@ -50,6 +54,14 @@ export default function TrustCenter() {
       breadcrumbs={[{ label: "Trust", href: "/trust/trust-center" }, { label: "Trust Center" }]}
     >
       <div className="space-y-16">
+        {/* Contextual Sourced Proof Chips */}
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          <ProofChip metric="NIST CSF" label="Security Framework Alignment" icon={Shield} />
+          <ProofChip metric="BAA" label="HIPAA Compliance Support" icon={FileCheck} />
+          <ProofChip metric="SOC 2" label="Readiness & Audit Evidence" icon={Award} />
+          <ProofChip metric="ARIZONA" label="Local Direct Engineering" icon={Lock} />
+        </div>
+
         {/* Intro */}
         <motion.p 
           className="text-xl text-gray-300 text-center max-w-3xl mx-auto leading-relaxed"
@@ -92,13 +104,25 @@ export default function TrustCenter() {
           </div>
         </div>
 
-        {/* Honest empty hook — only populate when a current report/attestation exists */}
-        <div className={`p-8 md:p-10 ${cardClass}`}>
-          <h2 className="text-2xl font-bold text-white mb-3">Verified Certifications & Attestations</h2>
-          <p className="text-gray-400 leading-relaxed max-w-3xl">
-            No independent SOC 2 Type II report or HIPAA certification is published here. When a current, documented attestation is available, it will be listed in this section.
-          </p>
-        </div>
+        {/* Honest transparent hook — verified attestation reporting */}
+        <EvidenceFrame
+          classification="SANITIZED_REAL"
+          title="Verified Certifications & Attestations Disclosure"
+          subtitle="Direct transparency on corporate attestations versus customer security framework support."
+          status="informational"
+          statusLabel="TRANSPARENT DISCLOSURE"
+          sourceNote="Digerati Experts Corporate Governance & Legal Compliance Spec"
+          variant="dark"
+        >
+          <div className="rounded-lg border border-white/10 bg-black/40 p-4 font-mono text-xs text-white/80 leading-relaxed space-y-2">
+            <p className="text-white/70">
+              No independent SOC 2 Type II report or HIPAA certification is published here. Framework names describe client environments Digerati Experts secures, manages, and supports during third-party audits.
+            </p>
+            <p className="text-emerald-400 font-semibold pt-1">
+              ✓ Business Associate Agreements (BAAs) provided for covered healthcare entities.
+            </p>
+          </div>
+        </EvidenceFrame>
 
         {/* Security Practices */}
         <motion.div 

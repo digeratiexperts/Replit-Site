@@ -15,6 +15,10 @@ import { CTA } from "@/lib/ctaCopy";
 import { StatementHeading } from "@/components/visual/StatementHeading";
 import { ConversionPathBar } from "@/components/ConversionPathBar";
 import { revealInView, revealInitial, revealTransition, revealViewport } from "@/lib/animations";
+import { ProofChip } from "@/components/evidence/ProofChip";
+import { IncidentFlow } from "@/components/evidence/IncidentFlow";
+import { HUDFrame } from "@/components/evidence/HUDFrame";
+import { StatusToken } from "@/components/evidence/StatusToken";
 
 const SolutionsIndex = () => {
   const prefersReducedMotion = useReducedMotion();
@@ -164,6 +168,14 @@ const SolutionsIndex = () => {
                 <a href={CTA.secondaryHref}>{CTA.secondary}</a>
               </Button>
             </div>
+
+            {/* Factual Proof Chips */}
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+              <ProofChip metric="24/7" label="Human-Led SOC" icon={Lock} />
+              <ProofChip metric="ARIZONA" label="Local Engineering Team" icon={Users} />
+              <ProofChip metric="6 DOMAINS" label="Assessed & Protected" icon={Shield} />
+              <ProofChip metric="RTO/RPO" label="Defined SLA Commitments" icon={Activity} />
+            </div>
           </motion.div>
 
           {/* Pricing Tiers */}
@@ -186,19 +198,19 @@ const SolutionsIndex = () => {
                 <motion.div
                   key={plan.name}
                   variants={itemVariants}
-                  className="de-interactive-card relative rounded-2xl border border-de-hairline bg-de-raised p-6"
+                  className="de-hud-card relative p-6 transition-all duration-200 hover:border-[#D3126A]/40"
                   data-testid={`plan-${plan.name.toLowerCase()}`}
                 >
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-lg font-bold text-white">{plan.name}</span>
-                    <span className="px-2 py-1 text-xs font-medium bg-white/10 text-white/70 rounded">
+                    <span className="text-lg font-bold text-white font-heading">{plan.name}</span>
+                    <span className="px-2 py-0.5 text-xs font-mono font-semibold bg-white/10 text-white/80 rounded border border-white/10">
                       {plan.tier}
                     </span>
                   </div>
                   
                   <div className="mb-4">
-                    <span className="text-4xl font-black text-white">${plan.price}</span>
-                    <span className="text-white/50 text-sm ml-2">/ user / month</span>
+                    <span className="text-4xl font-black text-white font-mono tracking-tight">${plan.price}</span>
+                    <span className="text-white/50 text-sm ml-2">/ user / mo</span>
                   </div>
                   
                   <p className="text-white/60 text-sm mb-6 leading-relaxed">
@@ -214,7 +226,7 @@ const SolutionsIndex = () => {
                     ))}
                   </ul>
                   
-                  <Button asChild variant="outline" className="w-full border-de-hairline bg-de-bg text-white hover:text-white" data-testid={`button-get-${plan.name.toLowerCase()}`}>
+                  <Button asChild variant="outline" className="w-full border-white/15 bg-black/40 text-white hover:text-white hover:border-[#D3126A]/50" data-testid={`button-get-${plan.name.toLowerCase()}`}>
                     <a href="/book">
                       {CTA.primaryShort}
                       <ArrowRight className="ml-2 h-4 w-4" />
@@ -238,7 +250,7 @@ const SolutionsIndex = () => {
             transition={revealTransition}
           >
             <div className="mb-10 text-center">
-              <span className="mb-4 inline-flex items-center rounded-full border border-de-hairline bg-de-bg px-3 py-1 text-xs font-medium text-white/70">
+              <span className="mb-4 inline-flex items-center rounded-full border border-de-hairline bg-de-bg px-3 py-1 text-xs font-medium text-white/70 font-mono uppercase tracking-wider">
                 Baseline vs depth
               </span>
               <StatementHeading as="h2" className="mb-3 text-2xl md:text-3xl">
@@ -278,7 +290,7 @@ const SolutionsIndex = () => {
             </motion.div>
           </motion.section>
 
-          {/* Security Services */}
+          {/* Security Services & Evidence Scenario */}
           <motion.section 
             className="mb-20"
             initial={{ opacity: 0, y: 30 }}
@@ -288,11 +300,18 @@ const SolutionsIndex = () => {
           >
             <div className="mb-10 text-center">
               <StatementHeading as="h2" className="mb-3 text-2xl md:text-3xl">
-                Security & Protection
+                Security & Threat Containment
               </StatementHeading>
-              <p className="text-white/60">Advanced security features for businesses that need more than baseline protection.</p>
+              <p className="text-white/60 max-w-2xl mx-auto">
+                Real human analysts backed by behavioral telemetry watching and neutralizing threat vectors around the clock.
+              </p>
             </div>
             
+            {/* Operational Incident Flow Evidence Module */}
+            <div className="mb-10">
+              <IncidentFlow />
+            </div>
+
             <motion.div 
               className="grid md:grid-cols-2 gap-5"
               variants={containerVariants}
@@ -312,7 +331,7 @@ const SolutionsIndex = () => {
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
                       <h3 className="text-white font-semibold">{service.title}</h3>
-                      <span className="px-2 py-0.5 text-xs bg-de-raised text-de-magenta-ink rounded">
+                      <span className="px-2 py-0.5 text-xs bg-de-raised text-de-magenta-ink rounded font-mono font-medium">
                         {service.tier}
                       </span>
                     </div>

@@ -200,7 +200,7 @@ Order:
 
 VIS-001 through VIS-005 should happen before agents start spraying new design treatments across the site.
 
-CSS utilities `.de-hud-card`, `.de-grid-matrix`, `.de-telemetry-badge`, `.de-telemetry-live-dot` were added to `client/src/index.css` in `87e2858`. Do not apply them to homepage, Store, FAQ, or DE Desk without a ledger assignment and visual QA.
+CSS utilities `.de-hud-card`, `.de-grid-matrix`, `.de-telemetry-badge`, `.de-telemetry-live-dot` were added to `client/src/index.css` in `87e2858`. `2722dd5` applied `.de-hud-card` and ProofChip/IncidentFlow to several solutions/resources/trust pages. Do not extend that spray from VIS-001. Visual review is VIS-003 / VIS-008 / VIS-016.
 
 ---
 
