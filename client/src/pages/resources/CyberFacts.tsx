@@ -16,6 +16,10 @@ import {
   formatFactSource,
   type CyberAwarenessFact,
 } from "@/data/cyberAwarenessFacts";
+import { ProofChip } from "@/components/evidence/ProofChip";
+import { EvidenceFrame } from "@/components/evidence/EvidenceFrame";
+import { HUDFrame } from "@/components/evidence/HUDFrame";
+import { StatusToken } from "@/components/evidence/StatusToken";
 
 type FactCategory = "ransomware" | "identity" | "human" | "recovery" | "financial" | "arizona";
 
@@ -138,35 +142,35 @@ const FactCard = forwardRef<HTMLDivElement, FactCardProps>(function FactCard(
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className={`relative rounded-2xl border border-de-hairline bg-de-raised ${featured ? "p-8 md:p-10" : "p-6"}`}
+      className={`de-hud-card relative transition-all duration-200 hover:border-[#D3126A]/40 ${featured ? "p-8 md:p-10" : "p-6"}`}
       data-testid={`fact-card-${fact.id}`}
     >
       <div className="absolute top-4 right-4 flex items-center gap-2">
-        <span className="inline-flex items-center gap-1.5 rounded-md border border-de-hairline bg-de-bg px-2.5 py-1 text-xs font-medium text-white/60">
+        <span className="inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-black/40 px-2.5 py-1 text-xs font-mono font-medium text-white/70">
           {categoryInfo[fact.category].icon}
           {categoryInfo[fact.category].label}
         </span>
       </div>
 
-      <div className={`flex flex-wrap items-baseline gap-4 ${featured ? "mb-6 border-b border-de-hairline pb-6" : "mb-4"}`}>
-        <span className={`font-black tracking-tight text-de-accent-ink ${featured ? "text-5xl md:text-7xl" : "text-3xl md:text-4xl"}`}>
+      <div className={`flex flex-wrap items-baseline gap-4 ${featured ? "mb-6 border-b border-white/10 pb-6" : "mb-4"}`}>
+        <span className={`font-black font-mono de-tabular-nums tracking-tight text-de-accent-ink ${featured ? "text-5xl md:text-7xl" : "text-3xl md:text-4xl"}`}>
           {fact.stat}
         </span>
-        <span className={`font-bold uppercase tracking-wider text-white/60 ${featured ? "text-base" : "text-xs"}`}>
+        <span className={`font-bold font-mono uppercase tracking-wider text-white/60 ${featured ? "text-base" : "text-xs"}`}>
           {fact.label}
         </span>
       </div>
 
-      <p className={`font-medium leading-relaxed text-white/80 ${featured ? "mb-6 text-lg md:text-xl" : "mb-4 text-sm"}`}>
+      <p className={`font-medium leading-relaxed text-white/80 ${featured ? "mb-6 text-lg md:text-xl font-heading" : "mb-4 text-sm"}`}>
         {fact.text}
       </p>
 
-      <div className={`flex flex-wrap items-center justify-between gap-4 ${featured ? "rounded-xl border border-de-hairline bg-de-bg p-4" : ""}`}>
+      <div className={`flex flex-wrap items-center justify-between gap-4 ${featured ? "rounded-xl border border-white/10 bg-black/30 p-4" : ""}`}>
         <a
           href={fact.sourceUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 text-sm text-de-accent-ink hover:underline"
+          className="inline-flex items-center gap-2 text-sm font-mono text-de-accent-ink hover:underline"
           data-testid={`fact-source-${fact.id}`}
         >
           <span className="text-white/55">Source:</span>
@@ -212,44 +216,31 @@ const CyberFacts = () => {
     canonical: '/resources/cyber-facts',
   });
 
-  // Randomize featured fact on load
   useEffect(() => {
     const pick = featuredFacts[Math.floor(Math.random() * featuredFacts.length)];
     setRandomFact(pick);
   }, []);
 
+  const handleCopy = (fact: CyberFact) => {
+    navigator.clipboard.writeText(`${fact.stat} ${fact.text} (${fact.source})`);
+    setCopiedId(fact.id);
+    toast({
+      title: "Fact Copied",
+      description: "Statistic and source copied to clipboard.",
+    });
+    setTimeout(() => setCopiedId(null), 2000);
+  };
+
   const refreshRandomFact = () => {
-    const currentIndex = featuredFacts.findIndex(f => f.id === randomFact?.id);
-    let newIndex;
-    do {
-      newIndex = Math.floor(Math.random() * featuredFacts.length);
-    } while (newIndex === currentIndex && featuredFacts.length > 1);
-    setRandomFact(featuredFacts[newIndex]);
+    const remaining = featuredFacts.filter(f => f.id !== randomFact?.id);
+    const pick = remaining[Math.floor(Math.random() * remaining.length)];
+    setRandomFact(pick);
   };
 
   const filteredFacts = useMemo(() => {
     if (selectedCategory === "all") return allFacts;
     return allFacts.filter(f => f.category === selectedCategory);
   }, [selectedCategory]);
-
-  const handleCopy = async (fact: CyberFact) => {
-    const text = `${fact.stat} ${fact.text}\n\nSource: ${fact.source}\n${fact.sourceUrl}`;
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopiedId(fact.id);
-      toast({
-        title: "Copied to clipboard",
-        description: `"${fact.label}" fact copied successfully.`,
-      });
-      setTimeout(() => setCopiedId(null), 2000);
-    } catch (err) {
-      toast({
-        title: "Copy failed",
-        description: "Please try again or copy manually.",
-        variant: "destructive"
-      });
-    }
-  };
 
   const containerVariants = prefersReducedMotion ? undefined : {
     hidden: { opacity: 0 },
@@ -272,8 +263,15 @@ const CyberFacts = () => {
       }
     >
       <div className="space-y-16" data-testid="heading-cyber-facts">
-          <section>
-            <div className="flex items-center justify-between gap-4 flex-wrap mb-8">
+        {/* Sourced Proof Chips */}
+        <div className="flex flex-wrap items-center gap-3">
+          <ProofChip metric="SOURCED" label="Peer-Reviewed Industry Data" icon={Shield} />
+          <ProofChip metric="GOVERNMENT" label="CISA & FBI IC3 Audited" icon={Lock} />
+          <ProofChip metric="ARIZONA" label="State Breach Law Ready" icon={MapPin} />
+        </div>
+
+        <section>
+          <div className="flex items-center justify-between gap-4 flex-wrap mb-8">
               <div>
                 <h2 className="text-2xl md:text-3xl font-bold text-white mb-1">Today's Cyber Fact</h2>
                 <p className="text-sm text-white/55 uppercase tracking-wider font-semibold">Auto-randomizes on load</p>

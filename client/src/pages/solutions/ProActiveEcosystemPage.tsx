@@ -8,6 +8,9 @@ import { useSEO } from "@/hooks/useSEO";
 import { BreadcrumbJsonLd, ServiceJsonLd } from "@/components/JsonLd";
 import { CTA } from "@/lib/ctaCopy";
 import { pricing, formatUserPrice, formatPrice, PRICING_SCOPE_NOTE } from "@/data/pricing";
+import { ProofChip } from "@/components/evidence/ProofChip";
+import { ProActiveEcosystemDiagram } from "@/components/visual/ProActiveEcosystemDiagram";
+import { AssessmentReportSample } from "@/components/evidence/AssessmentReportSample";
 
 const lifecycle = [
   { title: "Assessment", body: "Review identity, endpoints, email, backups, network, and operating reality — not a sales script." },
@@ -57,22 +60,39 @@ export default function ProActiveEcosystemPage() {
       />
 
       <div className="space-y-16">
+          {/* Sourced Contextual Proof Chips */}
+          <div className="flex flex-wrap items-center gap-3">
+            <ProofChip metric="4 MODELS" label="IT · Office · Business · Enterprise" icon={Layers} />
+            <ProofChip metric="6 DOMAINS" label="Engineered Architecture" icon={Shield} />
+            <ProofChip metric="ARIZONA" label="Principal-Led Engagement" icon={Users} />
+          </div>
+
           <section className="grid gap-6 md:grid-cols-3">
             {[
               { icon: Shield, title: "Cybersecurity-first IT", body: "Identity, endpoints, email, and recovery are designed in — not bolted on after a help-desk contract." },
               { icon: Layers, title: "One accountable model", body: "Support, workplace, security operations, and strategy sit in one operating relationship instead of a pile of vendors." },
               { icon: GitBranch, title: "Fit, not upsell theater", body: "We match users, devices, locations, infrastructure, compliance, and whether you need fully managed or co-managed coverage." },
             ].map((item) => (
-              <div key={item.title} className="de-interactive-card rounded-2xl border border-de-hairline bg-de-raised p-6">
+              <div key={item.title} className="de-hud-card p-6 transition-all duration-200 hover:border-[#D3126A]/40">
                 <IconWell icon={item.icon} size="sm" surface="dark" />
-                <h2 className="mt-4 text-lg font-semibold text-white">{item.title}</h2>
-                <p className="mt-2 text-sm leading-relaxed text-white/60">{item.body}</p>
+                <h2 className="mt-4 text-lg font-semibold text-white font-heading">{item.title}</h2>
+                <p className="mt-2 text-sm leading-relaxed text-white/70">{item.body}</p>
               </div>
             ))}
           </section>
 
+          {/* Flagship Ecosystem Operating Architecture Diagram */}
+          <section className="mb-16">
+            <ProActiveEcosystemDiagram />
+          </section>
+
           <section className="mb-16">
             <EcosystemProgression />
+          </section>
+
+          {/* Discovery Deliverable Sample Excerpt */}
+          <section className="mb-16">
+            <AssessmentReportSample />
           </section>
 
           <section className="mb-16 grid gap-10 lg:grid-cols-2">

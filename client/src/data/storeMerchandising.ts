@@ -1287,12 +1287,12 @@ export const GUIDED_BUYER_OPTIONS: {
 }[] = [
   {
     value: "prospect",
-    label: "New to Digerati",
+    label: "New to DE",
     blurb: "Looking for managed IT or a first security read — Solutions, not a hardware wall.",
   },
   {
     value: "existing_client",
-    label: "Existing Digerati client",
+    label: "Existing DE client",
     blurb: "Add tools from the Client Marketplace without replacing your current stack.",
   },
   {
@@ -1515,7 +1515,7 @@ export function buildGuidedRecommendation(answers: GuidedBuyingAnswers): GuidedR
     family === "solutions"
       ? `One ProActive tier (consultative — packages are mutually exclusive), the $2,500 Cybersecurity Risk Assessment when relevant, and a few related add-ons. List rates × ~${seats} seats where unit-priced; checkout uses canonical SKUs and prices.`
       : `Client Marketplace picks for ${
-          answers.buyerType === "in_house_it" ? "an in-house IT team" : "an existing Digerati client"
+          answers.buyerType === "in_house_it" ? "an in-house IT team" : "an existing DE client"
         }. We are not stacking a second ProActive package. Estimates are list rates; checkout still confirms server prices.`;
 
   return {
