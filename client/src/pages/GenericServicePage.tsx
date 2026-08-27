@@ -22,6 +22,9 @@ import { IconWell } from "@/components/visual/IconWell";
 import { StatementHeading } from "@/components/visual/StatementHeading";
 import { createStaggerDelay, revealInView, revealInitial, revealTransition, revealViewport } from "@/lib/animations";
 import { Button } from "@/components/ui/button";
+import { ProofChip } from "@/components/evidence/ProofChip";
+import { StatusToken } from "@/components/evidence/StatusToken";
+import { Shield, Clock, Award, Users } from "lucide-react";
 
 interface ServiceFeature {
   title: string;
@@ -87,11 +90,11 @@ const FeatureCard = ({
     whileInView={revealInView}
     viewport={revealViewport}
     transition={{ ...revealTransition, delay: createStaggerDelay(index) }}
-    className="de-interactive-card group h-full rounded-2xl border border-de-hairline bg-de-raised p-6"
+    className="de-hud-card group h-full p-6 transition-all duration-200 hover:border-[#D3126A]/40"
   >
     <div className="mb-4">
       {feature.icon ? (
-        <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl border border-de-hairline bg-de-bg text-de-accent-ink">
+        <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-black/40 text-de-accent-ink">
           {feature.icon}
         </span>
       ) : (
@@ -99,7 +102,7 @@ const FeatureCard = ({
       )}
     </div>
     <h3 className="font-heading text-xl font-semibold text-white">{feature.title}</h3>
-    <p className="mt-2 leading-relaxed text-white/75">{feature.description}</p>
+    <p className="mt-2 leading-relaxed text-white/75 text-sm">{feature.description}</p>
   </motion.article>
 );
 
@@ -128,6 +131,14 @@ export default function GenericServicePage({
   return (
     <PageTemplate title={title} subtitle={subtitle} variant="dark" breadcrumbs={breadcrumbs}>
       <div className="space-y-16">
+        {/* Factual Contextual Proof Chips */}
+        <div className="flex flex-wrap items-center gap-3">
+          <ProofChip metric="24/7" label="Human-Led SOC" icon={Shield} />
+          <ProofChip metric="ARIZONA" label="Local Engineering Team" icon={Users} />
+          <ProofChip metric="6 DOMAINS" label="Managed Protection" icon={Award} />
+          <ProofChip metric="SLA" label="Defined Response Times" icon={Clock} />
+        </div>
+
         {stat && (
           <motion.div
             initial={prefersReducedMotion ? false : revealInitial}
@@ -235,10 +246,10 @@ export default function GenericServicePage({
                   transition={{ ...revealTransition, delay: createStaggerDelay(index) }}
                   className="de-interactive-card rounded-xl border border-de-hairline bg-de-raised p-5"
                 >
-                  <div className="mb-2 text-xs font-semibold tracking-wide text-de-accent-ink">
-                    Step {index + 1}
+                  <div className="mb-2 font-mono text-[11px] font-bold tracking-widest text-[#F04C97] uppercase">
+                    0{index + 1} / STEP
                   </div>
-                  <h3 className="mb-2 text-lg font-semibold text-white">{step.title}</h3>
+                  <h3 className="mb-2 text-lg font-semibold text-white font-heading">{step.title}</h3>
                   <p className="text-sm leading-relaxed text-white/70">{step.description}</p>
                 </motion.div>
               ))}
