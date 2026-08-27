@@ -4,7 +4,7 @@ Source of truth for Digerati Experts visual tokens. Extracted from the live code
 
 Quality bar: `design/approved/` — match or elevate toward those examples. Do not copy Linear/Stripe; analyze principles (hierarchy, restraint, composition) and apply them in DE’s language.
 
-Companion docs: `BRAND.md`, `UX_PRINCIPLES.md`, `IMAGERY.md`. Policy: root `.cursorrules`.
+Companion docs: `BRAND.md`, `UX_PRINCIPLES.md`, `IMAGERY.md`. Layers on this foundation: `VISUAL_SYSTEM_V2.md`. Policy: root `.cursorrules` (§9A).
 
 ## Personality
 
