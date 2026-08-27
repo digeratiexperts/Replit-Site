@@ -31,6 +31,8 @@ OpenMSP background mapping (do not copy their yellow): page `#161616` → `--de-
 
 Adjacent same-chapter dark sections share one field with a hairline and internal lift (raised cards). Different chapters step well ↔ surface ↔ paper ↔ magenta so the page does not read as one `#0a0a0a` slab. Do not paint `#0f0f0f`, `#0f0f1a`, `#141418`, or cool `#F7FAFC` as competing page fields. Magenta how-it-works stays the only loud band. DE logo gold (`#e7b20d`) is a secondary mark color only — never a CTA fill.
 
+Base canvas: `html`/`body` background is `--de-bg` (`#050312`), never pure `#000`. Sections that intentionally go transparent to share a continuous field with their neighbor fall through to this color — an undocumented pure-black base would introduce a third, off-token dark underneath the two the system defines.
+
 DE Desk shell `#1a0b33`
 Nested dark `#12141c` / `#171922`
 Nested light `#ffffff` / `#faf8fc` (Desk chat insert only)

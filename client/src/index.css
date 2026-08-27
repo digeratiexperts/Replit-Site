@@ -267,7 +267,10 @@ html.de-store-gesture-lock body {
 
 html.de-marketing-canvas,
 html.de-marketing-canvas body {
-  background-color: #000;
+  /* var(--de-bg), not pure #000 — sections that go transparent to share a
+   * continuous field (per DESIGN_SYSTEM.md) should fall through to the
+   * documented graphite well, not an undocumented third dark. */
+  background-color: var(--de-bg);
   overflow-x: clip;
 }
 
@@ -1529,9 +1532,12 @@ html {
     letter-spacing: -0.01em;
   }
 
-  /* Stats and numbers use Oxanium for tech feel */
+  /* Stats and numbers use Oxanium for tech feel. Tabular figures keep
+   * digit width fixed so counters/percentages don't jitter horizontally
+   * during a count-up animation or when a sibling value changes. */
   .font-mono, [data-stat], .stat-value {
     font-family: 'Oxanium', 'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
   }
 
   /* Apple-like text shadow for dark backgrounds - improves readability */

@@ -40,7 +40,7 @@ export const DigeratiAlertBanner = (): JSX.Element => {
             viewport={revealViewport}
             transition={revealTransition}
           >
-            <p className="mb-3 text-sm font-semibold uppercase tracking-[0.16em] text-[#D3126A] md:text-base">
+            <p className="mb-3 text-sm font-semibold uppercase tracking-[0.16em] text-[#A30E52] md:text-base">
               Why we exist
             </p>
             <h2 className="mb-4 font-heading text-3xl font-semibold leading-tight tracking-[-0.02em] text-[#1A1228] md:text-4xl lg:text-5xl">
