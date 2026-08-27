@@ -34,6 +34,10 @@ import {
 } from "lucide-react";
 import { PRIMARY_PHONE } from "@/data/companyContact";
 import { CTA } from "@/lib/ctaCopy";
+import { ProofChip } from "@/components/evidence/ProofChip";
+import { EvidenceFrame } from "@/components/evidence/EvidenceFrame";
+import { HUDFrame } from "@/components/evidence/HUDFrame";
+import { StatusToken } from "@/components/evidence/StatusToken";
 
 const bcdrData = {
   packages: [
@@ -371,9 +375,17 @@ export default function BackupDisasterRecovery() {
         { name: "Backup & Disaster Recovery", url: "/solutions/backup-disaster-recovery" }
       ]} />
       <div className="space-y-20">
-        <div className="inline-flex items-center gap-2 rounded-full border border-de-hairline bg-de-raised px-3 py-1.5 text-sm font-medium text-white/80">
-          <AlertTriangle className="h-4 w-4 text-de-accent-ink" />
-          $1.53M average ransomware recovery cost (Sophos 2025)
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="inline-flex items-center gap-2 rounded-full border border-de-hairline bg-de-raised px-3 py-1.5 text-sm font-medium text-white/80">
+            <AlertTriangle className="h-4 w-4 text-de-accent-ink" />
+            $1.53M average ransomware recovery cost (Sophos 2025)
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <ProofChip metric="IMMUTABLE" label="Air-Gapped Copies" icon={HardDrive} />
+            <ProofChip metric="TESTED" label="Verified Cadence" icon={RefreshCw} />
+            <ProofChip metric="ARIZONA" label="Local Recovery Team" icon={Users} />
+          </div>
         </div>
 
         {/* What We Protect */}
@@ -396,28 +408,78 @@ export default function BackupDisasterRecovery() {
             <h2 className="text-3xl font-bold text-white mb-6 text-center">BCDR in 30 Seconds</h2>
             <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
               <div className="text-center">
-                <div className="w-16 h-16 rounded-full bg-de-raised flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 rounded-full bg-de-raised flex items-center justify-center mx-auto mb-4 border border-white/10">
                   <HardDrive className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="font-semibold text-white mb-2">Backup</h3>
+                <h3 className="font-semibold text-white mb-2 font-heading text-lg">Backup</h3>
                 <p className="text-white/60 text-sm">Copies of your data, stored securely, with immutable protection against ransomware</p>
               </div>
               <div className="text-center">
-                <div className="w-16 h-16 rounded-full bg-de-raised flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 rounded-full bg-de-raised flex items-center justify-center mx-auto mb-4 border border-white/10">
                   <Timer className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="font-semibold text-white mb-2">Recovery Targets</h3>
+                <h3 className="font-semibold text-white mb-2 font-heading text-lg">Recovery Targets</h3>
                 <p className="text-white/60 text-sm">Agreed RPO (data loss limit) and RTO (downtime limit) documented in your agreement</p>
               </div>
               <div className="text-center">
-                <div className="w-16 h-16 rounded-full bg-de-raised flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 rounded-full bg-de-raised flex items-center justify-center mx-auto mb-4 border border-white/10">
                   <ClipboardCheck className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="font-semibold text-white mb-2">Tested Recovery</h3>
+                <h3 className="font-semibold text-white mb-2 font-heading text-lg">Tested Recovery</h3>
                 <p className="text-white/60 text-sm">Regular restore tests with documented procedures—proven, not assumed</p>
               </div>
             </div>
           </div>
+        </motion.section>
+
+        {/* Evidence Artifact: Restore Verification Drill */}
+        <motion.section {...fadeInUp}>
+          <EvidenceFrame
+            classification="EXAMPLE"
+            title="Quarterly BCDR Restore Verification Runbook"
+            subtitle="How Digerati Experts verifies recovery integrity in isolated sandboxes to guarantee RTO/RPO SLAs."
+            status="verified"
+            statusLabel="RESTORE DRILL COMPLETE"
+            timestamp="Cadence: Quarterly"
+            sourceNote="Digerati Experts Continuity Engineering Audit Spec"
+            variant="dark"
+            className="max-w-4xl mx-auto"
+          >
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="rounded-lg border border-white/10 bg-black/40 p-3">
+                  <p className="font-mono text-[10px] text-white/50 uppercase">Tested Target</p>
+                  <p className="text-sm font-bold text-white font-mono mt-0.5">Primary Domain Controller & ERP</p>
+                </div>
+                <div className="rounded-lg border border-white/10 bg-black/40 p-3">
+                  <p className="font-mono text-[10px] text-white/50 uppercase">Achieved RTO</p>
+                  <p className="text-sm font-bold text-emerald-400 font-mono mt-0.5">2h 14m (SLA: 4h)</p>
+                </div>
+                <div className="rounded-lg border border-white/10 bg-black/40 p-3">
+                  <p className="font-mono text-[10px] text-white/50 uppercase">Data Integrity Check</p>
+                  <p className="text-sm font-bold text-emerald-400 font-mono mt-0.5">100% Checksum Verified</p>
+                </div>
+              </div>
+
+              <div className="rounded-lg border border-white/5 bg-[#0e0b14] p-4 font-mono text-xs text-white/80 space-y-2">
+                <p className="text-[11px] text-white/40 uppercase tracking-wider pb-1 border-b border-white/5">
+                  EXECUTED RESTORE SEQUENCE
+                </p>
+                <div className="flex items-center justify-between text-xs pt-1">
+                  <span>1. Immutable snapshot mount in isolated hypervisor</span>
+                  <span className="text-emerald-400 font-semibold">PASS (14m)</span>
+                </div>
+                <div className="flex items-center justify-between text-xs">
+                  <span>2. Database integrity & transaction log consistency verification</span>
+                  <span className="text-emerald-400 font-semibold">PASS (38m)</span>
+                </div>
+                <div className="flex items-center justify-between text-xs">
+                  <span>3. Application mock login & critical record query validation</span>
+                  <span className="text-emerald-400 font-semibold">PASS (22m)</span>
+                </div>
+              </div>
+            </div>
+          </EvidenceFrame>
         </motion.section>
 
         {/* RPO/RTO Picker */}
@@ -516,11 +578,11 @@ export default function BackupDisasterRecovery() {
                 key={pkg.sku}
                 {...fadeInUp}
                 transition={{ delay: index * 0.1 }}
-                className="relative overflow-hidden rounded-2xl border border-de-hairline bg-de-raised"
+                className="de-hud-card relative overflow-hidden"
               >
                 <div className="p-8">
-                  <h3 className="text-2xl font-bold text-white">{pkg.name}</h3>
-                  <p className="text-de-accent-ink text-sm mb-2">{pkg.subtitle}</p>
+                  <h3 className="text-2xl font-bold text-white font-heading">{pkg.name}</h3>
+                  <p className="text-de-accent-ink text-sm mb-2 font-mono font-medium">{pkg.subtitle}</p>
                   <p className="text-white/60 text-sm mb-6">{pkg.best_for}</p>
                   
                   <div className="flex gap-4 mb-6">

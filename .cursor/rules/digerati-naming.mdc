@@ -1,0 +1,39 @@
+---
+description: Canonical Digerati Experts company naming convention
+globs: ["**/*"]
+alwaysApply: true
+---
+# DIGERATI EXPERTS NAMING
+
+Use the company name consistently in customer-facing and operational copy.
+
+## Canonical names
+
+- **Full company name:** `Digerati Experts`
+- **Approved short form:** `DE`
+
+## Do not use
+
+Do not use `Digerati` by itself as the company label in user-facing copy, navigation, dialogs, help text, transactional copy, generated documents, or agent-written marketing content.
+
+Prefer:
+
+- `Digerati Experts` when the full brand name is useful for clarity, first mention, SEO, legal/business context, or external-facing headings.
+- `DE` when a short label is appropriate after context is established or space is constrained.
+
+Examples:
+
+- `Digerati agent` -> `DE agent`
+- `New to Digerati` -> `New to Digerati Experts`
+- `Contact Digerati` -> `Contact DE` or `Contact Digerati Experts`
+
+## Exceptions
+
+Do not rewrite:
+
+- repository/package/code identifiers solely because they contain `digerati`
+- domains, email addresses, API identifiers, database values, environment keys, or external vendor/product names
+- historical quotations or source material where changing the text would be inaccurate
+- the already-correct full string `Digerati Experts`
+
+When unsure whether a string is a company label or an identifier, preserve the identifier and fix only the visible customer-facing label.
