@@ -15,12 +15,12 @@
 | **VIS-001** | Visual System v2 Docs & Rules | Antigravity / Claude | `main` | None | `design/VISUAL_SYSTEM_V2.md`, `design/*.md` | **LIVE** | Passed | Yes |
 | **VIS-002** | `EvidenceFrame` + Classifications | Antigravity | `main` | VIS-001 | `client/src/components/evidence/EvidenceFrame.tsx` | **LIVE** | Passed | Yes |
 | **VIS-003** | `HUDFrame` + `StatusToken` + `ProofChip` | Antigravity | `main` | VIS-001 | `client/src/components/evidence/HUDFrame.tsx`, `StatusToken.tsx`, `ProofChip.tsx` | **LIVE** | Passed | Yes |
-| **VIS-004** | Diagram Primitives (`DiagramNode`, `Boundary`) | Cursor / Codex | — | VIS-001, VIS-003 | `client/src/components/evidence/DiagramPrimitives.tsx` | **READY** | — | — |
-| **VIS-005** | DE Protection Coverage Architecture | Claude + Antigravity | — | VIS-002, VIS-003 | `client/src/components/evidence/ProtectionCoverageMap.tsx` | **READY** | — | — |
-| **VIS-006** | ProActive Ecosystem Flagship Diagram | Claude + Antigravity | — | VIS-004 | `client/src/components/visual/ProActiveEcosystemDiagram.tsx` | **READY** | — | — |
-| **VIS-007** | Assessment `EvidenceFrame` Preview | Claude | — | VIS-002 | `client/src/components/evidence/AssessmentReportSample.tsx` | **READY** | — | — |
+| **VIS-004** | Diagram Primitives (`DiagramNode`, `Boundary`) | Antigravity | `main` | VIS-001, VIS-003 | `client/src/components/evidence/DiagramPrimitives.tsx` | **LIVE** | Passed | Yes |
+| **VIS-005** | DE Protection Coverage Architecture | Antigravity | `main` | VIS-002, VIS-003 | `client/src/components/visual/ProtectionCommandDeck.tsx` | **LIVE** | Passed | Yes |
+| **VIS-006** | ProActive Ecosystem Flagship Diagram | Antigravity | `main` | VIS-004 | `client/src/components/visual/ProActiveEcosystemDiagram.tsx` | **LIVE** | Passed | Yes |
+| **VIS-007** | Assessment `EvidenceFrame` Preview | Antigravity | `main` | VIS-002 | `client/src/components/evidence/AssessmentReportSample.tsx` | **LIVE** | Passed | Yes |
 | **VIS-008** | `IncidentFlow` Example Scenario Module | Antigravity | `main` | VIS-002, VIS-003 | `client/src/components/evidence/IncidentFlow.tsx` | **LIVE** | Passed | Yes |
-| **VIS-009** | Protection Interactive Command Deck (6 Domains) | Antigravity + Cursor | — | VIS-005, VIS-008 | `client/src/pages/sections/DigeratiHowWeProtectSection.tsx` | **READY** | — | — |
+| **VIS-009** | Protection Interactive Command Deck (6 Domains) | Antigravity | `main` | VIS-005, VIS-008 | `client/src/pages/sections/DigeratiHowWeProtectSection.tsx` | **LIVE** | Passed | Yes |
 | **VIS-010** | Environment Plates Set (4 Plates) | Art Direction | — | VIS-001 | `attached_assets/plates/*` | **BACKLOG** | — | — |
 | **VIS-011** | Store Product-Media System | Cursor / Claude | — | VIS-002, VIS-003 | `client/src/components/store/ProductMedia.tsx` | **BACKLOG** | — | — |
 | **VIS-012** | Photography Plan & Asset Matrix | Content / Human | — | VIS-001 | `design/PHOTOGRAPHY.md` | **BACKLOG** | — | — |

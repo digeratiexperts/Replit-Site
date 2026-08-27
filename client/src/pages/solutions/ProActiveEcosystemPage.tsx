@@ -9,6 +9,8 @@ import { BreadcrumbJsonLd, ServiceJsonLd } from "@/components/JsonLd";
 import { CTA } from "@/lib/ctaCopy";
 import { pricing, formatUserPrice, formatPrice, PRICING_SCOPE_NOTE } from "@/data/pricing";
 import { ProofChip } from "@/components/evidence/ProofChip";
+import { ProActiveEcosystemDiagram } from "@/components/visual/ProActiveEcosystemDiagram";
+import { AssessmentReportSample } from "@/components/evidence/AssessmentReportSample";
 
 const lifecycle = [
   { title: "Assessment", body: "Review identity, endpoints, email, backups, network, and operating reality — not a sales script." },
@@ -79,8 +81,18 @@ export default function ProActiveEcosystemPage() {
             ))}
           </section>
 
+          {/* Flagship Ecosystem Operating Architecture Diagram */}
+          <section className="mb-16">
+            <ProActiveEcosystemDiagram />
+          </section>
+
           <section className="mb-16">
             <EcosystemProgression />
+          </section>
+
+          {/* Discovery Deliverable Sample Excerpt */}
+          <section className="mb-16">
+            <AssessmentReportSample />
           </section>
 
           <section className="mb-16 grid gap-10 lg:grid-cols-2">

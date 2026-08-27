@@ -4,15 +4,7 @@ import { Link } from "wouter";
 import { IconWell } from "@/components/visual/IconWell";
 import type { LucideIcon } from "lucide-react";
 import { revealInitial, revealInView, revealTransition, revealViewport } from "@/lib/animations";
-
-const domains = [
-  { icon: KeyRound, title: "Identity", link: "/solutions/unified-security", desc: "SSO, MFA, and access architecture." },
-  { icon: Monitor, title: "Endpoints", link: "/solutions/threat-detection", desc: "Device protection and hardening." },
-  { icon: Mail, title: "Email", link: "/solutions/security-operations", desc: "Anti-phishing and mailbox defenses." },
-  { icon: Wifi, title: "Network", link: "/solutions/managed-it-support", desc: "Firewall, Wi-Fi, and connectivity operations." },
-  { icon: Database, title: "Data & Recovery", link: "/solutions/backup-disaster-recovery", desc: "Backup, restore testing, and continuity." },
-  { icon: Radio, title: "Security Operations", link: "/solutions/security-operations", desc: "Detection, response, and human triage." },
-];
+import { ProtectionCommandDeck } from "@/components/visual/ProtectionCommandDeck";
 
 const steps: {
   number: number;
@@ -66,49 +58,26 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
           <div className="de-paper-island relative px-6 py-10 sm:px-10 sm:py-14 md:px-12 md:py-16">
             <div className="relative z-10">
               <motion.div
-                className="mb-12 max-w-2xl md:mb-16"
+                className="mb-8 max-w-2xl md:mb-12"
                 initial={prefersReducedMotion ? false : revealInitial}
                 whileInView={revealInView}
                 viewport={revealViewport}
                 transition={revealTransition}
               >
-                <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-de-magenta">
+                <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-[#A30E52]">
                   What we protect
                 </p>
                 <h2 className="mb-4 font-heading text-3xl font-semibold tracking-[-0.02em] text-[#1A1228] md:text-4xl">
                   Six domains. One accountable operating model.
                 </h2>
                 <p className="text-lg leading-relaxed text-[#3A3448]">
-                  Capability pages live under Solutions. The methodology — assessment through operations —
-                  is documented on the ProActive Ecosystem overview.
+                  Select any domain below to inspect our architectural defense boundaries, continuous telemetry, and verified client deliverables.
                 </p>
               </motion.div>
 
-              <div
-                id="protection-stack"
-                className="mx-auto grid max-w-[92rem] grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
-              >
-                {domains.map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <Link
-                      key={item.title}
-                      href={item.link}
-                      className="group relative flex items-start gap-4 overflow-hidden rounded-xl border border-[var(--de-paper-hairline)] bg-white p-5 transition-all duration-200 hover:border-[#D3126A]/30 hover:shadow-[0_4px_20px_-6px_rgba(211,18,106,0.16)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2"
-                    >
-                      <span className="absolute inset-x-0 top-0 h-[2px] rounded-t-xl bg-gradient-to-r from-[#D3126A]/40 via-[#D3126A]/80 to-[#D3126A]/40 opacity-0 transition-opacity duration-200 group-hover:opacity-100" aria-hidden="true" />
-                      <span className="inline-flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-[#D3126A]/20 bg-[#D3126A]/8 text-[#D3126A] transition-colors group-hover:border-[#D3126A]/40 group-hover:bg-[#D3126A]/12">
-                        <Icon className="h-5 w-5" aria-hidden="true" />
-                      </span>
-                      <div className="min-w-0">
-                        <p className="text-[15px] font-semibold text-[#1A1228] transition-colors group-hover:text-[#A30E52] md:text-base">
-                          {item.title}
-                        </p>
-                        <p className="mt-0.5 text-sm leading-relaxed text-[#5A5368]">{item.desc}</p>
-                      </div>
-                    </Link>
-                  );
-                })}
+              {/* Interactive Six Domains Protection Command Deck */}
+              <div id="protection-stack">
+                <ProtectionCommandDeck />
               </div>
             </div>
           </div>
