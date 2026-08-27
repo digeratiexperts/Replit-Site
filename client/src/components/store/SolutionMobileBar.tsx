@@ -1,13 +1,22 @@
+import { useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
 import { formatSnapshotMoney } from "@/lib/solutionSnapshotView";
 import { cn } from "@/lib/utils";
+import { rectOverlapsPageContent } from "@/lib/stickyCtaVisibility";
 
 /**
  * Persistent Your Solution dock on /store/* — desktop bottom-right, mobile sticky.
  * Sits above Ask DE / sticky CTA. Does not replace the marketing assessment bar.
+ *
+ * Its own fixed position is a stable offset from the bottom chrome, so unlike
+ * the assessment bar it never moves — but that means whatever product grid or
+ * rail happens to scroll into that exact band would sit underneath it with no
+ * warning. Reuses the same blocking-target check the assessment bar uses
+ * (any StoreProductCard, the trust strip, PDP's related-products rail) and
+ * fades out rather than printing over a price or Add/Configure button.
  */
 export function SolutionMobileBar() {
   const [location] = useLocation();
@@ -17,14 +26,39 @@ export function SolutionMobileBar() {
     location,
   );
   const onPdp = location.startsWith("/store/product/");
+  const barRef = useRef<HTMLDivElement>(null);
+  const [overlapping, setOverlapping] = useState(false);
 
-  if (!onStore || onCheckoutFlow || isOpen || items.length === 0) return null;
+  const hidden = !onStore || onCheckoutFlow || isOpen || items.length === 0;
+
+  useEffect(() => {
+    if (hidden) return;
+    const measure = () => {
+      const el = barRef.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      setOverlapping(rectOverlapsPageContent(rect, (x) => document.elementsFromPoint(x, rect.top + Math.min(20, rect.height / 2))));
+    };
+    measure();
+    window.addEventListener("scroll", measure, { passive: true });
+    window.addEventListener("resize", measure);
+    const poll = window.setInterval(measure, 500);
+    return () => {
+      window.removeEventListener("scroll", measure);
+      window.removeEventListener("resize", measure);
+      window.clearInterval(poll);
+    };
+  }, [hidden, location]);
+
+  if (hidden) return null;
 
   return (
     <div
+      ref={barRef}
       className={cn(
-        "de-fixed-in-canvas pointer-events-none fixed z-40 px-3 sm:px-0",
+        "de-fixed-in-canvas fixed z-40 px-3 transition-opacity duration-150 sm:px-0",
         onPdp && "max-lg:hidden",
+        overlapping ? "pointer-events-none opacity-0" : "pointer-events-none opacity-100",
       )}
       style={{
         bottom:

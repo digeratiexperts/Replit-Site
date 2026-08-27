@@ -1,6 +1,5 @@
-import { useRef, type MouseEvent } from "react";
+import { useLayoutEffect, useRef, useState, type MouseEvent } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import {
   merchandisingRails,
   getProductsForRail,
@@ -44,6 +43,31 @@ function RailScroller({
   onLoginRequired: () => void;
 }) {
   const scrollerRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const updateScrollState = () => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    setCanScrollLeft(el.scrollLeft > 4);
+    setCanScrollRight(el.scrollLeft < maxScroll - 4);
+  };
+
+  useLayoutEffect(() => {
+    updateScrollState();
+    const el = scrollerRef.current;
+    if (!el) return;
+    const onScroll = () => updateScrollState();
+    el.addEventListener("scroll", onScroll, { passive: true });
+    const ro = new ResizeObserver(updateScrollState);
+    ro.observe(el);
+    return () => {
+      el.removeEventListener("scroll", onScroll);
+      ro.disconnect();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [products.length]);
 
   const scroll = (dir: -1 | 1) => {
     const el = scrollerRef.current;
@@ -55,46 +79,44 @@ function RailScroller({
 
   return (
     <div className="mb-12" data-testid={`rail-${title.toLowerCase().replace(/\s+/g, "-")}`}>
-      <div className="mb-5 flex items-end justify-between gap-4">
-        <div>
-          <h3 className="text-2xl font-semibold text-white">{title}</h3>
-          <p className="mt-1 text-base text-white/55">{subtitle}</p>
-        </div>
-        <div className="hidden gap-2 sm:flex">
-          <Button
-            type="button"
-            size="icon"
-            variant="outline"
-            className="h-10 w-10 border-white/15 bg-transparent text-white hover:bg-white/5"
-            onClick={() => scroll(-1)}
-            aria-label={`Scroll ${title} left`}
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </Button>
-          <Button
-            type="button"
-            size="icon"
-            variant="outline"
-            className="h-10 w-10 border-white/15 bg-transparent text-white hover:bg-white/5"
-            onClick={() => scroll(1)}
-            aria-label={`Scroll ${title} right`}
-          >
-            <ChevronRight className="h-5 w-5" />
-          </Button>
-        </div>
+      <div className="mb-5">
+        <h3 className="text-2xl font-semibold text-white">{title}</h3>
+        <p className="mt-1 text-base text-white/55">{subtitle}</p>
       </div>
       <div className="relative">
         <div
-          className="pointer-events-none absolute inset-y-0 left-0 z-10 w-6 bg-gradient-to-r from-[#0a0a0a] to-transparent sm:w-10"
+          className={`pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-[#0a0a0a] to-transparent transition-opacity duration-200 sm:w-16 ${
+            canScrollLeft ? "opacity-100" : "opacity-0"
+          }`}
           aria-hidden="true"
         />
         <div
-          className="pointer-events-none absolute inset-y-0 right-0 z-10 w-6 bg-gradient-to-l from-[#0a0a0a] to-transparent sm:w-10"
+          className={`pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-[#0a0a0a] to-transparent transition-opacity duration-200 sm:w-16 ${
+            canScrollRight ? "opacity-100" : "opacity-0"
+          }`}
           aria-hidden="true"
         />
+        <button
+          type="button"
+          onClick={() => scroll(-1)}
+          disabled={!canScrollLeft}
+          aria-label={`Scroll ${title} left`}
+          className="absolute left-1.5 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-[#0a0a0a]/85 text-white shadow-[0_8px_24px_rgba(0,0,0,0.45)] backdrop-blur-sm transition-all duration-200 hover:border-de-accent/60 hover:bg-[#141414] hover:scale-105 disabled:pointer-events-none disabled:opacity-0 sm:flex"
+        >
+          <ChevronLeft className="h-5 w-5" />
+        </button>
+        <button
+          type="button"
+          onClick={() => scroll(1)}
+          disabled={!canScrollRight}
+          aria-label={`Scroll ${title} right`}
+          className="absolute right-1.5 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-[#0a0a0a]/85 text-white shadow-[0_8px_24px_rgba(0,0,0,0.45)] backdrop-blur-sm transition-all duration-200 hover:border-de-accent/60 hover:bg-[#141414] hover:scale-105 disabled:pointer-events-none disabled:opacity-0 sm:flex"
+        >
+          <ChevronRight className="h-5 w-5" />
+        </button>
       <div
         ref={scrollerRef}
-        className="de-store-h-rail flex gap-5 pb-2 scrollbar-thin"
+        className="de-store-h-rail flex gap-5 pb-2"
         style={{ scrollSnapType: "x mandatory" }}
       >
         {products.map((product) => {

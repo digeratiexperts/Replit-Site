@@ -8,7 +8,15 @@ const INDEX = path.join(DIST, "index.html");
 const budgets = {
   entryRawBytes: 1_120_000,
   entryGzipBytes: 330_000,
-  cssRawBytes: 275_000,
+  // Raised from 275_000 on 2026-08-27: the Visual System v2 evidence/HUD/
+  // diagram components (EvidenceFrame, HUDFrame, StatusToken, ProofChip,
+  // DiagramPrimitives, ProtectionCommandDeck, ProActiveEcosystemDiagram,
+  // IncidentFlow, AssessmentReportSample) pushed the compiled stylesheet to
+  // ~278.4kB via their own Tailwind utility usage, not duplication — verified
+  // by diffing index.css directly, ~1KB of hand-written CSS, the rest is
+  // JIT-generated utilities from genuinely new components. Small headroom
+  // above current actual usage, not a blank check for future growth.
+  cssRawBytes: 290_000,
 };
 
 function fail(message) {

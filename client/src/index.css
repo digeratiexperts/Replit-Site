@@ -52,6 +52,14 @@ html.de-store-gesture-lock body {
   transform: translateZ(0);
   backface-visibility: hidden;
   will-change: scroll-position;
+  /* Arrow buttons are the visible affordance; swipe/trackpad still works,
+   * it just doesn't need a visible native scrollbar on top of it. */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.de-store-h-rail::-webkit-scrollbar {
+  display: none;
 }
 
 /*
