@@ -18,6 +18,7 @@
 #   User:        diger7051
 #   Code:        /home/digeratiexperts.com/current
 #   Service:     digeratiexperts-site (systemd — NOT PM2)
+#   Repository:  https://github.com/digeratiexperts/digeratiexperts-site.git
 #   Do NOT deploy from /root/Replit-Site
 #
 # Usage:
@@ -59,7 +60,7 @@ case "$TARGET" in
     ;;
 esac
 
-REPO_URL="${REPO_URL:-https://github.com/digeratiexperts/Replit-Site.git}"
+REPO_URL="${REPO_URL:-https://github.com/digeratiexperts/digeratiexperts-site.git}"
 DEPLOY_BRANCH="${DEPLOY_BRANCH:-main}"
 KEEP_RELEASES="${KEEP_RELEASES:-3}"
 NO_SYSTEMD="${NO_SYSTEMD:-0}"
@@ -76,6 +77,7 @@ log() { printf '[deploy %s] %s\n' "$(date +%H:%M:%S)" "$*"; }
 fail() { log "ERROR: $*"; exit 1; }
 
 # ---------------------------------------------------------------- preflight
+command -v git  >/dev/null || fail "git not found on PATH"
 command -v node >/dev/null || fail "node not found on PATH"
 command -v npm  >/dev/null || fail "npm not found on PATH"
 NODE_MAJOR="$(node -p 'process.versions.node.split(".")[0]')"
@@ -106,10 +108,27 @@ if [ ! -d "$MIRROR_DIR" ]; then
   log "Cloning $REPO_URL (bare mirror) into $MIRROR_DIR"
   git clone --mirror "$REPO_URL" "$MIRROR_DIR"
 else
-  log "Fetching latest $DEPLOY_BRANCH"
-  git --git-dir="$MIRROR_DIR" fetch --prune origin
+  git --git-dir="$MIRROR_DIR" rev-parse --is-bare-repository 2>/dev/null | grep -qx true \
+    || fail "$MIRROR_DIR exists but is not a valid bare Git repository"
+
+  CURRENT_ORIGIN="$(git --git-dir="$MIRROR_DIR" remote get-url origin 2>/dev/null || true)"
+  if [ "$CURRENT_ORIGIN" != "$REPO_URL" ]; then
+    log "Repairing mirror origin: ${CURRENT_ORIGIN:-<missing>} -> $REPO_URL"
+    if [ -n "$CURRENT_ORIGIN" ]; then
+      git --git-dir="$MIRROR_DIR" remote set-url origin "$REPO_URL"
+    else
+      git --git-dir="$MIRROR_DIR" remote add origin "$REPO_URL"
+    fi
+  fi
 fi
-COMMIT="$(git --git-dir="$MIRROR_DIR" rev-parse "$DEPLOY_BRANCH")"
+
+VERIFIED_ORIGIN="$(git --git-dir="$MIRROR_DIR" remote get-url origin 2>/dev/null || true)"
+[ "$VERIFIED_ORIGIN" = "$REPO_URL" ] \
+  || fail "mirror origin verification failed: expected $REPO_URL, got ${VERIFIED_ORIGIN:-<missing>}"
+
+log "Fetching latest $DEPLOY_BRANCH from $VERIFIED_ORIGIN"
+git --git-dir="$MIRROR_DIR" fetch --prune origin
+COMMIT="$(git --git-dir="$MIRROR_DIR" rev-parse "refs/heads/$DEPLOY_BRANCH")"
 log "Deploying $DEPLOY_BRANCH @ $COMMIT"
 
 # ---------------------------------------------------------------- build
