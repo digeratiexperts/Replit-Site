@@ -172,6 +172,7 @@ async function ingestOne(
   const knowledgeType = classifyHubKnowledgeType(document, group);
   const status = stringValue(document.status) || stringValue(document.state) || "";
   const slug = stringValue(document.slug);
+  const url = sourceUrl(document);
 
   const result = await storeKnowledgeDocument({
     id: stableDocumentId(clientId, group, externalId),
@@ -188,9 +189,11 @@ async function ingestOne(
     source: {
       kind: "document",
       label: group === "contract" ? "TechSales signed/client contract" : "TechSales client document library",
-      ...(sourceUrl(document) ? { url: sourceUrl(document) } : {}),
+      ...(url ? { url } : {}),
     },
-    sourceExternalId: externalId,
+    // Upstream identifiers are not guaranteed to be globally unique. Namespace
+    // them by the authoritative portal tenant before they become provenance IDs.
+    sourceExternalId: `${clientId}:${externalId}`,
     tags: ["techsales", group, ...(slug ? [slug] : [])],
     modes: ["general", "support", "security", "sales"],
     pageTypes: ["portal", "desk"],
