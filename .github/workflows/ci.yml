@@ -84,3 +84,28 @@ jobs:
           fi
 
           BASE_URL=http://127.0.0.1:3300 npm run smoke:public
+
+      # The VPS deployer may be a CyberPanel Git webhook or a cron poll of main.
+      # On a main push, prove the actual public runtime picked up this release.
+      - name: Verify DE Intelligence production rollout
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL="https://digeratiexperts.com/api/portal/zoho/chat/status"
+          BODY=""
+          for _ in $(seq 1 30); do
+            BODY="$(curl -fsS --max-time 10 "$URL" || true)"
+            if printf '%s' "$BODY" | grep -q '"version":"de-intelligence-v1"' \
+              && printf '%s' "$BODY" | grep -q '"enabled":true' \
+              && printf '%s' "$BODY" | grep -Eq '"publicGovernedRecords":[1-9][0-9]*'; then
+              echo "Production is serving DE Intelligence v1"
+              printf '%s\n' "$BODY"
+              exit 0
+            fi
+            sleep 20
+          done
+
+          echo "Production did not report DE Intelligence v1 after polling $URL"
+          printf '%s\n' "$BODY"
+          exit 1
