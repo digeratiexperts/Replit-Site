@@ -337,7 +337,21 @@ html.de-marketing-canvas body {
   min-height: 100%;
   background-color: var(--de-bg);
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04);
-  padding-bottom: calc(var(--de-unified-bar-h) + var(--de-sticky-cta-h) + var(--de-chrome-inset));
+  padding-bottom: calc(
+    var(--de-unified-bar-h) + var(--de-sticky-cta-h) + var(--de-cookie-h) + var(--de-chrome-inset)
+  );
+}
+
+/* Keep checkout/quote Pay Now above cookie + assessment + dock. */
+.de-checkout-summary {
+  position: sticky;
+  top: calc(var(--de-nav-current-bottom) + 0.75rem);
+  max-height: calc(
+    100dvh - var(--de-nav-current-bottom) - var(--de-cookie-h) - var(--de-sticky-cta-h) -
+      var(--de-unified-bar-h) - 2.5rem
+  );
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .de-fixed-in-canvas {

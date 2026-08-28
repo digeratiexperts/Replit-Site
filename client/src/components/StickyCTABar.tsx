@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Phone, Shield, X } from "lucide-react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,9 @@ import {
   isNearDocumentEnd,
   isPageFooterOnScreen,
   isPastStickyCtaThreshold,
+  isStickyCtaPinnedRoute,
   isStickyCtaRouteAllowed,
+  isTooShortToReachStickyThreshold,
   rectOverlapsPageContent,
   shouldShowStickyCta,
 } from "@/lib/stickyCtaVisibility";
@@ -27,6 +29,7 @@ function publishStickyCtaHeight(px: number) {
 export function StickyCTABar() {
   const [location] = useLocation();
   const light = isStorePath(location);
+  const reduceMotion = useReducedMotion() ?? false;
   const [dismissed, setDismissed] = useState(false);
   const [pastThreshold, setPastThreshold] = useState(false);
   const [scrolling, setScrolling] = useState(false);
@@ -40,6 +43,7 @@ export function StickyCTABar() {
   const lastHeight = useRef(0);
 
   const routeAllowed = isStickyCtaRouteAllowed(location);
+  const pinned = isStickyCtaPinnedRoute(location);
   const visible = shouldShowStickyCta({
     dismissed,
     routeAllowed,
@@ -47,6 +51,7 @@ export function StickyCTABar() {
     scrolling,
     overlapping,
     autoHidden,
+    pinned,
   });
 
   useEffect(() => {
@@ -91,16 +96,27 @@ export function StickyCTABar() {
       const overlayHits = rectOverlapsPageContent(rect, (x) =>
         document.elementsFromPoint(x, top + Math.min(20, height / 2)),
       );
-      const footerHits = Array.from(document.querySelectorAll("footer")).some((el) => {
-        if (el.closest("[role='dialog']") || el.closest(".de-desk-shell")) return false;
-        return isPageFooterOnScreen(el.getBoundingClientRect().top, window.innerHeight);
-      });
-      const endHits = isNearDocumentEnd(
-        window.scrollY,
+      const shortPage = isTooShortToReachStickyThreshold(
         window.innerHeight,
         document.documentElement.scrollHeight,
       );
-      setOverlapping(overlayHits || footerHits || endHits);
+      // Pinned checkout (and other short pages) always have the footer in view.
+      // Parking for that would make the Risk Assessment bar never appear.
+      const parkForFooter = !pinned && !shortPage;
+      const footerHits =
+        parkForFooter &&
+        Array.from(document.querySelectorAll("footer")).some((el) => {
+          if (el.closest("[role='dialog']") || el.closest(".de-desk-shell")) return false;
+          return isPageFooterOnScreen(el.getBoundingClientRect().top, window.innerHeight);
+        });
+      const endHits =
+        parkForFooter &&
+        isNearDocumentEnd(
+          window.scrollY,
+          window.innerHeight,
+          document.documentElement.scrollHeight,
+        );
+      setOverlapping(Boolean(overlayHits || footerHits || endHits));
     };
 
     const markScrolling = (on: boolean) => {
@@ -110,8 +126,16 @@ export function StickyCTABar() {
 
     const onScroll = () => {
       const scrollY = window.scrollY;
-      setPastThreshold(isPastStickyCtaThreshold(scrollY, window.innerHeight));
-      markScrolling(true);
+      const shortPage = isTooShortToReachStickyThreshold(
+        window.innerHeight,
+        document.documentElement.scrollHeight,
+      );
+      setPastThreshold(
+        pinned || shortPage || isPastStickyCtaThreshold(scrollY, window.innerHeight),
+      );
+      if (!pinned) {
+        markScrolling(true);
+      }
       if (Math.abs(scrollY - lastShowScroll.current) >= STICKY_CTA_RESHOW_DELTA_PX) {
         setAutoHidden(false);
       }
@@ -119,7 +143,7 @@ export function StickyCTABar() {
       idleTimer = window.setTimeout(() => {
         markScrolling(false);
         measureOverlap();
-      }, STICKY_CTA_SCROLL_IDLE_MS);
+      }, pinned ? 0 : STICKY_CTA_SCROLL_IDLE_MS);
     };
 
     const onScrollRaf = () => {
@@ -142,7 +166,7 @@ export function StickyCTABar() {
       window.removeEventListener("resize", measureOverlap);
       document.documentElement.dataset.stickyCtaScrolling = "false";
     };
-  }, [dismissed, routeAllowed]);
+  }, [dismissed, routeAllowed, pinned]);
 
   useEffect(() => {
     if (dismissed || !routeAllowed) {
@@ -164,12 +188,14 @@ export function StickyCTABar() {
     publish();
     const ro = new ResizeObserver(publish);
     ro.observe(el);
-    const hideTimer = window.setTimeout(() => setAutoHidden(true), STICKY_CTA_AUTO_HIDE_MS);
+    const hideTimer = pinned
+      ? undefined
+      : window.setTimeout(() => setAutoHidden(true), STICKY_CTA_AUTO_HIDE_MS);
     return () => {
       ro.disconnect();
-      window.clearTimeout(hideTimer);
+      if (hideTimer) window.clearTimeout(hideTimer);
     };
-  }, [visible, dismissed, routeAllowed]);
+  }, [visible, dismissed, routeAllowed, pinned]);
 
   const handleDismiss = () => {
     setDismissed(true);
@@ -184,10 +210,10 @@ export function StickyCTABar() {
       {visible && (
         <motion.div
           ref={barRef}
-          initial={{ y: 24, opacity: 0 }}
+          initial={reduceMotion ? false : { y: 24, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 16, opacity: 0 }}
-          transition={{ duration: 0.16, ease: "easeOut" }}
+          exit={reduceMotion ? { opacity: 0 } : { y: 16, opacity: 0 }}
+          transition={{ duration: reduceMotion ? 0 : 0.16, ease: "easeOut" }}
           className="de-bottom-bar"
           data-testid="sticky-cta-bar"
           data-sticky-cta-chrome="true"
@@ -204,8 +230,10 @@ export function StickyCTABar() {
             <button
               onClick={handleDismiss}
               className={cn(
-                "absolute right-2 top-2 z-10 rounded-full p-1.5 transition-colors",
-                light ? "hover:bg-black/5" : "hover:bg-white/10",
+                "absolute right-2 top-2 z-10 flex min-h-11 min-w-11 items-center justify-center rounded-full p-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2",
+                light
+                  ? "hover:bg-black/5 focus-visible:ring-offset-white"
+                  : "hover:bg-white/10 focus-visible:ring-offset-de-raised",
               )}
               aria-label="Close banner"
               data-testid="button-dismiss-sticky-cta"
@@ -214,7 +242,7 @@ export function StickyCTABar() {
             </button>
 
             <div className="px-4 py-3 pr-11">
-              <div className="flex flex-col items-center justify-between gap-3 lg:flex-row lg:gap-5">
+              <div className="flex flex-col items-center justify-between gap-3 sm:flex-row lg:gap-5">
                 <div className="flex min-w-0 items-center gap-3">
                   <div
                     className={cn(
@@ -235,7 +263,7 @@ export function StickyCTABar() {
                     </p>
                     <p
                       className={cn(
-                        "max-w-xl text-sm leading-snug md:text-base",
+                        "hidden max-w-xl text-sm leading-snug lg:block md:text-base",
                         light ? "text-slate-600" : "text-white/70",
                       )}
                     >
@@ -266,8 +294,10 @@ export function StickyCTABar() {
                   <a
                     href={PRIMARY_PHONE.telHref}
                     className={cn(
-                      "hidden items-center gap-2 text-base transition-colors md:flex",
-                      light ? "text-slate-600 hover:text-slate-900" : "text-white/75 hover:text-white",
+                      "hidden items-center gap-2 text-base transition-colors md:flex focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 rounded-sm",
+                      light
+                        ? "text-slate-600 hover:text-slate-900 focus-visible:ring-offset-white"
+                        : "text-white/75 hover:text-white focus-visible:ring-offset-de-raised",
                     )}
                     data-testid="link-phone-sticky"
                   >

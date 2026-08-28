@@ -61,7 +61,7 @@ export function SolutionOrderSummary({
 
   return (
     <div
-      className="sticky top-28 rounded-xl border border-white/10 bg-white/5 p-6"
+      className="de-checkout-summary rounded-xl border border-white/10 bg-white/5 p-6"
       data-testid={testId}
     >
       <h2 className="mb-6 flex items-center gap-2 text-xl font-semibold text-white">

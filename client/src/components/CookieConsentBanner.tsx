@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "wouter";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { saveConsent } from "@/lib/analytics";
 import { isStorePath } from "@/lib/storeChromeGestures";
 import { cn } from "@/lib/utils";
@@ -19,6 +19,7 @@ function hasStoredConsent(): boolean {
 export function CookieConsentBanner() {
   const [location] = useLocation();
   const light = isStorePath(location);
+  const reduceMotion = useReducedMotion() ?? false;
   const [visible, setVisible] = useState(false);
   const [showPreferences, setShowPreferences] = useState(false);
   const [analyticsEnabled, setAnalyticsEnabled] = useState(true);
@@ -90,9 +91,10 @@ export function CookieConsentBanner() {
           {showPreferences && !deskOpen && (
             <motion.div
               key="prefs-overlay"
-              initial={{ opacity: 0 }}
+              initial={reduceMotion ? false : { opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              transition={{ duration: reduceMotion ? 0 : 0.2 }}
               className="fixed inset-0 z-[9990] bg-black/60 backdrop-blur-sm"
               onClick={() => setShowPreferences(false)}
             />
@@ -101,10 +103,10 @@ export function CookieConsentBanner() {
           {showPreferences && !deskOpen && (
             <motion.div
               key="prefs-panel"
-              initial={{ opacity: 0, y: 40 }}
+              initial={reduceMotion ? false : { opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 40 }}
-              transition={{ duration: 0.3 }}
+              exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 40 }}
+              transition={{ duration: reduceMotion ? 0 : 0.3 }}
               className={cn(
                 "fixed bottom-[88px] left-4 right-4 z-[9995] rounded-2xl border p-6 shadow-2xl md:left-auto md:w-[420px]",
                 light
@@ -233,10 +235,10 @@ export function CookieConsentBanner() {
 
           <motion.div
             key="cookie-banner"
-            initial={{ y: "100%" }}
+            initial={reduceMotion ? false : { y: "100%" }}
             animate={{ y: 0 }}
-            exit={{ y: "100%" }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
+            exit={reduceMotion ? { opacity: 0 } : { y: "100%" }}
+            transition={{ duration: reduceMotion ? 0 : 0.4, ease: "easeOut" }}
             className={`fixed z-[9991] de-fixed-in-canvas bottom-0${
               deskOpen ? " invisible pointer-events-none" : ""
             }`}
@@ -263,10 +265,11 @@ export function CookieConsentBanner() {
                 />
               )}
 
-              <div className="relative z-10 mx-auto flex max-w-screen-2xl flex-col items-stretch gap-2 px-4 py-2.5 md:flex-row md:items-center md:gap-8 md:px-8 md:py-4">
+              <div className="relative z-10 mx-auto flex max-w-screen-2xl flex-col items-stretch gap-2 px-4 py-2.5 lg:flex-row lg:items-center lg:gap-8 lg:px-8 lg:py-4">
                 <p
                   className={cn(
-                    "hidden min-w-0 flex-1 text-base leading-relaxed md:block",
+                    "min-w-0 flex-1 text-base leading-relaxed",
+                    light ? "hidden" : "hidden lg:block",
                     light ? "text-slate-700" : "text-gray-200",
                   )}
                 >
@@ -285,7 +288,8 @@ export function CookieConsentBanner() {
                 </p>
                 <p
                   className={cn(
-                    "min-w-0 flex-1 text-sm font-medium leading-snug md:hidden",
+                    "min-w-0 flex-1 text-sm font-medium leading-snug",
+                    light ? "" : "lg:hidden",
                     light ? "text-slate-800" : "text-gray-200",
                   )}
                 >
@@ -318,8 +322,10 @@ export function CookieConsentBanner() {
                   <button
                     onClick={() => setShowPreferences(v => !v)}
                     className={cn(
-                      "hidden min-h-11 whitespace-nowrap px-1 text-base font-semibold underline underline-offset-2 transition-colors md:inline-flex",
-                      light ? "text-[#D3126A] hover:text-slate-900" : "text-[#D3126A] hover:text-white",
+                      "hidden min-h-11 whitespace-nowrap px-1 text-base font-semibold underline underline-offset-2 transition-colors md:inline-flex focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 rounded-sm",
+                      light
+                        ? "text-[#D3126A] hover:text-slate-900 focus-visible:ring-offset-white"
+                        : "text-[#D3126A] hover:text-white focus-visible:ring-offset-[#0a0a0a]",
                     )}
                     data-testid="button-manage-cookie-preferences"
                   >
@@ -330,10 +336,10 @@ export function CookieConsentBanner() {
                     <button
                       onClick={reject}
                       className={cn(
-                        "min-h-11 whitespace-nowrap rounded border px-5 py-2 text-base font-semibold transition-colors",
+                        "min-h-11 whitespace-nowrap rounded border px-5 py-2 text-base font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2",
                         light
-                          ? "border-slate-300 bg-white text-slate-800 hover:bg-slate-50"
-                          : "border-white/20 bg-[#0a0a1a] text-white hover:bg-white/10",
+                          ? "border-slate-300 bg-white text-slate-800 hover:bg-slate-50 focus-visible:ring-offset-white"
+                          : "border-white/20 bg-[#0a0a1a] text-white hover:bg-white/10 focus-visible:ring-offset-[#0a0a0a]",
                       )}
                       data-testid="button-reject-all-cookies"
                     >
@@ -343,10 +349,10 @@ export function CookieConsentBanner() {
                     <button
                       onClick={accept}
                       className={cn(
-                        "min-h-11 whitespace-nowrap rounded px-5 py-2 text-base font-semibold transition-colors",
+                        "min-h-11 whitespace-nowrap rounded px-5 py-2 text-base font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2",
                         light
-                          ? "bg-[#D3126A] text-white hover:bg-[#e01874]"
-                          : "border border-white/20 bg-[#0a0a1a] text-white hover:bg-white/10",
+                          ? "bg-[#D3126A] text-white hover:bg-[#e01874] focus-visible:ring-offset-white"
+                          : "border border-white/20 bg-[#0a0a1a] text-white hover:bg-white/10 focus-visible:ring-offset-[#0a0a0a]",
                       )}
                       data-testid="button-accept-all-cookies"
                     >
