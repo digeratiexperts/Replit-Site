@@ -93,6 +93,13 @@ function previewChatLine(content: string, max = 108) {
   return text.length > max ? `${text.slice(0, max - 1)}…` : text;
 }
 
+function formatDeskMessageTime(iso?: string): string {
+  if (!iso) return "";
+  const when = new Date(iso);
+  if (Number.isNaN(when.getTime())) return "";
+  return when.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+}
+
 function getDeskChipIcon(id: DeskTicketChipId) {
   const iconClass = "w-4 h-4 text-[#D3126A] shrink-0";
   switch (id) {
@@ -189,7 +196,9 @@ export const ZohoASAPWidget = ({
   const [advisorSessionId, setAdvisorSessionId] = useState<string | null>(null);
   const [pendingSeed, setPendingSeed] = useState<string | null>(null);
 
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([CHAT_WELCOME]);
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>(() => [
+    { ...CHAT_WELCOME, createdAt: new Date().toISOString() },
+  ]);
   const [chatInput, setChatInput] = useState("");
   const [isChatSending, setIsChatSending] = useState(false);
   const [assistantAvailable, setAssistantAvailable] = useState<boolean | null>(null);
@@ -645,6 +654,7 @@ export const ZohoASAPWidget = ({
           id: `assistant-error-${Date.now()}`,
           role: "assistant",
           content: `${description} You can create a support ticket here and the team will follow up.`,
+          createdAt: new Date().toISOString(),
         },
       ]);
       if (activeTabRef.current !== "chat") {
@@ -921,7 +931,7 @@ export const ZohoASAPWidget = ({
         {isOpen && (
           <section
             ref={deskDrag.panelRef}
-            className="de-desk-shell fixed inset-x-3 top-[max(0.75rem,env(safe-area-inset-top))] bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-[10040] flex max-h-[100dvh] w-auto flex-col overflow-hidden sm:inset-auto sm:h-[min(760px,calc(100dvh-5.5rem))] sm:max-h-[min(86vh,calc(100dvh-4.5rem))] sm:w-[410px] sm:max-w-[calc(100vw-2rem)]"
+            className="de-desk-shell fixed inset-x-3 top-[max(0.75rem,env(safe-area-inset-top))] bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-[10040] flex max-h-[100dvh] w-auto flex-col overflow-hidden sm:inset-auto sm:h-[min(760px,calc(100dvh-5.5rem))] sm:max-h-[min(86vh,calc(100dvh-4.5rem))] sm:w-[440px] sm:max-w-[calc(100vw-2rem)]"
             style={deskWindowStyle}
             role="dialog"
             aria-modal="true"
@@ -1112,6 +1122,14 @@ export const ZohoASAPWidget = ({
                             >
                               <p className="whitespace-pre-wrap">{chatMessage.content}</p>
                             </div>
+                            {chatMessage.createdAt && formatDeskMessageTime(chatMessage.createdAt) ? (
+                              <time
+                                className="de-desk-msg-time"
+                                dateTime={chatMessage.createdAt}
+                              >
+                                {formatDeskMessageTime(chatMessage.createdAt)}
+                              </time>
+                            ) : null}
                             {chatMessage.supportChips?.length ? (
                               <div className="de-desk-chips" role="group" aria-label="Open a support ticket">
                                 {chatMessage.supportChips.map((chipId) => {
@@ -1783,11 +1801,11 @@ export const ZohoASAPWidget = ({
             .de-desk-id h2 {
               font-family: "Space Grotesk", sans-serif;
               font-weight: 600;
-              font-size: 16px;
+              font-size: 17px;
               color: var(--desk-shell-text);
               line-height: 1.2;
             }
-            .de-desk-id p { font-size: 13px; color: var(--desk-shell-muted); margin-top: 1px; }
+            .de-desk-id p { font-size: 14px; color: var(--desk-shell-muted); margin-top: 1px; }
             .de-desk-close {
               width: 44px; height: 44px; border-radius: 9px;
               border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
@@ -1818,7 +1836,7 @@ export const ZohoASAPWidget = ({
               padding: 8px 4px 10px;
               border-radius: 0;
               font-family: "Space Grotesk", sans-serif;
-              font-weight: 600; font-size: 13.5px;
+              font-weight: 600; font-size: 14.5px;
               color: rgba(255,255,255,0.62);
               display: flex; align-items: center; justify-content: center; gap: 6px;
               position: relative;
@@ -1909,15 +1927,15 @@ export const ZohoASAPWidget = ({
               font-size: 10px; font-weight: 700; letter-spacing: 0.02em; flex: none;
             }
             .de-desk-msg-col { min-width: 0; flex: 1; }
-            .de-desk-msg.is-user .de-desk-msg-col { flex: 0 1 auto; max-width: min(86%, 280px); }
+            .de-desk-msg.is-user .de-desk-msg-col { flex: 0 1 auto; max-width: min(86%, 310px); }
             .de-desk-msg-who {
               display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px;
             }
             .de-desk-msg-who strong {
               font-family: "Space Grotesk", sans-serif;
-              font-size: 13.5px; font-weight: 650; color: #fff;
+              font-size: 14.5px; font-weight: 650; color: #fff;
             }
-            .de-desk-msg-who em { font-style: normal; font-size: 12px; font-weight: 600; color: #4ade80; }
+            .de-desk-msg-who em { font-style: normal; font-size: 13px; font-weight: 600; color: #4ade80; }
             .de-desk-scroll::-webkit-scrollbar {
               width: 6px;
             }
@@ -2274,7 +2292,7 @@ export const ZohoASAPWidget = ({
             .de-desk-bubble {
               max-width: 100%;
               padding: 10px 13px;
-              font-size: 14px; line-height: 1.5;
+              font-size: 15px; line-height: 1.5;
               border-radius: 12px;
             }
             .de-desk-bubble.is-user {
@@ -2285,6 +2303,19 @@ export const ZohoASAPWidget = ({
               background: var(--de-raised, #151217); color: #fff;
               border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
               border-bottom-left-radius: 5px;
+            }
+            .de-desk-msg-time {
+              display: block;
+              margin-top: 5px;
+              font-size: 11px;
+              font-weight: 500;
+              letter-spacing: 0.02em;
+              color: rgba(255,255,255,0.38);
+              font-variant-numeric: tabular-nums;
+            }
+            .de-desk-msg.is-user .de-desk-msg-time { text-align: right; }
+            @media (prefers-reduced-motion: reduce) {
+              .de-desk-msg-time { transition: none; }
             }
             .de-desk-discover {
               margin: 12px 0 2px;
@@ -2297,7 +2328,7 @@ export const ZohoASAPWidget = ({
             .de-desk-discover-intro h3 {
               margin: 0;
               font-family: "Space Grotesk", sans-serif;
-              font-size: 16px;
+              font-size: 17px;
               font-weight: 700;
               line-height: 1.25;
               letter-spacing: -0.015em;
@@ -2306,7 +2337,7 @@ export const ZohoASAPWidget = ({
             .de-desk-discover-intro p {
               margin: 4px 0 0;
               color: rgba(255,255,255,0.68);
-              font-size: 13.5px;
+              font-size: 14.5px;
               line-height: 1.45;
             }
             .de-desk-discover-list {
@@ -2330,7 +2361,7 @@ export const ZohoASAPWidget = ({
               border-bottom: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
               color: #fff;
               font-family: "Space Grotesk", sans-serif;
-              font-size: 14px;
+              font-size: 15px;
               font-weight: 650;
               line-height: 1.3;
               text-align: left;
@@ -2388,7 +2419,7 @@ export const ZohoASAPWidget = ({
               background: transparent;
               color: #fff;
               font-family: "Space Grotesk", sans-serif;
-              font-size: 13.5px; font-weight: 650;
+              font-size: 14.5px; font-weight: 650;
               text-align: left;
               transition: background 0.15s ease;
             }
@@ -2516,7 +2547,7 @@ export const ZohoASAPWidget = ({
               border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
               border-radius: 10px;
               padding: 10px 14px;
-              color: #fff; font-size: 14.5px;
+              color: #fff; font-size: 15.5px;
             }
             .de-desk-shell input:-webkit-autofill,
             .de-desk-shell textarea:-webkit-autofill {
@@ -2547,7 +2578,7 @@ export const ZohoASAPWidget = ({
               margin: 0;
               padding: 0 16px 10px;
               background: transparent;
-              font-size: 12px; color: rgba(255,255,255,0.46);
+              font-size: 13px; color: rgba(255,255,255,0.46);
               flex-shrink: 0;
             }
             .de-desk-composer-caption svg { width: 11px; height: 11px; color: rgba(255,255,255,0.46); }
@@ -2577,7 +2608,7 @@ export const ZohoASAPWidget = ({
             .de-desk-tools-intro h3 {
               margin: 0;
               font-family: "Space Grotesk", sans-serif;
-              font-size: 17px;
+              font-size: 18px;
               font-weight: 700;
               line-height: 1.25;
               letter-spacing: -0.015em;
@@ -2586,14 +2617,14 @@ export const ZohoASAPWidget = ({
             .de-desk-tools-intro p {
               margin: 4px 0 0;
               color: rgba(255,255,255,0.68);
-              font-size: 13.5px;
+              font-size: 14.5px;
               line-height: 1.45;
             }
             .de-desk-tools-kicker {
               margin: 10px 0 6px !important;
               color: #fff !important;
               font-family: "Space Grotesk", sans-serif;
-              font-size: 15px !important;
+              font-size: 16px !important;
               font-weight: 650;
               line-height: 1.35 !important;
             }
@@ -2634,7 +2665,7 @@ export const ZohoASAPWidget = ({
             .de-desk-launch-heading {
               margin: 0 0 8px;
               color: rgba(255,255,255,0.52);
-              font-size: 11px;
+              font-size: 12px;
               font-weight: 700;
               letter-spacing: 0.08em;
               text-transform: uppercase;
@@ -2669,7 +2700,7 @@ export const ZohoASAPWidget = ({
             .de-desk-launch-icon svg { width: 14px; height: 14px; }
             .de-desk-launch-title {
               flex: 1; min-width: 0;
-              font-size: 13.5px; font-weight: 650;
+              font-size: 14.5px; font-weight: 650;
             }
             .de-desk-tools-list {
               --desk-ink: #17141f;
@@ -2768,7 +2799,7 @@ export const ZohoASAPWidget = ({
             .de-desk-tool-title {
               color: var(--desk-ink);
               font-family: "Space Grotesk", sans-serif;
-              font-size: 14.5px;
+              font-size: 15.5px;
               font-weight: 650;
               line-height: 1.3;
             }
@@ -2776,7 +2807,7 @@ export const ZohoASAPWidget = ({
               display: block;
               margin-top: 2px;
               color: var(--desk-ink-muted);
-              font-size: 12.75px;
+              font-size: 13.75px;
               line-height: 1.4;
             }
             .de-desk-tool-badge {
@@ -2980,7 +3011,7 @@ export const ZohoASAPWidget = ({
             @media (max-width: 420px) {
               .de-desk-grid2 { grid-template-columns: 1fr; }
               .de-desk-hero-art { display: none; }
-              .de-desk-tab { font-size: 12.5px; gap: 4px; padding: 8px 2px 10px; }
+              .de-desk-tab { font-size: 13.5px; gap: 4px; padding: 8px 2px 10px; }
               .de-desk-tab svg { width: 13px; height: 13px; }
               .de-desk-hero h3 { font-size: 17px; }
             }

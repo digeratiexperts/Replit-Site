@@ -79,6 +79,29 @@ describe("DE Desk shell positioning", () => {
     expect(src).toMatch(/support-submit-error/);
   });
 
+  it("opens a tad wider with one-step larger type on chrome, Client Tools, and Ask DE", () => {
+    expect(src).toMatch(/sm:w-\[440px\]/);
+    expect(src).not.toMatch(/sm:w-\[410px\]/);
+    expect(src).toMatch(/\.de-desk-id h2 \{[\s\S]*?font-size: 17px;/);
+    expect(src).toMatch(/\.de-desk-id p \{ font-size: 14px;/);
+    expect(src).toMatch(/\.de-desk-tab \{[\s\S]*?font-size: 14\.5px;/);
+    expect(src).toMatch(/\.de-desk-tools-intro h3 \{[\s\S]*?font-size: 18px;/);
+    expect(src).toMatch(/\.de-desk-tools-kicker \{[\s\S]*?font-size: 16px !important;/);
+    expect(src).toMatch(/\.de-desk-tools-intro p \{[\s\S]*?font-size: 14\.5px;/);
+    expect(src).toMatch(/\.de-desk-bubble \{[\s\S]*?font-size: 15px;/);
+    expect(src).toMatch(/\.de-desk-composer input \{[\s\S]*?font-size: 15\.5px;/);
+    expect(src).toMatch(/\.de-desk-composer-caption \{[\s\S]*?font-size: 13px;/);
+    expect(src).toMatch(/\.de-desk-tool-title \{[\s\S]*?font-size: 15\.5px;/);
+  });
+
+  it("stamps Ask DE messages with a real local time, not fake SOC chrome", () => {
+    expect(src).toMatch(/function formatDeskMessageTime/);
+    expect(src).toMatch(/className="de-desk-msg-time"/);
+    expect(src).toMatch(/dateTime=\{chatMessage\.createdAt\}/);
+    expect(src).toMatch(/toLocaleTimeString\(undefined, \{ hour: "numeric", minute: "2-digit" \}\)/);
+    expect(src).not.toMatch(/AZ SOC Live/);
+  });
+
   it("styles Ask DE discovery and Get Support issues as graphite grouped stacks", () => {
     expect(src).toMatch(/de-desk-discover/);
     expect(src).toMatch(/de-desk-discover-list/);

@@ -153,13 +153,30 @@ export function extractContactNameFromText(message: string): string | undefined 
 }
 
 const INFORMAL_COMPANY =
-  /^(your\s+(mom|mama|mother)|yo\s+mama|none|n\/a|n\.a\.|na|idk|skip|pass|nope|no|private|asdf+|test(ing)?|foo|bar|baz|-|\.|walk-?in|personal|myself|me|n\/a)$/i;
+  /^(your\s+(mom|mama|mother)|yo\s+mama|yours\s+truly|none|n\/a|n\.a\.|na|idk|skip|pass|nope|no|private|asdf+|test(ing)?|foo|bar|baz|-|\.|walk-?in|personal|myself|me|n\/a)$/i;
+
+const DE_INTERNAL_COMPANY =
+  /^(yours|your(s| company)?|you( guys| all)?|us|we|ours|our company|here|this( company| one| place| firm)?|the company|de( staff| employee)?|d\.e\.( staff| employee)?|digerati( experts)?( staff| employee)?|internal|staff|employee)$/i;
+
+const DE_INTERNAL_PHRASE =
+  /\b(i work (here|for (you|us|de|digerati( experts)?))|i(?:['’]?m| am) (with|at) (de|you|digerati)|i(?:['’]?m| am) (an? )?(de staff|de employee)|we(?:['’]?re| are) (de|digerati|you|yours|here))\b/i;
+
+/** Visitor is pointing at Digerati Experts / this desk — not a literal outside company name. */
+export function isDeInternalCompanyAnswer(name: string | undefined | null): boolean {
+  if (!name) return false;
+  const text = name.replace(/\s+/g, " ").trim();
+  if (!text) return false;
+  if (DE_INTERNAL_COMPANY.test(text)) return true;
+  if (DE_INTERNAL_PHRASE.test(text)) return true;
+  return false;
+}
 
 /** Joke, declined, or nonsense company — accept as a walk-in, do not stall. */
 export function isInformalCompanyName(name: string | undefined | null): boolean {
   if (!name) return false;
   const text = name.replace(/\s+/g, " ").trim();
   if (!text) return false;
+  if (isDeInternalCompanyAnswer(text)) return false;
   if (INFORMAL_COMPANY.test(text)) return true;
   if (/\byour\s+(mom|mama|mother)\b/i.test(text)) return true;
   if (/\b(rather not|prefer not|none of your|mind your own)\b/i.test(text)) return true;
@@ -246,6 +263,12 @@ export function mergeProfile(
     next.employeeCount = current.employeeCount;
   }
 
+  if (isDeInternalCompanyAnswer(next.companyName)) {
+    next.companyName = "Digerati Experts";
+    next.deInternal = true;
+    next.companyInformal = false;
+  }
+
   next.qualificationConfidence = scoreQualification(next);
   return next;
 }
@@ -269,6 +292,11 @@ export function scoreQualification(profile: ConversationProfile): number {
 export function knownFactsList(profile: ConversationProfile): string[] {
   const facts: string[] = [];
   if (profile.companyName) facts.push(`companyName=${profile.companyName}`);
+  if (profile.deInternal) {
+    facts.push(
+      "deInternal=true (visitor indicated they work at Digerati Experts — staff/internal, not a client, not an outside company named yours/us/DE/here)",
+    );
+  }
   if (profile.companyInformal) facts.push("companyInformal=true (walk-in — do not moralize or dump a sales pitch)");
   if (profile.contactName) facts.push(`contactName=${profile.contactName}`);
   if (profile.email) facts.push(`email=${profile.email}`);

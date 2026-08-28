@@ -17,6 +17,7 @@ import {
   extractCompanyNameFromText,
   isSubstantiveAdvisorQuestion,
   isInformalCompanyName,
+  isDeInternalCompanyAnswer,
 } from "./profile";
 import { buildSystemPrompt, INTERNAL_REFUSAL, BANNED_CANNED_OPENER } from "./prompt";
 import { sanitizeActions, assertNoInternalLeak, defaultActionsForMode } from "./actions";
@@ -75,8 +76,15 @@ function parseModelJson(raw: string): ModelAdvisorOutput | null {
 }
 
 function applyCompanyGuess(profile: ConversationProfile, raw: string): ConversationProfile {
+  if (isDeInternalCompanyAnswer(raw)) {
+    return mergeProfile(profile, {
+      companyName: "Digerati Experts",
+      deInternal: true,
+      companyInformal: false,
+    });
+  }
   if (isInformalCompanyName(raw)) {
-    return mergeProfile(profile, { companyName: "Walk-in", companyInformal: true });
+    return mergeProfile(profile, { companyName: "Walk-in", companyInformal: true, deInternal: false });
   }
   return mergeProfile(profile, { companyName: raw, companyInformal: false });
 }
@@ -113,6 +121,18 @@ function identityCompanyPrompt(contactName?: string): string {
     : "What company are you with?";
 }
 
+function identityReadyPrompt(profile: ConversationProfile): string {
+  const first = (profile.contactName || "").split(" ")[0];
+  if (profile.deInternal) {
+    return first
+      ? `${first}, you're with DE — I won't treat that as an outside company. What's on the desk?`
+      : "You're with DE — I won't treat that as an outside company. What's on the desk?";
+  }
+  return first
+    ? `Got it, ${first}. What should we look at?`
+    : "Got it. What should we look at?";
+}
+
 export async function handleAdvisorChat(req: AdvisorChatRequest): Promise<AdvisorChatResponse> {
   const userTurn = (req.message || "").trim().slice(0, 4000);
   if (!userTurn) {
@@ -123,6 +143,8 @@ export async function handleAdvisorChat(req: AdvisorChatRequest): Promise<Adviso
   const session = getOrCreateSession(req.sessionId, req.pageContext);
   const page = req.pageContext || session.pageContext;
   const priorName = session.profile.contactName;
+  const priorCompany = session.profile.companyName;
+  const priorDeInternal = session.profile.deInternal;
 
   // Merge heuristic extraction before model so known facts are available
   let profile = mergeProfile(session.profile, extractProfileFromText(message));
@@ -233,18 +255,47 @@ export async function handleAdvisorChat(req: AdvisorChatRequest): Promise<Adviso
   }
 
   let justCollectedInformalCompany = false;
+  let justCollectedDeInternal = Boolean(!priorDeInternal && profile.deInternal);
   if (!skipIdentity && !profile.companyName) {
     const collectedNameThisTurn = Boolean(!priorName && profile.contactName);
     const companyGuess = extractCompanyNameFromText(message, { allowBare: !collectedNameThisTurn });
     if (companyGuess && companyGuess.toLowerCase() !== (profile.contactName || "").toLowerCase()) {
       justCollectedInformalCompany = isInformalCompanyName(companyGuess);
+      justCollectedDeInternal = isDeInternalCompanyAnswer(companyGuess);
       profile = applyCompanyGuess(profile, companyGuess);
       updateProfile(session, profile);
     }
   }
 
+  const justCollectedCompany = Boolean(!priorCompany && profile.companyName);
+
   if (!skipIdentity && !profile.companyName) {
     const reply = identityCompanyPrompt(profile.contactName);
+    appendMessage(session, "user", message);
+    appendMessage(session, "assistant", reply);
+    session.lastAssistantReply = reply;
+    session.lastMode = mode === "off_topic" ? "msp_discovery" : mode;
+    const persisted = await persistTurn(session.id, message, reply, profile, page?.pathname);
+    return {
+      sessionId: session.id,
+      reply,
+      mode: session.lastMode,
+      profile,
+      actions: [],
+      analyticsEvents: ["conversation_started"],
+      knownFacts: knownFactsList(profile),
+      ...persisted,
+    };
+  }
+
+  // Identity just finished and they have not asked anything yet — greet locally.
+  // Skip the model so "Joe" / "yours" does not wait on a heavy prompt.
+  if (
+    justCollectedCompany &&
+    !session.heldUserMessage &&
+    !isSubstantiveAdvisorQuestion(userTurn)
+  ) {
+    const reply = identityReadyPrompt(profile);
     appendMessage(session, "user", message);
     appendMessage(session, "assistant", reply);
     session.lastAssistantReply = reply;
@@ -306,6 +357,9 @@ export async function handleAdvisorChat(req: AdvisorChatRequest): Promise<Adviso
     profile.companyInformal
       ? "Company was given informally — treat as a walk-in. Do not moralize or dump a sales pitch."
       : "",
+    profile.deInternal
+      ? "Visitor indicated they work at Digerati Experts. Acknowledge as staff/internal. Do not treat them as a client. Do not invent portal features. Never echo throwaway company words like yours, us, here, or DE as an outside company name."
+      : "",
     `Latest message: ${userTurn}`,
   ]
     .filter(Boolean)
@@ -324,11 +378,15 @@ export async function handleAdvisorChat(req: AdvisorChatRequest): Promise<Adviso
   };
 
   let modelOut: ModelAdvisorOutput | null = null;
-  try {
-    const raw = await callModel(system, history, modelUserTurn);
-    if (raw) modelOut = parseModelJson(raw);
-  } catch (err) {
-    console.error("[msp-advisor] model call failed:", err);
+  // Staff-affiliation turns stay local/heuristic so we do not wait on the model
+  // just to echo a garbled company name.
+  if (!justCollectedDeInternal) {
+    try {
+      const raw = await callModel(system, history, modelUserTurn);
+      if (raw) modelOut = parseModelJson(raw);
+    } catch (err) {
+      console.error("[msp-advisor] model call failed:", err);
+    }
   }
 
   if (!modelOut?.reply) {
