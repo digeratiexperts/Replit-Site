@@ -18,7 +18,22 @@
 | Service | `digeratiexperts-site` (systemd) |
 | Private port | `127.0.0.1:3300` (OLS proxies HTTPS here) |
 
-### Deploy an update
+### Automatic deploy (required)
+
+GitHub Actions deploys `main` through a **self-hosted runner on de-vps**.
+If that runner is offline, Phase 2 and every later `main` commit stay off
+production even when hosted CI is green.
+
+```bash
+# On 192.227.158.46 as root, once (token from GitHub → Settings → Runners)
+RUNNER_TOKEN=... bash deploy/vps/install-actions-runner.sh
+systemctl enable --now actions-runner-digeratiexperts-site.service
+```
+
+Do not cancel in-flight `main` deploys by stacking more pushes. Hosted CI
+cancels overlapping pull requests only.
+
+### Manual deploy (same script the runner runs)
 
 ```bash
 sudo -u diger7051 bash -lc \

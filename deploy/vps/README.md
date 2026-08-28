@@ -85,9 +85,18 @@ The script:
 8. On any restart/inactive/health failure: rolls back the symlink, restarts,
    and **exits non-zero** (failed deployment — never treated as optional)
 
-Automatic deploys: either a cron entry polling `main`, or CyberPanel's Git
-Manager webhook calling the script. Choose ONE mechanism — if this script
-is the deployer, disable any competing timer/webhook.
+Automatic deploys: GitHub Actions job **Deploy and verify production VPS**
+on `main`, using a self-hosted runner **on this VPS**. Labels required:
+`self-hosted`, `Linux`, `X64`. Install or repair it with
+`deploy/vps/install-actions-runner.sh` and keep
+`actions-runner-digeratiexperts-site.service` enabled.
+
+Do **not** rely on cron or CyberPanel Git Manager for production rollout.
+If the runner is offline, `main` CI stays green and production stays stale.
+
+If a deploy job is already queued, starting the runner is enough — do not
+push another commit just to retry. `workflow_dispatch` on the CI workflow
+can also re-run check + deploy after the runner is online.
 
 ## One-time setup (staging)
 
