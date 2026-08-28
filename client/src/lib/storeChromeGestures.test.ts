@@ -8,6 +8,7 @@ import {
 
 describe("store chrome gestures", () => {
   it("locks only store routes", () => {
+    expect(isStorePath("/store/checkout")).toBe(true);
     expect(isStorePath("/store")).toBe(true);
     expect(isStorePath("/store/managed")).toBe(true);
     expect(isStorePath("/store/product/de-proactive-office")).toBe(true);

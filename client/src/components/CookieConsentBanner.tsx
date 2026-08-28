@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { AnimatePresence, motion } from "framer-motion";
 import { saveConsent } from "@/lib/analytics";
+import { isStorePath } from "@/lib/storeChromeGestures";
+import { cn } from "@/lib/utils";
 
 const LEGACY_KEY = "de_cookie_consent";
 const CONSENT_KEY = "de_cookie_consent_v2";
@@ -15,6 +17,8 @@ function hasStoredConsent(): boolean {
 }
 
 export function CookieConsentBanner() {
+  const [location] = useLocation();
+  const light = isStorePath(location);
   const [visible, setVisible] = useState(false);
   const [showPreferences, setShowPreferences] = useState(false);
   const [analyticsEnabled, setAnalyticsEnabled] = useState(true);
@@ -101,68 +105,124 @@ export function CookieConsentBanner() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 40 }}
               transition={{ duration: 0.3 }}
-              className="fixed bottom-[88px] left-4 right-4 md:left-auto z-[9995] rounded-2xl border border-de-hairline bg-de-raised shadow-2xl shadow-black/50 p-6 md:w-[420px]"
+              className={cn(
+                "fixed bottom-[88px] left-4 right-4 z-[9995] rounded-2xl border p-6 shadow-2xl md:left-auto md:w-[420px]",
+                light
+                  ? "border-black/10 bg-white shadow-black/20"
+                  : "border-de-hairline bg-de-raised shadow-black/50",
+              )}
               style={{ right: "calc(var(--de-canvas-gutter) + 1.5rem)" }}
               data-testid="cookie-preferences-panel"
+              data-surface={light ? "light" : "dark"}
             >
-              <h3 className="text-white font-semibold text-lg mb-1 font-['Space_Grotesk']">Cookie Preferences</h3>
-              <p className="text-gray-300 text-base mb-5 leading-relaxed">
+              <h3
+                className={cn(
+                  "mb-1 font-['Space_Grotesk'] text-lg font-semibold",
+                  light ? "text-slate-900" : "text-white",
+                )}
+              >
+                Cookie Preferences
+              </h3>
+              <p className={cn("mb-5 text-base leading-relaxed", light ? "text-slate-600" : "text-gray-300")}>
                 Choose which cookies you allow. Strictly necessary cookies are always enabled.
               </p>
 
               <div className="space-y-4">
-                <div className="flex items-start justify-between gap-4 p-3 rounded-xl bg-white/5 border border-white/10">
+                <div
+                  className={cn(
+                    "flex items-start justify-between gap-4 rounded-xl border p-3",
+                    light ? "border-black/10 bg-slate-50" : "border-white/10 bg-white/5",
+                  )}
+                >
                   <div>
-                    <p className="text-white text-base font-medium">Strictly Necessary</p>
-                    <p className="text-gray-400 text-base mt-0.5">Required for the site to function.</p>
+                    <p className={cn("text-base font-medium", light ? "text-slate-900" : "text-white")}>
+                      Strictly Necessary
+                    </p>
+                    <p className={cn("mt-0.5 text-base", light ? "text-slate-500" : "text-gray-400")}>
+                      Required for the site to function.
+                    </p>
                   </div>
-                  <span className="text-emerald-400 text-base font-semibold mt-1 whitespace-nowrap">Always On</span>
+                  <span
+                    className={cn(
+                      "mt-1 whitespace-nowrap text-base font-semibold",
+                      light ? "text-emerald-700" : "text-emerald-400",
+                    )}
+                  >
+                    Always On
+                  </span>
                 </div>
 
-                <label className="flex items-start justify-between gap-4 p-3 rounded-xl bg-white/5 border border-white/10 cursor-pointer">
+                <label
+                  className={cn(
+                    "flex cursor-pointer items-start justify-between gap-4 rounded-xl border p-3",
+                    light ? "border-black/10 bg-slate-50" : "border-white/10 bg-white/5",
+                  )}
+                >
                   <div>
-                    <p className="text-white text-base font-medium">Analytics Cookies</p>
-                    <p className="text-gray-400 text-base mt-0.5">Help us understand how visitors interact with the site.</p>
+                    <p className={cn("text-base font-medium", light ? "text-slate-900" : "text-white")}>
+                      Analytics Cookies
+                    </p>
+                    <p className={cn("mt-0.5 text-base", light ? "text-slate-500" : "text-gray-400")}>
+                      Help us understand how visitors interact with the site.
+                    </p>
                   </div>
                   <div
                     role="switch"
                     aria-checked={analyticsEnabled}
                     onClick={() => setAnalyticsEnabled(v => !v)}
-                    className={`relative mt-1 w-10 h-5 rounded-full flex-shrink-0 cursor-pointer transition-colors ${analyticsEnabled ? "bg-[#D3126A]" : "bg-white/20"}`}
+                    className={`relative mt-1 h-5 w-10 flex-shrink-0 cursor-pointer rounded-full transition-colors ${
+                      analyticsEnabled ? "bg-[#D3126A]" : light ? "bg-slate-300" : "bg-white/20"
+                    }`}
                     data-testid="toggle-analytics"
                   >
-                    <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-transform ${analyticsEnabled ? "translate-x-5" : "translate-x-0"}`} />
+                    <span className={`absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white transition-transform ${analyticsEnabled ? "translate-x-5" : "translate-x-0"}`} />
                   </div>
                 </label>
 
-                <label className="flex items-start justify-between gap-4 p-3 rounded-xl bg-white/5 border border-white/10 cursor-pointer">
+                <label
+                  className={cn(
+                    "flex cursor-pointer items-start justify-between gap-4 rounded-xl border p-3",
+                    light ? "border-black/10 bg-slate-50" : "border-white/10 bg-white/5",
+                  )}
+                >
                   <div>
-                    <p className="text-white text-base font-medium">Marketing Cookies</p>
-                    <p className="text-gray-400 text-base mt-0.5">Used to deliver relevant ads and track campaign effectiveness.</p>
+                    <p className={cn("text-base font-medium", light ? "text-slate-900" : "text-white")}>
+                      Marketing Cookies
+                    </p>
+                    <p className={cn("mt-0.5 text-base", light ? "text-slate-500" : "text-gray-400")}>
+                      Used to deliver relevant ads and track campaign effectiveness.
+                    </p>
                   </div>
                   <div
                     role="switch"
                     aria-checked={marketingEnabled}
                     onClick={() => setMarketingEnabled(v => !v)}
-                    className={`relative mt-1 w-10 h-5 rounded-full flex-shrink-0 cursor-pointer transition-colors ${marketingEnabled ? "bg-[#D3126A]" : "bg-white/20"}`}
+                    className={`relative mt-1 h-5 w-10 flex-shrink-0 cursor-pointer rounded-full transition-colors ${
+                      marketingEnabled ? "bg-[#D3126A]" : light ? "bg-slate-300" : "bg-white/20"
+                    }`}
                     data-testid="toggle-marketing"
                   >
-                    <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-transform ${marketingEnabled ? "translate-x-5" : "translate-x-0"}`} />
+                    <span className={`absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white transition-transform ${marketingEnabled ? "translate-x-5" : "translate-x-0"}`} />
                   </div>
                 </label>
               </div>
 
-              <div className="flex gap-3 mt-5">
+              <div className="mt-5 flex gap-3">
                 <button
                   onClick={savePreferences}
-                  className="flex-1 min-h-11 bg-[#D3126A] hover:bg-[#e01874] text-white text-base font-semibold py-2.5 rounded-xl transition-colors"
+                  className="min-h-11 flex-1 rounded-xl bg-[#D3126A] py-2.5 text-base font-semibold text-white transition-colors hover:bg-[#e01874]"
                   data-testid="button-save-preferences"
                 >
                   Save Preferences
                 </button>
                 <button
                   onClick={() => setShowPreferences(false)}
-                  className="min-h-11 px-4 bg-white/10 hover:bg-white/20 text-white text-base font-semibold py-2.5 rounded-xl transition-colors"
+                  className={cn(
+                    "min-h-11 rounded-xl px-4 py-2.5 text-base font-semibold transition-colors",
+                    light
+                      ? "bg-slate-100 text-slate-800 hover:bg-slate-200"
+                      : "bg-white/10 text-white hover:bg-white/20",
+                  )}
                   data-testid="button-cancel-preferences"
                 >
                   Cancel
@@ -181,41 +241,61 @@ export function CookieConsentBanner() {
               deskOpen ? " invisible pointer-events-none" : ""
             }`}
             data-testid="cookie-consent-banner"
+            data-surface={light ? "light" : "dark"}
             aria-hidden={deskOpen || undefined}
           >
             <div
               ref={bannerRef}
               className="relative overflow-hidden"
-              style={{
-                background: "#0a0a0a",
-                borderTop: "1px solid rgba(255,255,255,0.1)",
-              }}
+              style={
+                light
+                  ? { background: "#ffffff", borderTop: "1px solid rgba(15, 23, 42, 0.12)" }
+                  : { background: "#0a0a0a", borderTop: "1px solid rgba(255,255,255,0.1)" }
+              }
             >
-              <div
-                className="absolute inset-0 pointer-events-none opacity-[0.04]"
-                style={{
-                  backgroundImage: `linear-gradient(rgba(255,255,255,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.15) 1px, transparent 1px)`,
-                  backgroundSize: "32px 32px",
-                }}
-              />
+              {!light && (
+                <div
+                  className="pointer-events-none absolute inset-0 opacity-[0.04]"
+                  style={{
+                    backgroundImage: `linear-gradient(rgba(255,255,255,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.15) 1px, transparent 1px)`,
+                    backgroundSize: "32px 32px",
+                  }}
+                />
+              )}
 
-              <div className="relative z-10 max-w-screen-2xl mx-auto px-4 md:px-8 py-2.5 md:py-4 flex flex-col md:flex-row items-stretch md:items-center gap-2 md:gap-8">
-                <p className="hidden md:block text-gray-200 text-base leading-relaxed flex-1 min-w-0">
+              <div className="relative z-10 mx-auto flex max-w-screen-2xl flex-col items-stretch gap-2 px-4 py-2.5 md:flex-row md:items-center md:gap-8 md:px-8 md:py-4">
+                <p
+                  className={cn(
+                    "hidden min-w-0 flex-1 text-base leading-relaxed md:block",
+                    light ? "text-slate-700" : "text-gray-200",
+                  )}
+                >
                   Digerati Experts uses cookies and similar tracking technologies to collect information you provide and to capture your interaction with our site. We use this information to enhance site navigation, personalize content, analyze your use of our website, and assist in our marketing efforts and customer service. To deliver the best experience, analytics and hosting service providers may have access to this information. By clicking "Accept All," you consent to our collection, use, and disclosure of such information. For more information about our data processing practices, please see our{" "}
                   <Link
                     href="/legal/privacy-policy"
-                    className="underline underline-offset-2 text-[#D3126A] hover:text-white transition-colors font-medium"
+                    className={cn(
+                      "font-medium underline underline-offset-2 transition-colors",
+                      light ? "text-[#D3126A] hover:text-slate-900" : "text-[#D3126A] hover:text-white",
+                    )}
                     data-testid="link-privacy-policy-cookie"
                   >
                     Privacy Policy
                   </Link>
                   .
                 </p>
-                <p className="md:hidden text-sm font-medium leading-snug text-gray-200 flex-1 min-w-0">
+                <p
+                  className={cn(
+                    "min-w-0 flex-1 text-sm font-medium leading-snug md:hidden",
+                    light ? "text-slate-800" : "text-gray-200",
+                  )}
+                >
                   We use cookies.{" "}
                   <Link
                     href="/legal/privacy-policy"
-                    className="underline underline-offset-2 text-[#D3126A] hover:text-white transition-colors font-semibold"
+                    className={cn(
+                      "font-semibold underline underline-offset-2 transition-colors",
+                      light ? "text-[#D3126A] hover:text-slate-900" : "text-[#D3126A] hover:text-white",
+                    )}
                     data-testid="link-privacy-policy-cookie-mobile"
                   >
                     Privacy
@@ -224,26 +304,37 @@ export function CookieConsentBanner() {
                   <button
                     type="button"
                     onClick={() => setShowPreferences(v => !v)}
-                    className="underline underline-offset-2 text-[#D3126A] hover:text-white font-semibold"
+                    className={cn(
+                      "font-semibold underline underline-offset-2",
+                      light ? "text-[#D3126A] hover:text-slate-900" : "text-[#D3126A] hover:text-white",
+                    )}
                     data-testid="button-manage-cookie-preferences-mobile"
                   >
                     Preferences
                   </button>
                 </p>
 
-                <div className="flex items-center gap-2 flex-shrink-0 flex-wrap w-full md:w-auto justify-between md:justify-end">
+                <div className="flex w-full flex-shrink-0 flex-wrap items-center justify-between gap-2 md:w-auto md:justify-end">
                   <button
                     onClick={() => setShowPreferences(v => !v)}
-                    className="hidden md:inline-flex text-[#D3126A] hover:text-white text-base font-semibold underline underline-offset-2 transition-colors whitespace-nowrap px-1 min-h-11"
+                    className={cn(
+                      "hidden min-h-11 whitespace-nowrap px-1 text-base font-semibold underline underline-offset-2 transition-colors md:inline-flex",
+                      light ? "text-[#D3126A] hover:text-slate-900" : "text-[#D3126A] hover:text-white",
+                    )}
                     data-testid="button-manage-cookie-preferences"
                   >
                     Manage Cookie Preferences
                   </button>
 
-                  <div className="flex items-center gap-2 ml-auto md:ml-0">
+                  <div className="ml-auto flex items-center gap-2 md:ml-0">
                     <button
                       onClick={reject}
-                      className="min-h-11 px-5 py-2 rounded text-base font-semibold bg-[#0a0a1a] border border-white/20 text-white hover:bg-white/10 transition-colors whitespace-nowrap"
+                      className={cn(
+                        "min-h-11 whitespace-nowrap rounded border px-5 py-2 text-base font-semibold transition-colors",
+                        light
+                          ? "border-slate-300 bg-white text-slate-800 hover:bg-slate-50"
+                          : "border-white/20 bg-[#0a0a1a] text-white hover:bg-white/10",
+                      )}
                       data-testid="button-reject-all-cookies"
                     >
                       Reject All
@@ -251,7 +342,12 @@ export function CookieConsentBanner() {
 
                     <button
                       onClick={accept}
-                      className="min-h-11 px-5 py-2 rounded text-base font-semibold bg-[#0a0a1a] border border-white/20 text-white hover:bg-white/10 transition-colors whitespace-nowrap"
+                      className={cn(
+                        "min-h-11 whitespace-nowrap rounded px-5 py-2 text-base font-semibold transition-colors",
+                        light
+                          ? "bg-[#D3126A] text-white hover:bg-[#e01874]"
+                          : "border border-white/20 bg-[#0a0a1a] text-white hover:bg-white/10",
+                      )}
                       data-testid="button-accept-all-cookies"
                     >
                       Accept All

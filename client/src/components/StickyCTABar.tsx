@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { useBooking } from "@/contexts/BookingContext";
 import { CTA } from "@/lib/ctaCopy";
 import { PRIMARY_PHONE } from "@/data/companyContact";
+import { isStorePath } from "@/lib/storeChromeGestures";
+import { cn } from "@/lib/utils";
 import {
   STICKY_CTA_AUTO_HIDE_MS,
   STICKY_CTA_RESHOW_DELTA_PX,
@@ -24,6 +26,7 @@ function publishStickyCtaHeight(px: number) {
 
 export function StickyCTABar() {
   const [location] = useLocation();
+  const light = isStorePath(location);
   const [dismissed, setDismissed] = useState(false);
   const [pastThreshold, setPastThreshold] = useState(false);
   const [scrolling, setScrolling] = useState(false);
@@ -188,50 +191,84 @@ export function StickyCTABar() {
           className="de-bottom-bar"
           data-testid="sticky-cta-bar"
           data-sticky-cta-chrome="true"
+          data-surface={light ? "light" : "dark"}
         >
-          <div className="relative overflow-hidden rounded-2xl border border-de-hairline bg-de-raised">
+          <div
+            className={cn(
+              "relative overflow-hidden rounded-2xl border",
+              light
+                ? "border-black/10 bg-white shadow-[0_12px_40px_rgba(0,0,0,0.16)]"
+                : "border-de-hairline bg-de-raised",
+            )}
+          >
             <button
               onClick={handleDismiss}
-              className="absolute top-2 right-2 z-10 p-1.5 rounded-full hover:bg-white/10 transition-colors"
+              className={cn(
+                "absolute right-2 top-2 z-10 rounded-full p-1.5 transition-colors",
+                light ? "hover:bg-black/5" : "hover:bg-white/10",
+              )}
               aria-label="Close banner"
               data-testid="button-dismiss-sticky-cta"
             >
-              <X className="w-4 h-4 text-white/70" />
+              <X className={cn("h-4 w-4", light ? "text-slate-600" : "text-white/70")} />
             </button>
 
             <div className="px-4 py-3 pr-11">
-              <div className="flex flex-col lg:flex-row items-center justify-between gap-3 lg:gap-5">
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="hidden sm:flex w-10 h-10 rounded-full bg-white/10 items-center justify-center shrink-0">
-                    <Shield className="w-5 h-5 text-de-accent-ink" />
+              <div className="flex flex-col items-center justify-between gap-3 lg:flex-row lg:gap-5">
+                <div className="flex min-w-0 items-center gap-3">
+                  <div
+                    className={cn(
+                      "hidden h-10 w-10 shrink-0 items-center justify-center rounded-full sm:flex",
+                      light ? "bg-black/[0.04]" : "bg-white/10",
+                    )}
+                  >
+                    <Shield className="h-5 w-5 text-de-accent-ink" />
                   </div>
-                  <div className="text-center lg:text-left min-w-0">
-                    <p className="text-white font-semibold text-base md:text-lg">
+                  <div className="min-w-0 text-center lg:text-left">
+                    <p
+                      className={cn(
+                        "text-base font-semibold md:text-lg",
+                        light ? "text-slate-900" : "text-white",
+                      )}
+                    >
                       Independent Risk Assessment
                     </p>
-                    <p className="text-white/70 text-sm md:text-base leading-snug max-w-xl">
+                    <p
+                      className={cn(
+                        "max-w-xl text-sm leading-snug md:text-base",
+                        light ? "text-slate-600" : "text-white/70",
+                      )}
+                    >
                       Your current provider has a conflict grading their own work.
                       {" "}
-                      <span className="text-white/90">
+                      <span className={light ? "text-slate-800" : "text-white/90"}>
                         We map the gaps, build a plan, and can collaborate with them — switching is optional.
                       </span>
                     </p>
                   </div>
                 </div>
 
-                <div className="hidden xl:flex items-center">
+                <div className="hidden items-center xl:flex">
                   <span
-                    className="rounded-full border border-white/20 bg-white/5 px-3.5 py-1.5 text-xs font-medium tracking-wide text-white/80 whitespace-nowrap"
+                    className={cn(
+                      "whitespace-nowrap rounded-full border px-3.5 py-1.5 text-xs font-medium tracking-wide",
+                      light
+                        ? "border-black/10 bg-black/[0.03] text-slate-700"
+                        : "border-white/20 bg-white/5 text-white/80",
+                    )}
                     data-testid="sticky-cta-reassurance"
                   >
                     No switch required
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
+                <div className="flex shrink-0 items-center gap-2 md:gap-4">
                   <a
                     href={PRIMARY_PHONE.telHref}
-                    className="hidden md:flex items-center gap-2 text-white/75 hover:text-white transition-colors text-base"
+                    className={cn(
+                      "hidden items-center gap-2 text-base transition-colors md:flex",
+                      light ? "text-slate-600 hover:text-slate-900" : "text-white/75 hover:text-white",
+                    )}
                     data-testid="link-phone-sticky"
                   >
                     <Phone className="w-4 h-4" />
