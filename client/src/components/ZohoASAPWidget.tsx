@@ -93,6 +93,13 @@ function previewChatLine(content: string, max = 108) {
   return text.length > max ? `${text.slice(0, max - 1)}…` : text;
 }
 
+function formatDeskMessageTime(iso?: string): string {
+  if (!iso) return "";
+  const when = new Date(iso);
+  if (Number.isNaN(when.getTime())) return "";
+  return when.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+}
+
 function getDeskChipIcon(id: DeskTicketChipId) {
   const iconClass = "w-4 h-4 text-[#D3126A] shrink-0";
   switch (id) {
@@ -189,7 +196,9 @@ export const ZohoASAPWidget = ({
   const [advisorSessionId, setAdvisorSessionId] = useState<string | null>(null);
   const [pendingSeed, setPendingSeed] = useState<string | null>(null);
 
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([CHAT_WELCOME]);
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>(() => [
+    { ...CHAT_WELCOME, createdAt: new Date().toISOString() },
+  ]);
   const [chatInput, setChatInput] = useState("");
   const [isChatSending, setIsChatSending] = useState(false);
   const [assistantAvailable, setAssistantAvailable] = useState<boolean | null>(null);
@@ -645,6 +654,7 @@ export const ZohoASAPWidget = ({
           id: `assistant-error-${Date.now()}`,
           role: "assistant",
           content: `${description} You can create a support ticket here and the team will follow up.`,
+          createdAt: new Date().toISOString(),
         },
       ]);
       if (activeTabRef.current !== "chat") {
@@ -1112,6 +1122,14 @@ export const ZohoASAPWidget = ({
                             >
                               <p className="whitespace-pre-wrap">{chatMessage.content}</p>
                             </div>
+                            {chatMessage.createdAt && formatDeskMessageTime(chatMessage.createdAt) ? (
+                              <time
+                                className="de-desk-msg-time"
+                                dateTime={chatMessage.createdAt}
+                              >
+                                {formatDeskMessageTime(chatMessage.createdAt)}
+                              </time>
+                            ) : null}
                             {chatMessage.supportChips?.length ? (
                               <div className="de-desk-chips" role="group" aria-label="Open a support ticket">
                                 {chatMessage.supportChips.map((chipId) => {
@@ -2285,6 +2303,19 @@ export const ZohoASAPWidget = ({
               background: var(--de-raised, #151217); color: #fff;
               border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
               border-bottom-left-radius: 5px;
+            }
+            .de-desk-msg-time {
+              display: block;
+              margin-top: 5px;
+              font-size: 11px;
+              font-weight: 500;
+              letter-spacing: 0.02em;
+              color: rgba(255,255,255,0.38);
+              font-variant-numeric: tabular-nums;
+            }
+            .de-desk-msg.is-user .de-desk-msg-time { text-align: right; }
+            @media (prefers-reduced-motion: reduce) {
+              .de-desk-msg-time { transition: none; }
             }
             .de-desk-discover {
               margin: 12px 0 2px;

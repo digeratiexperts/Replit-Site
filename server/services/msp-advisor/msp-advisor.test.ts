@@ -9,7 +9,7 @@ import {
   listKnownServiceNames,
   inferPageType,
 } from "./knowledge";
-import { extractProfileFromText, mergeProfile, createEmptyProfile, knownFactsList, extractContactNameFromText, extractCompanyNameFromText, isInformalCompanyName } from "./profile";
+import { extractProfileFromText, mergeProfile, createEmptyProfile, knownFactsList, extractContactNameFromText, extractCompanyNameFromText, isInformalCompanyName, isDeInternalCompanyAnswer } from "./profile";
 import { BANNED_CANNED_OPENER } from "./prompt";
 import { sanitizeActions, sanitizePath, assertNoInternalLeak, isAllowedActionType } from "./actions";
 import { handleAdvisorChat } from "./advisor";
@@ -158,6 +158,17 @@ describe("identity extraction", () => {
     assert.equal(isInformalCompanyName("Acme Dental"), false);
     assert.equal(extractCompanyNameFromText("Your Mama", { allowBare: true }), "Your Mama");
   });
+  it("does not treat DE-staff company answers as a literal outside company", () => {
+    for (const answer of ["yours", "us", "DE", "here", "this company", "Digerati Experts"]) {
+      assert.equal(isDeInternalCompanyAnswer(answer), true, answer);
+      assert.equal(isInformalCompanyName(answer), false, answer);
+    }
+    assert.equal(isDeInternalCompanyAnswer("Acme Dental"), false);
+    const patched = mergeProfile(createEmptyProfile(), { companyName: "yours" });
+    assert.equal(patched.companyName, "Digerati Experts");
+    assert.equal(patched.deInternal, true);
+    assert.doesNotMatch(patched.companyName || "", /yours/i);
+  });
 });
 
 function normalizeForCompare(text: string): string {
@@ -203,6 +214,22 @@ describe("handleAdvisorChat acceptance (heuristic / no LLM required)", () => {
     });
     assert.equal(third.profile.companyName, "Hale Family Dentistry");
     assert.doesNotMatch(third.reply, /what'?s your name/i);
+  });
+
+  it("does not echo yours as a company when the visitor means they work at DE", async () => {
+    const first = await handleAdvisorChat({ message: "Joe" });
+    assert.equal(first.profile.contactName, "Joe");
+    assert.match(first.reply, /company/i);
+    const second = await handleAdvisorChat({
+      sessionId: first.sessionId,
+      message: "yours",
+    });
+    assert.equal(second.profile.deInternal, true);
+    assert.equal(second.profile.companyName, "Digerati Experts");
+    assert.doesNotMatch(second.reply, /from yours/i);
+    assert.doesNotMatch(second.reply, /Joe from yours/i);
+    assert.match(second.reply, /DE/i);
+    assert.doesNotMatch(second.reply, /portal\.digeratiexperts\.com/i);
   });
 
   it("answers IT question path without crashing and returns DE actions", async () => {

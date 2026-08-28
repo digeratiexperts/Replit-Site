@@ -63,6 +63,8 @@ export interface ConversationProfile {
   desiredOutcome?: string;
   /** Joke / declined company — treat as walk-in, do not collapse the thread. */
   companyInformal?: boolean;
+  /** Visitor indicated they work at Digerati Experts — not an external company, not a client claim. */
+  deInternal?: boolean;
 }
 
 export interface AdvisorAction {

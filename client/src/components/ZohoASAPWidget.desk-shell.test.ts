@@ -94,6 +94,14 @@ describe("DE Desk shell positioning", () => {
     expect(src).toMatch(/\.de-desk-tool-title \{[\s\S]*?font-size: 15\.5px;/);
   });
 
+  it("stamps Ask DE messages with a real local time, not fake SOC chrome", () => {
+    expect(src).toMatch(/function formatDeskMessageTime/);
+    expect(src).toMatch(/className="de-desk-msg-time"/);
+    expect(src).toMatch(/dateTime=\{chatMessage\.createdAt\}/);
+    expect(src).toMatch(/toLocaleTimeString\(undefined, \{ hour: "numeric", minute: "2-digit" \}\)/);
+    expect(src).not.toMatch(/AZ SOC Live/);
+  });
+
   it("styles Ask DE discovery and Get Support issues as graphite grouped stacks", () => {
     expect(src).toMatch(/de-desk-discover/);
     expect(src).toMatch(/de-desk-discover-list/);
