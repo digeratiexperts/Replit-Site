@@ -6,7 +6,12 @@ import {
   formatAddressOneLine,
 } from "../../../client/src/data/companyContact";
 import { PORTAL_LOGIN, PORTAL_HOME } from "../../../client/src/lib/portalUrls";
-import { formatKnowledgeForPrompt, retrievePublicKnowledge } from "../de-intelligence/retrieve";
+import {
+  formatKnowledgeForPrompt,
+  retrievePublicKnowledge,
+  retrievePublicKnowledgeStorageBacked,
+} from "../de-intelligence/retrieve";
+import type { KnowledgeRetrievalHit } from "../de-intelligence/types";
 import type { AdvisorMode, PageContext } from "./types";
 
 export const DE_COMPANY = {
@@ -82,17 +87,23 @@ export function isKnownServiceMention(text: string): boolean {
   return listKnownServiceNames().some((n) => lower.includes(n.toLowerCase()));
 }
 
-/**
- * Build the public DE Desk knowledge slice.
- *
- * queryHint is optional so older callers stay compatible. The governed
- * retriever still uses the classified mode + page context when queryHint is
- * unavailable. Public Desk is hard-scoped to public records here.
- */
-export function selectKnowledgeSlice(
+function retrievalQuery(mode: AdvisorMode, page?: PageContext, queryHint?: string): string {
+  return [
+    queryHint || "",
+    mode.replace(/_/g, " "),
+    page?.pageType || "",
+    page?.pageTitle || "",
+    page?.serviceContext || "",
+    page?.pathname || "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+}
+
+function buildKnowledgeSlice(
   mode: AdvisorMode,
-  page?: PageContext,
-  queryHint?: string,
+  page: PageContext | undefined,
+  governedHits: KnowledgeRetrievalHit[],
 ): string {
   const parts: string[] = [
     `Company: ${DE_COMPANY.name}`,
@@ -111,23 +122,6 @@ export function selectKnowledgeSlice(
     );
   }
 
-  const retrievalQuery = [
-    queryHint || "",
-    mode.replace(/_/g, " "),
-    page?.pageType || "",
-    page?.pageTitle || "",
-    page?.serviceContext || "",
-    page?.pathname || "",
-  ]
-    .filter(Boolean)
-    .join(" ");
-
-  const governedHits = retrievePublicKnowledge({
-    query: retrievalQuery,
-    mode,
-    pageType: page?.pageType,
-    limit: 6,
-  });
   parts.push(
     "GOVERNED DE INTELLIGENCE (ranked by relevance, scope, and authority):\n" +
       formatKnowledgeForPrompt(governedHits),
@@ -140,9 +134,7 @@ export function selectKnowledgeSlice(
     page?.pageType === "pricing" ||
     page?.pageType === "store";
 
-  const wantServices =
-    mode !== "off_topic" &&
-    mode !== "security_incident";
+  const wantServices = mode !== "off_topic" && mode !== "security_incident";
 
   if (wantPricing) parts.push(getCanonicalPricingKnowledge());
   if (wantServices) parts.push(getServiceCapabilityKnowledge());
@@ -174,6 +166,44 @@ export function selectKnowledgeSlice(
   }
 
   return parts.join("\n\n");
+}
+
+/**
+ * Synchronous bootstrap path retained for deterministic tests and callers that
+ * do not have an async lifecycle. It remains public-scope fail-closed.
+ */
+export function selectKnowledgeSlice(
+  mode: AdvisorMode,
+  page?: PageContext,
+  queryHint?: string,
+): string {
+  const query = retrievalQuery(mode, page, queryHint);
+  const governedHits = retrievePublicKnowledge({
+    query,
+    mode,
+    pageType: page?.pageType,
+    limit: 6,
+  });
+  return buildKnowledgeSlice(mode, page, governedHits);
+}
+
+/**
+ * Production DE Desk path. PostgreSQL scope filtering and FTS happen before
+ * generation, then bootstrap + durable candidates share the governed reranker.
+ */
+export async function selectKnowledgeSliceStorageBacked(
+  mode: AdvisorMode,
+  page?: PageContext,
+  queryHint?: string,
+): Promise<string> {
+  const query = retrievalQuery(mode, page, queryHint);
+  const governedHits = await retrievePublicKnowledgeStorageBacked({
+    query,
+    mode,
+    pageType: page?.pageType,
+    limit: 6,
+  });
+  return buildKnowledgeSlice(mode, page, governedHits);
 }
 
 export function inferPageType(pathname: string): PageContext["pageType"] {
