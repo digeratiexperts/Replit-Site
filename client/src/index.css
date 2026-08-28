@@ -1940,3 +1940,41 @@ button, [role="button"], a {
 .de-panel-theme-toggle {
   transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
 }
+
+/*
+ * Your Solution cart: overflow-y-auto on the list lets that flex child shrink
+ * to ~0 while the footer (overflow: visible) cannot shrink below its content.
+ * Pin the footer, give the line-item list remaining height, and keep a floor
+ * so 4–6 rows stay scannable on typical viewports.
+ */
+.de-solution-drawer {
+  min-height: 0;
+  overflow: hidden;
+}
+.de-solution-drawer__body {
+  display: flex;
+  min-height: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  overflow: hidden;
+}
+.de-solution-drawer__list {
+  flex: 1 1 auto;
+  min-height: min(20rem, 42vh);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.de-solution-drawer__footer {
+  flex: 0 0 auto;
+}
+@media (max-height: 700px) {
+  .de-solution-drawer__list {
+    min-height: min(12.5rem, 34vh);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .de-solution-drawer__list {
+    scroll-behavior: auto;
+  }
+}
