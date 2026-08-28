@@ -24,102 +24,85 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
 
-          storage = Path('server/services/de-intelligence/storage.ts')
+          storage = Path("server/services/de-intelligence/storage.ts")
           text = storage.read_text()
-
           replacements = [
-            (
-              '  if (record.status !== "active") return false;\n',
-              '  if (record.status !== "active") return false;\n  if (record.reviewState !== "approved") return false;\n',
-            ),
-            (
-              '    status: String(row.status) as KnowledgeStatus,\n    authority: Number(row.authority),\n',
-              '    status: String(row.status) as KnowledgeStatus,\n    reviewState: String(row.review_state || "proposed") as KnowledgeRecord["reviewState"],\n    authority: Number(row.authority),\n',
-            ),
-            (
-              '  r.status,\n  r.authority,\n',
-              '  r.status,\n  r.review_state,\n  r.authority,\n',
-            ),
-            (
-              "          WHERE r.status = 'active'\n            AND ${scopePredicate}\n",
-              "          WHERE r.status = 'active'\n            AND r.review_state = 'approved'\n            AND ${scopePredicate}\n",
-            ),
-            (
-              "          WHERE r.status = 'active' AND ${scopePredicate}\n",
-              "          WHERE r.status = 'active' AND r.review_state = 'approved' AND ${scopePredicate}\n",
-            ),
-            (
-              '      status: input.status || "active",\n      authority: input.authority,\n',
-              '      status: input.status || "active",\n      reviewState: input.reviewState || "proposed",\n      authority: input.authority,\n',
-            ),
+              ('  if (record.status !== "active") return false;\n', '  if (record.status !== "active") return false;\n  if (record.reviewState !== "approved") return false;\n'),
+              ('    status: String(row.status) as KnowledgeStatus,\n    authority: Number(row.authority),\n', '    status: String(row.status) as KnowledgeStatus,\n    reviewState: String(row.review_state || "proposed") as KnowledgeRecord["reviewState"],\n    authority: Number(row.authority),\n'),
+              ('  r.status,\n  r.authority,\n', '  r.status,\n  r.review_state,\n  r.authority,\n'),
+              ("          WHERE r.status = 'active'\n            AND ${scopePredicate}\n", "          WHERE r.status = 'active'\n            AND r.review_state = 'approved'\n            AND ${scopePredicate}\n"),
+              ("          WHERE r.status = 'active' AND ${scopePredicate}\n", "          WHERE r.status = 'active' AND r.review_state = 'approved' AND ${scopePredicate}\n"),
+              ('      status: input.status || "active",\n      authority: input.authority,\n', '      status: input.status || "active",\n      reviewState: input.reviewState || "proposed",\n      authority: input.authority,\n'),
           ]
           for old, new in replacements:
-            count = text.count(old)
-            if count != 1:
-              raise SystemExit(f'storage patch expected one match, got {count}: {old[:70]!r}')
-            text = text.replace(old, new, 1)
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f"storage patch expected one match, got {count}: {old[:70]!r}")
+              text = text.replace(old, new, 1)
           storage.write_text(text)
 
-          routes = Path('server/routes.ts')
+          routes = Path("server/routes.ts")
           text = routes.read_text()
           route_start = text.find('app.get("/api/portal/contracts"')
           if route_start < 0:
-            raise SystemExit('portal contracts route not found')
+              raise SystemExit("portal contracts route not found")
           route_end = text.find('app.get("/api/portal/contracts/', route_start + 1)
           if route_end < 0:
-            route_end = text.find('app.post("/api/portal/contracts/', route_start + 1)
+              route_end = text.find('app.post("/api/portal/contracts/', route_start + 1)
           if route_end < 0:
-            raise SystemExit('portal contracts route end not found')
+              raise SystemExit("portal contracts route end not found")
           block = text[route_start:route_end]
           needle = '      if (!hub) {'
           if block.count(needle) != 1:
-            raise SystemExit(f'portal contracts ingestion anchor count={block.count(needle)}')
-          hook = '''      if (companyId && hub) {
-        void import("./services/de-intelligence/techSalesIngestion")
-          .then(({ ingestTechSalesCompanyKnowledge }) =>
-            ingestTechSalesCompanyKnowledge({ clientId: companyId, hub }),
-          )
-          .catch((error: any) => {
-            logger.warn("TechSales knowledge ingestion scheduling failed", {
-              clientId: companyId,
-              message: error?.message || String(error),
-            });
-          });
-      }
-
-'''
+              raise SystemExit(f"portal contracts ingestion anchor count={block.count(needle)}")
+          hook = "\n".join([
+              '      if (companyId && hub) {',
+              '        void import("./services/de-intelligence/techSalesIngestion")',
+              '          .then(({ ingestTechSalesCompanyKnowledge }) =>',
+              '            ingestTechSalesCompanyKnowledge({ clientId: companyId, hub }),',
+              '          )',
+              '          .catch((error: any) => {',
+              '            logger.warn("TechSales knowledge ingestion scheduling failed", {',
+              '              clientId: companyId,',
+              '              message: error?.message || String(error),',
+              '            });',
+              '          });',
+              '      }',
+              '',
+              '',
+          ])
           block = block.replace(needle, hook + needle, 1)
-          text = text[:route_start] + block + text[route_end:]
-          routes.write_text(text)
+          routes.write_text(text[:route_start] + block + text[route_end:])
 
-          tests = Path('server/services/de-intelligence/storage.test.ts')
+          tests = Path("server/services/de-intelligence/storage.test.ts")
           text = tests.read_text()
           anchor = '  it("preserves provenance on an ingested public document", async () => {'
           if text.count(anchor) != 1:
-            raise SystemExit('storage test anchor not found exactly once')
-          test = '''  it("never retrieves storage-backed knowledge until it is explicitly approved", async () => {
-    await storeKnowledgeDocument({
-      title: "Unreviewed client procedure",
-      content: "This draft procedure contains the unique phrase cobalt-review-boundary and must not reach retrieval.",
-      scope: "client",
-      clientId: "review-client",
-      type: "client_documentation",
-      authority: 99,
-      reviewState: "needs_review",
-      source: { kind: "document", label: "Unreviewed document" },
-    });
-
-    const hits = await searchStoredKnowledge({
-      query: "cobalt review boundary",
-      scope: "client",
-      clientId: "review-client",
-    });
-    expect(hits.some((hit) => hit.content.includes("cobalt-review-boundary"))).toBe(false);
-  });
-
-'''
-          text = text.replace(anchor, test + anchor, 1)
-          tests.write_text(text)
+              raise SystemExit("storage test anchor not found exactly once")
+          test = "\n".join([
+              '  it("never retrieves storage-backed knowledge until it is explicitly approved", async () => {',
+              '    await storeKnowledgeDocument({',
+              '      title: "Unreviewed client procedure",',
+              '      content: "This draft procedure contains the unique phrase cobalt-review-boundary and must not reach retrieval.",',
+              '      scope: "client",',
+              '      clientId: "review-client",',
+              '      type: "client_documentation",',
+              '      authority: 99,',
+              '      reviewState: "needs_review",',
+              '      source: { kind: "document", label: "Unreviewed document" },',
+              '    });',
+              '',
+              '    const hits = await searchStoredKnowledge({',
+              '      query: "cobalt review boundary",',
+              '      scope: "client",',
+              '      clientId: "review-client",',
+              '    });',
+              '    expect(hits.some((hit) => hit.content.includes("cobalt-review-boundary"))).toBe(false);',
+              '  });',
+              '',
+              '',
+          ])
+          tests.write_text(text.replace(anchor, test + anchor, 1))
           PY
 
       - name: Verify patch
