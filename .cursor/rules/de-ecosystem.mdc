@@ -23,13 +23,13 @@ GitHub owns website / Store / portal / blog **application and versioned content 
 
 ## Pipeline truth
 
-`git commit` ≠ merged ≠ deployed ≠ production verified. **MERGED ≠ LIVE.**
+`git commit` ≠ merged ≠ deployed ≠ production verified. **MERGED ≠ LIVE.** A green CI check or a merge is not LIVE. Record deploy SHA and health before claiming production.
 
 Website PR **#88** (“Keep the production Actions runner online…”) **closed without merge**. Production deploy reliability is still unresolved. Do not report website production as healthy from a merge or green CI alone.
 
-## Connector done-ness
+## Connector done ≠ authenticated
 
-A connector is **not** done when it merely authenticates. It needs scoped R/W, external-ID mapping, health/freshness, idempotent retries, divergence detection, verified reconciliation, actionable failure reporting, and auditability.
+A connector is **not** done when it merely authenticates. It needs scoped R/W, external IDs, health/freshness, idempotent retries, divergence detection, verified reconciliation, failure reporting, and audit.
 
 ## Integration
 
@@ -66,8 +66,8 @@ Loop: `OBSERVE → DIAGNOSE → PROPOSE → REMEDIATE (allowlisted) → VERIFY �
 1. Finish ECO-001 + P0 secret cleanup (Hub Issue **#121** WorkDrive credential in `.replit` — rotate/remove **in Hub**; never paste the secret).
 2. Field-level SoT matrix (ECO-002).
 3. Canonical identity layer (ECO-003).
-4. Full Integration Layer from existing `de-sync` (ECO-004–008).
-5. Health + reconciliation before broad automation.
+4. Full `de-sync` Integration Layer (ECO-004–008).
+5. Health + reconciliation **before** auto-writes.
 6. GitHub + production SHA / release state in TechSales (ECO-009–010).
 7. Canonical content registry + migrate surfaces (ECO-011–015).
 8. Business automation (Portal, notes timeline, AI issues/repair, lifecycles, email, social, health console).
@@ -82,14 +82,18 @@ TechSales answers **“Is DE healthy?”** from **live evidence**, then **“Fix
 ## Stale / current facts — do not revive
 
 - Website PR **#59 was not merged**. Campaign landings live via **#82** (`595c820`).
-- Hub PR **#120** (`2cd37da`) = ecosystem docs. Hub PR **#123** (`5354a8b`) = **ratified charter**.
+- Website PR **#88** closed without merge. Do not treat runner/deploy reliability as solved.
+- Hub PR **#120** (`2cd37da`) = ecosystem docs. Hub PR **#123** (`5354a8b89c39db1612e36159882dc1819f0a03c2`) = **ratified charter**, not LIVE operations.
 - Hub PR **#119** control-plane code is **not complete/live** until fresh CI after Zoho Mail health correction.
+- P0: Hub Issue **#121** — WorkDrive secret in `.replit`: rotate/remove **in Hub**; **never paste the secret**.
+- Hub Issue **#122** stays open until the completion gate and acceptance tests pass.
 
 ## Website agent workflow
 
 - Isolated branch from current `origin/main`; PR against this repo; concurrency audit (`docs/PR-CONCURRENCY-AUDIT.md`).
 - No force-push to `main`. Do not merge your own PR.
 - Portal login: `https://portal.digeratiexperts.com/portal/login` — never `//login`.
+- Do not implement Hub ECO-001–030 from this website repo unless a website-owned slice is explicitly assigned.
 
 ## Honesty
 
