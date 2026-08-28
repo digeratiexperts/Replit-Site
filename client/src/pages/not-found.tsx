@@ -1,11 +1,16 @@
 import { AlertCircle, ArrowRight, Home } from "lucide-react";
+import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { PageTemplate } from "@/components/PageTemplate";
 import { ConversionPathBar } from "@/components/ConversionPathBar";
 import { useSEO } from "@/hooks/useSEO";
 import { CTA } from "@/lib/ctaCopy";
+import {
+  isMarketingFallbackPath,
+  MarketingRouteFallback,
+} from "@/pages/MarketingRouteFallback";
 
-export default function NotFound() {
+function NotFoundPage() {
   useSEO({
     title: "404 - Page Not Found",
     description:
@@ -50,4 +55,19 @@ export default function NotFound() {
       </div>
     </PageTemplate>
   );
+}
+
+/**
+ * App.tsx intentionally keeps its current routing unchanged while stale PR #59
+ * is ported. Recognized campaign/resource URLs are dispatched here with a real
+ * Wouter route context; every other unmatched URL remains the actual 404 page.
+ */
+export default function NotFound() {
+  const [location] = useLocation();
+
+  if (isMarketingFallbackPath(location)) {
+    return <MarketingRouteFallback />;
+  }
+
+  return <NotFoundPage />;
 }

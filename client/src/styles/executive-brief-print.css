@@ -1,0 +1,9 @@
+@media print {
+  .de-brief-document {
+    background: #fff !important;
+  }
+
+  .de-brief-document a[href]::after {
+    content: none;
+  }
+}

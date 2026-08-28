@@ -335,7 +335,9 @@ export function MegaMenu() {
           items: [
             { title: 'Downtime Calculator', description: 'See what downtime really costs', icon: <BarChart3 className="h-5 w-5" />, url: '/resources/downtime-calculator' },
             { title: 'Security Checklist', description: 'Assess your security posture', icon: <ClipboardCheck className="h-5 w-5" />, url: '/resources/security-checklist' },
-            { title: 'Datasheets', description: 'Technical specifications', icon: <FileCheck className="h-5 w-5" />, url: '/resources/datasheets' },
+            { title: 'Datasheets', description: 'Package PDFs and sample reports', icon: <FileCheck className="h-5 w-5" />, url: '/resources/datasheets' },
+            { title: 'Executive briefs', description: 'Short buyer-ready operating notes', icon: <ClipboardCheck className="h-5 w-5" />, url: '/resources/briefs' },
+            { title: 'Campaign offers', description: 'Single-offer pages for ads and search', icon: <BarChart3 className="h-5 w-5" />, url: '/go' },
           ]
         }
       ]
