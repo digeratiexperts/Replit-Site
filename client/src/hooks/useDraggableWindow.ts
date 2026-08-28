@@ -86,7 +86,7 @@ export function useDraggableWindow(options: {
 
   const measureAndClamp = useCallback((x: number, y: number) => {
     const el = panelRef.current;
-    const width = el?.offsetWidth ?? 410;
+    const width = el?.offsetWidth ?? 440;
     return clampDeskPos(x, y, width, readViewport());
   }, []);
 
@@ -145,7 +145,7 @@ export function useDraggableWindow(options: {
     if (!open || (!pos && !size)) return;
     const onResize = () => {
       const view = readViewport();
-      setPos((current) => (current ? clampDeskPos(current.x, current.y, size?.w ?? panelRef.current?.offsetWidth ?? 410, view) : current));
+      setPos((current) => (current ? clampDeskPos(current.x, current.y, size?.w ?? panelRef.current?.offsetWidth ?? 440, view) : current));
       setSize((current) => (current ? clampDeskSize(current.w, current.h, view) : current));
     };
     window.addEventListener("resize", onResize);

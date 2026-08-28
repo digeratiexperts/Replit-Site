@@ -9,6 +9,9 @@ const COMPETING_CHROME_SELECTORS = [
   ".de-unified-bar",
   ".de-fab-rail",
   "[data-sticky-cta-chrome]",
+  // Cookie stacks under the assessment bar via --de-cookie-h. Treating it as a
+  // blocker hid the Risk Assessment CTA whenever the banner was on screen.
+  "[data-testid='cookie-consent-banner']",
 ];
 
 const BLOCKING_OVERLAY_SELECTORS = [
@@ -16,7 +19,6 @@ const BLOCKING_OVERLAY_SELECTORS = [
   "[aria-modal='true']",
   "[data-radix-dialog-content]",
   "[data-radix-dialog-overlay]",
-  "[data-testid='cookie-consent-banner']",
   ".de-desk-shell",
   // Commerce surfaces with their own CTAs/prices — the assessment bar must not
   // print over another product's "Add"/price link or a trust claim. Ordinary
@@ -35,8 +37,26 @@ export function isStickyCtaRouteAllowed(path: string): boolean {
   return path !== "/" && !path.startsWith("/portal");
 }
 
+/** Checkout (and quote) stay pinned even when the page is too short to scroll. */
+export function isStickyCtaPinnedRoute(path: string): boolean {
+  return (
+    path === "/store/checkout" ||
+    path.startsWith("/store/checkout/") ||
+    path === "/store/quote-request" ||
+    path.startsWith("/store/quote-request/")
+  );
+}
+
 export function isPastStickyCtaThreshold(scrollY: number, viewportH: number): boolean {
   return scrollY > viewportH * 0.5;
+}
+
+/** True when the document cannot scroll far enough to ever pass the 50% threshold. */
+export function isTooShortToReachStickyThreshold(
+  viewportH: number,
+  scrollHeight: number,
+): boolean {
+  return scrollHeight - viewportH <= viewportH * 0.5;
 }
 
 /** Park the bar when the visitor is on the page footer so links stay clickable. */
@@ -61,15 +81,16 @@ export function shouldShowStickyCta(input: {
   scrolling: boolean;
   overlapping: boolean;
   autoHidden: boolean;
+  pinned?: boolean;
 }): boolean {
-  return (
-    !input.dismissed &&
-    input.routeAllowed &&
-    input.pastThreshold &&
-    !input.scrolling &&
-    !input.overlapping &&
-    !input.autoHidden
-  );
+  if (input.dismissed || !input.routeAllowed) return false;
+  if (input.overlapping) return false;
+  if (input.pinned) {
+    // Checkout must stay on a short page: no scroll threshold, no 12s auto-hide,
+    // no “park because the footer is already in view.”
+    return true;
+  }
+  return input.pastThreshold && !input.scrolling && !input.autoHidden;
 }
 
 export function isStickyCtaChrome(el: Element | null): boolean {
@@ -77,7 +98,7 @@ export function isStickyCtaChrome(el: Element | null): boolean {
   return COMPETING_CHROME_SELECTORS.some((selector) => el.closest(selector));
 }
 
-/** Dialogs, drawers, cookie, and Desk occupy the same dock — page copy does not. */
+/** Dialogs, Desk, and store product CTAs occupy the same dock — cookie chrome stacks instead. */
 export function isBlockingStickyCtaTarget(el: Element | null): boolean {
   if (!el) return false;
   if (typeof document !== "undefined" && (el === document.documentElement || el === document.body)) {

@@ -1,0 +1,102 @@
+---
+description: DE ecosystem — Hub is operational SoT; website is a GitHub-owned projection; Hub Issue #122 is the completion scoreboard
+alwaysApply: true
+---
+
+# DE ecosystem (one program)
+
+DE is **one governed ecosystem**, not bolted integrations. Do not invent a second Hub, factual DB, mail stack, or middleware.
+
+**Charter (RATIFIED):** `digeratiexperts/Intelligence-Hub` `docs/DE-ECOSYSTEM-CHARTER.md` via PR **#123**, merge `5354a8b89c39db1612e36159882dc1819f0a03c2`. Also: `docs/DE-ECOSYSTEM-CONTROL-PLANE.md`, `docs/SOURCE-OF-TRUTH-MATRIX.md`, `docs/DE-ECOSYSTEM-TASKS.md`.
+
+**Scoreboard:** Hub Issue **[#122](https://github.com/digeratiexperts/Intelligence-Hub/issues/122)** (ECO-001 → ECO-030 + final acceptance). Stay open until the charter completion gate passes. **Do not call the ecosystem finished** until #122’s gate passes. Do **not** copy that ledger into this website repo.
+
+## Repositories
+
+| Role | Canonical repo | Default branch |
+| --- | --- | --- |
+| Control plane / operational SoT | `digeratiexperts/Intelligence-Hub` (Intelligence Hub / TechSales) | `master` |
+| Content / application projection | `digeratiexperts/digeratiexperts-site` (this repo) | `main` |
+| Legacy / reference only | `digeratiexperts/TechSales` | do not start new work |
+
+GitHub owns website / Store / portal / blog **application and versioned content code**. Hub owns operational/commercial truth. `Replit-Site` is a historical checkout name, not authority.
+
+## Pipeline truth
+
+`git commit` ≠ merged ≠ deployed ≠ production verified. **MERGED ≠ LIVE.** A green CI check or a merge is not LIVE. Record deploy SHA and health before claiming production.
+
+Website PR **#88** (“Keep the production Actions runner online…”) **closed without merge**. Production deploy reliability is still unresolved. Do not report website production as healthy from a merge or green CI alone.
+
+## Connector done ≠ authenticated
+
+A connector is **not** done when it merely authenticates. It needs scoped R/W, external IDs, health/freshness, idempotent retries, divergence detection, verified reconciliation, failure reporting, and audit.
+
+## Integration
+
+Evolve existing Hub **`de-sync` + outbox/retry**. Do **not** create a second middleware stack. Website durable paths: `docs/DE-SYSTEM-INTEGRATION.md`.
+
+## Domain ownership
+
+| Domain | Owner | This repo |
+| --- | --- | --- |
+| Customer IDs / accounts | Hub (`accounts.id` once commercial) | mapped IDs only; never invent clients |
+| Deals / quotes / agreements | Hub | safe projections |
+| Catalog / pricing / entitlements | Hub | Store/portal get safe projections; **margins stay internal** |
+| Website / Store / portal / blog app code | GitHub (this repo) | isolated branch → PR → concurrency audit → merge → deploy |
+| Approved business claims / campaign intent | Hub registries | project to Website / Blog / Store / Email / Social |
+
+## Evidence plane
+
+Hub **Knowledge System** is the evidence plane. Chain: **source → KB rule → approved claim → channel variants**. Do not invent a second factual DB here.
+
+## AI repair (Hub audited assistant only)
+
+Loop: `OBSERVE → DIAGNOSE → PROPOSE → REMEDIATE (allowlisted) → VERIFY → REPORT`. No admin AI backdoor.
+
+**Allow (verify after):** inspect, retry idempotent sync, re-fetch stale records, reconcile allowlisted fields, rebuild caches, republish known-good mappings.
+
+**Deny unless explicit DE approval + Hub audit:** deploy, rotate secrets, delete accounts, change pricing, merge accounts, send mail, post social, publish customer-facing statements.
+
+## Email
+
+**Zoho Mail is current DE email transport.** Do not build a new mail stack. Lifecycle email defaults **draft-only**.
+
+## Ordered next (do not skip ahead to email / social / auto-writes)
+
+1. Finish ECO-001 + P0 secret cleanup (Hub Issue **#121** WorkDrive credential in `.replit` — rotate/remove **in Hub**; never paste the secret).
+2. Field-level SoT matrix (ECO-002).
+3. Canonical identity layer (ECO-003).
+4. Full `de-sync` Integration Layer (ECO-004–008).
+5. Health + reconciliation **before** auto-writes.
+6. GitHub + production SHA / release state in TechSales (ECO-009–010).
+7. Canonical content registry + migrate surfaces (ECO-011–015).
+8. Business automation (Portal, notes timeline, AI issues/repair, lifecycles, email, social, health console).
+9. Hostile testing (auth expiry, dupes, outages, schema drift, rate limits).
+
+Website agents implement a slice only when explicitly assigned (e.g. ECO-013 consumers). Do not start ECO-001–030 from this turn/repo by default.
+
+## Finish line
+
+TechSales answers **“Is DE healthy?”** from **live evidence**, then **“Fix everything you safely can”** with allowlisted verified repair and escalate the rest. That is #122’s gate — not a website checklist.
+
+## Stale / current facts — do not revive
+
+- Website PR **#59 was not merged**. Campaign landings live via **#82** (`595c820`).
+- Website PR **#88** closed without merge. Do not treat runner/deploy reliability as solved.
+- Hub PR **#120** (`2cd37da`) = ecosystem docs. Hub PR **#123** (`5354a8b89c39db1612e36159882dc1819f0a03c2`) = **ratified charter**, not LIVE operations.
+- Hub PR **#119** control-plane code is **not complete/live** until fresh CI after Zoho Mail health correction.
+- P0: Hub Issue **#121** — WorkDrive secret in `.replit`: rotate/remove **in Hub**; **never paste the secret**.
+- Hub Issue **#122** stays open until the completion gate and acceptance tests pass.
+
+## Website agent workflow
+
+- Isolated branch from current `origin/main`; PR against this repo; concurrency audit (`docs/PR-CONCURRENCY-AUDIT.md`).
+- No force-push to `main`. Do not merge your own PR.
+- Portal login: `https://portal.digeratiexperts.com/portal/login` — never `//login`.
+- Do not implement Hub ECO-001–030 from this website repo unless a website-owned slice is explicitly assigned.
+
+## Honesty
+
+Do not fabricate `connected=healthy`. Health is CONNECTED / DEGRADED / STALE / FAILED / AUTH_REQUIRED / SCHEMA_DRIFT / UNKNOWN — only from evidence.
+
+Do not invent clients, prices, telemetry, certifications, partners, SLAs, or live connector status.

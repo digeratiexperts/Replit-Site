@@ -6,6 +6,12 @@ import {
   formatAddressOneLine,
 } from "../../../client/src/data/companyContact";
 import { PORTAL_LOGIN, PORTAL_HOME } from "../../../client/src/lib/portalUrls";
+import {
+  formatKnowledgeForPrompt,
+  retrievePublicKnowledge,
+  retrievePublicKnowledgeStorageBacked,
+} from "../de-intelligence/retrieve";
+import type { KnowledgeRetrievalHit } from "../de-intelligence/types";
 import type { AdvisorMode, PageContext } from "./types";
 
 export const DE_COMPANY = {
@@ -81,7 +87,24 @@ export function isKnownServiceMention(text: string): boolean {
   return listKnownServiceNames().some((n) => lower.includes(n.toLowerCase()));
 }
 
-export function selectKnowledgeSlice(mode: AdvisorMode, page?: PageContext): string {
+function retrievalQuery(mode: AdvisorMode, page?: PageContext, queryHint?: string): string {
+  return [
+    queryHint || "",
+    mode.replace(/_/g, " "),
+    page?.pageType || "",
+    page?.pageTitle || "",
+    page?.serviceContext || "",
+    page?.pathname || "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+}
+
+function buildKnowledgeSlice(
+  mode: AdvisorMode,
+  page: PageContext | undefined,
+  governedHits: KnowledgeRetrievalHit[],
+): string {
   const parts: string[] = [
     `Company: ${DE_COMPANY.name}`,
     `Positioning: ${DE_COMPANY.positioning}`,
@@ -99,6 +122,11 @@ export function selectKnowledgeSlice(mode: AdvisorMode, page?: PageContext): str
     );
   }
 
+  parts.push(
+    "GOVERNED DE INTELLIGENCE (ranked by relevance, scope, and authority):\n" +
+      formatKnowledgeForPrompt(governedHits),
+  );
+
   const wantPricing =
     mode === "pricing" ||
     mode === "msp_discovery" ||
@@ -106,9 +134,7 @@ export function selectKnowledgeSlice(mode: AdvisorMode, page?: PageContext): str
     page?.pageType === "pricing" ||
     page?.pageType === "store";
 
-  const wantServices =
-    mode !== "off_topic" &&
-    mode !== "security_incident";
+  const wantServices = mode !== "off_topic" && mode !== "security_incident";
 
   if (wantPricing) parts.push(getCanonicalPricingKnowledge());
   if (wantServices) parts.push(getServiceCapabilityKnowledge());
@@ -120,12 +146,12 @@ export function selectKnowledgeSlice(mode: AdvisorMode, page?: PageContext): str
   }
   if (mode === "existing_client") {
     parts.push(
-      "EXISTING CLIENT MODE: Prioritize portal/support paths. Do not run heavy prospect qualification.",
+      "EXISTING CLIENT MODE: Prioritize portal/support paths. Do not run heavy prospect qualification. Never invent client-specific configuration, licensing, entitlement, topology, or contract terms that were not retrieved from authenticated client context.",
     );
   }
   if (mode === "it_support") {
     parts.push(
-      "IT SUPPORT MODE: Discover the symptom (email, device, network, sign-in). Point them to Get Support in this DE Desk window. Do not pitch a Cyber Risk Assessment unless they asked about buying or assessments.",
+      "IT SUPPORT MODE: Discover the symptom (email, device, network, sign-in). Give safe, reversible orientation when grounded in the supplied knowledge, then point them to Get Support in this DE Desk window when account access or hands-on work is required. Do not pitch a Cyber Risk Assessment unless they asked about buying or assessments.",
     );
   }
   if (mode === "compliance" || page?.pageType === "compliance") {
@@ -140,6 +166,44 @@ export function selectKnowledgeSlice(mode: AdvisorMode, page?: PageContext): str
   }
 
   return parts.join("\n\n");
+}
+
+/**
+ * Synchronous bootstrap path retained for deterministic tests and callers that
+ * do not have an async lifecycle. It remains public-scope fail-closed.
+ */
+export function selectKnowledgeSlice(
+  mode: AdvisorMode,
+  page?: PageContext,
+  queryHint?: string,
+): string {
+  const query = retrievalQuery(mode, page, queryHint);
+  const governedHits = retrievePublicKnowledge({
+    query,
+    mode,
+    pageType: page?.pageType,
+    limit: 6,
+  });
+  return buildKnowledgeSlice(mode, page, governedHits);
+}
+
+/**
+ * Production DE Desk path. PostgreSQL scope filtering and FTS happen before
+ * generation, then bootstrap + durable candidates share the governed reranker.
+ */
+export async function selectKnowledgeSliceStorageBacked(
+  mode: AdvisorMode,
+  page?: PageContext,
+  queryHint?: string,
+): Promise<string> {
+  const query = retrievalQuery(mode, page, queryHint);
+  const governedHits = await retrievePublicKnowledgeStorageBacked({
+    query,
+    mode,
+    pageType: page?.pageType,
+    limit: 6,
+  });
+  return buildKnowledgeSlice(mode, page, governedHits);
 }
 
 export function inferPageType(pathname: string): PageContext["pageType"] {

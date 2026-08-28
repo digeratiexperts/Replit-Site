@@ -24,15 +24,15 @@ const categoryIcon: Record<ThreatCategory, JSX.Element> = {
 };
 
 function categoryBadgeClass(item: ThreatItem): string {
-  if (item.severity === "critical") return "bg-red-500/20 text-red-400 border-red-500/30";
-  if (item.severity === "high") return "border-[#D3126A] bg-transparent text-white";
-  return "border-de-hairline bg-transparent text-white/70";
+  if (item.severity === "critical") return "bg-red-50 text-red-700 border-red-200";
+  if (item.severity === "high") return "border-[#D3126A] bg-transparent text-[#A30E52]";
+  return "border-[var(--de-paper-hairline)] bg-transparent text-[#5A5368]";
 }
 
 function InsightCard({ insight, index }: { insight: ThreatItem; index: number }) {
   return (
     <Card
-      className="de-interactive-tile group relative h-full overflow-hidden rounded-xl border border-white/10 bg-gradient-to-b from-[#18141f] to-[#0e0c13] shadow-lg transition-all duration-300 hover:border-[#D3126A]/50 hover:-translate-y-1"
+      className="de-paper-on-well de-interactive-tile group relative h-full overflow-hidden rounded-xl bg-white shadow-none hover:border-[#D3126A]/50"
       data-testid={`insight-card-${index}`}
     >
       <div className="h-1 bg-gradient-to-r from-[#D3126A] via-[#E61E76] to-transparent opacity-80 group-hover:opacity-100" />
@@ -45,7 +45,7 @@ function InsightCard({ insight, index }: { insight: ThreatItem; index: number })
               <span className="sm:hidden">{insight.category.split(" ")[0]}</span>
             </span>
           </Badge>
-          <span className="text-xs text-white/50 flex items-center gap-1.5 whitespace-nowrap font-mono">
+          <span className="flex items-center gap-1.5 whitespace-nowrap font-mono text-xs text-[#5A5368]">
             <Calendar className="h-3.5 w-3.5 text-[#D3126A]" />
             <span className="hidden sm:inline">{formatThreatDate(insight.publishedAt)}</span>
             <span className="sm:hidden">{formatThreatDate(insight.publishedAt, "short")}</span>
@@ -54,16 +54,16 @@ function InsightCard({ insight, index }: { insight: ThreatItem; index: number })
         <p className="mb-1.5 text-xs font-bold uppercase tracking-[0.14em] text-[#D3126A]">
           {insight.kicker}
         </p>
-        <CardTitle className="text-base sm:text-lg font-bold text-white line-clamp-2 leading-snug group-hover:text-white">
+        <CardTitle className="line-clamp-2 text-base font-bold leading-snug text-[#1A1228] sm:text-lg">
           {insight.title}
         </CardTitle>
       </CardHeader>
       <CardContent className="p-5 sm:p-6 pt-0">
-        <CardDescription className="text-white/70 mb-4 line-clamp-3 text-xs sm:text-sm leading-relaxed">
+        <CardDescription className="mb-4 line-clamp-3 text-xs leading-relaxed text-black/60 sm:text-sm">
           {insight.excerpt}
         </CardDescription>
-        <div className="flex items-center justify-between pt-4 border-t border-white/10 gap-3 text-xs">
-          <span className="text-white/50 truncate font-mono">
+        <div className="flex items-center justify-between gap-3 border-t border-[var(--de-paper-hairline)] pt-4 text-xs">
+          <span className="truncate font-mono text-[#5A5368]">
             {insight.sourceName}
             {insight.vendor ? ` · ${insight.vendor}` : ""}
             {insight.cve ? ` · ${insight.cve}` : ""}
@@ -72,7 +72,7 @@ function InsightCard({ insight, index }: { insight: ThreatItem; index: number })
             href={insight.sourceUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1 font-semibold text-[#D3126A] hover:text-[#f0187a] shrink-0"
+            className="flex shrink-0 items-center gap-1 font-semibold text-[#D3126A] hover:text-[#f0187a]"
           >
             Read source
             <ExternalLink className="h-3 w-3" />
@@ -198,21 +198,21 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
 
         {loading ? (
           <div
-            className="mx-auto mb-12 max-w-2xl rounded-2xl border border-de-hairline bg-de-raised p-6 text-center md:p-8"
+            className="de-paper-on-well mx-auto mb-12 max-w-2xl rounded-2xl bg-white p-6 text-center md:p-8"
             data-testid="insights-loading"
           >
-            <p className="text-lg font-semibold text-white">Loading current threats…</p>
-            <p className="mt-2 text-base leading-relaxed text-white/55">
+            <p className="text-lg font-semibold text-[#1A1228]">Loading current threats…</p>
+            <p className="mt-2 text-base leading-relaxed text-black/60">
               Checking CISA, FIRST, NVD, and Microsoft MSRC. Nothing is invented while this loads.
             </p>
           </div>
         ) : displayed.length === 0 ? (
           <div
-            className="mx-auto mb-12 max-w-2xl rounded-2xl border border-de-hairline bg-de-raised p-6 text-center md:p-8"
+            className="de-paper-on-well mx-auto mb-12 max-w-2xl rounded-2xl bg-white p-6 text-center md:p-8"
             data-testid="insights-empty"
           >
-            <p className="text-lg font-semibold text-white">No current items meet the homepage threshold.</p>
-            <p className="mt-2 text-base leading-relaxed text-white/55">
+            <p className="text-lg font-semibold text-[#1A1228]">No current items meet the homepage threshold.</p>
+            <p className="mt-2 text-base leading-relaxed text-black/60">
               We only promote threats with confirmed exploitation, high exploit probability, or clear
               SMB relevance — and only within the last 45 days. The full stream stays on Security
               Updates with dates and sources.

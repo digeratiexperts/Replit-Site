@@ -3,7 +3,9 @@ import {
   isNearDocumentEnd,
   isPageFooterOnScreen,
   isPastStickyCtaThreshold,
+  isStickyCtaPinnedRoute,
   isStickyCtaRouteAllowed,
+  isTooShortToReachStickyThreshold,
   rectOverlapsPageContent,
   shouldShowStickyCta,
 } from "./stickyCtaVisibility";
@@ -16,9 +18,22 @@ describe("sticky CTA visibility", () => {
     expect(isStickyCtaRouteAllowed("/store")).toBe(true);
   });
 
+  it("pins checkout and quote even when the page is too short to scroll", () => {
+    expect(isStickyCtaPinnedRoute("/store/checkout")).toBe(true);
+    expect(isStickyCtaPinnedRoute("/store/quote-request")).toBe(true);
+    expect(isStickyCtaPinnedRoute("/store")).toBe(false);
+    expect(isStickyCtaPinnedRoute("/solutions")).toBe(false);
+  });
+
   it("waits until the visitor is halfway down the first screen", () => {
     expect(isPastStickyCtaThreshold(100, 800)).toBe(false);
     expect(isPastStickyCtaThreshold(401, 800)).toBe(true);
+  });
+
+  it("treats a short document as already past the scroll threshold", () => {
+    expect(isTooShortToReachStickyThreshold(900, 900)).toBe(true);
+    expect(isTooShortToReachStickyThreshold(900, 1100)).toBe(true);
+    expect(isTooShortToReachStickyThreshold(900, 2400)).toBe(false);
   });
 
   it("hides while scrolling, overlapping, timed out, or dismissed", () => {
@@ -37,6 +52,21 @@ describe("sticky CTA visibility", () => {
     expect(shouldShowStickyCta({ ...base, dismissed: true })).toBe(false);
   });
 
+  it("shows on a pinned checkout page without waiting for scroll or a long document", () => {
+    const checkout = {
+      dismissed: false,
+      routeAllowed: true,
+      pastThreshold: false,
+      scrolling: true,
+      overlapping: false,
+      autoHidden: true,
+      pinned: true,
+    };
+    expect(shouldShowStickyCta(checkout)).toBe(true);
+    expect(shouldShowStickyCta({ ...checkout, overlapping: true })).toBe(false);
+    expect(shouldShowStickyCta({ ...checkout, dismissed: true })).toBe(false);
+  });
+
   it("does not treat ordinary page copy as overlap", () => {
     const article = {
       closest: () => null,
@@ -48,7 +78,7 @@ describe("sticky CTA visibility", () => {
     expect(overlaps).toBe(false);
   });
 
-  it("parks when a dialog or cookie banner sits in the same slot", () => {
+  it("parks when a dialog sits in the same slot", () => {
     const dialog = {
       closest: (selector: string) => (selector === "[role='dialog']" ? dialog : null),
     } as unknown as Element;
@@ -58,6 +88,19 @@ describe("sticky CTA visibility", () => {
         () => [dialog],
       ),
     ).toBe(true);
+  });
+
+  it("stacks with the cookie banner instead of parking behind it", () => {
+    const cookie = {
+      closest: (selector: string) =>
+        selector === "[data-testid='cookie-consent-banner']" ? cookie : null,
+    } as unknown as Element;
+    expect(
+      rectOverlapsPageContent(
+        { top: 700, left: 40, width: 1200, height: 100, right: 1240 },
+        () => [cookie],
+      ),
+    ).toBe(false);
   });
 
   it("parks near the document footer", () => {

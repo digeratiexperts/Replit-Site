@@ -5,13 +5,16 @@ on:
     branches: [main]
   push:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
 
+# PR validation can cancel stale runs. Push/dispatch runs use their run ID so
+# an offline production runner never blocks newer main CI from starting.
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  group: ci-${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   check-test-build:
@@ -84,3 +87,111 @@ jobs:
           fi
 
           BASE_URL=http://127.0.0.1:3300 npm run smoke:public
+
+  # Production is a CyberPanel/OpenLiteSpeed VPS, not a Replit deployment.
+  # This job is pinned to a repo-scoped production runner. Generic Linux
+  # self-hosted runners (RackNerd security runner, Zorin laptop, etc.) are not
+  # eligible, preventing accidental cross-project execution.
+  deploy-production:
+    name: Deploy and verify production VPS
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    needs: check-test-build
+    runs-on: [self-hosted, Linux, X64, de-production, website-prod]
+    timeout-minutes: 30
+    concurrency:
+      group: de-production-website
+      cancel-in-progress: false
+
+    steps:
+      # If the production runner was offline for several merges, old deploy jobs
+      # may be waiting. They should not redeploy repeatedly when the runner returns.
+      - name: Coalesce stale deployment runs
+        shell: bash
+        run: |
+          set -euo pipefail
+          LATEST_SHA="$(git ls-remote https://github.com/digeratiexperts/digeratiexperts-site.git refs/heads/main | awk '{print $1}')"
+          test -n "$LATEST_SHA"
+          echo "Workflow SHA: $GITHUB_SHA"
+          echo "Latest main:  $LATEST_SHA"
+          if [ "$GITHUB_SHA" != "$LATEST_SHA" ]; then
+            echo "DE_DEPLOY_STALE=true" >> "$GITHUB_ENV"
+            echo "This is a stale deployment run; a newer main run will deploy instead."
+          else
+            echo "DE_DEPLOY_STALE=false" >> "$GITHUB_ENV"
+          fi
+
+      - name: Assert runner is the DE production host
+        if: env.DE_DEPLOY_STALE != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "Runner host: $(hostname)"
+          echo "Runner user: $(id -un)"
+
+          SITE=/home/digeratiexperts.com
+          DEPLOY="$SITE/current/deploy/vps/deploy.sh"
+
+          test -d "$SITE" || {
+            echo "::error::This runner is not on the DE production VPS: $SITE is missing."
+            exit 1
+          }
+          test -f "$DEPLOY" || {
+            echo "::error::Canonical production deploy script is missing: $DEPLOY"
+            exit 1
+          }
+
+          LOAD_STATE="$(systemctl show -p LoadState --value digeratiexperts-site 2>/dev/null || true)"
+          test "$LOAD_STATE" = "loaded" || {
+            echo "::error::digeratiexperts-site systemd unit is not loaded on this runner host."
+            exit 1
+          }
+
+          if [ "$(id -un)" = "diger7051" ]; then
+            echo "DE_DEPLOY_AS=site-user" >> "$GITHUB_ENV"
+          elif [ "$(id -u)" = "0" ]; then
+            echo "DE_DEPLOY_AS=root" >> "$GITHUB_ENV"
+          elif sudo -n -u diger7051 true 2>/dev/null; then
+            echo "DE_DEPLOY_AS=sudo-site-user" >> "$GITHUB_ENV"
+          else
+            echo "::error::Runner is on the production VPS but cannot execute as diger7051. Use scripts/setup-github-runner.sh with RUNNER_USER=diger7051, or grant only the required sudo-as-diger7051 deployment command."
+            exit 1
+          fi
+
+      - name: Deploy current main with canonical release script
+        if: env.DE_DEPLOY_STALE != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          CMD='DEPLOY_BRANCH=main bash /home/digeratiexperts.com/current/deploy/vps/deploy.sh production'
+          case "$DE_DEPLOY_AS" in
+            site-user)
+              bash -lc "$CMD"
+              ;;
+            root)
+              sudo -u diger7051 bash -lc "$CMD"
+              ;;
+            sudo-site-user)
+              sudo -n -u diger7051 bash -lc "$CMD"
+              ;;
+            *)
+              echo "::error::Unknown deployment execution mode"
+              exit 1
+              ;;
+          esac
+
+      - name: Verify production runtime
+        if: env.DE_DEPLOY_STALE != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS http://127.0.0.1:3300/healthz
+          curl -fsS https://digeratiexperts.com/healthz
+
+          URL="https://digeratiexperts.com/api/portal/zoho/chat/status"
+          BODY="$(curl -fsS --max-time 15 "$URL")"
+          printf '%s\n' "$BODY"
+
+          printf '%s' "$BODY" | grep -q '"version":"de-intelligence-v1"'
+          printf '%s' "$BODY" | grep -q '"enabled":true'
+          printf '%s' "$BODY" | grep -Eq '"publicGovernedRecords":[1-9][0-9]*'
+          echo "Production is serving DE Intelligence v1"

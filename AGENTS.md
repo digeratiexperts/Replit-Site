@@ -1,6 +1,6 @@
 # Agent workflow (Digerati Experts)
 
-Authoritative policy: **`.cursorrules`** (sections 1-42, including section 9A Visual System v2). Always-applied pointer: `.cursor/rules/00-follow-cursorrules.mdc`.
+Authoritative policy: **`.cursorrules`** (sections 1-42, including section 9A Visual System v2). Always-applied pointers: `.cursor/rules/00-follow-cursorrules.mdc`, `.cursor/rules/de-ecosystem.mdc`.
 
 Design OS (execution layer, does not replace `.cursorrules`): `.cursor/rules/ui-ux.mdc`, `brand.mdc`, `frontend.mdc`, `visual-system-v2.mdc` + `design/DESIGN_SYSTEM.md` + `design/VISUAL_SYSTEM_V2.md`. Never judge UI from source code alone. Blog/Journal and Store colors are locked: `.cursor/rules/blog-store-color-lock.mdc`.
 
@@ -15,6 +15,8 @@ Task ledger: `docs/SITE-VISUAL-TASKS.md`. Do not start a visual task marked IN P
 - `digeratiexperts/TechSales` is legacy/reference-only by default; do not start new work there or archive/delete it without an explicit migration decision.
 - Full authority matrix: `docs/REPOSITORY-AUTHORITY.md`.
 - Website source-of-truth details: `docs/SOURCE-OF-TRUTH.md`.
+- Ecosystem rule (always apply): `.cursor/rules/de-ecosystem.mdc`. This website is a GitHub-owned **content/application projection**. Intelligence Hub is the **operational control plane**.
+- Ecosystem **scoreboard** is Hub Issue [#122](https://github.com/digeratiexperts/Intelligence-Hub/issues/122) (charter `docs/DE-ECOSYSTEM-CHARTER.md`, ratified PR #123 / `5354a8b`). Do **not** copy ECO-001–030 into this repo. Do **not** call the ecosystem finished until #122’s completion gate passes.
 
 If an old Cursor task, chat, PR description, screenshot, or migration note conflicts with current GitHub state and the authority files above, treat the old instruction as stale and re-check before acting.
 
