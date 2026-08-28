@@ -8,6 +8,7 @@ set -Eeuo pipefail
 
 REPO="${REPO:-digeratiexperts/digeratiexperts-site}"
 REPO_URL="https://github.com/${REPO}"
+CANONICAL_GIT_URL="${CANONICAL_GIT_URL:-${REPO_URL}.git}"
 RUNNER_ROLE="${RUNNER_ROLE:-website-prod}"
 RUNNER_LABELS="${RUNNER_LABELS:-de-production,website-prod}"
 RUNNER_NAME="${RUNNER_NAME:-$(hostname -s)-${RUNNER_ROLE}}"
@@ -36,6 +37,40 @@ else
 fi
 
 id "$RUNNER_USER" >/dev/null 2>&1 || die "Runner user '$RUNNER_USER' does not exist."
+
+# The website deployer uses /home/digeratiexperts.com/app as a persistent bare
+# mirror. Repair it here before the first queued deployment is allowed to run.
+# This also migrates hosts that were still pointed at the retired Replit-Site
+# repository. The production deploy must always source the canonical site repo.
+if [[ "$RUNNER_ROLE" == "website-prod" ]]; then
+  command -v git >/dev/null 2>&1 || die "git is required on the website production VPS."
+  SITE_HOME=/home/digeratiexperts.com
+  MIRROR_DIR="$SITE_HOME/app"
+  SITE_USER="${SITE_USER:-diger7051}"
+  id "$SITE_USER" >/dev/null 2>&1 || die "Site user '$SITE_USER' does not exist."
+
+  if [[ ! -d "$MIRROR_DIR" ]]; then
+    log "creating canonical production mirror: $CANONICAL_GIT_URL -> $MIRROR_DIR"
+    $SUDO -u "$SITE_USER" git clone --mirror "$CANONICAL_GIT_URL" "$MIRROR_DIR"
+  else
+    git --git-dir="$MIRROR_DIR" rev-parse --is-bare-repository 2>/dev/null | grep -qx true \
+      || die "$MIRROR_DIR exists but is not a valid bare Git repository."
+    CURRENT_ORIGIN="$(git --git-dir="$MIRROR_DIR" remote get-url origin 2>/dev/null || true)"
+    if [[ "$CURRENT_ORIGIN" != "$CANONICAL_GIT_URL" ]]; then
+      log "repairing production mirror origin: ${CURRENT_ORIGIN:-<missing>} -> $CANONICAL_GIT_URL"
+      if [[ -n "$CURRENT_ORIGIN" ]]; then
+        $SUDO -u "$SITE_USER" git --git-dir="$MIRROR_DIR" remote set-url origin "$CANONICAL_GIT_URL"
+      else
+        $SUDO -u "$SITE_USER" git --git-dir="$MIRROR_DIR" remote add origin "$CANONICAL_GIT_URL"
+      fi
+    fi
+  fi
+
+  VERIFIED_ORIGIN="$(git --git-dir="$MIRROR_DIR" remote get-url origin 2>/dev/null || true)"
+  [[ "$VERIFIED_ORIGIN" == "$CANONICAL_GIT_URL" ]] \
+    || die "Production mirror origin verification failed: '$VERIFIED_ORIGIN'"
+  log "production mirror verified: $VERIFIED_ORIGIN"
+fi
 
 get_token() {
   if [[ -n "${RUNNER_TOKEN:-}" ]]; then
