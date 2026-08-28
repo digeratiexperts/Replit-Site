@@ -250,52 +250,43 @@ export function ShoppingCart() {
                               const visual = getProductVisual(item.product);
                               const recurring = isRecurringPricing(item.product.pricingType);
                               const detailsOpen = openItemId === item.product.id;
+                              const lineTotal = (
+                                (item.clientPrice ?? item.product.basePrice) * item.quantity
+                              ).toFixed(2);
                               return (
                                 <div
                                   key={item.product.id}
-                                  className="rounded-lg border border-[color:var(--dp-border-10)] bg-[color:var(--dp-card-bg)] p-3"
+                                  className="rounded-lg border border-[color:var(--dp-border-10)] bg-[color:var(--dp-card-bg)] px-3 py-2.5"
                                   data-testid={`cart-item-${item.product.id}`}
                                 >
-                                  <div className="mb-2 flex items-start gap-3">
+                                  <div className="flex items-start gap-3">
                                     <img
                                       src={visual.logoUrl || visual.cardUrl}
                                       alt=""
-                                      className="h-11 w-11 shrink-0 rounded-md border border-[color:var(--dp-border-10)] bg-white object-contain p-1"
+                                      className="h-10 w-10 shrink-0 rounded-md border border-[color:var(--dp-border-10)] bg-white object-contain p-1"
                                     />
                                     <div className="min-w-0 flex-1">
-                                      <h4 className="line-clamp-2 font-medium text-[color:var(--dp-text-primary)]">
-                                        {item.product.name}
-                                      </h4>
+                                      <div className="flex items-start justify-between gap-2">
+                                        <h4 className="line-clamp-2 font-medium leading-snug text-[color:var(--dp-text-primary)]">
+                                          {item.product.name}
+                                        </h4>
+                                        <span className="shrink-0 text-sm font-semibold tabular-nums text-de-accent-ink">
+                                          ${lineTotal}
+                                          {recurring
+                                            ? item.product.pricingType === "yearly"
+                                              ? "/yr"
+                                              : "/mo"
+                                            : ""}
+                                        </span>
+                                      </div>
                                       <p className="text-xs text-[color:var(--dp-text-50)]">
                                         {categoryLabels[item.product.category]} ·{" "}
                                         {billingLabel(item.product.pricingType, item.product.pricingUnit)}
                                       </p>
-                                      <p className="text-sm text-[color:var(--dp-text-50)]">{formatPrice(item.product)}</p>
                                     </div>
-                                    <Button
-                                      variant="ghost"
-                                      size="sm"
-                                      className="h-10 shrink-0 px-2 text-[color:var(--dp-text-60)] hover:text-[color:var(--dp-text-hover)]"
-                                      onClick={() =>
-                                        setOpenItemId(detailsOpen ? null : item.product.id)
-                                      }
-                                      aria-expanded={detailsOpen}
-                                      data-testid={`button-item-details-${item.product.id}`}
-                                    >
-                                      Details
-                                      <ChevronDown
-                                        className={`ml-1 h-3.5 w-3.5 transition-transform ${detailsOpen ? "rotate-180" : ""}`}
-                                      />
-                                    </Button>
                                   </div>
 
-                                  {detailsOpen && item.product.shortDescription && (
-                                    <p className="mb-2 text-xs leading-relaxed text-[color:var(--dp-text-55)]">
-                                      {item.product.shortDescription}
-                                    </p>
-                                  )}
-
-                                  <div className="flex flex-wrap items-center justify-between gap-2">
+                                  <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
                                     <div className="flex items-center gap-1">
                                       <Button
                                         variant="outline"
@@ -330,41 +321,54 @@ export function ShoppingCart() {
                                         <Plus className="h-3 w-3" />
                                       </Button>
                                     </div>
-                                    <span className="text-sm font-semibold text-de-accent-ink">
-                                      $
-                                      {(
-                                        (item.clientPrice ?? item.product.basePrice) * item.quantity
-                                      ).toFixed(2)}
-                                      {recurring
-                                        ? item.product.pricingType === "yearly"
-                                          ? "/yr"
-                                          : "/mo"
-                                        : ""}
-                                    </span>
+                                    <div className="flex items-center">
+                                      <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="h-11 px-2 text-[color:var(--dp-text-60)] hover:text-[color:var(--dp-text-hover)]"
+                                        onClick={() =>
+                                          setOpenItemId(detailsOpen ? null : item.product.id)
+                                        }
+                                        aria-expanded={detailsOpen}
+                                        data-testid={`button-item-details-${item.product.id}`}
+                                      >
+                                        Details
+                                        <ChevronDown
+                                          className={`ml-1 h-3.5 w-3.5 transition-transform ${detailsOpen ? "rotate-180" : ""}`}
+                                        />
+                                      </Button>
+                                      <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => removeFromCart(item.product.id)}
+                                        className="h-11 px-2 text-[color:var(--dp-danger)] hover:bg-[color:var(--dp-danger-hover-bg)]"
+                                        data-testid={`button-remove-${item.product.id}`}
+                                      >
+                                        <Trash2 className="mr-1 h-3.5 w-3.5" />
+                                        Remove
+                                      </Button>
+                                    </div>
                                   </div>
 
-                                  <div className="mt-2 flex flex-wrap gap-2">
-                                    <Button
-                                      variant="ghost"
-                                      size="sm"
-                                      className="h-10 px-2 text-[color:var(--dp-text-60)] hover:text-[color:var(--dp-text-hover)]"
-                                      onClick={() => saveForLater(item.product.id)}
-                                      data-testid={`button-save-later-${item.product.id}`}
-                                    >
-                                      <BookmarkPlus className="mr-1 h-3.5 w-3.5" />
-                                      Save for later
-                                    </Button>
-                                    <Button
-                                      variant="ghost"
-                                      size="sm"
-                                      onClick={() => removeFromCart(item.product.id)}
-                                      className="h-10 px-2 text-[color:var(--dp-danger)] hover:bg-[color:var(--dp-danger-hover-bg)]"
-                                      data-testid={`button-remove-${item.product.id}`}
-                                    >
-                                      <Trash2 className="mr-1 h-3.5 w-3.5" />
-                                      Remove
-                                    </Button>
-                                  </div>
+                                  {detailsOpen && (
+                                    <div className="mt-2 border-t border-[color:var(--dp-border-10)] pt-2">
+                                      {item.product.shortDescription && (
+                                        <p className="mb-2 text-xs leading-relaxed text-[color:var(--dp-text-55)]">
+                                          {item.product.shortDescription}
+                                        </p>
+                                      )}
+                                      <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="h-11 px-2 text-[color:var(--dp-text-60)] hover:text-[color:var(--dp-text-hover)]"
+                                        onClick={() => saveForLater(item.product.id)}
+                                        data-testid={`button-save-later-${item.product.id}`}
+                                      >
+                                        <BookmarkPlus className="mr-1 h-3.5 w-3.5" />
+                                        Save for later
+                                      </Button>
+                                    </div>
+                                  )}
                                 </div>
                               );
                             })}
@@ -573,10 +577,10 @@ export function ShoppingCart() {
                     <FileText className="mr-2 h-4 w-4" />
                     Request Formal Quote
                   </Button>
-                  <div className="grid grid-cols-2 gap-1">
+                  <div className="grid grid-cols-3 gap-1">
                     <Button
                       variant="ghost"
-                      className="h-auto min-h-11 whitespace-normal text-center text-sm leading-tight text-[color:var(--dp-text-70)] hover:bg-[color:var(--dp-hover-bg)] hover:text-[color:var(--dp-text-hover)]"
+                      className="h-auto min-h-11 whitespace-normal px-1 text-center text-sm leading-tight text-[color:var(--dp-text-70)] hover:bg-[color:var(--dp-hover-bg)] hover:text-[color:var(--dp-text-hover)]"
                       onClick={closeCart}
                       data-testid="button-continue-shopping"
                     >
@@ -585,24 +589,24 @@ export function ShoppingCart() {
                     <Button
                       asChild
                       variant="ghost"
-                      className="h-auto min-h-11 whitespace-normal text-center text-sm leading-tight text-[color:var(--dp-text-70)] hover:bg-de-accent/10 hover:text-[color:var(--dp-text-hover)]"
+                      className="h-auto min-h-11 whitespace-normal px-1 text-center text-sm leading-tight text-[color:var(--dp-text-70)] hover:bg-de-accent/10 hover:text-[color:var(--dp-text-hover)]"
                       onClick={closeCart}
                       data-testid="button-schedule-from-cart"
                     >
-                      <a href="/book" className="whitespace-normal text-center leading-tight">
+                      <a href="/book" className="inline-flex items-center justify-center whitespace-normal text-center leading-tight">
                         <Calendar className="mr-1 h-4 w-4 shrink-0" />
                         {CTA.primaryShort}
                       </a>
                     </Button>
+                    <Button
+                      variant="ghost"
+                      onClick={clearCart}
+                      className="h-auto min-h-11 whitespace-normal px-1 text-center text-sm leading-tight text-[color:var(--dp-text-50)] hover:bg-[color:var(--dp-hover-bg)] hover:text-[color:var(--dp-text-hover)]"
+                      data-testid="button-clear-cart"
+                    >
+                      Clear solution
+                    </Button>
                   </div>
-                  <Button
-                    variant="ghost"
-                    onClick={clearCart}
-                    className="h-10 w-full text-[color:var(--dp-text-50)] hover:bg-[color:var(--dp-hover-bg)] hover:text-[color:var(--dp-text-hover)]"
-                    data-testid="button-clear-cart"
-                  >
-                    Clear solution
-                  </Button>
                 </div>
               </div>
             )}
