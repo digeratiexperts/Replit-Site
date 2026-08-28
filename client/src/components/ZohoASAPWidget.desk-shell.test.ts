@@ -89,6 +89,14 @@ describe("DE Desk shell positioning", () => {
     expect(src).toMatch(/0 0 0 1px rgba\(255,255,255,0\.5\)/);
   });
 
+  it("paints Get Support issue choices white with black type and a slow hover wash", () => {
+    expect(src).toMatch(/trackDeskSupportRowGlow/);
+    expect(src).toMatch(/\.de-desk-issue-list \{[\s\S]*?background: #fff;/);
+    expect(src).toMatch(/\.de-desk-issue-row \{[\s\S]*?color: #17141f;/);
+    expect(src).toMatch(/\.de-desk-incident \{[\s\S]*?background: #fff;/);
+    expect(src).toMatch(/\.de-desk-incident-copy strong \{[\s\S]*?color: #17141f;/);
+  });
+
   it("styles Ask DE discovery and Get Support issues as graphite grouped stacks", () => {
     expect(src).toMatch(/de-desk-discover/);
     expect(src).toMatch(/de-desk-discover-list/);
