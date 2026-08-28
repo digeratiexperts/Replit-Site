@@ -180,6 +180,7 @@ export function ShoppingCart() {
             }
             className={`de-panel fixed right-0 z-[61] flex w-full flex-col border-l border-[color:var(--dp-border-10)] bg-[color:var(--dp-panel-bg)] ${drawerWidthClass}`}
             data-theme={panelTheme}
+            data-accent="electric"
             style={getPanelThemeStyle(panelTheme)}
             data-testid="shopping-cart-panel"
           >
@@ -261,13 +262,14 @@ export function ShoppingCart() {
             )}
 
             {!isMinimized && items.length > 0 && (
-              <div className="flex min-h-0 flex-1 flex-col md:flex-row">
+              <div className="grid min-h-0 flex-1 grid-cols-1 md:grid-cols-2 md:grid-rows-[auto_minmax(0,1fr)] lg:grid-cols-[minmax(0,1.35fr)_minmax(13rem,1fr)_minmax(17rem,0.95fr)] lg:grid-rows-1">
                 <SolutionDrawerPane
                   id="items"
                   title="In this solution"
                   summary={itemsPaneSummary(items.length)}
                   open={panes.items}
                   onToggle={() => onTogglePane("items")}
+                  className="md:row-start-2 lg:col-start-1 lg:row-start-1"
                 >
                   {grouped.map(([group, groupItems]) => (
                     <div key={group} className="mb-5 last:mb-0">
@@ -424,6 +426,7 @@ export function ShoppingCart() {
                   summary={coveragePaneSummary(coverage.coveredCount, coverage.dimensionCount)}
                   open={panes.coverage}
                   onToggle={() => onTogglePane("coverage")}
+                  className="md:col-span-2 md:row-start-1 md:max-h-[42vh] md:border-b md:border-r-0 lg:col-span-1 lg:col-start-2 lg:row-start-1 lg:max-h-none lg:border-b-0 lg:border-r"
                 >
                   <CoverageScorePanel
                     embedded
@@ -527,7 +530,7 @@ export function ShoppingCart() {
                   summary={checkoutPaneSummary(totals)}
                   open={panes.checkout}
                   onToggle={() => onTogglePane("checkout")}
-                  className="md:max-w-sm"
+                  className="md:col-start-2 md:row-start-2 md:border-r-0 lg:col-start-3 lg:row-start-1"
                 >
                   <div className="mb-4 space-y-2">
                     {totals.dueToday > 0 && (

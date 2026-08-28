@@ -79,6 +79,9 @@ describe("Your Solution drawer source", () => {
     expect(cartSrc).toMatch(/id="coverage"/);
     expect(cartSrc).toMatch(/id="checkout"/);
     expect(cartSrc).toMatch(/lg:max-w-6xl/);
+    expect(cartSrc).toMatch(/md:grid-cols-2/);
+    expect(cartSrc).toMatch(/lg:grid-cols-\[minmax\(0,1\.35fr\)/);
+    expect(cartSrc).toMatch(/data-accent="electric"/);
     expect(paneSrc).toMatch(/data-testid=\{`solution-pane-\$\{id\}`\}/);
     expect(paneSrc).toMatch(/aria-expanded=\{open\}/);
     expect(paneSrc).toMatch(/min-h-11/);

@@ -28,8 +28,8 @@ export function SolutionDrawerPane({
   return (
     <section
       className={cn(
-        "flex min-w-0 flex-col border-b border-[color:var(--dp-border-10)] md:border-b-0 md:border-r md:last:border-r-0",
-        open ? "min-h-0 flex-1 md:min-w-[16rem]" : "flex-none md:w-56 md:shrink-0",
+        "flex h-full min-h-0 min-w-0 flex-col border-b border-[color:var(--dp-border-10)] md:border-b-0 md:border-r md:last:border-r-0",
+        !open && "flex-none",
         className,
       )}
       data-testid={`solution-pane-${id}`}
