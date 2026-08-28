@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type PointerEvent as ReactPointerEvent } from "react";
 import {
   CheckCircle2,
   ChevronRight,
@@ -91,6 +91,16 @@ type ChatHeadsUp = {
 function previewChatLine(content: string, max = 108) {
   const text = content.replace(/\s+/g, " ").trim();
   return text.length > max ? `${text.slice(0, max - 1)}…` : text;
+}
+
+/** Pointer-follow white outline on Get Support fields. Magenta still wins on :focus. */
+function trackDeskSupportFieldSpotlight(event: ReactPointerEvent<HTMLElement>) {
+  if (event.pointerType !== "mouse") return;
+  const field = (event.target as HTMLElement | null)?.closest?.(".de-desk-input") as HTMLElement | null;
+  if (!field || !event.currentTarget.contains(field)) return;
+  const rect = field.getBoundingClientRect();
+  field.style.setProperty("--desk-spot-x", `${Math.round(event.clientX - rect.left)}px`);
+  field.style.setProperty("--desk-spot-y", `${Math.round(event.clientY - rect.top)}px`);
 }
 
 function getDeskChipIcon(id: DeskTicketChipId) {
@@ -1280,7 +1290,11 @@ export const ZohoASAPWidget = ({
                         ) : null}
                         </div>
 
-                        <div className="de-desk-form" ref={ticketDetailsRef}>
+                        <div
+                          className="de-desk-form"
+                          ref={ticketDetailsRef}
+                          onPointerMove={trackDeskSupportFieldSpotlight}
+                        >
 
                         <div className="de-desk-field">
                           <label htmlFor="support-name">Name</label>
@@ -2105,27 +2119,72 @@ export const ZohoASAPWidget = ({
             .de-desk-input-wrap { position: relative; }
             .de-desk-input-wrap > svg {
               position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
-              width: 15px; height: 15px; color: rgba(255,255,255,0.65); pointer-events: none;
+              width: 15px; height: 15px; color: rgba(255,255,255,0.72); pointer-events: none;
             }
             .de-desk-shell .de-desk-input {
+              --desk-spot-x: 50%;
+              --desk-spot-y: 50%;
               width: 100%;
               min-height: 46px;
               height: 46px;
-              background: var(--de-raised, #151217) !important;
-              border: 1px solid rgba(255,255,255,0.22) !important;
+              border: 1px solid transparent !important;
+              background-color: var(--de-raised, #151217) !important;
+              background-image:
+                linear-gradient(var(--de-raised, #151217), var(--de-raised, #151217)),
+                linear-gradient(rgba(255,255,255,0.88), rgba(255,255,255,0.88)) !important;
+              background-origin: border-box;
+              background-clip: padding-box, border-box;
               color: #fff !important;
               border-radius: 11px;
               padding: 10px 14px 10px 34px;
               font-size: 14px;
-              box-shadow: inset 0 2px 4px rgba(0,0,0,0.4) !important;
-              transition: border-color 0.16s ease, box-shadow 0.16s ease;
+              box-shadow:
+                inset 0 2px 4px rgba(0,0,0,0.4),
+                0 0 0 1px rgba(255,255,255,0.5) !important;
+              transition: box-shadow 0.2s ease-out;
             }
-            .de-desk-shell .de-desk-input:focus {
-              border-color: #D3126A !important;
+            @media (hover: hover) and (pointer: fine) {
+              .de-desk-shell .de-desk-input:hover:not(:focus):not([aria-invalid="true"]) {
+                background-image:
+                  linear-gradient(var(--de-raised, #151217), var(--de-raised, #151217)),
+                  radial-gradient(
+                    170px circle at var(--desk-spot-x) var(--desk-spot-y),
+                    #fff 0%,
+                    rgba(255,255,255,0.82) 26%,
+                    rgba(255,255,255,0.42) 100%
+                  ) !important;
+                box-shadow:
+                  inset 0 2px 4px rgba(0,0,0,0.4),
+                  0 0 0 1px rgba(255,255,255,0.14),
+                  0 0 18px rgba(255,255,255,0.12) !important;
+              }
+            }
+            .de-desk-shell .de-desk-input:focus,
+            .de-desk-shell .de-desk-input:focus-visible {
+              background-image:
+                linear-gradient(var(--de-raised, #151217), var(--de-raised, #151217)),
+                linear-gradient(#D3126A, #D3126A) !important;
               box-shadow: 0 0 0 3px rgba(211,18,106,0.25), inset 0 2px 4px rgba(0,0,0,0.4) !important;
+              outline: 2px solid #D3126A !important;
+              outline-offset: 2px;
             }
             .de-desk-shell .de-desk-input[aria-invalid="true"] {
-              border-color: #f0455b !important;
+              background-image:
+                linear-gradient(var(--de-raised, #151217), var(--de-raised, #151217)),
+                linear-gradient(#f0455b, #f0455b) !important;
+            }
+            @media (prefers-reduced-motion: reduce) {
+              .de-desk-shell .de-desk-input {
+                transition: none;
+              }
+              .de-desk-shell .de-desk-input:hover:not(:focus):not([aria-invalid="true"]) {
+                background-image:
+                  linear-gradient(var(--de-raised, #151217), var(--de-raised, #151217)),
+                  linear-gradient(rgba(255,255,255,0.88), rgba(255,255,255,0.88)) !important;
+                box-shadow:
+                  inset 0 2px 4px rgba(0,0,0,0.4),
+                  0 0 0 1px rgba(255,255,255,0.5) !important;
+              }
             }
             .de-desk-field-error {
               margin: 6px 0 0;
