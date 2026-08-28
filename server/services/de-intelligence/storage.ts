@@ -335,6 +335,7 @@ function allowedScopeSql(scope: KnowledgeScope, clientId?: string) {
 
 function allowedInMemory(record: KnowledgeRecord, request: KnowledgeRetrievalRequest): boolean {
   if (record.status !== "active") return false;
+  if (record.reviewState !== "approved") return false;
   if (request.scope === "public") return record.scope === "public";
   if (request.scope === "internal") return record.scope === "public" || record.scope === "internal";
   return record.scope === "public" || (
@@ -354,6 +355,7 @@ function rowToKnowledgeRecord(row: any): KnowledgeRecord {
     scope: String(row.scope) as KnowledgeScope,
     type: String(row.type) as KnowledgeType,
     status: String(row.status) as KnowledgeStatus,
+    reviewState: String(row.review_state || "proposed") as KnowledgeRecord["reviewState"],
     authority: Number(row.authority),
     ...(effectiveDate ? { effectiveDate } : {}),
     ...(reviewedAt ? { reviewedAt } : {}),
@@ -385,6 +387,7 @@ const SELECT_COLUMNS = sql`
   r.scope,
   r.type,
   r.status,
+  r.review_state,
   r.authority,
   r.effective_date,
   r.reviewed_at,
@@ -439,6 +442,7 @@ export async function searchStoredKnowledge(
           FROM de_knowledge_records r
           JOIN de_knowledge_chunks c ON c.record_id = r.id
           WHERE r.status = 'active'
+            AND r.review_state = 'approved'
             AND ${scopePredicate}
             AND to_tsvector(
                   'english'::regconfig,
@@ -451,7 +455,7 @@ export async function searchStoredKnowledge(
           SELECT ${SELECT_COLUMNS}, 0 AS text_rank
           FROM de_knowledge_records r
           JOIN de_knowledge_chunks c ON c.record_id = r.id
-          WHERE r.status = 'active' AND ${scopePredicate}
+          WHERE r.status = 'active' AND r.review_state = 'approved' AND ${scopePredicate}
           ORDER BY r.authority DESC, r.updated_at DESC
           LIMIT ${limit}
         `);
@@ -496,7 +500,9 @@ export async function storeKnowledgeDocument(input: StoredDocumentInput): Promis
 
   const hash = sha256(content);
   const documentId = input.id || `de-doc-${hash.slice(0, 20)}`;
-  const recordId = `de-record-${hash.slice(0, 20)}`;
+  const recordId = `de-record-${sha256(
+    `${documentId}|${input.scope}|${input.clientId || ""}|${hash}`,
+  ).slice(0, 20)}`;
   const sourceId = `de-source-${sha256(
     `${input.source.kind}|${input.source.label}|${input.sourceExternalId || ""}`,
   ).slice(0, 20)}`;
@@ -513,6 +519,7 @@ export async function storeKnowledgeDocument(input: StoredDocumentInput): Promis
       scope: input.scope,
       type: input.type,
       status: input.status || "active",
+      reviewState: input.reviewState || "proposed",
       authority: input.authority,
       ...(input.effectiveDate ? { effectiveDate: input.effectiveDate } : {}),
       ...(input.reviewedAt ? { reviewedAt: input.reviewedAt } : {}),

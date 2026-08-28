@@ -69,6 +69,48 @@ describe("DE Intelligence storage ingestion", () => {
     expect(acmeHits.some((hit) => hit.clientId === "acme")).toBe(true);
   });
 
+  it("never retrieves storage-backed knowledge until it is explicitly approved", async () => {
+    await storeKnowledgeDocument({
+      title: "Unreviewed client procedure",
+      content: "This draft procedure contains the unique phrase cobalt-review-boundary and must not reach retrieval.",
+      scope: "client",
+      clientId: "review-client",
+      type: "client_documentation",
+      authority: 99,
+      reviewState: "needs_review",
+      source: { kind: "document", label: "Unreviewed document" },
+    });
+
+    const hits = await searchStoredKnowledge({
+      query: "cobalt review boundary",
+      scope: "client",
+      clientId: "review-client",
+    });
+    expect(hits.some((hit) => hit.content.includes("cobalt-review-boundary"))).toBe(false);
+  });
+
+  it("keeps identical document content isolated between tenants", async () => {
+    const shared = "Shared boilerplate phrase tenant-collision-sentinel used by two separate clients.";
+    const clientA = await storeKnowledgeDocument({
+      title: "Shared procedure A", content: shared, scope: "client", clientId: "tenant-a",
+      type: "client_documentation", authority: 90, reviewState: "approved",
+      source: { kind: "document", label: "Tenant A source" },
+    });
+    const clientB = await storeKnowledgeDocument({
+      title: "Shared procedure B", content: shared, scope: "client", clientId: "tenant-b",
+      type: "client_documentation", authority: 90, reviewState: "approved",
+      source: { kind: "document", label: "Tenant B source" },
+    });
+    expect(clientA.recordId).not.toBe(clientB.recordId);
+
+    const aHits = await searchStoredKnowledge({ query: "tenant collision sentinel", scope: "client", clientId: "tenant-a" });
+    const bHits = await searchStoredKnowledge({ query: "tenant collision sentinel", scope: "client", clientId: "tenant-b" });
+    expect(aHits.some((hit) => hit.clientId === "tenant-a")).toBe(true);
+    expect(aHits.some((hit) => hit.clientId === "tenant-b")).toBe(false);
+    expect(bHits.some((hit) => hit.clientId === "tenant-b")).toBe(true);
+    expect(bHits.some((hit) => hit.clientId === "tenant-a")).toBe(false);
+  });
+
   it("preserves provenance on an ingested public document", async () => {
     const stored = await storeKnowledgeDocument({
       title: "DE password reset guide",
