@@ -1,4 +1,5 @@
 import { DE_KNOWLEDGE_CATALOG } from "./catalog";
+import { recordKnowledgeGap, searchStoredKnowledge } from "./storage";
 import type {
   KnowledgeRecord,
   KnowledgeRetrievalHit,
@@ -76,6 +77,14 @@ function scoreRecord(record: KnowledgeRecord, request: KnowledgeRetrievalRequest
     score += 3;
     reasons.push("client-match");
   }
+  if (record.sourceDocumentId) {
+    score += 0.08;
+    reasons.push("durable-source");
+  }
+  if (record.confidence != null) {
+    score += Math.max(0, Math.min(record.confidence, 1)) * 0.2;
+    reasons.push(`confidence:${record.confidence.toFixed(2)}`);
+  }
 
   return { record, score, reasons };
 }
@@ -92,6 +101,35 @@ export function retrieveKnowledge(
     .slice(0, limit);
 }
 
+export async function retrieveKnowledgeStorageBacked(
+  request: KnowledgeRetrievalRequest,
+): Promise<KnowledgeRetrievalHit[]> {
+  // Authorization filtering occurs in the durable store before records are
+  // returned here. We then apply the exact same governed reranker used by the
+  // bootstrap corpus, preserving one retrieval contract across both sources.
+  const storedCandidates = await searchStoredKnowledge(request, 50);
+  const merged = new Map<string, KnowledgeRecord>();
+  for (const record of DE_KNOWLEDGE_CATALOG) merged.set(record.id, record);
+  for (const record of storedCandidates) merged.set(record.id, record);
+
+  const hits = retrieveKnowledge(request, Array.from(merged.values()));
+  const queryTokens = tokens(request.query);
+  const hasMeaningfulMatch = hits.some((hit) =>
+    hit.reasons.some((reason) => reason.startsWith("lexical:") || reason.startsWith("tag:"))
+  );
+  if (queryTokens.length >= 2 && !hasMeaningfulMatch) {
+    void recordKnowledgeGap({
+      query: request.query,
+      scope: request.scope,
+      clientId: request.clientId,
+      mode: request.mode,
+      pageType: request.pageType,
+      reason: "No meaningful governed lexical/tag match after storage-backed retrieval",
+    });
+  }
+  return hits;
+}
+
 export function formatKnowledgeForPrompt(hits: KnowledgeRetrievalHit[]): string {
   if (!hits.length) return "No governed DE knowledge matched this turn. Do not invent DE-specific facts; ask one clarifying question or route to support.";
 
@@ -100,7 +138,7 @@ export function formatKnowledgeForPrompt(hits: KnowledgeRetrievalHit[]): string 
       `[DE SOURCE ${index + 1}: ${record.id}]`,
       `Title: ${record.title}`,
       `Type: ${record.type}; authority=${record.authority}; scope=${record.scope}; effective=${record.effectiveDate || "unspecified"}`,
-      `Source: ${record.source.label}`,
+      `Source: ${record.source.label}${record.sourceDocumentId ? `; document=${record.sourceDocumentId}` : ""}${record.chunkIndex == null ? "" : `; chunk=${record.chunkIndex}`}`,
       record.content,
     ].join("\n"))
     .join("\n\n");
@@ -113,6 +151,21 @@ export function retrievePublicKnowledge(params: {
   limit?: number;
 }): KnowledgeRetrievalHit[] {
   return retrieveKnowledge({
+    query: params.query,
+    scope: "public",
+    mode: params.mode,
+    pageType: params.pageType,
+    limit: params.limit,
+  });
+}
+
+export async function retrievePublicKnowledgeStorageBacked(params: {
+  query: string;
+  mode?: string;
+  pageType?: string;
+  limit?: number;
+}): Promise<KnowledgeRetrievalHit[]> {
+  return retrieveKnowledgeStorageBacked({
     query: params.query,
     scope: "public",
     mode: params.mode,
