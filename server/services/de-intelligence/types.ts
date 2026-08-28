@@ -42,6 +42,13 @@ export type KnowledgeRecord = {
   modes?: string[];
   pageTypes?: string[];
   source: KnowledgeSource;
+  /** Storage-backed provenance. Bootstrap records may omit these fields. */
+  sourceDocumentId?: string;
+  chunkIndex?: number;
+  ingestedAt?: string;
+  confidence?: number;
+  reviewedBy?: string;
+  supersedesId?: string;
 };
 
 export type KnowledgeRetrievalRequest = {
