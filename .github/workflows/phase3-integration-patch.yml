@@ -40,6 +40,7 @@ jobs:
               ("          WHERE r.status = 'active'\n            AND ${scopePredicate}\n", "          WHERE r.status = 'active'\n            AND r.review_state = 'approved'\n            AND ${scopePredicate}\n"),
               ("          WHERE r.status = 'active' AND ${scopePredicate}\n", "          WHERE r.status = 'active' AND r.review_state = 'approved' AND ${scopePredicate}\n"),
               ('      status: input.status || "active",\n      authority: input.authority,\n', '      status: input.status || "active",\n      reviewState: input.reviewState || "proposed",\n      authority: input.authority,\n'),
+              ('  const recordId = `de-record-${hash.slice(0, 20)}`;\n', '  const recordId = `de-record-${sha256(\n    `${documentId}|${input.scope}|${input.clientId || ""}|${hash}`,\n  ).slice(0, 20)}`;\n'),
           ]
           for old, new in replacements:
               count = text.count(old)
@@ -107,6 +108,28 @@ jobs:
               '    expect(hits.some((hit) => hit.content.includes("cobalt-review-boundary"))).toBe(false);',
               '  });',
               '',
+              '  it("keeps identical document content isolated between tenants", async () => {',
+              '    const shared = "Shared boilerplate phrase tenant-collision-sentinel used by two separate clients.";',
+              '    const clientA = await storeKnowledgeDocument({',
+              '      title: "Shared procedure A", content: shared, scope: "client", clientId: "tenant-a",',
+              '      type: "client_documentation", authority: 90, reviewState: "approved",',
+              '      source: { kind: "document", label: "Tenant A source" },',
+              '    });',
+              '    const clientB = await storeKnowledgeDocument({',
+              '      title: "Shared procedure B", content: shared, scope: "client", clientId: "tenant-b",',
+              '      type: "client_documentation", authority: 90, reviewState: "approved",',
+              '      source: { kind: "document", label: "Tenant B source" },',
+              '    });',
+              '    expect(clientA.recordId).not.toBe(clientB.recordId);',
+              '',
+              '    const aHits = await searchStoredKnowledge({ query: "tenant collision sentinel", scope: "client", clientId: "tenant-a" });',
+              '    const bHits = await searchStoredKnowledge({ query: "tenant collision sentinel", scope: "client", clientId: "tenant-b" });',
+              '    expect(aHits.some((hit) => hit.clientId === "tenant-a")).toBe(true);',
+              '    expect(aHits.some((hit) => hit.clientId === "tenant-b")).toBe(false);',
+              '    expect(bHits.some((hit) => hit.clientId === "tenant-b")).toBe(true);',
+              '    expect(bHits.some((hit) => hit.clientId === "tenant-a")).toBe(false);',
+              '  });',
+              '',
               '',
           ])
           tests.write_text(text.replace(anchor, test + anchor, 1))
@@ -124,5 +147,6 @@ jobs:
           git config user.name 'de-phase3-bot'
           git config user.email 'actions@users.noreply.github.com'
           git add server/routes.ts server/services/de-intelligence/storage.ts server/services/de-intelligence/storage.test.ts
-          git commit -m 'fix(intelligence): enforce approval gate and ingest portal documents'
+          git commit -m 'fix(intelligence): enforce approval and tenant storage boundaries'
+          git pull --rebase origin feat/de-intelligence-techsales-ingestion
           git push origin HEAD:feat/de-intelligence-techsales-ingestion
