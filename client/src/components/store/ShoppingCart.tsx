@@ -30,6 +30,7 @@ import {
 import { Link, useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 import { CoverageScorePanel } from "@/components/store/CoverageScorePanel";
+import { shouldShowOngoingEquivalent } from "@/components/store/solutionCartUx";
 import { analytics } from "@/lib/analytics";
 import { CTA } from "@/lib/ctaCopy";
 import { PRIMARY_PHONE } from "@/data/companyContact";
@@ -73,6 +74,7 @@ export function ShoppingCart() {
   const [panes, setPanes] = useState<SolutionDrawerPaneState>(() =>
     defaultSolutionDrawerPanes("desktop"),
   );
+  const [openItemId, setOpenItemId] = useState<string | null>(null);
   const paneTouchedRef = useRef(false);
   const prefersReducedMotion = useReducedMotion();
   const { toast } = useToast();
@@ -86,6 +88,7 @@ export function ShoppingCart() {
   const complements = useMemo(() => getCartComplements(cartProducts, { limit: 3 }), [cartProducts]);
   const missing = useMemo(() => getMissingRequirements(cartProducts), [cartProducts]);
   const coverage = useMemo(() => computeCoverageScore(cartProducts), [cartProducts]);
+  const showOngoing = shouldShowOngoingEquivalent(totals);
 
   const grouped = useMemo(() => {
     const map = new Map<string, typeof items>();
@@ -271,6 +274,7 @@ export function ShoppingCart() {
                   onToggle={() => onTogglePane("items")}
                   className="md:row-start-2 lg:col-start-1 lg:row-start-1"
                 >
+                  <div data-testid="solution-line-items" aria-label="Solution line items">
                   {grouped.map(([group, groupItems]) => (
                     <div key={group} className="mb-5 last:mb-0">
                       <h4 className="mb-2 text-xs font-semibold uppercase tracking-wide text-[color:var(--dp-text-55)]">
@@ -280,6 +284,7 @@ export function ShoppingCart() {
                         {groupItems.map((item) => {
                           const visual = getProductVisual(item.product);
                           const recurring = isRecurringPricing(item.product.pricingType);
+                          const detailsOpen = openItemId === item.product.id;
                           return (
                             <div
                               key={item.product.id}
@@ -356,6 +361,19 @@ export function ShoppingCart() {
                                 <Button
                                   variant="ghost"
                                   size="sm"
+                                  className="h-11 px-2 text-[color:var(--dp-text-60)] hover:text-[color:var(--dp-text-hover)]"
+                                  onClick={() => setOpenItemId(detailsOpen ? null : item.product.id)}
+                                  aria-expanded={detailsOpen}
+                                  data-testid={`button-item-details-${item.product.id}`}
+                                >
+                                  Details
+                                  <ChevronDown
+                                    className={`ml-1 h-3.5 w-3.5 transition-transform ${detailsOpen ? "rotate-180" : ""}`}
+                                  />
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
                                   className="h-10 px-2 text-[color:var(--dp-text-60)] hover:text-[color:var(--dp-text-hover)]"
                                   onClick={() => saveForLater(item.product.id)}
                                   data-testid={`button-save-later-${item.product.id}`}
@@ -374,12 +392,18 @@ export function ShoppingCart() {
                                   Remove
                                 </Button>
                               </div>
+                              {detailsOpen && item.product.shortDescription && (
+                                <p className="mt-2 border-t border-[color:var(--dp-border-10)] pt-2 text-xs leading-relaxed text-[color:var(--dp-text-55)]">
+                                  {item.product.shortDescription}
+                                </p>
+                              )}
                             </div>
                           );
                         })}
                       </div>
                     </div>
                   ))}
+                  </div>
 
                   {canUndoRemove && (
                     <Button
@@ -565,12 +589,14 @@ export function ShoppingCart() {
                         </span>
                       </div>
                     )}
-                    <div className="flex items-center justify-between border-t border-[color:var(--dp-border-10)] pt-2">
-                      <span className="font-medium text-[color:var(--dp-text-primary)]">Ongoing equivalent</span>
-                      <span className="text-lg font-bold text-de-accent-ink">
-                        {formatSnapshotMoney(totals.recurringMonthlyEquivalent)}/mo
-                      </span>
-                    </div>
+                    {showOngoing && (
+                      <div className="flex items-center justify-between border-t border-[color:var(--dp-border-10)] pt-2">
+                        <span className="font-medium text-[color:var(--dp-text-primary)]">Ongoing equivalent</span>
+                        <span className="text-lg font-bold text-de-accent-ink">
+                          {formatSnapshotMoney(totals.recurringMonthlyEquivalent)}/mo
+                        </span>
+                      </div>
+                    )}
                     <p className="flex items-start gap-1.5 text-xs text-[color:var(--dp-text-45)]">
                       <Clock className="mt-0.5 h-3 w-3 shrink-0" />
                       Recurring services bill on the start date after kickoff. One-time work is due
@@ -612,9 +638,10 @@ export function ShoppingCart() {
                         onClick={closeCart}
                         data-testid="button-schedule-from-cart"
                       >
-                        <a href="/book" className="whitespace-normal text-center leading-tight">
+                        <a href="/book" className="inline-flex items-center justify-center whitespace-normal text-center leading-tight">
                           <Calendar className="mr-1 h-4 w-4 shrink-0" />
-                          {CTA.primaryShort}
+                          <span className="sm:hidden">{CTA.primaryNavCompact}</span>
+                          <span className="hidden sm:inline">{CTA.primaryShort}</span>
                         </a>
                       </Button>
                     </div>

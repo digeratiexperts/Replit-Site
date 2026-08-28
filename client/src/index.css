@@ -619,6 +619,66 @@ html[data-dock-hidden="true"] .de-bottom-bar {
   box-shadow: 0 8px 32px rgba(26, 18, 16, 0.1);
 }
 
+/* White cards on a dark well — threat tiles and similar homepage boxes. */
+.de-paper-on-well {
+  background-color: var(--de-paper-raised);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow:
+    0 12px 36px rgba(0, 0, 0, 0.42),
+    0 0 0 1px rgba(211, 18, 106, 0.1);
+}
+
+/* FAQ rows on paper: same white lift as the assessment card, magenta left rail. */
+.de-paper-faq-item {
+  background-color: var(--de-paper-raised);
+  border: 1px solid var(--de-paper-hairline);
+  box-shadow:
+    inset 3px 0 0 #d3126a,
+    -6px 0 18px -8px rgba(211, 18, 106, 0.28),
+    0 8px 32px rgba(26, 18, 16, 0.08);
+  transition:
+    box-shadow 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@media (hover: hover) and (pointer: fine) {
+  .de-paper-faq-item:hover {
+    transform: translateY(-1px);
+    box-shadow:
+      inset 3px 0 0 #d3126a,
+      -8px 0 22px -6px rgba(211, 18, 106, 0.36),
+      0 12px 36px rgba(26, 18, 16, 0.1);
+  }
+}
+.de-paper-faq-item.is-open {
+  box-shadow:
+    inset 3px 0 0 #d3126a,
+    -8px 0 22px -6px rgba(211, 18, 106, 0.36),
+    0 12px 36px rgba(26, 18, 16, 0.1);
+}
+.de-paper-faq-item:has(:focus-visible) {
+  outline: 2px solid #d3126a;
+  outline-offset: 2px;
+}
+.de-paper-faq-chevron {
+  transition:
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.3s ease;
+}
+.de-paper-faq-chevron.is-open {
+  transform: rotate(180deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .de-paper-faq-item {
+    transition: box-shadow 0.2s ease;
+  }
+  .de-paper-faq-item:hover {
+    transform: none;
+  }
+  .de-paper-faq-chevron {
+    transition: none;
+  }
+}
+
 /* Elevated, floating paper showcase island over dark cyber canvas */
 .de-paper-island {
   position: relative;
@@ -1953,4 +2013,42 @@ button, [role="button"], a {
 /* Store drawer theme values are supplied inline on each .de-panel root. */
 .de-panel-theme-toggle {
   transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+/*
+ * Your Solution cart: overflow-y-auto on the list lets that flex child shrink
+ * to ~0 while the footer (overflow: visible) cannot shrink below its content.
+ * Pin the footer, give the line-item list remaining height, and keep a floor
+ * so 4–6 rows stay scannable on typical viewports.
+ */
+.de-solution-drawer {
+  min-height: 0;
+  overflow: hidden;
+}
+.de-solution-drawer__body {
+  display: flex;
+  min-height: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  overflow: hidden;
+}
+.de-solution-drawer__list {
+  flex: 1 1 auto;
+  min-height: min(20rem, 42vh);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.de-solution-drawer__footer {
+  flex: 0 0 auto;
+}
+@media (max-height: 700px) {
+  .de-solution-drawer__list {
+    min-height: min(12.5rem, 34vh);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .de-solution-drawer__list {
+    scroll-behavior: auto;
+  }
 }
