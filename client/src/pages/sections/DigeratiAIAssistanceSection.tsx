@@ -86,22 +86,24 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
                 ))}
               </ul>
 
-              <div className="grid sm:grid-cols-2 gap-4 mb-8">
-                <div className="group rounded-xl border border-white/10 bg-gradient-to-b from-[#18141f] to-[#0e0c13] p-5 shadow-lg transition-all duration-300 hover:border-[#D3126A]/50">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-[#D3126A]/10 text-[#D3126A] mb-3 transition-colors group-hover:bg-[#D3126A] group-hover:text-white">
+              <div className="mb-8 grid gap-4 sm:grid-cols-2">
+                <div className="de-paper-on-well group relative overflow-hidden rounded-xl bg-white p-5">
+                  <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#D3126A] via-[#E61E76] to-transparent opacity-80" />
+                  <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg border border-[var(--de-paper-hairline)] bg-[#D3126A]/10 text-[#D3126A] transition-colors group-hover:bg-[#D3126A] group-hover:text-white">
                     <Shield className="h-5 w-5" aria-hidden />
                   </div>
-                  <p className="text-white font-bold text-base mb-1">Coverage with Context</p>
-                  <p className="text-white/65 text-xs md:text-sm leading-relaxed">
+                  <p className="mb-1 text-base font-bold text-[#1A1228]">Coverage with Context</p>
+                  <p className="text-xs leading-relaxed text-black/60 md:text-sm">
                     Alerts are interpreted against your specific environment — never dumped into an unmonitored ticket queue.
                   </p>
                 </div>
-                <div className="group rounded-xl border border-white/10 bg-gradient-to-b from-[#18141f] to-[#0e0c13] p-5 shadow-lg transition-all duration-300 hover:border-[#D3126A]/50">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-[#D3126A]/10 text-[#D3126A] mb-3 transition-colors group-hover:bg-[#D3126A] group-hover:text-white">
+                <div className="de-paper-on-well group relative overflow-hidden rounded-xl bg-white p-5">
+                  <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#D3126A] via-[#E61E76] to-transparent opacity-80" />
+                  <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg border border-[var(--de-paper-hairline)] bg-[#D3126A]/10 text-[#D3126A] transition-colors group-hover:bg-[#D3126A] group-hover:text-white">
                     <Layers className="h-5 w-5" aria-hidden />
                   </div>
-                  <p className="text-white font-bold text-base mb-1">Documented Next Steps</p>
-                  <p className="text-white/65 text-xs md:text-sm leading-relaxed">
+                  <p className="mb-1 text-base font-bold text-[#1A1228]">Documented Next Steps</p>
+                  <p className="text-xs leading-relaxed text-black/60 md:text-sm">
                     Findings translate into actionable steps your executive and IT teams can execute without decoding cryptic jargon.
                   </p>
                 </div>

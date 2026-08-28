@@ -41,31 +41,29 @@ export const DigeratiFAQSection = (): JSX.Element => {
       <FAQJsonLd faqs={faqs} />
       <div className="mx-auto max-w-[var(--de-canvas)] px-3 sm:px-4 lg:px-6">
         <div className="de-paper-island relative px-6 py-10 sm:px-10 sm:py-14 md:px-12 md:py-16">
-          <div className="max-w-4xl mx-auto relative z-10">
-            {/* Header */}
+          <div className="relative z-10 mx-auto max-w-4xl">
             <motion.div
               initial={prefersReducedMotion ? false : revealInitial}
               whileInView={revealInView}
               viewport={revealViewport}
               transition={revealTransition}
-              className="text-center mb-10 md:mb-12"
+              className="mb-10 text-center md:mb-12"
             >
-              <p className="mb-3 text-sm font-semibold uppercase tracking-[0.16em] text-[#D3126A] md:text-base">
+              <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-[#D3126A]">
                 Common questions
               </p>
-              <h2 className="mb-4 px-2 font-heading text-3xl font-semibold tracking-[-0.02em] text-[#1A1228] sm:text-4xl md:mb-5 md:text-5xl">
+              <h2 className="mb-4 font-heading text-3xl font-semibold leading-tight tracking-[-0.02em] text-[#1A1228] md:text-4xl lg:text-5xl">
                 Frequently Asked Questions
               </h2>
-              <p className="px-4 text-lg text-[#5A5368] md:text-xl">
+              <p className="mx-auto max-w-2xl text-lg leading-relaxed text-black/60 md:text-xl">
                 Straight answers on how we work, what we recommend, and why.
               </p>
             </motion.div>
 
-            {/* FAQ Items */}
-            <div className="space-y-4">
+            <div className="space-y-3 md:space-y-4">
               {faqs.map((faq, index) => {
                 const isOpen = openIndex === index;
-                
+
                 return (
                   <motion.div
                     key={index}
@@ -75,51 +73,46 @@ export const DigeratiFAQSection = (): JSX.Element => {
                     transition={{ ...revealTransition, delay: index * 0.04 }}
                     data-testid={`faq-${index}`}
                   >
-                    <div 
-                      className={`de-paper-lift rounded-xl border-l-4 transition-all duration-300 ${
-                        isOpen 
-                          ? 'border-l-[#D3126A] shadow-[0_6px_28px_-8px_rgba(211,18,106,0.22)]'
-                          : 'border-l-[#D3126A]/30 hover:border-l-[#D3126A] hover:shadow-[0_4px_20px_-8px_rgba(211,18,106,0.18)]'
-                      }`}
+                    <div
+                      className={`de-paper-faq-item rounded-2xl ${isOpen ? "is-open" : ""}`}
                     >
                       <button
-                        className="w-full px-6 py-6 md:px-8 md:py-7 flex items-center justify-between text-left group"
+                        className="group flex w-full min-h-11 items-center justify-between gap-4 px-5 py-5 text-left focus-visible:outline-none md:px-7 md:py-6"
                         onClick={() => toggleAccordion(index)}
                         aria-expanded={isOpen}
                         aria-controls={`faq-answer-${index}`}
                         id={`faq-question-${index}`}
                         data-testid={`faq-trigger-${index}`}
                       >
-                        <span className={`pr-4 text-base font-semibold transition-colors duration-200 md:text-lg ${
-                          isOpen ? 'text-[#D3126A]' : 'text-[#1A1228] group-hover:text-[#D3126A]'
-                        }`}>
+                        <span className="pr-2 text-base font-semibold text-[#1A1228] md:text-lg">
                           {faq.question}
                         </span>
-                        <div className={`w-8 h-8 flex-shrink-0 rounded-full flex items-center justify-center transition-all duration-300 ${
-                          isOpen 
-                            ? 'bg-[#D3126A] rotate-180 shadow-[0_0_14px_-2px_rgba(211,18,106,0.55)]' 
-                            : 'bg-[#D3126A]/10 group-hover:bg-[#D3126A]/20'
-                        }`}>
-                          <ChevronDown 
-                            className={`h-5 w-5 transition-colors duration-200 flex-shrink-0 ${
-                              isOpen ? 'text-white' : 'text-[#D3126A]'
-                            }`}
-                          />
-                        </div>
+                        <span
+                          className={`de-paper-faq-chevron flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#D3126A]/10 group-hover:bg-[#D3126A]/15 ${
+                            isOpen ? "is-open bg-[#D3126A]/15" : ""
+                          }`}
+                          aria-hidden="true"
+                        >
+                          <ChevronDown className="h-5 w-5 text-[#D3126A]" />
+                        </span>
                       </button>
 
                       <AnimatePresence initial={false}>
                         {isOpen && (
                           <motion.div
-                            initial={{ height: 0, opacity: 0 }}
+                            initial={prefersReducedMotion ? false : { height: 0, opacity: 0 }}
                             animate={{ height: "auto", opacity: 1 }}
                             exit={{ height: 0, opacity: 0 }}
-                            transition={{ duration: 0.25, ease: "easeOut" }}
+                            transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.25, ease: "easeOut" }}
                             className="overflow-hidden"
                           >
-                            <div className="px-5 pb-6 md:px-8 md:pb-7 pt-0">
+                            <div className="px-5 pb-6 pt-0 md:px-7 md:pb-7">
                               <div className="border-t border-[var(--de-paper-hairline)] pt-4">
-                                <p className="text-base leading-relaxed text-[#3A3448] md:text-lg" id={`faq-answer-${index}`} data-testid={`faq-answer-${index}`}>
+                                <p
+                                  className="text-base leading-relaxed text-black/60 md:text-lg"
+                                  id={`faq-answer-${index}`}
+                                  data-testid={`faq-answer-${index}`}
+                                >
                                   {faq.answer}
                                 </p>
                               </div>
