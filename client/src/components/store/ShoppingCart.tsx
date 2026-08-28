@@ -286,7 +286,7 @@ export function ShoppingCart() {
                                     </div>
                                   </div>
 
-                                  <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
+                                  <div className="mt-2 flex items-center justify-between gap-2">
                                     <div className="flex items-center gap-1">
                                       <Button
                                         variant="outline"
@@ -595,7 +595,8 @@ export function ShoppingCart() {
                     >
                       <a href="/book" className="inline-flex items-center justify-center whitespace-normal text-center leading-tight">
                         <Calendar className="mr-1 h-4 w-4 shrink-0" />
-                        {CTA.primaryShort}
+                        <span className="sm:hidden">{CTA.primaryNavCompact}</span>
+                        <span className="hidden sm:inline">{CTA.primaryShort}</span>
                       </a>
                     </Button>
                     <Button
