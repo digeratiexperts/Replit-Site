@@ -153,13 +153,13 @@ export function extractContactNameFromText(message: string): string | undefined 
 }
 
 const INFORMAL_COMPANY =
-  /^(your\s+(mom|mama|mother)|yo\s+mama|none|n\/a|n\.a\.|na|idk|skip|pass|nope|no|private|asdf+|test(ing)?|foo|bar|baz|-|\.|walk-?in|personal|myself|me|n\/a)$/i;
+  /^(your\s+(mom|mama|mother)|yo\s+mama|yours\s+truly|none|n\/a|n\.a\.|na|idk|skip|pass|nope|no|private|asdf+|test(ing)?|foo|bar|baz|-|\.|walk-?in|personal|myself|me|n\/a)$/i;
 
 const DE_INTERNAL_COMPANY =
-  /^(yours|your(s| company)?|you( guys| all)?|us|we|ours|our company|here|this( company| one| place)?|the company|de|d\.e\.|digerati( experts)?|internal|staff|employee)$/i;
+  /^(yours|your(s| company)?|you( guys| all)?|us|we|ours|our company|here|this( company| one| place| firm)?|the company|de( staff| employee)?|d\.e\.( staff| employee)?|digerati( experts)?( staff| employee)?|internal|staff|employee)$/i;
 
 const DE_INTERNAL_PHRASE =
-  /\b(i work (here|for (you|us|de|digerati( experts)?))|i(?:['’]?m| am) (with|at) (de|you|digerati)|we(?:['’]?re| are) (de|digerati|you|yours|here))\b/i;
+  /\b(i work (here|for (you|us|de|digerati( experts)?))|i(?:['’]?m| am) (with|at) (de|you|digerati)|i(?:['’]?m| am) (an? )?(de staff|de employee)|we(?:['’]?re| are) (de|digerati|you|yours|here))\b/i;
 
 /** Visitor is pointing at Digerati Experts / this desk — not a literal outside company name. */
 export function isDeInternalCompanyAnswer(name: string | undefined | null): boolean {

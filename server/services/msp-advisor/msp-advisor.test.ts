@@ -159,15 +159,36 @@ describe("identity extraction", () => {
     assert.equal(extractCompanyNameFromText("Your Mama", { allowBare: true }), "Your Mama");
   });
   it("does not treat DE-staff company answers as a literal outside company", () => {
-    for (const answer of ["yours", "us", "DE", "here", "this company", "Digerati Experts"]) {
+    for (const answer of [
+      "yours",
+      "us",
+      "DE",
+      "here",
+      "this company",
+      "this firm",
+      "Digerati Experts",
+      "DE staff",
+      "DE employee",
+      "I work for Digerati Experts",
+      "I'm DE staff",
+      "I am DE staff",
+    ]) {
       assert.equal(isDeInternalCompanyAnswer(answer), true, answer);
       assert.equal(isInformalCompanyName(answer), false, answer);
     }
     assert.equal(isDeInternalCompanyAnswer("Acme Dental"), false);
+    assert.equal(isDeInternalCompanyAnswer("yours truly"), false);
+    assert.equal(isInformalCompanyName("yours truly"), true);
     const patched = mergeProfile(createEmptyProfile(), { companyName: "yours" });
     assert.equal(patched.companyName, "Digerati Experts");
     assert.equal(patched.deInternal, true);
     assert.doesNotMatch(patched.companyName || "", /yours/i);
+    const staff = mergeProfile(createEmptyProfile(), { companyName: "DE staff" });
+    assert.equal(staff.companyName, "Digerati Experts");
+    assert.equal(staff.deInternal, true);
+    const employed = mergeProfile(createEmptyProfile(), { companyName: "I work for Digerati Experts" });
+    assert.equal(employed.companyName, "Digerati Experts");
+    assert.equal(employed.deInternal, true);
   });
 });
 
@@ -214,6 +235,20 @@ describe("handleAdvisorChat acceptance (heuristic / no LLM required)", () => {
     });
     assert.equal(third.profile.companyName, "Hale Family Dentistry");
     assert.doesNotMatch(third.reply, /what'?s your name/i);
+  });
+
+  it("treats yours truly as a walk-in, not a company named yours truly", async () => {
+    const first = await handleAdvisorChat({ message: "Joe" });
+    assert.equal(first.profile.contactName, "Joe");
+    const second = await handleAdvisorChat({
+      sessionId: first.sessionId,
+      message: "yours truly",
+    });
+    assert.equal(second.profile.companyInformal, true);
+    assert.equal(second.profile.companyName, "Walk-in");
+    assert.notEqual(second.profile.deInternal, true);
+    assert.doesNotMatch(second.profile.companyName || "", /yours truly/i);
+    assert.doesNotMatch(second.reply, /from yours truly/i);
   });
 
   it("does not echo yours as a company when the visitor means they work at DE", async () => {
