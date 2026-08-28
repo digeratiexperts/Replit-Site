@@ -122,13 +122,14 @@ const CHAT_WELCOME: ChatMessage = {
 
 const QUICK_CHAT_PROMPTS: Array<{
   label: string;
+  icon: typeof Wrench;
   ticketChip?: DeskTicketChipId;
 }> = [
-  { label: "I need IT help" },
-  { label: "I'm concerned about cybersecurity" },
-  { label: "I need help with compliance" },
-  { label: "I'm evaluating managed IT" },
-  { label: "Possible security incident", ticketChip: "security-incident" },
+  { label: "I need IT help", icon: Wrench },
+  { label: "I'm concerned about cybersecurity", icon: Shield },
+  { label: "I need help with compliance", icon: FileText },
+  { label: "I'm evaluating managed IT", icon: LayoutGrid },
+  { label: "Possible security incident", icon: ShieldAlert, ticketChip: "security-incident" },
 ];
 
 const ASK_IT_HELP_CHIPS: DeskTicketChipId[] = [
@@ -1116,8 +1117,8 @@ export const ZohoASAPWidget = ({
                                   <h4 className="de-desk-quick-title">How can our Arizona team assist you?</h4>
                                   <p className="de-desk-quick-sub">Choose a prompt or type below for real-time guidance:</p>
                                 </div>
-                                <div className="de-desk-quick-inset" role="group" aria-label="Common questions">
-                                  {QUICK_CHAT_PROMPTS.map(({ label, ticketChip }) => (
+                                <div className="de-desk-tools-list de-desk-quick-list" role="group" aria-label="Common questions">
+                                  {QUICK_CHAT_PROMPTS.map(({ label, icon: Icon, ticketChip }) => (
                                     <button
                                       key={label}
                                       type="button"
@@ -1130,10 +1131,15 @@ export const ZohoASAPWidget = ({
                                         }
                                         void handleSendChat(label);
                                       }}
-                                      className="de-desk-quick-item"
+                                      className="de-desk-tool-link"
                                     >
-                                      <span className="de-desk-quick-dash">—</span>
-                                      <span className="de-desk-quick-label">{label}</span>
+                                      <span className="de-desk-tool-icon">
+                                        <Icon aria-hidden="true" />
+                                      </span>
+                                      <span className="de-desk-tool-copy">
+                                        <span className="de-desk-tool-title">{label}</span>
+                                      </span>
+                                      <ChevronRight className="de-desk-tool-arrow" aria-hidden="true" />
                                     </button>
                                   ))}
                                 </div>
@@ -1249,21 +1255,30 @@ export const ZohoASAPWidget = ({
                         </button>
 
                         <p className="de-desk-urgency-label" id="support-issue-label">What do you need help with?</p>
-                        <div className="de-desk-issue-list" role="group" aria-labelledby="support-issue-label">
-                          {DESK_STANDARD_TICKET_CHIPS.map((chip) => (
-                            <button
-                              key={chip.id}
-                              type="button"
-                              className={`de-desk-issue-row${selectedTicketChip === chip.id ? " is-on" : ""}`}
-                              data-testid={`ticket-issue-${chip.id}`}
-                              onClick={() => applyTicketChip(chip.id)}
-                            >
-                              <span className="flex items-center gap-2 min-w-0">
-                                {getDeskChipIcon(chip.id)}
-                                <span className="truncate">{chip.label}</span>
-                              </span>
-                            </button>
-                          ))}
+                        <div className="de-desk-tools-list de-desk-issue-list" role="group" aria-labelledby="support-issue-label">
+                          {DESK_STANDARD_TICKET_CHIPS.map((chip) => {
+                            const isOn = selectedTicketChip === chip.id;
+                            return (
+                              <button
+                                key={chip.id}
+                                type="button"
+                                className={`de-desk-tool-link de-desk-issue-row${isOn ? " is-on" : ""}`}
+                                aria-pressed={isOn}
+                                data-testid={`ticket-issue-${chip.id}`}
+                                onClick={() => applyTicketChip(chip.id)}
+                              >
+                                <span className="de-desk-tool-icon">{getDeskChipIcon(chip.id)}</span>
+                                <span className="de-desk-tool-copy">
+                                  <span className="de-desk-tool-title">{chip.label}</span>
+                                </span>
+                                {isOn ? (
+                                  <CheckCircle2 className="de-desk-tool-arrow is-on" aria-hidden="true" />
+                                ) : (
+                                  <ChevronRight className="de-desk-tool-arrow" aria-hidden="true" />
+                                )}
+                              </button>
+                            );
+                          })}
                         </div>
 
                         {selectedTicketChip === "security-incident" ? (
@@ -1965,32 +1980,7 @@ export const ZohoASAPWidget = ({
               border-radius: 16px;
             }
             .de-desk-issue-list {
-              display: grid;
-              grid-template-columns: 1fr 1fr;
-              gap: 6px;
               margin-bottom: 14px;
-            }
-            .de-desk-issue-row {
-              width: 100%; text-align: left;
-              min-height: 44px;
-              padding: 10px 12px;
-              border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
-              border-radius: 10px;
-              background: var(--de-raised, #151217);
-              color: #ffffff;
-              font-size: 13px; font-weight: 600;
-              transition: border-color 0.15s ease, background 0.15s ease;
-            }
-            .de-desk-issue-row:hover {
-              border-color: rgba(211,18,106,0.6);
-              background: var(--de-raised, #151217);
-              color: #fff;
-            }
-            .de-desk-issue-row.is-on {
-              border-color: #D3126A;
-              background: linear-gradient(180deg, rgba(211,18,106,0.22) 0%, rgba(211,18,106,0.10) 100%);
-              color: #fff;
-              box-shadow: inset 0 0 0 1px #D3126A, 0 4px 14px -3px rgba(211,18,106,0.4);
             }
             .de-desk-issues {
               display: flex; flex-wrap: wrap; gap: 6px;
@@ -2233,37 +2223,8 @@ export const ZohoASAPWidget = ({
               font-size: 12px;
               line-height: 1.4;
             }
-            .de-desk-quick-inset {
-              display: flex;
-              flex-direction: column;
-              gap: 4px;
+            .de-desk-quick-list {
               margin-top: 10px;
-              padding: 6px;
-              background: rgba(255,255,255,0.035);
-              border: 1px solid rgba(255,255,255,0.08);
-              border-radius: 10px;
-            }
-            .de-desk-quick-item {
-              display: flex;
-              align-items: center;
-              gap: 9px;
-              width: 100%;
-              min-height: 44px;
-              padding: 8px 10px;
-              background: transparent;
-              border: 1px solid transparent;
-              border-radius: 8px;
-              color: rgba(255,255,255,0.88);
-              font-size: 12.5px;
-              font-weight: 600;
-              text-align: left;
-              transition: background 0.15s ease, border-color 0.15s ease;
-              cursor: pointer;
-            }
-            .de-desk-quick-item:hover {
-              background: rgba(211,18,106,0.14);
-              border-color: rgba(211,18,106,0.38);
-              color: #ffffff;
             }
             .de-desk-quick-dash {
               color: #D3126A;
@@ -2272,9 +2233,47 @@ export const ZohoASAPWidget = ({
               line-height: 1;
               flex: none;
             }
-            .de-desk-quick-label {
-              flex: 1;
-              min-width: 0;
+            /* Ask DE prompts and Get Support issues share the Client Tools
+               white list-card look (.de-desk-tools-list / .de-desk-tool-link)
+               so all three Desk tabs use one consistent "list" component. */
+            .de-desk-quick-list .de-desk-tool-link,
+            .de-desk-issue-list .de-desk-tool-link {
+              padding-top: 11px;
+              padding-bottom: 11px;
+            }
+            .de-desk-quick-list .de-desk-tool-link:not(:last-child),
+            .de-desk-issue-list .de-desk-tool-link:not(:last-child) {
+              border-bottom: 1px solid rgba(20,16,30,0.07);
+            }
+            .de-desk-issue-row .de-desk-tool-icon svg {
+              color: var(--tool-color, #17141f);
+            }
+            .de-desk-issue-row.is-on {
+              position: relative;
+              background:
+                linear-gradient(90deg, rgba(211,18,106,0.055), rgba(211,18,106,0.018) 62%, transparent),
+                #fff;
+            }
+            .de-desk-issue-row.is-on::before {
+              content: "";
+              position: absolute;
+              left: 0;
+              top: 11px;
+              bottom: 11px;
+              width: 3px;
+              border-radius: 0 999px 999px 0;
+              background: #D3126A;
+            }
+            .de-desk-issue-row.is-on .de-desk-tool-icon {
+              border-color: color-mix(in srgb, #D3126A 38%, transparent);
+              background: color-mix(in srgb, #D3126A 8%, #fff);
+              color: #D3126A;
+            }
+            .de-desk-issue-row.is-on .de-desk-tool-title {
+              color: #D3126A;
+            }
+            .de-desk-tool-arrow.is-on {
+              color: #D3126A;
             }
             .de-desk-perks-inset {
               display: flex;
