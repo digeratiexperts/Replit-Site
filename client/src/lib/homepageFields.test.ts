@@ -36,4 +36,19 @@ describe("homepage chapter fields", () => {
     expect(homepage).toContain("DigeratiThreatsInsightsSection");
     expect(homepage).toContain("DigeratiPricingSection");
   });
+
+  it("FAQ matches the paper island recipe with white magenta-rail rows", () => {
+    const faq = readFileSync(
+      path.resolve(__dirname, "../pages/sections/DigeratiFAQSection.tsx"),
+      "utf8",
+    );
+    expect(faq).toContain("de-dark-well");
+    expect(faq).toContain("de-paper-island");
+    expect(faq).toContain("de-paper-faq-item");
+    expect(faq).toContain('text-[#1A1228]');
+    expect(faq).not.toContain("de-hud-card");
+    expect(css).toContain(".de-paper-faq-item {");
+    expect(css).toContain("inset 3px 0 0 #d3126a");
+    expect(css).toContain("background-color: var(--de-paper-raised)");
+  });
 });
