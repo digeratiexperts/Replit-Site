@@ -13,6 +13,9 @@ const STOP_WORDS = new Set([
   "when", "where", "which", "who", "why", "with", "you", "your",
 ]);
 
+let publicStorageSnapshot: KnowledgeRecord[] = [];
+let publicSnapshotRefresh: Promise<void> | null = null;
+
 function normalize(value: string): string {
   return value.toLowerCase().replace(/[^a-z0-9+.#-]+/g, " ").replace(/\s+/g, " ").trim();
 }
@@ -130,6 +133,28 @@ export async function retrieveKnowledgeStorageBacked(
   return hits;
 }
 
+export async function refreshPublicStoredKnowledgeSnapshot(): Promise<void> {
+  if (publicSnapshotRefresh) return publicSnapshotRefresh;
+  publicSnapshotRefresh = (async () => {
+    try {
+      publicStorageSnapshot = await searchStoredKnowledge(
+        { query: "", scope: "public", limit: 12 },
+        100,
+      );
+    } catch (error: any) {
+      console.warn("[de-intelligence] public storage snapshot refresh failed:", error?.message || error);
+    } finally {
+      publicSnapshotRefresh = null;
+    }
+  })();
+  return publicSnapshotRefresh;
+}
+
+// Start hydrating durable public knowledge as soon as the retriever module is
+// loaded. Public DE Desk remains fully functional on the bootstrap corpus while
+// the database initializes.
+void refreshPublicStoredKnowledgeSnapshot();
+
 export function formatKnowledgeForPrompt(hits: KnowledgeRetrievalHit[]): string {
   if (!hits.length) return "No governed DE knowledge matched this turn. Do not invent DE-specific facts; ask one clarifying question or route to support.";
 
@@ -150,13 +175,23 @@ export function retrievePublicKnowledge(params: {
   pageType?: string;
   limit?: number;
 }): KnowledgeRetrievalHit[] {
+  // The public snapshot is hydrated only from a store query whose SQL scope
+  // predicate is public-only. Re-check scope here as defense in depth.
+  const catalog = [...DE_KNOWLEDGE_CATALOG, ...publicStorageSnapshot].filter(
+    (record) => record.scope === "public",
+  );
+
+  // Keep the snapshot fresh without blocking a visitor turn. Newly ingested
+  // durable records become visible on the next turn/process refresh.
+  void refreshPublicStoredKnowledgeSnapshot();
+
   return retrieveKnowledge({
     query: params.query,
     scope: "public",
     mode: params.mode,
     pageType: params.pageType,
     limit: params.limit,
-  });
+  }, catalog);
 }
 
 export async function retrievePublicKnowledgeStorageBacked(params: {
