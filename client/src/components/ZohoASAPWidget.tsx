@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type PointerEvent as ReactPointerEvent } from "react";
 import {
   CheckCircle2,
   ChevronRight,
@@ -91,6 +91,28 @@ type ChatHeadsUp = {
 function previewChatLine(content: string, max = 108) {
   const text = content.replace(/\s+/g, " ").trim();
   return text.length > max ? `${text.slice(0, max - 1)}…` : text;
+}
+
+/** Pointer-follow white outline on Get Support fields. Magenta still wins on :focus. */
+function trackDeskSupportFieldSpotlight(event: ReactPointerEvent<HTMLElement>) {
+  if (event.pointerType !== "mouse") return;
+  const field = (event.target as HTMLElement | null)?.closest?.(".de-desk-input") as HTMLElement | null;
+  if (!field || !event.currentTarget.contains(field)) return;
+  const rect = field.getBoundingClientRect();
+  field.style.setProperty("--desk-spot-x", `${Math.round(event.clientX - rect.left)}px`);
+  field.style.setProperty("--desk-spot-y", `${Math.round(event.clientY - rect.top)}px`);
+}
+
+/** Slow light under the pointer on Get Support issue rows. */
+function trackDeskSupportRowGlow(event: ReactPointerEvent<HTMLElement>) {
+  if (event.pointerType !== "mouse") return;
+  const row = (event.target as HTMLElement | null)?.closest?.(
+    ".de-desk-issue-row, .de-desk-incident",
+  ) as HTMLElement | null;
+  if (!row || !event.currentTarget.contains(row)) return;
+  const rect = row.getBoundingClientRect();
+  row.style.setProperty("--desk-row-x", `${Math.round(event.clientX - rect.left)}px`);
+  row.style.setProperty("--desk-row-y", `${Math.round(event.clientY - rect.top)}px`);
 }
 
 function formatDeskMessageTime(iso?: string): string {
@@ -1245,7 +1267,7 @@ export const ZohoASAPWidget = ({
                       </div>
                     ) : (
                       <>
-                        <div className="de-desk-ticket-upper">
+                        <div className="de-desk-ticket-upper" onPointerMove={trackDeskSupportRowGlow}>
                         <div className="de-desk-ticket-lead">
                           <p className="de-desk-launch-heading">Incident reporting &amp; support</p>
                           <h3>Direct Engineering Support</h3>
@@ -1298,7 +1320,11 @@ export const ZohoASAPWidget = ({
                         ) : null}
                         </div>
 
-                        <div className="de-desk-form" ref={ticketDetailsRef}>
+                        <div
+                          className="de-desk-form"
+                          ref={ticketDetailsRef}
+                          onPointerMove={trackDeskSupportFieldSpotlight}
+                        >
 
                         <div className="de-desk-field">
                           <label htmlFor="support-name">Name</label>
@@ -1950,25 +1976,56 @@ export const ZohoASAPWidget = ({
               background: #D3126A;
             }
             .de-desk-incident {
+              --desk-row-x: 28px;
+              --desk-row-y: 50%;
+              position: relative;
+              isolation: isolate;
+              overflow: hidden;
               display: flex; align-items: center; gap: 12px;
               width: 100%; text-align: left;
               min-height: 54px;
               margin: 2px 0 16px;
               padding: 12px 14px;
-              border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
+              border: 1px solid rgba(20,16,30,0.12);
               border-radius: 13px;
-              background: var(--de-raised, #151217);
-              color: #fff;
+              background: #fff;
+              color: #17141f;
               box-shadow: inset 3px 0 0 #D3126A;
-              transition: border-color 0.16s ease, background 0.16s ease;
+              transition:
+                background 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                border-color 0.3s ease;
             }
-            .de-desk-incident:hover {
-              border-color: rgba(255,255,255,0.22);
-              background: #1a171c;
+            .de-desk-incident::before {
+              content: "";
+              position: absolute;
+              inset: 0;
+              pointer-events: none;
+              opacity: 0;
+              background: radial-gradient(
+                160px circle at var(--desk-row-x) var(--desk-row-y),
+                #fff 0%,
+                rgba(255,255,255,0.7) 38%,
+                transparent 70%
+              );
+              transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+            }
+            .de-desk-incident > * { position: relative; z-index: 1; }
+            @media (hover: hover) and (pointer: fine) {
+              .de-desk-incident:hover {
+                background: #fff;
+                border-color: rgba(20,16,30,0.10);
+                transform: translateY(-1px);
+                box-shadow:
+                  inset 3px 0 0 #D3126A,
+                  0 14px 28px -18px rgba(20,16,30,0.28);
+              }
+              .de-desk-incident:hover::before { opacity: 1; }
             }
             .de-desk-incident.is-on {
               border-color: rgba(211,18,106,0.45);
-              background: var(--de-raised, #151217);
+              background: #fff;
               box-shadow: inset 3px 0 0 #D3126A, 0 0 0 1px rgba(211,18,106,0.28);
             }
             .de-desk-incident-icon {
@@ -1976,24 +2033,26 @@ export const ZohoASAPWidget = ({
               width: 39px; height: 39px;
               align-items: center; justify-content: center;
               border-radius: 11px;
-              border: 1px solid rgba(211,18,106,0.32);
-              background: rgba(211,18,106,0.12);
+              border: 1px solid color-mix(in srgb, #D3126A 38%, transparent);
+              background: color-mix(in srgb, #D3126A 8%, #fff);
               color: #D3126A;
             }
+            .de-desk-incident:hover .de-desk-incident-icon { background: #fff; }
             .de-desk-incident-icon svg { width: 17px; height: 17px; stroke-width: 1.9; }
             .de-desk-incident-copy { display: flex; flex-direction: column; min-width: 0; flex: 1; }
             .de-desk-incident-copy strong {
               font-family: "Space Grotesk", sans-serif;
               font-size: 14.5px; font-weight: 650; line-height: 1.3;
+              color: #17141f;
             }
             .de-desk-incident-copy span {
               margin-top: 2px;
-              color: rgba(255,255,255,0.62);
+              color: #5c5668;
               font-size: 12.75px; line-height: 1.4;
             }
             .de-desk-incident-arrow {
               width: 15px; height: 15px; flex: none;
-              color: rgba(255,255,255,0.42);
+              color: #726c82;
             }
             .de-desk-incident:hover .de-desk-incident-arrow { color: #D3126A; }
             .de-desk-form {
@@ -2007,16 +2066,24 @@ export const ZohoASAPWidget = ({
               border-radius: 16px;
             }
             .de-desk-issue-list {
-              overflow: hidden;
+              overflow: visible;
               width: 100%;
               display: flex;
               flex-direction: column;
               margin: 0 0 16px;
-              border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
+              border: 1px solid rgba(20,16,30,0.12);
               border-radius: 15px;
-              background: var(--de-raised, #151217);
+              background: #fff;
+              box-shadow:
+                0 1px 0 rgba(255,255,255,0.9) inset,
+                0 12px 28px -24px rgba(20,16,30,0.34);
             }
             .de-desk-issue-row {
+              --desk-row-x: 28px;
+              --desk-row-y: 50%;
+              position: relative;
+              isolation: isolate;
+              overflow: hidden;
               display: flex;
               align-items: center;
               gap: 12px;
@@ -2025,42 +2092,108 @@ export const ZohoASAPWidget = ({
               min-height: 48px;
               padding: 12px 14px;
               border: 0;
-              border-bottom: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
+              border-bottom: 1px solid rgba(20,16,30,0.08);
               border-radius: 0;
-              background: transparent;
-              color: #fff;
+              background: #fff;
+              color: #17141f;
               font-family: "Space Grotesk", sans-serif;
               font-size: 14.5px; font-weight: 650; line-height: 1.3;
-              transition: background 0.15s ease;
+              transition:
+                background 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
             }
-            .de-desk-issue-row:last-child { border-bottom: 0; }
-            .de-desk-issue-row:hover {
-              background: rgba(255,255,255,0.04);
-              color: #fff;
+            .de-desk-issue-row::before {
+              content: "";
+              position: absolute;
+              inset: 0;
+              pointer-events: none;
+              z-index: 0;
+              opacity: 0;
+              background: radial-gradient(
+                170px circle at var(--desk-row-x) var(--desk-row-y),
+                #fff 0%,
+                rgba(255,255,255,0.72) 36%,
+                transparent 68%
+              );
+              transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+            }
+            .de-desk-issue-row::after {
+              content: "";
+              position: absolute;
+              inset: 0;
+              pointer-events: none;
+              z-index: 0;
+              background: linear-gradient(
+                108deg,
+                transparent 28%,
+                rgba(255,255,255,0.95) 48%,
+                transparent 68%
+              );
+              transform: translateX(-42%);
+              opacity: 0;
+              transition:
+                transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                opacity 0.35s ease;
+            }
+            .de-desk-issue-row > * { position: relative; z-index: 1; }
+            .de-desk-issue-row:first-child { border-radius: 15px 15px 0 0; }
+            .de-desk-issue-row:last-child { border-bottom: 0; border-radius: 0 0 15px 15px; }
+            .de-desk-issue-row:first-child:last-child { border-radius: 15px; }
+            @media (hover: hover) and (pointer: fine) {
+              .de-desk-issue-row:hover {
+                z-index: 2;
+                background: #fff;
+                transform: translateY(-1px);
+                box-shadow: 0 12px 26px -16px rgba(20,16,30,0.28);
+              }
+              .de-desk-issue-row:hover::before { opacity: 1; }
+              .de-desk-issue-row:hover::after {
+                opacity: 1;
+                transform: translateX(42%);
+              }
             }
             .de-desk-issue-row.is-on {
-              background: rgba(211,18,106,0.10);
+              background: color-mix(in srgb, #D3126A 6%, #fff);
               box-shadow: inset 3px 0 0 #D3126A;
-              color: #fff;
+              color: #17141f;
+            }
+            .de-desk-issue-row.is-on:hover {
+              background: #fff;
+              box-shadow:
+                inset 3px 0 0 #D3126A,
+                0 12px 26px -16px rgba(20,16,30,0.28);
             }
             .de-desk-issue-icon {
               display: inline-flex; flex: none;
               width: 36px; height: 36px;
               align-items: center; justify-content: center;
               border-radius: 10px;
-              border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
-              background: var(--de-bg, #050312);
+              border: 1px solid rgba(20,16,30,0.10);
+              background: #f7f5f2;
               color: #D3126A;
+              transition:
+                background 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                border-color 0.3s ease;
+            }
+            .de-desk-issue-row:hover .de-desk-issue-icon {
+              background: #fff;
+              border-color: rgba(20,16,30,0.08);
             }
             .de-desk-issue-label {
               flex: 1; min-width: 0;
               overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+              color: #17141f;
             }
             .de-desk-issue-arrow {
               width: 15px; height: 15px; flex: none;
-              color: rgba(255,255,255,0.38);
+              color: #726c82;
+              transition: color 0.3s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
             }
-            .de-desk-issue-row:hover .de-desk-issue-arrow,
+            .de-desk-issue-row:hover .de-desk-issue-arrow {
+              color: #D3126A;
+              transform: translateX(2px);
+            }
             .de-desk-issue-row.is-on .de-desk-issue-arrow { color: #D3126A; }
             .de-desk-issues {
               display: flex; flex-wrap: wrap; gap: 6px;
@@ -2123,27 +2256,72 @@ export const ZohoASAPWidget = ({
             .de-desk-input-wrap { position: relative; }
             .de-desk-input-wrap > svg {
               position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
-              width: 15px; height: 15px; color: rgba(255,255,255,0.65); pointer-events: none;
+              width: 15px; height: 15px; color: rgba(255,255,255,0.72); pointer-events: none;
             }
             .de-desk-shell .de-desk-input {
+              --desk-spot-x: 50%;
+              --desk-spot-y: 50%;
               width: 100%;
               min-height: 46px;
               height: 46px;
-              background: var(--de-raised, #151217) !important;
-              border: 1px solid rgba(255,255,255,0.22) !important;
+              border: 1px solid transparent !important;
+              background-color: var(--de-raised, #151217) !important;
+              background-image:
+                linear-gradient(var(--de-raised, #151217), var(--de-raised, #151217)),
+                linear-gradient(rgba(255,255,255,0.88), rgba(255,255,255,0.88)) !important;
+              background-origin: border-box;
+              background-clip: padding-box, border-box;
               color: #fff !important;
               border-radius: 11px;
               padding: 10px 14px 10px 34px;
               font-size: 14px;
-              box-shadow: inset 0 2px 4px rgba(0,0,0,0.4) !important;
-              transition: border-color 0.16s ease, box-shadow 0.16s ease;
+              box-shadow:
+                inset 0 2px 4px rgba(0,0,0,0.4),
+                0 0 0 1px rgba(255,255,255,0.5) !important;
+              transition: box-shadow 0.2s ease-out;
             }
-            .de-desk-shell .de-desk-input:focus {
-              border-color: #D3126A !important;
+            @media (hover: hover) and (pointer: fine) {
+              .de-desk-shell .de-desk-input:hover:not(:focus):not([aria-invalid="true"]) {
+                background-image:
+                  linear-gradient(var(--de-raised, #151217), var(--de-raised, #151217)),
+                  radial-gradient(
+                    170px circle at var(--desk-spot-x) var(--desk-spot-y),
+                    #fff 0%,
+                    rgba(255,255,255,0.82) 26%,
+                    rgba(255,255,255,0.42) 100%
+                  ) !important;
+                box-shadow:
+                  inset 0 2px 4px rgba(0,0,0,0.4),
+                  0 0 0 1px rgba(255,255,255,0.14),
+                  0 0 18px rgba(255,255,255,0.12) !important;
+              }
+            }
+            .de-desk-shell .de-desk-input:focus,
+            .de-desk-shell .de-desk-input:focus-visible {
+              background-image:
+                linear-gradient(var(--de-raised, #151217), var(--de-raised, #151217)),
+                linear-gradient(#D3126A, #D3126A) !important;
               box-shadow: 0 0 0 3px rgba(211,18,106,0.25), inset 0 2px 4px rgba(0,0,0,0.4) !important;
+              outline: 2px solid #D3126A !important;
+              outline-offset: 2px;
             }
             .de-desk-shell .de-desk-input[aria-invalid="true"] {
-              border-color: #f0455b !important;
+              background-image:
+                linear-gradient(var(--de-raised, #151217), var(--de-raised, #151217)),
+                linear-gradient(#f0455b, #f0455b) !important;
+            }
+            @media (prefers-reduced-motion: reduce) {
+              .de-desk-shell .de-desk-input {
+                transition: none;
+              }
+              .de-desk-shell .de-desk-input:hover:not(:focus):not([aria-invalid="true"]) {
+                background-image:
+                  linear-gradient(var(--de-raised, #151217), var(--de-raised, #151217)),
+                  linear-gradient(rgba(255,255,255,0.88), rgba(255,255,255,0.88)) !important;
+                box-shadow:
+                  inset 0 2px 4px rgba(0,0,0,0.4),
+                  0 0 0 1px rgba(255,255,255,0.5) !important;
+              }
             }
             .de-desk-field-error {
               margin: 6px 0 0;
@@ -2955,6 +3133,12 @@ export const ZohoASAPWidget = ({
               .de-desk-send { transition: none; }
               .de-desk-tool-link:hover .de-desk-tool-arrow,
               .de-desk-security-action:hover { transform: none; }
+              .de-desk-issue-row:hover,
+              .de-desk-incident:hover { transform: none; }
+              .de-desk-issue-row:hover::before,
+              .de-desk-issue-row:hover::after,
+              .de-desk-incident:hover::before { opacity: 0; }
+              .de-desk-issue-row:hover .de-desk-issue-arrow { transform: none; }
             }
             .de-desk-foot { display: none; }
             .de-desk-resize-edge {
