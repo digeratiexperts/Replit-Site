@@ -6,6 +6,7 @@ import {
   formatAddressOneLine,
 } from "../../../client/src/data/companyContact";
 import { PORTAL_LOGIN, PORTAL_HOME } from "../../../client/src/lib/portalUrls";
+import { formatKnowledgeForPrompt, retrievePublicKnowledge } from "../de-intelligence/retrieve";
 import type { AdvisorMode, PageContext } from "./types";
 
 export const DE_COMPANY = {
@@ -81,7 +82,18 @@ export function isKnownServiceMention(text: string): boolean {
   return listKnownServiceNames().some((n) => lower.includes(n.toLowerCase()));
 }
 
-export function selectKnowledgeSlice(mode: AdvisorMode, page?: PageContext): string {
+/**
+ * Build the public DE Desk knowledge slice.
+ *
+ * queryHint is optional so older callers stay compatible. The governed
+ * retriever still uses the classified mode + page context when queryHint is
+ * unavailable. Public Desk is hard-scoped to public records here.
+ */
+export function selectKnowledgeSlice(
+  mode: AdvisorMode,
+  page?: PageContext,
+  queryHint?: string,
+): string {
   const parts: string[] = [
     `Company: ${DE_COMPANY.name}`,
     `Positioning: ${DE_COMPANY.positioning}`,
@@ -98,6 +110,28 @@ export function selectKnowledgeSlice(mode: AdvisorMode, page?: PageContext): str
       `Visitor page: pathname=${page.pathname}; type=${page.pageType}; title=${page.pageTitle || ""}; serviceContext=${page.serviceContext || ""}`,
     );
   }
+
+  const retrievalQuery = [
+    queryHint || "",
+    mode.replace(/_/g, " "),
+    page?.pageType || "",
+    page?.pageTitle || "",
+    page?.serviceContext || "",
+    page?.pathname || "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  const governedHits = retrievePublicKnowledge({
+    query: retrievalQuery,
+    mode,
+    pageType: page?.pageType,
+    limit: 6,
+  });
+  parts.push(
+    "GOVERNED DE INTELLIGENCE (ranked by relevance, scope, and authority):\n" +
+      formatKnowledgeForPrompt(governedHits),
+  );
 
   const wantPricing =
     mode === "pricing" ||
@@ -120,12 +154,12 @@ export function selectKnowledgeSlice(mode: AdvisorMode, page?: PageContext): str
   }
   if (mode === "existing_client") {
     parts.push(
-      "EXISTING CLIENT MODE: Prioritize portal/support paths. Do not run heavy prospect qualification.",
+      "EXISTING CLIENT MODE: Prioritize portal/support paths. Do not run heavy prospect qualification. Never invent client-specific configuration, licensing, entitlement, topology, or contract terms that were not retrieved from authenticated client context.",
     );
   }
   if (mode === "it_support") {
     parts.push(
-      "IT SUPPORT MODE: Discover the symptom (email, device, network, sign-in). Point them to Get Support in this DE Desk window. Do not pitch a Cyber Risk Assessment unless they asked about buying or assessments.",
+      "IT SUPPORT MODE: Discover the symptom (email, device, network, sign-in). Give safe, reversible orientation when grounded in the supplied knowledge, then point them to Get Support in this DE Desk window when account access or hands-on work is required. Do not pitch a Cyber Risk Assessment unless they asked about buying or assessments.",
     );
   }
   if (mode === "compliance" || page?.pageType === "compliance") {
