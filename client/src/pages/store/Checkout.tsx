@@ -169,9 +169,16 @@ const Checkout = () => {
     <div className="min-h-screen bg-[#0a0a0a]">
       <MegaMenu />
 
-      <main className="de-nav-clear pb-20">
+      <main className="de-nav-clear pb-[calc(5rem+var(--de-cookie-h)+var(--de-sticky-cta-h)+var(--de-unified-bar-h))]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <nav className="mb-8" aria-label="Breadcrumb">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="grid lg:grid-cols-5 gap-8 lg:items-start"
+          >
+            <div className="order-2 lg:order-1 lg:col-span-3 space-y-8">
+          <nav className="mb-2" aria-label="Breadcrumb">
             <ol className="flex items-center gap-2 text-sm text-white/50">
               <li>
                 <Link href="/store" className="hover:text-white transition-colors" data-testid="breadcrumb-store">
@@ -183,7 +190,7 @@ const Checkout = () => {
             </ol>
           </nav>
 
-          <div className="flex items-center gap-4 mb-8">
+          <div className="flex items-center gap-4">
             <Link href="/store">
               <Button variant="ghost" className="text-white/60 hover:text-white" data-testid="button-back-to-store">
                 <ArrowLeft className="w-4 h-4 mr-2" />
@@ -192,20 +199,13 @@ const Checkout = () => {
             </Link>
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
             <h1 className="text-3xl md:text-4xl font-bold text-white mb-2" data-testid="text-checkout-title">
               Checkout
             </h1>
-            <p className="text-white/60 mb-8" data-testid="text-checkout-subtitle">
+            <p className="text-white/60" data-testid="text-checkout-subtitle">
               Complete your order for IT services and solutions
             </p>
 
-            <div className="grid lg:grid-cols-5 gap-8 lg:items-start">
-              <div className="order-2 lg:order-1 lg:col-span-3 space-y-8">
                 <div className="bg-white/5 border border-white/10 rounded-xl p-6" data-testid="section-billing-info">
                   <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
                     <FileText className="w-5 h-5 text-de-accent-ink" />
@@ -405,7 +405,6 @@ const Checkout = () => {
                   }
                 />
               </div>
-            </div>
           </motion.div>
         </div>
       </main>

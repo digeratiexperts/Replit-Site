@@ -20,7 +20,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { getPanelThemeStyle, isRecurringPricing, useCart } from "@/contexts/CartContext";
 import { categoryLabels, formatPrice } from "@/data/storeProducts";
-import { solutionGroupFor, getCartComplements } from "@/data/storeMerchandising";
+import { computeCoverageScore, solutionGroupFor, getCartComplements } from "@/data/storeMerchandising";
 import { getProductVisual } from "@/data/productImages";
 import { billingLabel } from "@shared/storeCommerce";
 import {
@@ -35,6 +35,19 @@ import { analytics } from "@/lib/analytics";
 import { CTA } from "@/lib/ctaCopy";
 import { PRIMARY_PHONE } from "@/data/companyContact";
 import { useDockHiddenWhileOpen } from "@/hooks/useDockHiddenWhileOpen";
+import { formatSnapshotMoney } from "@/lib/solutionSnapshotView";
+import { SolutionDrawerPane } from "@/components/store/SolutionDrawerPane";
+import {
+  checkoutPaneSummary,
+  coveragePaneSummary,
+  defaultSolutionDrawerPanes,
+  itemsPaneSummary,
+  openItemsPane,
+  readSolutionDrawerViewport,
+  toggleSolutionPane,
+  type SolutionDrawerPaneId,
+  type SolutionDrawerPaneState,
+} from "@/components/store/solutionDrawerPanes";
 
 export function ShoppingCart() {
   const {
@@ -58,8 +71,11 @@ export function ShoppingCart() {
     togglePanelTheme,
   } = useCart();
   const [isMinimized, setIsMinimized] = useState(false);
-  const [billingOpen, setBillingOpen] = useState(false);
+  const [panes, setPanes] = useState<SolutionDrawerPaneState>(() =>
+    defaultSolutionDrawerPanes("desktop"),
+  );
   const [openItemId, setOpenItemId] = useState<string | null>(null);
+  const paneTouchedRef = useRef(false);
   const prefersReducedMotion = useReducedMotion();
   const { toast } = useToast();
   const [, setLocation] = useLocation();
@@ -71,6 +87,7 @@ export function ShoppingCart() {
   const cartProducts = useMemo(() => items.map((item) => item.product), [items]);
   const complements = useMemo(() => getCartComplements(cartProducts, { limit: 3 }), [cartProducts]);
   const missing = useMemo(() => getMissingRequirements(cartProducts), [cartProducts]);
+  const coverage = useMemo(() => computeCoverageScore(cartProducts), [cartProducts]);
   const showOngoing = shouldShowOngoingEquivalent(totals);
 
   const grouped = useMemo(() => {
@@ -83,6 +100,21 @@ export function ShoppingCart() {
     }
     return Array.from(map.entries());
   }, [items]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      paneTouchedRef.current = false;
+      return;
+    }
+    if (!paneTouchedRef.current) {
+      setPanes(defaultSolutionDrawerPanes(readSolutionDrawerViewport(window.innerWidth)));
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    setPanes((prev) => openItemsPane(prev));
+  }, [isOpen, lastUpdated]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -114,6 +146,17 @@ export function ShoppingCart() {
     ? new Date(lastUpdated).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })
     : null;
 
+  const onTogglePane = (id: SolutionDrawerPaneId) => {
+    paneTouchedRef.current = true;
+    setPanes((prev) => toggleSolutionPane(prev, id));
+  };
+
+  const drawerWidthClass = isMinimized
+    ? "bottom-0 top-auto rounded-tl-2xl sm:max-w-xl"
+    : items.length === 0
+      ? "inset-y-0 max-sm:inset-0 sm:max-w-xl"
+      : "inset-y-0 max-sm:inset-0 sm:max-w-4xl lg:max-w-6xl";
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -138,18 +181,17 @@ export function ShoppingCart() {
             transition={
               prefersReducedMotion ? { duration: 0 } : { type: "spring", damping: 26, stiffness: 320 }
             }
-            className={`de-panel de-solution-drawer fixed right-0 z-[61] flex w-full flex-col border-l border-[color:var(--dp-border-10)] bg-[color:var(--dp-panel-bg)] sm:max-w-xl ${
-              isMinimized ? "bottom-0 top-auto rounded-tl-2xl" : "inset-y-0 max-sm:inset-0"
-            }`}
+            className={`de-panel fixed right-0 z-[61] flex w-full flex-col border-l border-[color:var(--dp-border-10)] bg-[color:var(--dp-panel-bg)] ${drawerWidthClass}`}
             data-theme={panelTheme}
+            data-accent="electric"
             style={getPanelThemeStyle(panelTheme)}
             data-testid="shopping-cart-panel"
           >
-            <div className="flex shrink-0 items-center justify-between border-b border-[color:var(--dp-border-10)] px-4 py-3 sm:px-5">
-              <div className="flex min-w-0 items-center gap-3">
-                <Layers className="h-5 w-5 shrink-0 text-de-accent-ink" />
-                <div className="min-w-0">
-                  <h2 id="solution-drawer-title" className="text-lg font-semibold text-[color:var(--dp-text-primary)] sm:text-xl">
+            <div className="flex items-center justify-between border-b border-[color:var(--dp-border-10)] p-5 sm:p-6">
+              <div className="flex items-center gap-3">
+                <Layers className="h-5 w-5 text-de-accent-ink" />
+                <div>
+                  <h2 id="solution-drawer-title" className="text-xl font-semibold text-[color:var(--dp-text-primary)]">
                     Your Solution
                   </h2>
                   <span className="text-sm text-[color:var(--dp-text-50)]">
@@ -177,7 +219,6 @@ export function ShoppingCart() {
                   className="hidden h-11 w-11 text-[color:var(--dp-text-60)] hover:bg-de-accent/10 hover:text-[color:var(--dp-text-hover)] sm:inline-flex"
                   data-testid="button-minimize-cart"
                   title={isMinimized ? "Expand solution" : "Minimize"}
-                  aria-label={isMinimized ? "Expand solution" : "Minimize"}
                 >
                   <ChevronDown
                     className={`h-5 w-5 transition-transform ${isMinimized ? "rotate-180" : ""}`}
@@ -190,7 +231,6 @@ export function ShoppingCart() {
                   onClick={closeCart}
                   className="h-11 w-11 text-[color:var(--dp-text-60)] hover:bg-de-accent/10 hover:text-[color:var(--dp-text-hover)]"
                   data-testid="button-close-cart"
-                  aria-label="Close Your Solution"
                 >
                   <X className="h-5 w-5" />
                 </Button>
@@ -201,414 +241,427 @@ export function ShoppingCart() {
               {announcement}
             </div>
 
-            {!isMinimized && (
-              <div className="de-solution-drawer__body">
-                {items.length === 0 ? (
-                  <div className="flex h-full flex-col items-center justify-center px-4 text-center">
-                    <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[color:var(--dp-card-bg)]">
-                      <Layers className="h-10 w-10 text-[color:var(--dp-text-55)]" />
-                    </div>
-                    <h3 className="mb-2 text-lg font-medium text-[color:var(--dp-text-primary)]">No services yet</h3>
-                    <p className="mb-6 text-[color:var(--dp-text-50)]">
-                      Build a solution from outcomes, rails, or the catalog.
-                    </p>
-                    <Button
-                      asChild
-                      className="bg-[#D3126A] text-white hover:bg-[#b80f5c]"
-                      onClick={closeCart}
-                      data-testid="button-browse-products"
-                    >
-                      <Link href="/store/co-managed">
-                        Browse Products
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </Link>
-                    </Button>
-                  </div>
-                ) : (
-                  <>
-                    <CoverageScorePanel
-                      compact
-                      products={cartProducts}
-                      onAddSuggestion={(product) => {
-                        addToCart(product, Math.max(1, product.minimumQuantity), product.basePrice);
-                        toast({ title: "Added to solution", description: product.name });
-                      }}
-                    />
-
-                    <div
-                      className="de-solution-drawer__list space-y-4 px-4 py-3 sm:px-5"
-                      data-testid="solution-line-items"
-                      aria-label="Solution line items"
-                    >
-                      {grouped.map(([group, groupItems]) => (
-                        <div key={group}>
-                          <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-[color:var(--dp-text-55)]">
-                            {group}
-                          </h3>
-                          <div className="space-y-2">
-                            {groupItems.map((item) => {
-                              const visual = getProductVisual(item.product);
-                              const recurring = isRecurringPricing(item.product.pricingType);
-                              const detailsOpen = openItemId === item.product.id;
-                              const lineTotal = (
-                                (item.clientPrice ?? item.product.basePrice) * item.quantity
-                              ).toFixed(2);
-                              return (
-                                <div
-                                  key={item.product.id}
-                                  className="rounded-lg border border-[color:var(--dp-border-10)] bg-[color:var(--dp-card-bg)] px-3 py-2.5"
-                                  data-testid={`cart-item-${item.product.id}`}
-                                >
-                                  <div className="flex items-start gap-3">
-                                    <img
-                                      src={visual.logoUrl || visual.cardUrl}
-                                      alt=""
-                                      className="h-10 w-10 shrink-0 rounded-md border border-[color:var(--dp-border-10)] bg-white object-contain p-1"
-                                    />
-                                    <div className="min-w-0 flex-1">
-                                      <div className="flex items-start justify-between gap-2">
-                                        <h4 className="line-clamp-2 font-medium leading-snug text-[color:var(--dp-text-primary)]">
-                                          {item.product.name}
-                                        </h4>
-                                        <span className="shrink-0 text-sm font-semibold tabular-nums text-de-accent-ink">
-                                          ${lineTotal}
-                                          {recurring
-                                            ? item.product.pricingType === "yearly"
-                                              ? "/yr"
-                                              : "/mo"
-                                            : ""}
-                                        </span>
-                                      </div>
-                                      <p className="text-xs text-[color:var(--dp-text-50)]">
-                                        {categoryLabels[item.product.category]} ·{" "}
-                                        {billingLabel(item.product.pricingType, item.product.pricingUnit)}
-                                      </p>
-                                    </div>
-                                  </div>
-
-                                  <div className="mt-2 flex items-center justify-between gap-2">
-                                    <div className="flex items-center gap-1">
-                                      <Button
-                                        variant="outline"
-                                        size="icon"
-                                        onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                                        disabled={item.quantity <= item.product.minimumQuantity}
-                                        className="h-11 w-11 border-de-accent/30 bg-de-accent/10 text-[color:var(--dp-text-primary)] hover:bg-de-accent/20"
-                                        data-testid={`button-decrease-${item.product.id}`}
-                                        aria-label={`Decrease ${item.product.name}`}
-                                      >
-                                        <Minus className="h-3 w-3" />
-                                      </Button>
-                                      <input
-                                        type="number"
-                                        min={item.product.minimumQuantity}
-                                        value={item.quantity}
-                                        onChange={(event) =>
-                                          updateQuantity(item.product.id, Number(event.target.value))
-                                        }
-                                        className="h-11 w-14 rounded-md border border-[color:var(--dp-border-10)] bg-transparent text-center text-sm text-[color:var(--dp-text-primary)]"
-                                        data-testid={`quantity-${item.product.id}`}
-                                        aria-label={`${item.product.name} quantity`}
-                                      />
-                                      <Button
-                                        variant="outline"
-                                        size="icon"
-                                        onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                                        className="h-11 w-11 border-de-accent/30 bg-de-accent/10 text-[color:var(--dp-text-primary)] hover:bg-de-accent/20"
-                                        data-testid={`button-increase-${item.product.id}`}
-                                        aria-label={`Increase ${item.product.name}`}
-                                      >
-                                        <Plus className="h-3 w-3" />
-                                      </Button>
-                                    </div>
-                                    <div className="flex items-center">
-                                      <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        className="h-11 px-2 text-[color:var(--dp-text-60)] hover:text-[color:var(--dp-text-hover)]"
-                                        onClick={() =>
-                                          setOpenItemId(detailsOpen ? null : item.product.id)
-                                        }
-                                        aria-expanded={detailsOpen}
-                                        data-testid={`button-item-details-${item.product.id}`}
-                                      >
-                                        Details
-                                        <ChevronDown
-                                          className={`ml-1 h-3.5 w-3.5 transition-transform ${detailsOpen ? "rotate-180" : ""}`}
-                                        />
-                                      </Button>
-                                      <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={() => removeFromCart(item.product.id)}
-                                        className="h-11 px-2 text-[color:var(--dp-danger)] hover:bg-[color:var(--dp-danger-hover-bg)]"
-                                        data-testid={`button-remove-${item.product.id}`}
-                                      >
-                                        <Trash2 className="mr-1 h-3.5 w-3.5" />
-                                        Remove
-                                      </Button>
-                                    </div>
-                                  </div>
-
-                                  {detailsOpen && (
-                                    <div className="mt-2 border-t border-[color:var(--dp-border-10)] pt-2">
-                                      {item.product.shortDescription && (
-                                        <p className="mb-2 text-xs leading-relaxed text-[color:var(--dp-text-55)]">
-                                          {item.product.shortDescription}
-                                        </p>
-                                      )}
-                                      <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        className="h-11 px-2 text-[color:var(--dp-text-60)] hover:text-[color:var(--dp-text-hover)]"
-                                        onClick={() => saveForLater(item.product.id)}
-                                        data-testid={`button-save-later-${item.product.id}`}
-                                      >
-                                        <BookmarkPlus className="mr-1 h-3.5 w-3.5" />
-                                        Save for later
-                                      </Button>
-                                    </div>
-                                  )}
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      ))}
-
-                      {canUndoRemove && (
-                        <Button
-                          variant="outline"
-                          className="h-11 w-full border-[color:var(--dp-border-15)] bg-transparent text-[color:var(--dp-text-primary)] hover:bg-[color:var(--dp-hover-bg)]"
-                          onClick={undoRemove}
-                          data-testid="button-undo-remove"
-                        >
-                          <RotateCcw className="mr-2 h-4 w-4" />
-                          Undo remove
-                        </Button>
-                      )}
-
-                      {savedForLater.length > 0 && (
-                        <div data-testid="saved-for-later">
-                          <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-[color:var(--dp-text-55)]">
-                            Saved for later
-                          </h3>
-                          <div className="space-y-2">
-                            {savedForLater.map((item) => (
-                              <div
-                                key={item.product.id}
-                                className="flex items-center justify-between gap-2 rounded-lg border border-[color:var(--dp-border-10)] px-3 py-2"
-                              >
-                                <p className="truncate text-sm text-[color:var(--dp-text-primary)]">{item.product.name}</p>
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  className="h-10 border-[color:var(--dp-border-15)] bg-transparent text-[color:var(--dp-text-primary)] hover:bg-[color:var(--dp-hover-bg)]"
-                                  onClick={() => moveToSolution(item.product.id)}
-                                >
-                                  Move to solution
-                                </Button>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {missing.length > 0 && (
-                        <div
-                          className="rounded-xl border border-[color:var(--dp-warn-border)] bg-[color:var(--dp-warn-bg)] p-3"
-                          data-testid="solution-missing-requirements"
-                        >
-                          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[color:var(--dp-warn-text)]">
-                            Missing prerequisites
-                          </p>
-                          {missing.map((warning) => (
-                            <div key={`${warning.forSku}-${warning.sku}`} className="mb-2 last:mb-0">
-                              <p className="text-sm text-[color:var(--dp-text-80)]">{warning.message}</p>
-                              {warning.product && (
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  className="mt-2 h-10 border-[color:var(--dp-border-15)] bg-transparent text-[color:var(--dp-text-primary)] hover:bg-[color:var(--dp-hover-bg)]"
-                                  onClick={() =>
-                                    addToCart(
-                                      warning.product!,
-                                      Math.max(1, warning.product!.minimumQuantity),
-                                      warning.product!.basePrice,
-                                    )
-                                  }
-                                >
-                                  Add required item
-                                </Button>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      )}
-
-                      {complements.length > 0 && (
-                        <div
-                          className="rounded-xl border border-[color:var(--dp-border-10)] bg-[color:var(--dp-card-bg)] p-3"
-                          data-testid="cart-complements"
-                        >
-                          <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-[color:var(--dp-text-55)]">
-                            Recommended because
-                          </p>
-                          <div className="space-y-3">
-                            {complements.map((product) => {
-                              const why = recommendationWhy(product, cartProducts);
-                              return (
-                                <div key={product.sku} className="flex items-start justify-between gap-2">
-                                  <div className="min-w-0">
-                                    <p className="truncate text-sm text-[color:var(--dp-text-primary)]">{product.name}</p>
-                                    <p className="text-xs text-[color:var(--dp-text-55)]">{why}</p>
-                                    <p className="text-xs text-[color:var(--dp-text-45)]">{formatPrice(product)}</p>
-                                  </div>
-                                  <Button
-                                    size="sm"
-                                    variant="outline"
-                                    className="h-10 shrink-0 border-[color:var(--dp-border-15)] bg-transparent text-xs text-[color:var(--dp-text-primary)] hover:bg-[color:var(--dp-hover-bg)]"
-                                    onClick={() => {
-                                      addToCart(
-                                        product,
-                                        Math.max(1, product.minimumQuantity),
-                                        product.basePrice,
-                                      );
-                                      analytics.storeAcceptRecommendation(product.name, why ?? "");
-                                      toast({ title: "Added to solution", description: product.name });
-                                    }}
-                                    data-testid={`button-complement-${product.id}`}
-                                  >
-                                    Add
-                                  </Button>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      )}
-
-                      <p className="text-xs text-[color:var(--dp-text-55)]">
-                        Estimated onboarding: typically 7–10 business days after kickoff (varies by
-                        stack). Questions?{" "}
-                        <a
-                          href={PRIMARY_PHONE.telHref}
-                          className="inline-flex items-center gap-1 text-de-accent-ink hover:text-de-accent-ink"
-                        >
-                          <Phone className="h-3 w-3" />
-                          {PRIMARY_PHONE.display}
-                        </a>
-                      </p>
-                    </div>
-                  </>
-                )}
+            {!isMinimized && items.length === 0 && (
+              <div className="flex flex-1 flex-col items-center justify-center p-5 text-center sm:p-6">
+                <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[color:var(--dp-card-bg)]">
+                  <Layers className="h-10 w-10 text-[color:var(--dp-text-55)]" />
+                </div>
+                <h3 className="mb-2 text-lg font-medium text-[color:var(--dp-text-primary)]">No services yet</h3>
+                <p className="mb-6 text-[color:var(--dp-text-50)]">
+                  Build a solution from outcomes, rails, or the catalog.
+                </p>
+                <Button
+                  asChild
+                  className="bg-de-accent text-white hover:bg-[#6548ff]"
+                  onClick={closeCart}
+                  data-testid="button-browse-products"
+                >
+                  <Link href="/store/co-managed">
+                    Browse Products
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
               </div>
             )}
 
-            {items.length > 0 && (
-              <div className="de-solution-drawer__footer border-t border-[color:var(--dp-border-10)] bg-[color:var(--dp-card-bg)] px-4 py-3 sm:px-5">
-                <div className="mb-3 space-y-1">
-                  {totals.dueToday > 0 && (
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-[color:var(--dp-text-60)]">Due today</span>
-                      <span className="text-[color:var(--dp-text-primary)]">${totals.dueToday.toFixed(2)}</span>
-                    </div>
-                  )}
-                  {totals.monthly > 0 && (
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-[color:var(--dp-text-60)]">Monthly</span>
-                      <span className="text-[color:var(--dp-text-primary)]">${totals.monthly.toFixed(2)} / month</span>
-                    </div>
-                  )}
-                  {totals.annual > 0 && (
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-[color:var(--dp-text-60)]">Annual</span>
-                      <span className="text-[color:var(--dp-text-primary)]">${totals.annual.toFixed(2)}/yr</span>
-                    </div>
-                  )}
-                  {savings > 0 && (
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-[color:var(--dp-success)]">Client pricing save</span>
-                      <span className="font-medium text-[color:var(--dp-success)]">-${savings.toFixed(2)}</span>
-                    </div>
-                  )}
-                  {showOngoing && (
-                    <div className="flex items-center justify-between border-t border-[color:var(--dp-border-10)] pt-1.5">
-                      <span className="font-medium text-[color:var(--dp-text-primary)]">Ongoing equivalent</span>
-                      <span className="text-base font-bold text-de-accent-ink">
-                        ${totals.recurringMonthlyEquivalent.toFixed(2)}/mo
-                      </span>
-                    </div>
-                  )}
-                  <button
-                    type="button"
-                    className="flex min-h-10 w-full items-center gap-1.5 text-left text-xs text-[color:var(--dp-text-45)] hover:text-[color:var(--dp-text-60)]"
-                    onClick={() => setBillingOpen((open) => !open)}
-                    aria-expanded={billingOpen}
-                    data-testid="button-toggle-billing-notes"
-                  >
-                    <Clock className="h-3 w-3 shrink-0" />
-                    <span className="flex-1">
-                      {billingOpen
-                        ? "Recurring services bill on the start date after kickoff. One-time work is due when the order is placed. Tax is calculated at checkout when applicable."
-                        : "Billing cycle and tax notes"}
-                    </span>
-                    <ChevronDown
-                      className={`h-3.5 w-3.5 shrink-0 transition-transform ${billingOpen ? "rotate-180" : ""}`}
-                    />
-                  </button>
-                </div>
+            {!isMinimized && items.length > 0 && (
+              <div className="grid min-h-0 flex-1 grid-cols-1 md:grid-cols-2 md:grid-rows-[auto_minmax(0,1fr)] lg:grid-cols-[minmax(0,1.35fr)_minmax(13rem,1fr)_minmax(17rem,0.95fr)] lg:grid-rows-1">
+                <SolutionDrawerPane
+                  id="items"
+                  title="In this solution"
+                  summary={itemsPaneSummary(items.length)}
+                  open={panes.items}
+                  onToggle={() => onTogglePane("items")}
+                  className="md:row-start-2 lg:col-start-1 lg:row-start-1"
+                >
+                  <div data-testid="solution-line-items" aria-label="Solution line items">
+                  {grouped.map(([group, groupItems]) => (
+                    <div key={group} className="mb-5 last:mb-0">
+                      <h4 className="mb-2 text-xs font-semibold uppercase tracking-wide text-[color:var(--dp-text-55)]">
+                        {group}
+                      </h4>
+                      <div className="space-y-3">
+                        {groupItems.map((item) => {
+                          const visual = getProductVisual(item.product);
+                          const recurring = isRecurringPricing(item.product.pricingType);
+                          const detailsOpen = openItemId === item.product.id;
+                          return (
+                            <div
+                              key={item.product.id}
+                              className="rounded-lg border border-[color:var(--dp-border-10)] bg-[color:var(--dp-card-bg)] p-4"
+                              data-testid={`cart-item-${item.product.id}`}
+                            >
+                              <div className="mb-3 flex items-start gap-3">
+                                <img
+                                  src={visual.logoUrl || visual.cardUrl}
+                                  alt=""
+                                  className="h-12 w-12 shrink-0 rounded-md border border-[color:var(--dp-border-10)] bg-white object-contain p-1"
+                                />
+                                <div className="min-w-0 flex-1">
+                                  <h4 className="line-clamp-2 font-medium text-[color:var(--dp-text-primary)]">
+                                    {item.product.name}
+                                  </h4>
+                                  <p className="text-xs text-[color:var(--dp-text-50)]">
+                                    {categoryLabels[item.product.category]} ·{" "}
+                                    {billingLabel(item.product.pricingType, item.product.pricingUnit)}
+                                  </p>
+                                  <p className="text-sm text-[color:var(--dp-text-50)]">{formatPrice(item.product)}</p>
+                                </div>
+                              </div>
 
-                <div className="space-y-2">
-                  <Button
-                    className="h-11 w-full bg-[#D3126A] text-white hover:bg-[#b80f5c]"
-                    onClick={goCheckout}
-                    data-testid="button-checkout"
-                  >
-                    Continue to Checkout
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="h-11 w-full border-[color:var(--dp-border-15)] bg-transparent text-[color:var(--dp-text-primary)] hover:bg-[color:var(--dp-hover-bg)]"
-                    onClick={goQuote}
-                    data-testid="button-save-quote"
-                  >
-                    <FileText className="mr-2 h-4 w-4" />
-                    Request Formal Quote
-                  </Button>
-                  <div className="grid grid-cols-3 gap-1">
+                              <div className="flex items-center justify-between gap-2">
+                                <div className="flex items-center gap-1">
+                                  <Button
+                                    variant="outline"
+                                    size="icon"
+                                    onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
+                                    disabled={item.quantity <= item.product.minimumQuantity}
+                                    className="h-11 w-11 border-de-accent/30 bg-de-accent/10 text-[color:var(--dp-text-primary)] hover:bg-de-accent/20"
+                                    data-testid={`button-decrease-${item.product.id}`}
+                                    aria-label={`Decrease ${item.product.name}`}
+                                  >
+                                    <Minus className="h-3 w-3" />
+                                  </Button>
+                                  <input
+                                    type="number"
+                                    min={item.product.minimumQuantity}
+                                    value={item.quantity}
+                                    onChange={(event) =>
+                                      updateQuantity(item.product.id, Number(event.target.value))
+                                    }
+                                    className="h-11 w-14 rounded-md border border-[color:var(--dp-border-10)] bg-transparent text-center text-sm text-[color:var(--dp-text-primary)]"
+                                    data-testid={`quantity-${item.product.id}`}
+                                    aria-label={`${item.product.name} quantity`}
+                                  />
+                                  <Button
+                                    variant="outline"
+                                    size="icon"
+                                    onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                                    className="h-11 w-11 border-de-accent/30 bg-de-accent/10 text-[color:var(--dp-text-primary)] hover:bg-de-accent/20"
+                                    data-testid={`button-increase-${item.product.id}`}
+                                    aria-label={`Increase ${item.product.name}`}
+                                  >
+                                    <Plus className="h-3 w-3" />
+                                  </Button>
+                                </div>
+                                <span className="text-sm font-semibold text-de-accent-ink">
+                                  $
+                                  {(
+                                    (item.clientPrice ?? item.product.basePrice) * item.quantity
+                                  ).toFixed(2)}
+                                  {recurring
+                                    ? item.product.pricingType === "yearly"
+                                      ? "/yr"
+                                      : "/mo"
+                                    : ""}
+                                </span>
+                              </div>
+
+                              <div className="mt-3 flex flex-wrap gap-2">
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-11 px-2 text-[color:var(--dp-text-60)] hover:text-[color:var(--dp-text-hover)]"
+                                  onClick={() => setOpenItemId(detailsOpen ? null : item.product.id)}
+                                  aria-expanded={detailsOpen}
+                                  data-testid={`button-item-details-${item.product.id}`}
+                                >
+                                  Details
+                                  <ChevronDown
+                                    className={`ml-1 h-3.5 w-3.5 transition-transform ${detailsOpen ? "rotate-180" : ""}`}
+                                  />
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-10 px-2 text-[color:var(--dp-text-60)] hover:text-[color:var(--dp-text-hover)]"
+                                  onClick={() => saveForLater(item.product.id)}
+                                  data-testid={`button-save-later-${item.product.id}`}
+                                >
+                                  <BookmarkPlus className="mr-1 h-3.5 w-3.5" />
+                                  Save for later
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => removeFromCart(item.product.id)}
+                                  className="h-10 px-2 text-[color:var(--dp-danger)] hover:bg-[color:var(--dp-danger-hover-bg)]"
+                                  data-testid={`button-remove-${item.product.id}`}
+                                >
+                                  <Trash2 className="mr-1 h-3.5 w-3.5" />
+                                  Remove
+                                </Button>
+                              </div>
+                              {detailsOpen && item.product.shortDescription && (
+                                <p className="mt-2 border-t border-[color:var(--dp-border-10)] pt-2 text-xs leading-relaxed text-[color:var(--dp-text-55)]">
+                                  {item.product.shortDescription}
+                                </p>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                  </div>
+
+                  {canUndoRemove && (
                     <Button
-                      variant="ghost"
-                      className="h-auto min-h-11 whitespace-normal px-1 text-center text-sm leading-tight text-[color:var(--dp-text-70)] hover:bg-[color:var(--dp-hover-bg)] hover:text-[color:var(--dp-text-hover)]"
-                      onClick={closeCart}
-                      data-testid="button-continue-shopping"
+                      variant="outline"
+                      className="mt-3 h-11 w-full border-[color:var(--dp-border-15)] bg-transparent text-[color:var(--dp-text-primary)] hover:bg-[color:var(--dp-hover-bg)]"
+                      onClick={undoRemove}
+                      data-testid="button-undo-remove"
                     >
-                      Continue shopping
+                      <RotateCcw className="mr-2 h-4 w-4" />
+                      Undo remove
+                    </Button>
+                  )}
+
+                  {savedForLater.length > 0 && (
+                    <div className="mt-5" data-testid="saved-for-later">
+                      <h4 className="mb-2 text-xs font-semibold uppercase tracking-wide text-[color:var(--dp-text-55)]">
+                        Saved for later
+                      </h4>
+                      <div className="space-y-2">
+                        {savedForLater.map((item) => (
+                          <div
+                            key={item.product.id}
+                            className="flex items-center justify-between gap-2 rounded-lg border border-[color:var(--dp-border-10)] px-3 py-2"
+                          >
+                            <p className="truncate text-sm text-[color:var(--dp-text-primary)]">{item.product.name}</p>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="h-10 border-[color:var(--dp-border-15)] bg-transparent text-[color:var(--dp-text-primary)] hover:bg-[color:var(--dp-hover-bg)]"
+                              onClick={() => moveToSolution(item.product.id)}
+                            >
+                              Move to solution
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </SolutionDrawerPane>
+
+                <SolutionDrawerPane
+                  id="coverage"
+                  title="Coverage"
+                  summary={coveragePaneSummary(coverage.coveredCount, coverage.dimensionCount)}
+                  open={panes.coverage}
+                  onToggle={() => onTogglePane("coverage")}
+                  className="md:col-span-2 md:row-start-1 md:max-h-[42vh] md:border-b md:border-r-0 lg:col-span-1 lg:col-start-2 lg:row-start-1 lg:max-h-none lg:border-b-0 lg:border-r"
+                >
+                  <CoverageScorePanel
+                    embedded
+                    products={cartProducts}
+                    onAddSuggestion={(product) => {
+                      addToCart(product, Math.max(1, product.minimumQuantity), product.basePrice);
+                      toast({ title: "Added to solution", description: product.name });
+                    }}
+                  />
+
+                  {missing.length > 0 && (
+                    <div
+                      className="mt-4 rounded-xl border border-[color:var(--dp-warn-border)] bg-[color:var(--dp-warn-bg)] p-4"
+                      data-testid="solution-missing-requirements"
+                    >
+                      <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[color:var(--dp-warn-text)]">
+                        Missing prerequisites
+                      </p>
+                      {missing.map((warning) => (
+                        <div key={`${warning.forSku}-${warning.sku}`} className="mb-2 last:mb-0">
+                          <p className="text-sm text-[color:var(--dp-text-80)]">{warning.message}</p>
+                          {warning.product && (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="mt-2 h-10 border-[color:var(--dp-border-15)] bg-transparent text-[color:var(--dp-text-primary)] hover:bg-[color:var(--dp-hover-bg)]"
+                              onClick={() =>
+                                addToCart(
+                                  warning.product!,
+                                  Math.max(1, warning.product!.minimumQuantity),
+                                  warning.product!.basePrice,
+                                )
+                              }
+                            >
+                              Add required item
+                            </Button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {complements.length > 0 && (
+                    <div
+                      className="mt-4 rounded-xl border border-[color:var(--dp-border-10)] bg-[color:var(--dp-card-bg)] p-4"
+                      data-testid="cart-complements"
+                    >
+                      <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-[color:var(--dp-text-55)]">
+                        Recommended because
+                      </p>
+                      <div className="space-y-3">
+                        {complements.map((product) => {
+                          const why = recommendationWhy(product, cartProducts);
+                          return (
+                            <div key={product.sku} className="flex items-start justify-between gap-2">
+                              <div className="min-w-0">
+                                <p className="truncate text-sm text-[color:var(--dp-text-primary)]">{product.name}</p>
+                                <p className="text-xs text-[color:var(--dp-text-55)]">{why}</p>
+                                <p className="text-xs text-[color:var(--dp-text-45)]">{formatPrice(product)}</p>
+                              </div>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="h-10 shrink-0 border-[color:var(--dp-border-15)] bg-transparent text-xs text-[color:var(--dp-text-primary)] hover:bg-[color:var(--dp-hover-bg)]"
+                                onClick={() => {
+                                  addToCart(
+                                    product,
+                                    Math.max(1, product.minimumQuantity),
+                                    product.basePrice,
+                                  );
+                                  analytics.storeAcceptRecommendation(product.name, why ?? "");
+                                  toast({ title: "Added to solution", description: product.name });
+                                }}
+                                data-testid={`button-complement-${product.id}`}
+                              >
+                                Add
+                              </Button>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  <p className="mt-4 text-xs text-[color:var(--dp-text-55)]">
+                    Estimated onboarding: typically 7–10 business days after kickoff (varies by
+                    stack). Questions?{" "}
+                    <a
+                      href={PRIMARY_PHONE.telHref}
+                      className="inline-flex items-center gap-1 text-de-accent-ink hover:text-de-accent-ink"
+                    >
+                      <Phone className="h-3 w-3" />
+                      {PRIMARY_PHONE.display}
+                    </a>
+                  </p>
+                </SolutionDrawerPane>
+
+                <SolutionDrawerPane
+                  id="checkout"
+                  title="Totals"
+                  summary={checkoutPaneSummary(totals)}
+                  open={panes.checkout}
+                  onToggle={() => onTogglePane("checkout")}
+                  className="md:col-start-2 md:row-start-2 md:border-r-0 lg:col-start-3 lg:row-start-1"
+                >
+                  <div className="mb-4 space-y-2">
+                    {totals.dueToday > 0 && (
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-[color:var(--dp-text-60)]">Due today</span>
+                        <span className="text-[color:var(--dp-text-primary)]">
+                          {formatSnapshotMoney(totals.dueToday)}
+                        </span>
+                      </div>
+                    )}
+                    {totals.monthly > 0 && (
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-[color:var(--dp-text-60)]">Monthly</span>
+                        <span className="text-[color:var(--dp-text-primary)]">
+                          {formatSnapshotMoney(totals.monthly)} / month
+                        </span>
+                      </div>
+                    )}
+                    {totals.annual > 0 && (
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-[color:var(--dp-text-60)]">Annual</span>
+                        <span className="text-[color:var(--dp-text-primary)]">
+                          {formatSnapshotMoney(totals.annual)}/yr
+                        </span>
+                      </div>
+                    )}
+                    {savings > 0 && (
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-[color:var(--dp-success)]">Client pricing save</span>
+                        <span className="font-medium text-[color:var(--dp-success)]">
+                          -{formatSnapshotMoney(savings)}
+                        </span>
+                      </div>
+                    )}
+                    {showOngoing && (
+                      <div className="flex items-center justify-between border-t border-[color:var(--dp-border-10)] pt-2">
+                        <span className="font-medium text-[color:var(--dp-text-primary)]">Ongoing equivalent</span>
+                        <span className="text-lg font-bold text-de-accent-ink">
+                          {formatSnapshotMoney(totals.recurringMonthlyEquivalent)}/mo
+                        </span>
+                      </div>
+                    )}
+                    <p className="flex items-start gap-1.5 text-xs text-[color:var(--dp-text-45)]">
+                      <Clock className="mt-0.5 h-3 w-3 shrink-0" />
+                      Recurring services bill on the start date after kickoff. One-time work is due
+                      when the order is placed. Tax is calculated at checkout when applicable.
+                    </p>
+                  </div>
+
+                  <div className="space-y-2.5">
+                    <Button
+                      className="h-12 w-full bg-de-accent text-white hover:bg-[#6548ff]"
+                      onClick={goCheckout}
+                      data-testid="button-checkout"
+                    >
+                      Continue to Checkout
+                      <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                     <Button
-                      asChild
-                      variant="ghost"
-                      className="h-auto min-h-11 whitespace-normal px-1 text-center text-sm leading-tight text-[color:var(--dp-text-70)] hover:bg-de-accent/10 hover:text-[color:var(--dp-text-hover)]"
-                      onClick={closeCart}
-                      data-testid="button-schedule-from-cart"
+                      variant="outline"
+                      className="h-11 w-full border-[color:var(--dp-border-15)] bg-transparent text-[color:var(--dp-text-primary)] hover:bg-[color:var(--dp-hover-bg)]"
+                      onClick={goQuote}
+                      data-testid="button-save-quote"
                     >
-                      <a href="/book" className="inline-flex items-center justify-center whitespace-normal text-center leading-tight">
-                        <Calendar className="mr-1 h-4 w-4 shrink-0" />
-                        <span className="sm:hidden">{CTA.primaryNavCompact}</span>
-                        <span className="hidden sm:inline">{CTA.primaryShort}</span>
-                      </a>
+                      <FileText className="mr-2 h-4 w-4" />
+                      Request Formal Quote
                     </Button>
+                    <div className="grid grid-cols-2 gap-2">
+                      <Button
+                        variant="ghost"
+                        className="h-auto min-h-11 whitespace-normal text-center leading-tight text-[color:var(--dp-text-70)] hover:bg-[color:var(--dp-hover-bg)] hover:text-[color:var(--dp-text-hover)]"
+                        onClick={closeCart}
+                        data-testid="button-continue-shopping"
+                      >
+                        Continue shopping
+                      </Button>
+                      <Button
+                        asChild
+                        variant="ghost"
+                        className="h-auto min-h-11 whitespace-normal text-center leading-tight text-[color:var(--dp-text-70)] hover:bg-de-accent/10 hover:text-[color:var(--dp-text-hover)]"
+                        onClick={closeCart}
+                        data-testid="button-schedule-from-cart"
+                      >
+                        <a href="/book" className="inline-flex items-center justify-center whitespace-normal text-center leading-tight">
+                          <Calendar className="mr-1 h-4 w-4 shrink-0" />
+                          <span className="sm:hidden">{CTA.primaryNavCompact}</span>
+                          <span className="hidden sm:inline">{CTA.primaryShort}</span>
+                        </a>
+                      </Button>
+                    </div>
                     <Button
                       variant="ghost"
                       onClick={clearCart}
-                      className="h-auto min-h-11 whitespace-normal px-1 text-center text-sm leading-tight text-[color:var(--dp-text-50)] hover:bg-[color:var(--dp-hover-bg)] hover:text-[color:var(--dp-text-hover)]"
+                      className="h-10 w-full text-[color:var(--dp-text-50)] hover:bg-[color:var(--dp-hover-bg)] hover:text-[color:var(--dp-text-hover)]"
                       data-testid="button-clear-cart"
                     >
                       Clear solution
                     </Button>
                   </div>
-                </div>
+                </SolutionDrawerPane>
+              </div>
+            )}
+
+            {isMinimized && items.length > 0 && (
+              <div className="border-t border-[color:var(--dp-border-10)] px-5 py-3 text-sm text-[color:var(--dp-text-60)]">
+                {itemsPaneSummary(items.length)}
+                {totals.dueToday > 0 ? ` · ${checkoutPaneSummary(totals)}` : ""}
               </div>
             )}
           </motion.div>

@@ -11,6 +11,8 @@ interface CoverageScorePanelProps {
   products: StoreProduct[];
   onAddSuggestion?: (product: StoreProduct) => void;
   compact?: boolean;
+  /** Skip the outer card + heading when the parent pane already provides them. */
+  embedded?: boolean;
 }
 
 /**
@@ -20,6 +22,7 @@ export function CoverageScorePanel({
   products,
   onAddSuggestion,
   compact = false,
+  embedded = false,
 }: CoverageScorePanelProps) {
   const score = computeCoverageScore(products);
   const [expanded, setExpanded] = useState(!compact);
@@ -160,13 +163,21 @@ export function CoverageScorePanel({
 
   return (
     <div
-      className="rounded-xl border border-[color:var(--dp-border-10,#ffffff1a)] bg-[color:var(--dp-card-bg,#141414)] p-4"
+      className={
+        embedded
+          ? ""
+          : "rounded-xl border border-[color:var(--dp-border-10,#ffffff1a)] bg-[color:var(--dp-card-bg,#141414)] p-4"
+      }
       data-testid="coverage-score-panel"
     >
       <div className="mb-3 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <Shield className="h-4 w-4 text-de-accent-ink" />
-          <h3 className="text-sm font-semibold text-[color:var(--dp-text-primary,#ffffff)]">Solution coverage</h3>
+          {embedded ? (
+            <p className="text-sm font-medium text-[color:var(--dp-text-55,#ffffff8c)]">Heuristic score</p>
+          ) : (
+            <h3 className="text-sm font-semibold text-[color:var(--dp-text-primary,#ffffff)]">Solution coverage</h3>
+          )}
         </div>
         <div className="text-right">
           <span className="text-lg font-bold text-[color:var(--dp-text-primary,#ffffff)]" data-testid="text-coverage-score">
