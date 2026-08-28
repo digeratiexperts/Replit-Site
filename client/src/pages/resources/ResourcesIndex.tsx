@@ -61,8 +61,20 @@ const resources = [
   {
     name: "Datasheets",
     href: "/resources/datasheets",
-    description: "Technical summaries for packages, services, and assessments.",
+    description: "Downloadable package overviews, checklists, and sample reports.",
     icon: FileCheck,
+  },
+  {
+    name: "Executive briefs",
+    href: "/resources/briefs",
+    description: "Short operating notes for buyers — cyber risk, recovery, insurance, ProActive.",
+    icon: BookOpen,
+  },
+  {
+    name: "Campaign offers",
+    href: "/go",
+    description: "Single-offer pages for search and social — one path, one primary CTA.",
+    icon: Shield,
   },
 ];
 
