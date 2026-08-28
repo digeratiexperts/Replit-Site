@@ -4315,6 +4315,19 @@ export async function registerRoutes(app: Express) {
       if (companyId && mappedAccountId) {
         await persistHubAccountId(companyId, mappedAccountId);
       }
+      if (companyId && hub) {
+        void import("./services/de-intelligence/techSalesIngestion")
+          .then(({ ingestTechSalesCompanyKnowledge }) =>
+            ingestTechSalesCompanyKnowledge({ clientId: companyId, hub }),
+          )
+          .catch((error: any) => {
+            logger.warn("TechSales knowledge ingestion scheduling failed", {
+              clientId: companyId,
+              message: error?.message || String(error),
+            });
+          });
+      }
+
       if (!hub) {
         return res.json({
           contracts: [],
