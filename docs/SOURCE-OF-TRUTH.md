@@ -11,6 +11,8 @@ This repository is the canonical source for the Digerati Experts public website.
 
 The authoritative repository matrix is maintained in [`docs/REPOSITORY-AUTHORITY.md`](./REPOSITORY-AUTHORITY.md).
 
+This file is the **website application/content** source of truth (GitHub). Operational and commercial truth (accounts, deals, catalog, pricing, entitlements, approved claims) lives in Intelligence Hub (`digeratiexperts/Intelligence-Hub`). Executable agent rule: [`.cursor/rules/de-ecosystem.mdc`](../.cursor/rules/de-ecosystem.mdc). `git commit` ≠ merged ≠ deployed ≠ production verified.
+
 For website work:
 
 1. Branch from the current `digeratiexperts/digeratiexperts-site` `main`.

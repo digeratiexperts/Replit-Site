@@ -33,3 +33,5 @@ The old website PRs created from that blocked state should not be merged merely 
 - Website source of truth: [`docs/SOURCE-OF-TRUTH.md`](./SOURCE-OF-TRUTH.md)
 - Site/agent workflow: [`AGENTS.md`](../AGENTS.md)
 - Brand naming rule: [`.cursor/rules/digerati-naming.mdc`](../.cursor/rules/digerati-naming.mdc)
+- Ecosystem control plane (always-applied agent rule): [`.cursor/rules/de-ecosystem.mdc`](../.cursor/rules/de-ecosystem.mdc)
+- Hub operational SoT (in `digeratiexperts/Intelligence-Hub`; **do not copy the ECO task ledger into this repo**): `docs/DE-ECOSYSTEM-CONTROL-PLANE.md`, `docs/SOURCE-OF-TRUTH-MATRIX.md`, `docs/DE-ECOSYSTEM-TASKS.md`

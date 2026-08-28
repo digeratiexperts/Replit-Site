@@ -1,0 +1,86 @@
+---
+description: DE ecosystem — Hub is operational SoT; this website is a GitHub-owned content/application projection; one program, not bolted integrations
+alwaysApply: true
+---
+
+# DE ecosystem (one program)
+
+DE is **one governed ecosystem**, not a pile of bolted integrations. Do not invent a second Hub, a second factual database, a second mail stack, or a second middleware layer.
+
+## Repositories
+
+| Role | Canonical repo | Default branch |
+| --- | --- | --- |
+| Control plane / operational source of truth | `digeratiexperts/Intelligence-Hub` (Intelligence Hub / TechSales) | `master` |
+| Content / application projection | `digeratiexperts/digeratiexperts-site` (this repo) | `main` |
+| Legacy / reference only | `digeratiexperts/TechSales` | do not start new work |
+
+GitHub owns website / Store / portal / blog **application and versioned content code**. Hub owns operational/commercial truth. `Replit-Site` is a historical checkout name, not authority.
+
+Hub docs (read there; **do not copy the 30-task ECO ledger into this repo**):
+
+- `docs/DE-ECOSYSTEM-CONTROL-PLANE.md`
+- `docs/SOURCE-OF-TRUTH-MATRIX.md`
+- `docs/DE-ECOSYSTEM-TASKS.md` (ECO-001–030)
+
+## Pipeline truth
+
+`git commit` ≠ merged ≠ deployed ≠ production verified.
+
+A green CI check or a merge is not LIVE. Record deploy SHA and health before claiming production.
+
+## Integration
+
+Evolve existing Hub **`de-sync` + outbox/retry**. Do **not** create a second middleware stack.
+
+Website durable paths already exist (`docs/DE-SYSTEM-INTEGRATION.md`). Extend those; do not fork a parallel integration layer.
+
+## Domain ownership
+
+| Domain | Owner | This repo |
+| --- | --- | --- |
+| Customer IDs / accounts | Hub (`accounts.id` once commercial) | mapped IDs only; never invent clients |
+| Deals / quotes / agreements | Hub | safe projections |
+| Catalog / pricing / entitlements | Hub | Store/portal get safe projections; **margins stay internal** |
+| Website / Store / portal / blog app code | GitHub (this repo) | isolated branch → PR → concurrency audit → merge → deploy |
+| Approved business claims / campaign intent | Hub registries | project to Website / Blog / Store / Email / Social |
+
+## Evidence plane
+
+Hub **Knowledge System** is the evidence plane. Do not invent a second factual DB on the website.
+
+Chain: **source → KB rule → approved claim → channel variants**.
+
+Channel wording may differ; the approved fact/offer version must stay traceable. Do not hard-code parallel pricing, package rules, certifications, or capability claims when a canonical object exists.
+
+## AI repair (Hub audited assistant only)
+
+No admin AI backdoor. No website-side agent that bypasses Hub audit to “fix production.”
+
+**Allow (still verify after):** inspect, retry idempotent sync, re-fetch stale records, reconcile allowlisted fields, rebuild caches, republish known-good mappings.
+
+**Deny unless explicit DE approval + Hub audit:** deploy, rotate secrets, delete accounts, change pricing, merge accounts, send mail, post social, publish customer-facing statements.
+
+## Email
+
+**Zoho Mail is current DE email transport.** Do not build a new mail stack. Lifecycle email defaults **draft-only** until a template class is explicitly approved for send.
+
+## Stale / current facts — do not revive
+
+- Website PR **#59 was not merged** (closed). Campaign landings live via **#82** (`595c820`). Do not revive stale #59.
+- Hub PR **#120** merged ecosystem **docs** (`2cd37da`). Documentation is not a live control plane.
+- Hub PR **#119** control-plane code is **not complete/live** until fresh CI after Zoho Mail health correction.
+- P0: Hub Issue **#121** — WorkDrive secret in `.replit`: rotate/remove **in Hub**; **never paste the secret**; do not inherit that hygiene here (no secrets in Git, prompts, or logs).
+
+## Website agent workflow
+
+- Isolated branch from current `origin/main`; PR against this repo; concurrency audit (`docs/PR-CONCURRENCY-AUDIT.md`).
+- No force-push to `main`. Do not merge your own PR.
+- Portal login: `https://portal.digeratiexperts.com/portal/login` — never `//login`.
+- Do not implement Hub ECO-001–030 from this website repo unless a website-owned slice is explicitly assigned.
+
+## Honesty
+
+Do not fabricate `connected=healthy`. Connector health is CONNECTED / DEGRADED / STALE / FAILED / AUTH_REQUIRED / SCHEMA_DRIFT / UNKNOWN — only from evidence.
+
+Do not invent clients, prices, telemetry, certifications, partners, SLAs, or live connector status.
