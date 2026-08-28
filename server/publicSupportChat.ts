@@ -2,6 +2,7 @@ import { randomBytes } from "crypto";
 import type { Express } from "express";
 import rateLimit from "express-rate-limit";
 import { generateChatResponse } from "./openaiService";
+import { DE_KNOWLEDGE_CATALOG } from "./services/de-intelligence/catalog";
 
 export type PublicChatHistoryEntry = {
   role: "user" | "assistant";
@@ -50,11 +51,20 @@ const publicSupportChatRateLimiter = rateLimit({
 
 export function registerPublicSupportChat(app: Express): void {
   app.get("/api/portal/zoho/chat/status", (_req, res) => {
+    const publicKnowledgeRecords = DE_KNOWLEDGE_CATALOG.filter(
+      (record) => record.scope === "public" && record.status === "active",
+    ).length;
+
     res.json({
       success: true,
       assistantAvailable: assistantConfigured(),
       mode: "ai-assistant",
       ticketFallback: "/api/portal/zoho/ticket",
+      intelligence: {
+        enabled: true,
+        version: "de-intelligence-v1",
+        publicGovernedRecords: publicKnowledgeRecords,
+      },
     });
   });
 
