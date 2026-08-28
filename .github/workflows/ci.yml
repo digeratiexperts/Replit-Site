@@ -5,13 +5,16 @@ on:
     branches: [main]
   push:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
 
+# Cancel overlapping PR validation only. A newer push to main must not cancel a
+# queued or in-flight production deployment waiting on the production runner.
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   check-test-build:
@@ -91,7 +94,7 @@ jobs:
   # eligible, preventing accidental cross-project execution.
   deploy-production:
     name: Deploy and verify production VPS
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     needs: check-test-build
     runs-on: [self-hosted, Linux, X64, de-production, website-prod]
     timeout-minutes: 30
