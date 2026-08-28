@@ -13,4 +13,4 @@ The authoritative project policy is the root **`.cursorrules`** file (DIGERATI E
 - Preserve existing DE website content/CTAs/nav/stats unless DE explicitly approves removal.
 - Canonical portal login: `https://portal.digeratiexperts.com/portal/login` — never invent `//login`.
 - Visual System v2 (`design/VISUAL_SYSTEM_V2.md`, `.cursor/rules/visual-system-v2.mdc`) is the layer model on the locked foundation. Do not invent HUD/evidence primitives ad hoc. Ledger: `docs/SITE-VISUAL-TASKS.md`.
-- DE ecosystem: Intelligence Hub is the operational control plane; this repo is a content/application projection. Follow `.cursor/rules/de-ecosystem.mdc`. Do not invent a second Hub, knowledge DB, mail stack, or middleware.
+- DE ecosystem: Intelligence Hub is the operational control plane; this repo is a content/application projection. Follow `.cursor/rules/de-ecosystem.mdc`. Scoreboard: Hub Issue #122. Do not invent a second Hub, knowledge DB, mail stack, or middleware.

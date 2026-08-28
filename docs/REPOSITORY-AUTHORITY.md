@@ -34,4 +34,5 @@ The old website PRs created from that blocked state should not be merged merely 
 - Site/agent workflow: [`AGENTS.md`](../AGENTS.md)
 - Brand naming rule: [`.cursor/rules/digerati-naming.mdc`](../.cursor/rules/digerati-naming.mdc)
 - Ecosystem control plane (always-applied agent rule): [`.cursor/rules/de-ecosystem.mdc`](../.cursor/rules/de-ecosystem.mdc)
-- Hub operational SoT (in `digeratiexperts/Intelligence-Hub`; **do not copy the ECO task ledger into this repo**): `docs/DE-ECOSYSTEM-CONTROL-PLANE.md`, `docs/SOURCE-OF-TRUTH-MATRIX.md`, `docs/DE-ECOSYSTEM-TASKS.md`
+- Hub **scoreboard** (do not duplicate here): [Intelligence-Hub#122](https://github.com/digeratiexperts/Intelligence-Hub/issues/122)
+- Hub charter (ratified PR #123 / `5354a8b`): `docs/DE-ECOSYSTEM-CHARTER.md`, plus `docs/DE-ECOSYSTEM-CONTROL-PLANE.md`, `docs/SOURCE-OF-TRUTH-MATRIX.md`, `docs/DE-ECOSYSTEM-TASKS.md`
