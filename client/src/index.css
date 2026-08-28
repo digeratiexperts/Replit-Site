@@ -605,6 +605,15 @@ html[data-dock-hidden="true"] .de-bottom-bar {
   box-shadow: 0 8px 32px rgba(26, 18, 16, 0.1);
 }
 
+/* White cards on a dark well — threat tiles and similar homepage boxes. */
+.de-paper-on-well {
+  background-color: var(--de-paper-raised);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow:
+    0 12px 36px rgba(0, 0, 0, 0.42),
+    0 0 0 1px rgba(211, 18, 106, 0.1);
+}
+
 /* FAQ rows on paper: same white lift as the assessment card, magenta left rail. */
 .de-paper-faq-item {
   background-color: var(--de-paper-raised);

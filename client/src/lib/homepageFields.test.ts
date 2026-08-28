@@ -51,4 +51,18 @@ describe("homepage chapter fields", () => {
     expect(css).toContain("inset 3px 0 0 #d3126a");
     expect(css).toContain("background-color: var(--de-paper-raised)");
   });
+
+  it("homepage threat tiles are white on the dark well, not graphite fills", () => {
+    expect(insights).toContain("de-paper-on-well");
+    expect(insights).toContain("bg-white");
+    expect(insights).toContain('text-[#1A1228]');
+    expect(insights).not.toContain("from-[#18141f]");
+    expect(css).toContain(".de-paper-on-well {");
+    const ai = readFileSync(
+      path.resolve(__dirname, "../pages/sections/DigeratiAIAssistanceSection.tsx"),
+      "utf8",
+    );
+    expect(ai).toContain("de-paper-on-well");
+    expect(ai).toContain("Coverage with Context");
+  });
 });
