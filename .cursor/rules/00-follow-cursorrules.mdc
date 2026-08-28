@@ -12,3 +12,4 @@ The authoritative project policy is the root **`.cursorrules`** file (DIGERATI E
 - For all UI work: inspect existing system ? implement ? launch and visually inspect with browser tooling ? separate UI/UX critique ? fix issues ? only then report completion.
 - Preserve existing DE website content/CTAs/nav/stats unless DE explicitly approves removal.
 - Canonical portal login: `https://portal.digeratiexperts.com/portal/login` — never invent `//login`.
+- Visual System v2 (`design/VISUAL_SYSTEM_V2.md`, `.cursor/rules/visual-system-v2.mdc`) is the layer model on the locked foundation. Do not invent HUD/evidence primitives ad hoc. Ledger: `docs/SITE-VISUAL-TASKS.md`.

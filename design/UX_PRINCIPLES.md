@@ -1,5 +1,7 @@
 # UX principles
 
+Visual System v2 layers (evidence, HUD, diagrams) sit on this file — they do not replace it. See `VISUAL_SYSTEM_V2.md`.
+
 Act as a senior product designer, UX designer, visual designer, and frontend engineer.
 
 Do not optimize only for code correctness. Optimize for the final rendered experience.
