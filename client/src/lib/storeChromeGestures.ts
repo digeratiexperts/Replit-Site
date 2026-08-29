@@ -10,7 +10,13 @@ export const STORE_HORIZONTAL_RAIL_CLASS = "de-store-h-rail";
 export const STORE_TRAVERSE_WINDOW_MS = 450;
 
 export function isStorePath(path: string): boolean {
-  return path === "/store" || path.startsWith("/store/");
+  const pathname = path.split("?")[0] ?? path;
+  return (
+    pathname === "/store" ||
+    pathname.startsWith("/store/") ||
+    pathname === "/internal/warehouse" ||
+    pathname.startsWith("/internal/warehouse/")
+  );
 }
 
 export function isHorizontalDominantDelta(deltaX: number, deltaY: number, min = 1): boolean {

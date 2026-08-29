@@ -1,6 +1,6 @@
 # DE Store Architecture — Phase 0 design packet
 
-**Status:** DRAFT — awaiting Joe (DE) approval. **No product implementation.**  
+**Status:** APPROVED by Joe (DE). Door 2 is live. Warehouse isolation, Door 1 two-door entry, and fail-safe marketplace are implemented in follow-on slices. **MERGED ≠ LIVE.**  
 **Date:** 2026-08-29  
 **Inspected `origin/main`:** `9b2ffdc` (Merge PR #93). **MERGED ≠ LIVE.** This packet describes current *code*, not production verification.  
 **Governing spec:** Three public doors + Client Marketplace + DE Digital Warehouse (supersedes earlier kitchen-sink and three-door implementation instructions).  

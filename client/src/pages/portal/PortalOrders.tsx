@@ -346,8 +346,8 @@ export default function PortalOrders() {
                 <p className="text-gray-500 dark:text-gray-400 mb-2">No orders found</p>
                 <p className="text-sm text-gray-400 dark:text-gray-500">
                   {statusFilter !== "all" || sourceFilter !== "all" ? "Try a different filter or " : ""}
-                  <Link href="/store" className="text-[#D3126A] hover:underline">
-                    browse our store
+                  <Link href="/portal/marketplace" className="text-[#D3126A] hover:underline">
+                    browse the client marketplace
                   </Link>
                   {" · "}
                   <Link href="/portal/contracts" className="text-[#D3126A] hover:underline">

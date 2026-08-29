@@ -26,9 +26,10 @@ const ManagedStore = () => {
   const prefersReducedMotion = useReducedMotion();
 
   useSEO({
+    noIndex: true,
     title: 'Managed IT Packages | Digerati Experts Store',
     description: 'Complete managed IT packages and ProActive Ecosystem plans for businesses. Full-service IT support, security, compliance, and strategy—all in one predictable subscription.',
-    canonical: '/store/managed',
+    canonical: '/internal/warehouse/managed',
   });
 
   const contractOnlyProducts = getContractOnlyProducts();
@@ -54,7 +55,7 @@ const ManagedStore = () => {
   const ProductCard = ({ product, featured = false }: { product: StoreProduct; featured?: boolean }) => {
     const visual = getProductVisual(product);
     return (
-    <Link href={`/store/product/${product.sku}`}>
+    <Link href={`/internal/warehouse/product/${product.sku}`}>
       <motion.div
         variants={itemVariants}
         className={`relative overflow-hidden rounded-xl border transition-all duration-300 hover:-translate-y-1 cursor-pointer ${
@@ -147,7 +148,7 @@ const ManagedStore = () => {
           
           <StoreClientBar />
           <div className="mb-8 flex items-center gap-2 text-sm text-white/50">
-            <Link href="/store" className="transition-colors hover:text-white">Store</Link>
+            <Link href="/internal/warehouse" className="transition-colors hover:text-white">Store</Link>
             <span>/</span>
             <span className="text-white">Managed Clients</span>
           </div>
@@ -315,7 +316,7 @@ const ManagedStore = () => {
             </div>
             
             <div className="mt-8">
-              <Link href="/store/co-managed">
+              <Link href="/internal/warehouse/co-managed">
                 <Button 
                   variant="link" 
                   className="text-de-accent-ink hover:text-de-accent-ink"

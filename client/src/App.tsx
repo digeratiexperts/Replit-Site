@@ -17,13 +17,11 @@ import { PageLoadingSkeleton } from "@/components/LoadingSkeleton";
 import { AnnouncerProvider } from "@/components/AccessibleAnnouncer";
 import { useGlobalShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { useStoreChromeGestures } from "@/hooks/useStoreChromeGestures";
-import { CartProvider } from "@/contexts/CartContext";
 import { BookingProvider } from "@/contexts/BookingContext";
 import { BookingModal } from "@/components/BookingModal";
 import { CookieConsentBanner } from "@/components/CookieConsentBanner";
-import { ShoppingCart } from "@/components/store/ShoppingCart";
-import { SolutionMobileBar } from "@/components/store/SolutionMobileBar";
 import { isDoor2Path } from "@/lib/isDoor2Path";
+import { isWarehousePath } from "@/lib/warehousePaths";
 
 const SolutionsIndex = lazy(() => import("@/pages/solutions/SolutionsIndex"));
 const ManagedITSupport = lazy(() => import("@/pages/solutions/ManagedITSupport"));
@@ -123,6 +121,7 @@ const PortalVPN = lazy(() => import("@/pages/portal/PortalVPN"));
 const PortalCytracom = lazy(() => import("@/pages/portal/PortalCytracom"));
 const PortalFiles = lazy(() => import("@/pages/portal/PortalFiles"));
 const PortalOrders = lazy(() => import("@/pages/portal/PortalOrders"));
+const PortalMarketplace = lazy(() => import("@/pages/portal/PortalMarketplace"));
 const PortalOrderDetail = lazy(() => import("@/pages/portal/PortalOrderDetail"));
 const PortalBilling = lazy(() => import("@/pages/portal/PortalBilling"));
 const PortalCompany = lazy(() => import("@/pages/portal/PortalCompany"));
@@ -150,15 +149,7 @@ const BookingPage = lazy(() => import("@/pages/BookingPage"));
 const ContactPage = lazy(() => import("@/pages/Contact"));
 const DigeratiHomepage = lazy(() => import("@/pages/DigeratiHomepage").then((m) => ({ default: m.DigeratiHomepage })));
 
-// Store pages
-const StoreLanding = lazy(() => import("@/pages/store/StoreLanding"));
-const ManagedStore = lazy(() => import("@/pages/store/ManagedStore"));
-const CoManagedStore = lazy(() => import("@/pages/store/CoManagedStore"));
-const ProductDetail = lazy(() => import("@/pages/store/ProductDetail"));
-const Checkout = lazy(() => import("@/pages/store/Checkout"));
-const OrderConfirmation = lazy(() => import("@/pages/store/OrderConfirmation"));
-const QuoteRequestPage = lazy(() => import("@/pages/store/QuoteRequest"));
-const QuoteConfirmationPage = lazy(() => import("@/pages/store/QuoteConfirmation"));
+const WarehouseGate = lazy(() => import("@/pages/store/WarehouseGate"));
 
 // Internal DE sales pages were removed from the public bundle for security.
 // They now live behind authentication in the Intelligence Hub (techsales).
@@ -258,44 +249,14 @@ function Router() {
         )} />
       ))}
       
-      {/* Store Pages */}
-      <Route path="/store" component={() => (
+      <Route path="/internal/warehouse/*" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
-          <StoreLanding />
+          <WarehouseGate />
         </Suspense>
       )} />
-      <Route path="/store/managed" component={() => (
+      <Route path="/internal/warehouse" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
-          <ManagedStore />
-        </Suspense>
-      )} />
-      <Route path="/store/co-managed" component={() => (
-        <Suspense fallback={<PageLoadingSkeleton />}>
-          <CoManagedStore />
-        </Suspense>
-      )} />      <Route path="/store/product/:sku" component={() => (
-        <Suspense fallback={<PageLoadingSkeleton />}>
-          <ProductDetail />
-        </Suspense>
-      )} />
-      <Route path="/store/checkout" component={() => (
-        <Suspense fallback={<PageLoadingSkeleton />}>
-          <Checkout />
-        </Suspense>
-      )} />
-      <Route path="/store/order-confirmation" component={() => (
-        <Suspense fallback={<PageLoadingSkeleton />}>
-          <OrderConfirmation />
-        </Suspense>
-      )} />
-      <Route path="/store/quote-request" component={() => (
-        <Suspense fallback={<PageLoadingSkeleton />}>
-          <QuoteRequestPage />
-        </Suspense>
-      )} />
-      <Route path="/store/quote-confirmation/:id" component={() => (
-        <Suspense fallback={<PageLoadingSkeleton />}>
-          <QuoteConfirmationPage />
+          <WarehouseGate />
         </Suspense>
       )} />
       
@@ -727,6 +688,11 @@ function Router() {
           <PortalProcurementStore />
         </Suspense>
       )} />
+      <Route path="/portal/marketplace" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <PortalMarketplace />
+        </Suspense>
+      )} />
       <Route path="/portal/forms" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <PortalAdvancedForms />
@@ -914,6 +880,7 @@ function SpaPageViews() {
  * the brand magenta default.
  */
 const ACCENT_BY_PREFIX: ReadonlyArray<readonly [string, string]> = [
+  ["/internal/warehouse", "electric"],
   ["/store", "electric"],
   ["/support", "cyan"],
   ["/resources/blog", "amber"],
@@ -931,6 +898,7 @@ function AppContent() {
   const isPortal = location.startsWith("/portal");
   const isHome = location === "/";
   const hideDoor2HelpDock = isDoor2Path(location) && location.split("?")[0] !== "/solutions/business-needs";
+  const hideWarehouseChrome = isWarehousePath(location);
   const accent = isPortal ? undefined : accentFor(location);
 
   useEffect(() => {
@@ -953,7 +921,7 @@ function AppContent() {
         <Router />
       </div>
       <MarketingChrome />
-      {!isHome && !hideDoor2HelpDock && <SiteBottomBar />}
+      {!isHome && !hideDoor2HelpDock && !hideWarehouseChrome && <SiteBottomBar />}
       <StickyCTABar />
       <ExitIntentPopup delay={5000} />
       <CookieConsentBanner />
@@ -966,17 +934,13 @@ function App() {
     <ErrorBoundary>
       <HelmetProvider>
         <QueryClientProvider client={queryClient}>
-          <CartProvider>
-            <BookingProvider>
-              <TooltipProvider>
-                <Toaster />
-                <ShoppingCart />
-                <SolutionMobileBar />
-                <BookingModal />
-                <AppContent />
-              </TooltipProvider>
-            </BookingProvider>
-          </CartProvider>
+          <BookingProvider>
+            <TooltipProvider>
+              <Toaster />
+              <BookingModal />
+              <AppContent />
+            </TooltipProvider>
+          </BookingProvider>
         </QueryClientProvider>
       </HelmetProvider>
     </ErrorBoundary>

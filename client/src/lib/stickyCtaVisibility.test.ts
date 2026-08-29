@@ -15,14 +15,16 @@ describe("sticky CTA visibility", () => {
     expect(isStickyCtaRouteAllowed("/")).toBe(false);
     expect(isStickyCtaRouteAllowed("/portal/dashboard")).toBe(false);
     expect(isStickyCtaRouteAllowed("/solutions")).toBe(true);
-    expect(isStickyCtaRouteAllowed("/store")).toBe(true);
+    expect(isStickyCtaRouteAllowed("/store")).toBe(false);
+    expect(isStickyCtaRouteAllowed("/internal/warehouse")).toBe(false);
     expect(isStickyCtaRouteAllowed("/solutions/business-needs")).toBe(false);
     expect(isStickyCtaRouteAllowed("/solutions/request")).toBe(false);
   });
 
   it("pins checkout and quote even when the page is too short to scroll", () => {
-    expect(isStickyCtaPinnedRoute("/store/checkout")).toBe(true);
-    expect(isStickyCtaPinnedRoute("/store/quote-request")).toBe(true);
+    expect(isStickyCtaPinnedRoute("/internal/warehouse/checkout")).toBe(true);
+    expect(isStickyCtaPinnedRoute("/internal/warehouse/quote-request")).toBe(true);
+    expect(isStickyCtaPinnedRoute("/store/checkout")).toBe(false);
     expect(isStickyCtaPinnedRoute("/store")).toBe(false);
     expect(isStickyCtaPinnedRoute("/solutions")).toBe(false);
   });

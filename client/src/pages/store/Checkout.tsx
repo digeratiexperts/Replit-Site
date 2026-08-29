@@ -49,7 +49,7 @@ const Checkout = () => {
   useSEO({
     title: "Checkout | Digerati Experts Store",
     description: "Complete your purchase of IT services and solutions from Digerati Experts.",
-    canonical: "/store/checkout",
+    canonical: "/internal/warehouse/checkout",
     noIndex: true,
   });
 
@@ -71,7 +71,7 @@ const Checkout = () => {
 
   useEffect(() => {
     if (items.length === 0) {
-      navigate("/store");
+      navigate("/internal/warehouse");
     }
   }, [items.length, navigate]);
 
@@ -143,10 +143,10 @@ const Checkout = () => {
           window.location.href = result.url;
         } else if (result.orderId) {
           clearCart();
-          navigate(`/store/order-confirmation?orderId=${result.orderId}`);
+          navigate(`/internal/warehouse/order-confirmation?orderId=${result.orderId}`);
         }
       } else if (paymentMethod === "quote_request") {
-        navigate("/store/quote-request");
+        navigate("/internal/warehouse/quote-request");
         return;
       }
     } catch (error: any) {
@@ -181,7 +181,7 @@ const Checkout = () => {
           <nav className="mb-2" aria-label="Breadcrumb">
             <ol className="flex items-center gap-2 text-sm text-white/50">
               <li>
-                <Link href="/store" className="hover:text-white transition-colors" data-testid="breadcrumb-store">
+                <Link href="/internal/warehouse" className="hover:text-white transition-colors" data-testid="breadcrumb-store">
                   Store
                 </Link>
               </li>
@@ -191,7 +191,7 @@ const Checkout = () => {
           </nav>
 
           <div className="flex items-center gap-4">
-            <Link href="/store">
+            <Link href="/internal/warehouse">
               <Button variant="ghost" className="text-white/60 hover:text-white" data-testid="button-back-to-store">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Store
@@ -348,7 +348,7 @@ const Checkout = () => {
                       href={portalLoginWithReturn(
                         typeof window !== "undefined"
                           ? `${window.location.origin}/store/checkout`
-                          : "/store/checkout",
+                          : "/internal/warehouse/checkout",
                       )}
                       className="text-de-accent-ink underline-offset-4 hover:underline"
                       data-testid="checkout-portal-login"
