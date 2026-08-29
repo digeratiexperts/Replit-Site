@@ -32,9 +32,12 @@ export function CoverageScorePanel({
 
   const details = (
     <>
-      <p className={`${compact ? "mb-3" : "mb-4"} text-xs leading-relaxed text-[color:var(--dp-text-55,#ffffff8c)]`}>
-        Heuristic stack coverage (endpoint, identity, email, backup, network, compliance) —
-        not a security audit or certification claim.
+      <p
+        className={`${compact ? "mb-3" : "mb-4"} text-xs leading-relaxed text-[color:var(--dp-text-55,#ffffff8c)]`}
+        data-testid="coverage-experimental-heuristic"
+      >
+        Experimental heuristic — not an authoritative security score, audit, or certification.
+        Stack coverage is estimated from cart categories (endpoint, identity, email, backup, network, compliance).
       </p>
 
       <div className="space-y-2.5">
@@ -107,7 +110,7 @@ export function CoverageScorePanel({
                     Add
                   </Button>
                 ) : (
-                  <Link href={`/store/product/${s.product.sku}`}>
+                  <Link href={`/internal/warehouse/product/${s.product.sku}`}>
                     <span className="text-xs text-de-accent-ink hover:text-de-accent-ink">View</span>
                   </Link>
                 )}

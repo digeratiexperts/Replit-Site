@@ -81,11 +81,12 @@ const ProductDetail = () => {
   }, [product, isLoggedIn]);
 
   useSEO({
+    noIndex: true,
     title: product ? `${product.name} | Store` : "Product Not Found | Store",
     description:
       product?.description ||
       "Product details for Digerati Experts IT services and solutions.",
-    canonical: `/store/product/${sku}`,
+    canonical: `/internal/warehouse/product/${sku}`,
   });
 
   if (!product) {
@@ -96,7 +97,7 @@ const ProductDetail = () => {
           <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
             <h1 className="mb-4 text-3xl font-bold text-white">Product Not Found</h1>
             <p className="mb-8 text-white/60">The product you're looking for doesn't exist.</p>
-            <Link href="/store">
+            <Link href="/internal/warehouse">
               <Button className="bg-de-accent text-white hover:bg-[#6548ff]">
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Back to Store
@@ -114,7 +115,7 @@ const ProductDetail = () => {
   const tags = getProductTags(product);
   const configurable = isConfigurableProduct(product);
   const productPricing = getProductPrice(product.id, product.basePrice);
-  const storeLink = product.isContractOnly ? "/store/managed" : "/store/co-managed";
+  const storeLink = product.isContractOnly ? "/internal/warehouse/managed" : "/internal/warehouse/co-managed";
   const storeLabel = product.isContractOnly ? "Managed Services" : "Co-Managed Products";
   const includedHint = getIncludedInHint(product.sku);
   const relationships = getProductRelationships(product.sku);
@@ -173,16 +174,16 @@ const ProductDetail = () => {
         description={product.description}
         price={productPricing.price.toFixed(2)}
         image={seoImage}
-        url={`/store/product/${product.sku}`}
+        url={`/internal/warehouse/product/${product.sku}`}
         sku={product.sku}
         category={product.category}
       />
       <BreadcrumbJsonLd
         items={[
           { name: "Home", url: "/" },
-          { name: "Store", url: "/store" },
+          { name: "Store", url: "/internal/warehouse" },
           { name: storeLabel, url: storeLink },
-          { name: product.name, url: `/store/product/${product.sku}` },
+          { name: product.name, url: `/internal/warehouse/product/${product.sku}` },
         ]}
       />
       <MegaMenu />
@@ -195,7 +196,7 @@ const ProductDetail = () => {
             <ol className="flex items-center gap-2 text-sm text-white/50">
               <li>
                 <Link
-                  href="/store"
+                  href="/internal/warehouse"
                   className="transition-colors hover:text-white"
                   data-testid="breadcrumb-store"
                 >
@@ -558,7 +559,7 @@ const ProductDetail = () => {
                     <ul className="space-y-3">
                       {worksWithProducts.map((related) => (
                         <li key={related.id}>
-                          <Link href={`/store/product/${related.sku}`}>
+                          <Link href={`/internal/warehouse/product/${related.sku}`}>
                             <span className="group flex items-center justify-between gap-3 rounded-lg border border-transparent px-2 py-2 transition-colors hover:border-white/10 hover:bg-white/[0.03]">
                               <span>
                                 <span className="block font-medium text-white group-hover:text-de-accent-ink">
@@ -584,7 +585,7 @@ const ProductDetail = () => {
                     <ul className="space-y-3">
                       {upgradeProducts.map((related) => (
                         <li key={related.id}>
-                          <Link href={`/store/product/${related.sku}`}>
+                          <Link href={`/internal/warehouse/product/${related.sku}`}>
                             <span className="group flex items-center justify-between gap-3 rounded-lg border border-transparent px-2 py-2 transition-colors hover:border-white/10 hover:bg-white/[0.03]">
                               <span>
                                 <span className="block font-medium text-white group-hover:text-de-accent-ink">
@@ -617,7 +618,7 @@ const ProductDetail = () => {
               <h2 className="mb-6 text-2xl font-bold text-white">Recommended with this service</h2>
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                 {relatedProducts.map((related) => (
-                  <Link key={related.id} href={`/store/product/${related.sku}`}>
+                  <Link key={related.id} href={`/internal/warehouse/product/${related.sku}`}>
                     <div
                       className="group h-full cursor-pointer overflow-hidden rounded-xl border border-white/10 bg-white/[0.03] transition-all duration-300 hover:border-de-accent/30"
                       data-testid={`related-${related.id}`}

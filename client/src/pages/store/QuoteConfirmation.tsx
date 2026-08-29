@@ -21,7 +21,7 @@ import {
 import { PRIMARY_PHONE } from "@/data/companyContact";
 
 const QuoteConfirmation = () => {
-  const [, params] = useRoute("/store/quote-confirmation/:id");
+  const [, params] = useRoute("/internal/warehouse/quote-confirmation/:id");
   const quoteId = params?.id;
   const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
   const [pdfError, setPdfError] = useState<string | null>(null);
@@ -29,7 +29,7 @@ const QuoteConfirmation = () => {
   useSEO({
     title: "Quote Request Submitted | Digerati Experts Store",
     description: "Your quote request has been submitted successfully. Our team will contact you shortly.",
-    canonical: `/store/quote-confirmation/${quoteId}`,
+    canonical: `/internal/warehouse/quote-confirmation/${quoteId}`,
     noIndex: true,
   });
 
@@ -89,7 +89,7 @@ const QuoteConfirmation = () => {
               <p className="text-white/60 mb-8" data-testid="text-error-message">
                 We couldn't find the quote request you're looking for.
               </p>
-              <Link href="/store">
+              <Link href="/internal/warehouse">
                 <Button className="bg-de-accent hover:bg-de-accent text-white" data-testid="button-back-to-store">
                   Back to Store
                 </Button>
@@ -303,7 +303,7 @@ const QuoteConfirmation = () => {
                   Back to Home
                 </Button>
               </Link>
-              <Link href="/store">
+              <Link href="/internal/warehouse">
                 <Button
                   className="bg-de-accent hover:bg-de-accent text-white"
                   data-testid="button-continue-browsing"

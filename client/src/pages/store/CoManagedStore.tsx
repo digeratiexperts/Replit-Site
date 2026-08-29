@@ -207,8 +207,8 @@ const CoManagedStore = () => {
     if (selectedPurchasePath !== "all") params.set("path", selectedPurchasePath);
     if (selectedCoverage !== "all") params.set("coverage", selectedCoverage);
     const qs = params.toString();
-    const next = qs ? `/store/co-managed?${qs}` : "/store/co-managed";
-    const current = `/store/co-managed${searchString ? `?${searchString}` : ""}`;
+    const next = qs ? `/internal/warehouse/co-managed?${qs}` : "/internal/warehouse/co-managed";
+    const current = `/internal/warehouse/co-managed${searchString ? `?${searchString}` : ""}`;
     if (next !== current) {
       setLocation(next, { replace: true });
     }
@@ -229,10 +229,11 @@ const CoManagedStore = () => {
   ]);
 
   useSEO({
+    noIndex: true,
     title: "IT Store Catalog | Digerati Experts",
     description:
       "Guided IT storefront: shop by outcome, browse curated rails, and purchase co-managed products — endpoint, security, UCaaS, hardware, and professional services.",
-    canonical: "/store/co-managed",
+    canonical: "/internal/warehouse/co-managed",
   });
 
   const checkoutProducts = useMemo(() => getCheckoutEnabledProducts(), []);
@@ -479,7 +480,7 @@ const CoManagedStore = () => {
       description: "Items added to Your Solution — continue to request a quote.",
     });
     openCart();
-    setLocation("/store/checkout");
+    setLocation("/internal/warehouse/checkout");
   };
 
   const toggleCompare = (product: StoreProduct) => {
@@ -567,7 +568,7 @@ const CoManagedStore = () => {
           <StoreClientBar />
 
           <div className="mb-8 flex items-center gap-2 text-base text-white/50">
-            <Link href="/store" className="transition-colors hover:text-white">
+            <Link href="/internal/warehouse" className="transition-colors hover:text-white">
               Store
             </Link>
             <span>/</span>
@@ -617,7 +618,7 @@ const CoManagedStore = () => {
                 onClick={() => {
                   markGuidedSkipped();
                   setGuidanceTick((n) => n + 1);
-                  setLocation("/store/co-managed?catalog=full", { replace: true });
+                  setLocation("/internal/warehouse/co-managed?catalog=full", { replace: true });
                   scrollToCatalog();
                 }}
                 data-testid="button-browse-everything"
@@ -636,7 +637,7 @@ const CoManagedStore = () => {
                   onClick={() => {
                     markGuidedSkipped();
                     setGuidanceTick((n) => n + 1);
-                    setLocation("/store/co-managed?catalog=full", { replace: true });
+                    setLocation("/internal/warehouse/co-managed?catalog=full", { replace: true });
                   }}
                 >
                   Browse the full catalog
@@ -914,7 +915,7 @@ const CoManagedStore = () => {
               Ecosystem plans for all-inclusive support — or ask Digerati to recommend a stack.
             </p>
             <div className="flex flex-col justify-center gap-4 sm:flex-row">
-              <Link href="/store/managed">
+              <Link href="/internal/warehouse/managed">
                 <Button
                   size="lg"
                   className="h-12 bg-de-accent px-6 text-white hover:bg-[#6548ff]"
@@ -978,7 +979,7 @@ const CoManagedStore = () => {
         onSkipCatalog={() => {
           markGuidedSkipped();
           setGuidanceTick((n) => n + 1);
-          setLocation("/store/co-managed?catalog=full", { replace: true });
+          setLocation("/internal/warehouse/co-managed?catalog=full", { replace: true });
         }}
         onComplete={(next) => {
           setGuidanceTick((n) => n + 1);

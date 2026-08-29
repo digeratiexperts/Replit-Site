@@ -1,4 +1,5 @@
 import { isDoor2Path } from "./isDoor2Path";
+import { isWarehousePath } from "./warehousePaths";
 
 export const STICKY_CTA_SCROLL_IDLE_MS = 900;
 export const STICKY_CTA_AUTO_HIDE_MS = 12_000;
@@ -36,16 +37,24 @@ const BLOCKING_OVERLAY_SELECTORS = [
 ];
 
 export function isStickyCtaRouteAllowed(path: string): boolean {
-  return path !== "/" && !path.startsWith("/portal") && !isDoor2Path(path);
+  const pathname = path.split("?")[0] ?? path;
+  return (
+    pathname !== "/" &&
+    !pathname.startsWith("/portal") &&
+    !pathname.startsWith("/store") &&
+    !isDoor2Path(pathname) &&
+    !isWarehousePath(pathname)
+  );
 }
 
 /** Checkout (and quote) stay pinned even when the page is too short to scroll. */
 export function isStickyCtaPinnedRoute(path: string): boolean {
+  const pathname = path.split("?")[0] ?? path;
   return (
-    path === "/store/checkout" ||
-    path.startsWith("/store/checkout/") ||
-    path === "/store/quote-request" ||
-    path.startsWith("/store/quote-request/")
+    pathname === "/internal/warehouse/checkout" ||
+    pathname.startsWith("/internal/warehouse/checkout/") ||
+    pathname === "/internal/warehouse/quote-request" ||
+    pathname.startsWith("/internal/warehouse/quote-request/")
   );
 }
 

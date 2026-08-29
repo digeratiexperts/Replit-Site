@@ -133,13 +133,13 @@ export function ShoppingCart() {
   const goCheckout = () => {
     analytics.storeCheckoutStarted(totals.dueToday + totals.monthly + totals.annual);
     closeCart();
-    setLocation("/store/checkout");
+    setLocation("/internal/warehouse/checkout");
   };
 
   const goQuote = () => {
     analytics.storeRequestQuote(totals.dueToday + totals.monthly + totals.annual);
     closeCart();
-    setLocation("/store/checkout");
+    setLocation("/internal/warehouse/checkout");
   };
 
   const lastUpdatedLabel = lastUpdated
@@ -256,7 +256,7 @@ export function ShoppingCart() {
                   onClick={closeCart}
                   data-testid="button-browse-products"
                 >
-                  <Link href="/store/co-managed">
+                  <Link href="/internal/warehouse/co-managed">
                     Browse Products
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>

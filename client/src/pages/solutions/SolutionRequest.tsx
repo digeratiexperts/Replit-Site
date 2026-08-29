@@ -15,6 +15,7 @@ import {
   parseDeliveryModel,
   type CuratedDeliveryModel,
 } from "@/lib/businessNeeds";
+import { DOOR_2_ELIGIBILITY } from "@shared/checkoutEligibility";
 
 type Intent = "request" | "quote" | "assessment" | "consultation";
 
@@ -205,7 +206,12 @@ export default function SolutionRequest() {
               </Button>
             </section>
           ) : (
-            <form onSubmit={onSubmit} className="space-y-5" noValidate>
+            <form
+              onSubmit={onSubmit}
+              className="space-y-5"
+              noValidate
+              data-eligibility={DOOR_2_ELIGIBILITY}
+            >
               <div className="space-y-2">
                 <Label htmlFor="sr-org" className="text-white/80">
                   Organization

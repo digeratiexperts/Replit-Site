@@ -1,6 +1,6 @@
 /**
- * Regenerates public/sitemap.xml with marketing URLs + public store product pages.
- * Portal / checkout / transactional URLs are intentionally excluded (noindex).
+ * Regenerates public/sitemap.xml with marketing URLs + Door 2 family pages.
+ * Warehouse, portal, checkout, and SKU PDPs are intentionally excluded (noindex).
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -97,17 +97,9 @@ const STATIC = [
   ["/legal/privacy-policy", "yearly", "0.4"],
   ["/legal/terms-of-use", "yearly", "0.4"],
   ["/contact", "monthly", "0.7"],
-  ["/store", "weekly", "0.8"],
-  ["/store/managed", "weekly", "0.7"],
-  ["/store/co-managed", "weekly", "0.7"],
   ["/solutions/business-needs", "weekly", "0.8"],
   ["/solutions/request", "monthly", "0.3"],
 ];
-
-const productsPath = path.join(root, "client/src/data/storeProducts.ts");
-const productSrc = fs.readFileSync(productsPath, "utf8");
-const skus = [...productSrc.matchAll(/sku:\s*"([^"]+)"/g)].map((m) => m[1]);
-const uniqueSkus = [...new Set(skus)];
 
 const curatedPath = path.join(root, "client/src/data/curatedSolutions.ts");
 const curatedSrc = fs.readFileSync(curatedPath, "utf8");
@@ -139,8 +131,6 @@ const lines = [
   ...familyPaths.map((loc) => urlEntry(loc, "weekly", "0.7")),
   `  <!-- Resource PDFs (${resourceRoutes.length}) -->`,
   ...resourceRoutes.map((loc) => urlEntry(loc, "monthly", "0.6")),
-  `  <!-- Store products (${uniqueSkus.length}) -->`,
-  ...uniqueSkus.map((sku) => urlEntry(`/store/product/${encodeURIComponent(sku)}`, "weekly", "0.6")),
   `</urlset>`,
   ``,
 ];
@@ -148,5 +138,5 @@ const lines = [
 const out = path.join(root, "public/sitemap.xml");
 fs.writeFileSync(out, lines.join("\n"), "utf8");
 console.log(
-  `Wrote ${out} (${STATIC.length} static + ${familyPaths.length} families + ${resourceRoutes.length} resources + ${uniqueSkus.length} products)`,
+  `Wrote ${out} (${STATIC.length} static + ${familyPaths.length} families + ${resourceRoutes.length} resources)`,
 );

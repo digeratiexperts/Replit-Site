@@ -375,7 +375,7 @@ export function MegaMenu() {
     },
     {
       name: 'Store',
-      href: '/store',
+      href: '/solutions/business-needs',
       isSimple: true
     },
     {

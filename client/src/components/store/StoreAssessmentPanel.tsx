@@ -89,7 +89,7 @@ export function StoreAssessmentPanel({
         <p className="mt-1 text-xs text-white/50">
           ProActive Ecosystem packages include layered security and support in one plan.
         </p>
-        <Link href="/store/managed">
+        <Link href="/internal/warehouse/managed">
           <span className="mt-3 inline-flex items-center text-sm text-de-accent-ink hover:text-de-accent-ink">
             View managed packages
             <ArrowRight className="ml-1 h-3.5 w-3.5" />

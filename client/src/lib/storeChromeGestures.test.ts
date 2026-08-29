@@ -12,6 +12,8 @@ describe("store chrome gestures", () => {
     expect(isStorePath("/store")).toBe(true);
     expect(isStorePath("/store/managed")).toBe(true);
     expect(isStorePath("/store/product/de-proactive-office")).toBe(true);
+    expect(isStorePath("/internal/warehouse")).toBe(true);
+    expect(isStorePath("/internal/warehouse/checkout")).toBe(true);
     expect(isStorePath("/")).toBe(false);
     expect(isStorePath("/solutions/managed-it-support")).toBe(false);
     expect(isStorePath("/storage")).toBe(false);

@@ -66,7 +66,7 @@ const OrderConfirmation = () => {
   useSEO({
     title: "Order Confirmation | Digerati Experts Store",
     description: "Your order has been received. Thank you for your purchase.",
-    canonical: "/store/order-confirmation",
+    canonical: "/internal/warehouse/order-confirmation",
     noIndex: true,
   });
 
@@ -131,7 +131,7 @@ const OrderConfirmation = () => {
             <p className="text-white/60 mb-8">
               We couldn't find your order. Please check your email for confirmation or contact support.
             </p>
-            <Link href="/store">
+            <Link href="/internal/warehouse">
               <Button className="bg-de-accent hover:bg-de-accent text-white" data-testid="button-back-to-store">
                 <ShoppingBag className="w-4 h-4 mr-2" />
                 Continue Shopping
@@ -330,7 +330,7 @@ const OrderConfirmation = () => {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="flex flex-col sm:flex-row gap-4 justify-center"
           >
-            <Link href="/store">
+            <Link href="/internal/warehouse">
               <Button
                 variant="outline"
                 className="border-white/20 text-white hover:bg-white/10"
