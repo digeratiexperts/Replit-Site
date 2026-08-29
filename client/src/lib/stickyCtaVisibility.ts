@@ -1,3 +1,5 @@
+import { isDoor2Path } from "./isDoor2Path";
+
 export const STICKY_CTA_SCROLL_IDLE_MS = 900;
 export const STICKY_CTA_AUTO_HIDE_MS = 12_000;
 export const STICKY_CTA_RESHOW_DELTA_PX = 160;
@@ -34,7 +36,7 @@ const BLOCKING_OVERLAY_SELECTORS = [
 ];
 
 export function isStickyCtaRouteAllowed(path: string): boolean {
-  return path !== "/" && !path.startsWith("/portal");
+  return path !== "/" && !path.startsWith("/portal") && !isDoor2Path(path);
 }
 
 /** Checkout (and quote) stay pinned even when the page is too short to scroll. */

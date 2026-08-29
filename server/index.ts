@@ -6,6 +6,7 @@ import { createServer } from "http";
 import { registerRoutes, authMiddleware, requireRole } from "./routes";
 import { registerSecureZohoStoreCheckout } from "./secureStoreCheckout";
 import { registerStoreSolutionRoutes } from "./storeSolutionRoutes";
+import { registerPublicSolutionRoutes } from "./publicSolutionRoutes";
 import { registerPublicSupportChat } from "./publicSupportChat";
 import { createServer as createViteServer } from "vite";
 import path from "path";
@@ -271,6 +272,7 @@ app.use(cookieParser());
 
 registerSecureZohoStoreCheckout(app, authMiddleware as any, requireRole as any);
 registerStoreSolutionRoutes(app, authMiddleware as any);
+registerPublicSolutionRoutes(app);
 
 app.use((req, res, next) => {
   if (req.path.toLowerCase() === "/solutions/proactive-ecosystem-packages") {
