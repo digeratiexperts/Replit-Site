@@ -23,6 +23,7 @@ import { BookingModal } from "@/components/BookingModal";
 import { CookieConsentBanner } from "@/components/CookieConsentBanner";
 import { ShoppingCart } from "@/components/store/ShoppingCart";
 import { SolutionMobileBar } from "@/components/store/SolutionMobileBar";
+import { isDoor2Path } from "@/lib/isDoor2Path";
 
 const SolutionsIndex = lazy(() => import("@/pages/solutions/SolutionsIndex"));
 const ManagedITSupport = lazy(() => import("@/pages/solutions/ManagedITSupport"));
@@ -35,6 +36,9 @@ const ManagedWorkplace = lazy(() => import("@/pages/solutions/ManagedWorkplace")
 const BackupDisasterRecovery = lazy(() => import("@/pages/solutions/BackupDisasterRecovery"));
 const ProActiveEcosystemPage = lazy(() => import("@/pages/solutions/ProActiveEcosystemPage"));
 const CoManagedIT = lazy(() => import("@/pages/solutions/CoManagedIT"));
+const BusinessNeedsIndex = lazy(() => import("@/pages/solutions/BusinessNeedsIndex"));
+const BusinessNeedsFamily = lazy(() => import("@/pages/solutions/BusinessNeedsFamily"));
+const SolutionRequest = lazy(() => import("@/pages/solutions/SolutionRequest"));
 const UCaaS = lazy(() => import("@/pages/services/UCaaS"));
 const Healthcare = lazy(() => import("@/pages/industries/Healthcare"));
 const Accounting = lazy(() => import("@/pages/industries/Accounting"));
@@ -229,6 +233,21 @@ function Router() {
       <Route path="/solutions/co-managed-it" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <CoManagedIT />
+        </Suspense>
+      )} />
+      <Route path="/solutions/business-needs/:family" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <BusinessNeedsFamily />
+        </Suspense>
+      )} />
+      <Route path="/solutions/business-needs" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <BusinessNeedsIndex />
+        </Suspense>
+      )} />
+      <Route path="/solutions/request" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <SolutionRequest />
         </Suspense>
       )} />
       {Object.entries(servicePageData).filter(([key]) => !['managed-workplace', 'backup-disaster-recovery', 'co-managed-it', 'managed-it-support', 'ProActive-Ecosystem-Packages'].includes(key)).map(([key, data]) => (
@@ -911,6 +930,7 @@ function AppContent() {
   useStoreChromeGestures(location);
   const isPortal = location.startsWith("/portal");
   const isHome = location === "/";
+  const hideDoor2HelpDock = isDoor2Path(location) && location.split("?")[0] !== "/solutions/business-needs";
   const accent = isPortal ? undefined : accentFor(location);
 
   useEffect(() => {
@@ -933,7 +953,7 @@ function AppContent() {
         <Router />
       </div>
       <MarketingChrome />
-      {!isHome && <SiteBottomBar />}
+      {!isHome && !hideDoor2HelpDock && <SiteBottomBar />}
       <StickyCTABar />
       <ExitIntentPopup delay={5000} />
       <CookieConsentBanner />
