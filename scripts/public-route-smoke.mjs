@@ -27,7 +27,7 @@ const routes = [
   "/trust",
   "/trust/trust-center",
   "/contact",
-  "/store",
+  "/solutions/business-needs",
   "/about/press",
 ];
 
@@ -68,6 +68,28 @@ for (const path of routes) {
     }
   } catch (err) {
     fails.push(`/api/google-reviews → ${err.message}`);
+  }
+}
+
+{
+  const destaged = await fetch(`${BASE}/store`, { redirect: "manual" });
+  if (destaged.status !== 301) {
+    fails.push(`/store → expected 301 destage, got ${destaged.status}`);
+  } else if ((destaged.headers.get("location") || "") !== "/solutions/business-needs") {
+    fails.push(`/store → expected Location /solutions/business-needs, got ${destaged.headers.get("location")}`);
+  }
+
+  const warehouse = await fetch(`${BASE}/internal/warehouse`, { redirect: "manual" });
+  const staffSku = await fetch(`${BASE}/store/product/DE-SVC-CM-ENDPOINT-EDR-MO`, {
+    redirect: "manual",
+  });
+  const unknownSku = await fetch(`${BASE}/store/product/not-a-real-sku`, { redirect: "manual" });
+  if (warehouse.status !== 404) fails.push(`/internal/warehouse → expected 404, got ${warehouse.status}`);
+  if (staffSku.status !== 404 || unknownSku.status !== 404) {
+    fails.push(`legacy SKU destage → expected generic 404s, got ${staffSku.status}/${unknownSku.status}`);
+  }
+  if (warehouse.headers.get("location") || staffSku.headers.get("location")) {
+    fails.push(`warehouse denial leaked Location`);
   }
 }
 
