@@ -10,6 +10,7 @@ import {
 import { openMspAdvisor } from "@/lib/openMspAdvisor";
 import { isDoor2Path } from "@/lib/isDoor2Path";
 import { PRIMARY_PHONE } from "@shared/companyContact";
+import { AskDeGlyph } from "@/components/icons/AskDeGlyph";
 
 /** Original used 0.28s easeOut layout + 300ms grid. Keep that pacing without transform. */
 const EXPAND_S = 0.4;
@@ -105,13 +106,8 @@ function AskDELauncherButton({ compact = false }: { compact?: boolean }) {
         aria-label={compact ? "Open DE Desk for support" : "Open DE Desk"}
         aria-expanded={false}
       >
-        <span
-          className={`relative flex h-8 w-8 items-center justify-center rounded-full bg-[#D3126A] text-sm font-bold tracking-tight ${
-            compact ? "ring-2 ring-[#D3126A]/40 ring-offset-2 ring-offset-black" : ""
-          }`}
-        >
-          DE
-          <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full border-2 border-[#0a0a0a] bg-emerald-400" />
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#D3126A] text-white transition-transform duration-150 group-hover:scale-[1.04]">
+          <AskDeGlyph className="h-[26px] w-[26px]" />
         </span>
         {!compact && (
           <span className="hidden text-left sm:block">
