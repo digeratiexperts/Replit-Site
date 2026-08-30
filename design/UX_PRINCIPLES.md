@@ -56,6 +56,15 @@ Preserve existing DE content, CTAs, nav, and stats unless DE explicitly approves
 
 Canonical portal login: `https://portal.digeratiexperts.com/portal/login` — never invent `//login`.
 
+## No overlapping layers (hard rule)
+
+Two independently-interactive pieces of fixed/floating chrome must never occupy the same screen space. This is not a style preference — DE has hit this bug repeatedly (sticky CTA over product cards, cookie banner over checkout buttons, and most recently the Ask DE launcher covering the Store's "Your Solution" cart button on `/store` and `/solutions/business-needs`).
+
+- Any `position: fixed` or `position: absolute` element anchored to a screen edge (launcher buttons, carts, sticky bars, banners, toasts, callouts) must position itself using the shared chrome-coordination CSS custom properties (`--de-chrome-inset`, `--de-canvas-gutter`, `--de-unified-bar-h`, `--de-cookie-h`, `--de-sticky-cta-h`, etc. — see `client/src/index.css` and `client/src/lib/stickyCtaVisibility.ts`), not hardcoded `top/right/bottom/left` pixel or Tailwind spacing values. A new floating element publishes its own height as a CSS var (the same pattern `PublicSolutionCart` and `HomepageOnPageNav` use) so anything that needs to stack above it can do so precisely instead of guessing an offset.
+- Before adding any new floating/fixed element, check what else already floats on the pages it will appear on and verify — by rendering, not by reading code — that neither element covers the other at 390 / 768 / 1440.
+- The one sanctioned exception: a layer may render over other content if that content is deliberately dimmed or blurred to read as "behind" the active layer (a modal scrim, a blurred search bar under an open overlay). Two fully-opaque, independently-clickable elements sitting on top of each other with no visual signal that one is inactive is always a bug, never a valid layout.
+- A "flashy" callout/notification bubble anchored to a compact button is itself a floating layer and is subject to this rule — it must clear every other floating element on the page (not just the button it points at), the same way `SiteBottomBar`'s Ask DE callout clears `--de-store-cart-h` instead of only clearing the launcher button's own height.
+
 ## Visual QA
 
 For meaningful UI work: run the application, inspect the rendered page, capture at relevant viewports, look for visual problems, fix them, re-inspect. Never assume the UI is correct because the code compiles.
