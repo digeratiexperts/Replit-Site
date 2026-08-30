@@ -21,11 +21,11 @@ import { rectOverlapsPageContent } from "@/lib/stickyCtaVisibility";
 export function SolutionMobileBar() {
   const [location] = useLocation();
   const { items, totals, openCart, isOpen } = useCart();
-  const onStore = location.startsWith("/store");
+  const onStore = location.startsWith("/internal/warehouse");
   const onCheckoutFlow = /\/store\/(checkout|quote-request|quote-confirmation|order-confirmation)/.test(
     location,
   );
-  const onPdp = location.startsWith("/store/product/");
+  const onPdp = location.startsWith("/internal/warehouse/product/");
   const barRef = useRef<HTMLDivElement>(null);
   const [overlapping, setOverlapping] = useState(false);
 

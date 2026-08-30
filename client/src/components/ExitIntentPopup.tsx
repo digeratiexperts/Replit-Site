@@ -7,6 +7,8 @@ import { apiRequest } from "@/lib/queryClient";
 import { CTA } from "@/lib/ctaCopy";
 import logoImage from "@assets/DE-Logo-new_1762461524794.webp";
 import { PRIMARY_PHONE } from "@/data/companyContact";
+import { isDoor2Path } from "@/lib/isDoor2Path";
+import { isWarehousePath } from "@/lib/warehousePaths";
 
 const PUBLIC_EMAIL_DOMAINS = [
   "gmail.com",
@@ -60,6 +62,8 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
   const showPopup = useCallback((force = false) => {
     if (shownRef.current) return;
     if (window.location.pathname.startsWith("/portal")) return;
+    if (isDoor2Path(window.location.pathname)) return;
+    if (isWarehousePath(window.location.pathname)) return;
     if (document.documentElement.hasAttribute("data-de-desk-open")) return;
     if (!force) {
       try {
@@ -107,6 +111,8 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
 
   useEffect(() => {
     if (window.location.pathname.startsWith("/portal")) return;
+    if (isDoor2Path(window.location.pathname)) return;
+    if (isWarehousePath(window.location.pathname)) return;
 
     // Desktop leave toward the tab/address chrome only. No timer, no scroll bait.
     let armed = false;

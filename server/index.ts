@@ -6,6 +6,9 @@ import { createServer } from "http";
 import { registerRoutes, authMiddleware, requireRole } from "./routes";
 import { registerSecureZohoStoreCheckout } from "./secureStoreCheckout";
 import { registerStoreSolutionRoutes } from "./storeSolutionRoutes";
+import { registerPublicSolutionRoutes } from "./publicSolutionRoutes";
+import { registerWarehouseGates } from "./warehouseRoutes";
+import { registerPortalMarketplaceRoutes } from "./portalMarketplaceRoutes";
 import { registerPublicSupportChat } from "./publicSupportChat";
 import { createServer as createViteServer } from "vite";
 import path from "path";
@@ -269,8 +272,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+registerWarehouseGates(app);
 registerSecureZohoStoreCheckout(app, authMiddleware as any, requireRole as any);
 registerStoreSolutionRoutes(app, authMiddleware as any);
+registerPublicSolutionRoutes(app);
+registerPortalMarketplaceRoutes(app, authMiddleware as any);
 
 app.use((req, res, next) => {
   if (req.path.toLowerCase() === "/solutions/proactive-ecosystem-packages") {
@@ -282,12 +288,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use((req, res, next) => {
-  if (req.path === "/internal" || req.path.startsWith("/internal/")) {
-    return res.redirect(301, "/");
-  }
-  next();
-});
+// /internal/warehouse is gated in registerWarehouseGates. Other /internal paths stay destaged.
 
 app.use((req, res, next) => {
   if (req.path === "/login") {

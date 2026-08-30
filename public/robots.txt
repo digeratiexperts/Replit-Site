@@ -1,4 +1,4 @@
-# Digerati Experts — index website + store products. Keep portal/checkout out of SERPs.
+# Digerati Experts — index marketing site and the curated public Store. Keep private commerce routes out of SERPs.
 User-agent: *
 Allow: /
 Allow: /llms.txt
@@ -11,10 +11,7 @@ Disallow: /internal/
 Disallow: /official-network-planner
 Disallow: /de-ecosystem-matrix-offical
 Disallow: /store/checkout
-Disallow: /store/cart
-Disallow: /store/order-confirmation
-Disallow: /store/quote-request
-Disallow: /store/quote-confirmation/
+Disallow: /store/product/
 Disallow: /thanks
 Disallow: /quote-confirmation
 Disallow: /404

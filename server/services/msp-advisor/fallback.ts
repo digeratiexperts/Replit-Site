@@ -46,6 +46,9 @@ export type HeuristicInput = {
 };
 
 function walkInPrefix(input: HeuristicInput): string {
+  if (input.profile.deInternal) {
+    return "You're with DE — I won't treat that as an outside company. ";
+  }
   if (!input.justCollectedInformalCompany && !input.profile.companyInformal) return "";
   if (input.justCollectedInformalCompany) {
     return "I'll put you down as a walk-in for now. ";

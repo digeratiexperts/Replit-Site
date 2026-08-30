@@ -5,13 +5,16 @@ on:
     branches: [main]
   push:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
 
+# PR validation can cancel stale runs. Push/dispatch runs use their run ID so
+# an offline production runner never blocks newer main CI from starting.
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  group: ci-${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   check-test-build:
@@ -86,18 +89,39 @@ jobs:
           BASE_URL=http://127.0.0.1:3300 npm run smoke:public
 
   # Production is a CyberPanel/OpenLiteSpeed VPS, not a Replit deployment.
-  # A self-hosted runner is allowed to deploy only when it proves it is on the
-  # canonical DE production host. This permanently replaces the broken
-  # cron/webhook assumption with an explicit, fail-closed release path.
+  # This job is pinned to a repo-scoped production runner. Generic Linux
+  # self-hosted runners (RackNerd security runner, Zorin laptop, etc.) are not
+  # eligible, preventing accidental cross-project execution.
   deploy-production:
     name: Deploy and verify production VPS
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     needs: check-test-build
-    runs-on: [self-hosted, Linux, X64]
+    runs-on: [self-hosted, Linux, X64, de-production, website-prod]
     timeout-minutes: 30
+    concurrency:
+      group: de-production-website
+      cancel-in-progress: false
 
     steps:
+      # If the production runner was offline for several merges, old deploy jobs
+      # may be waiting. They should not redeploy repeatedly when the runner returns.
+      - name: Coalesce stale deployment runs
+        shell: bash
+        run: |
+          set -euo pipefail
+          LATEST_SHA="$(git ls-remote https://github.com/digeratiexperts/digeratiexperts-site.git refs/heads/main | awk '{print $1}')"
+          test -n "$LATEST_SHA"
+          echo "Workflow SHA: $GITHUB_SHA"
+          echo "Latest main:  $LATEST_SHA"
+          if [ "$GITHUB_SHA" != "$LATEST_SHA" ]; then
+            echo "DE_DEPLOY_STALE=true" >> "$GITHUB_ENV"
+            echo "This is a stale deployment run; a newer main run will deploy instead."
+          else
+            echo "DE_DEPLOY_STALE=false" >> "$GITHUB_ENV"
+          fi
+
       - name: Assert runner is the DE production host
+        if: env.DE_DEPLOY_STALE != 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -129,11 +153,12 @@ jobs:
           elif sudo -n -u diger7051 true 2>/dev/null; then
             echo "DE_DEPLOY_AS=sudo-site-user" >> "$GITHUB_ENV"
           else
-            echo "::error::Runner is on the production VPS but cannot execute as diger7051. Grant only this runner user passwordless sudo-as-diger7051 for the canonical deploy command; do not grant NOPASSWD: ALL."
+            echo "::error::Runner is on the production VPS but cannot execute as diger7051. Use scripts/setup-github-runner.sh with RUNNER_USER=diger7051, or grant only the required sudo-as-diger7051 deployment command."
             exit 1
           fi
 
       - name: Deploy current main with canonical release script
+        if: env.DE_DEPLOY_STALE != 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -155,6 +180,7 @@ jobs:
           esac
 
       - name: Verify production runtime
+        if: env.DE_DEPLOY_STALE != 'true'
         shell: bash
         run: |
           set -euo pipefail

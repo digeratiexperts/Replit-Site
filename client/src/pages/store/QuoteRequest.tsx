@@ -43,7 +43,7 @@ const QuoteRequest = () => {
   useSEO({
     title: "Request a Quote | Digerati Experts Store",
     description: "Request a custom quote for IT services and solutions from Digerati Experts.",
-    canonical: "/store/quote-request",
+    canonical: "/internal/warehouse/quote-request",
     noIndex: true,
   });
 
@@ -110,7 +110,7 @@ const QuoteRequest = () => {
 
       const result = await response.json();
       clearCart();
-      navigate(`/store/quote-confirmation/${result.id}`);
+      navigate(`/internal/warehouse/quote-confirmation/${result.id}`);
     } catch (error: any) {
       console.error("Quote request error:", error);
       toast({
@@ -127,7 +127,7 @@ const QuoteRequest = () => {
     return (
       <div className="min-h-screen bg-[#0a0a0a]">
         <MegaMenu />
-        <main className="de-nav-clear pb-20">
+        <main className="de-nav-clear pb-[calc(5rem+var(--de-cookie-h)+var(--de-sticky-cta-h)+var(--de-unified-bar-h))]">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -142,7 +142,7 @@ const QuoteRequest = () => {
               <p className="text-white/60 mb-8" data-testid="text-empty-cart-message">
                 Add items to your solution before requesting a quote.
               </p>
-              <Link href="/store">
+              <Link href="/internal/warehouse">
                 <Button className="bg-de-accent hover:bg-de-accent text-white" data-testid="button-browse-store">
                   Browse Store
                 </Button>
@@ -159,12 +159,12 @@ const QuoteRequest = () => {
     <div className="min-h-screen bg-[#0a0a0a]">
       <MegaMenu />
 
-      <main className="de-nav-clear pb-20">
+      <main className="de-nav-clear pb-[calc(5rem+var(--de-cookie-h)+var(--de-sticky-cta-h)+var(--de-unified-bar-h))]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <nav className="mb-8" aria-label="Breadcrumb">
             <ol className="flex items-center gap-2 text-sm text-white/50">
               <li>
-                <Link href="/store" className="hover:text-white transition-colors" data-testid="breadcrumb-store">
+                <Link href="/internal/warehouse" className="hover:text-white transition-colors" data-testid="breadcrumb-store">
                   Store
                 </Link>
               </li>
@@ -174,7 +174,7 @@ const QuoteRequest = () => {
           </nav>
 
           <div className="flex items-center gap-4 mb-8">
-            <Link href="/store/checkout">
+            <Link href="/internal/warehouse/checkout">
               <Button variant="ghost" className="text-white/60 hover:text-white" data-testid="button-back-to-checkout">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Checkout

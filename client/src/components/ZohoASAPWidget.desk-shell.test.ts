@@ -29,7 +29,8 @@ describe("DE Desk shell positioning", () => {
   it("keeps graphite chrome with a magenta cap instead of purple-wash or cream fields", () => {
     expect(src).toMatch(/inset 0 1px 0 #D3126A/);
     expect(src).toMatch(/\.de-desk-shell::before \{\s*content:\s*none;/);
-    expect(src).toMatch(/background: var\(--de-raised, #151217\) !important;/);
+    expect(src).toMatch(/background-color: var\(--de-raised, #151217\) !important;/);
+    expect(src).toMatch(/background-clip: padding-box, border-box;/);
     expect(src).not.toMatch(/radial-gradient\(ellipse 70% 36% at 50% 0%, rgba\(91,69,224/);
     expect(src).not.toMatch(/background:\s*#fcfaf7/);
     expect(src).toMatch(/PORTAL_LOGIN/);
@@ -77,6 +78,46 @@ describe("DE Desk shell positioning", () => {
     expect(src).not.toMatch(/type="file"/);
     expect(src).toMatch(/aria-invalid=\{ticketFieldErrors/);
     expect(src).toMatch(/support-submit-error/);
+  });
+
+  it("gives Get Support fields a brighter interactive white outline and magenta focus", () => {
+    expect(src).toMatch(/trackDeskSupportFieldSpotlight/);
+    expect(src).toMatch(/onPointerMove=\{trackDeskSupportFieldSpotlight\}/);
+    expect(src).toMatch(/linear-gradient\(rgba\(255,255,255,0\.88\), rgba\(255,255,255,0\.88\)\)/);
+    expect(src).toMatch(/radial-gradient\([\s\S]*--desk-spot-x/);
+    expect(src).toMatch(/linear-gradient\(#D3126A, #D3126A\)/);
+    expect(src).toMatch(/0 0 0 1px rgba\(255,255,255,0\.5\)/);
+  });
+
+  it("paints Get Support issue choices white with black type and a slow hover wash", () => {
+    expect(src).toMatch(/trackDeskSupportRowGlow/);
+    expect(src).toMatch(/\.de-desk-issue-list \{[\s\S]*?background: #fff;/);
+    expect(src).toMatch(/\.de-desk-issue-row \{[\s\S]*?color: #17141f;/);
+    expect(src).toMatch(/\.de-desk-incident \{[\s\S]*?background: #fff;/);
+    expect(src).toMatch(/\.de-desk-incident-copy strong \{[\s\S]*?color: #17141f;/);
+  });
+
+  it("opens a tad wider with one-step larger type on chrome, Client Tools, and Ask DE", () => {
+    expect(src).toMatch(/sm:w-\[440px\]/);
+    expect(src).not.toMatch(/sm:w-\[410px\]/);
+    expect(src).toMatch(/\.de-desk-id h2 \{[\s\S]*?font-size: 17px;/);
+    expect(src).toMatch(/\.de-desk-id p \{ font-size: 14px;/);
+    expect(src).toMatch(/\.de-desk-tab \{[\s\S]*?font-size: 14\.5px;/);
+    expect(src).toMatch(/\.de-desk-tools-intro h3 \{[\s\S]*?font-size: 18px;/);
+    expect(src).toMatch(/\.de-desk-tools-kicker \{[\s\S]*?font-size: 16px !important;/);
+    expect(src).toMatch(/\.de-desk-tools-intro p \{[\s\S]*?font-size: 14\.5px;/);
+    expect(src).toMatch(/\.de-desk-bubble \{[\s\S]*?font-size: 15px;/);
+    expect(src).toMatch(/\.de-desk-composer input \{[\s\S]*?font-size: 15\.5px;/);
+    expect(src).toMatch(/\.de-desk-composer-caption \{[\s\S]*?font-size: 13px;/);
+    expect(src).toMatch(/\.de-desk-tool-title \{[\s\S]*?font-size: 15\.5px;/);
+  });
+
+  it("stamps Ask DE messages with a real local time, not fake SOC chrome", () => {
+    expect(src).toMatch(/function formatDeskMessageTime/);
+    expect(src).toMatch(/className="de-desk-msg-time"/);
+    expect(src).toMatch(/dateTime=\{chatMessage\.createdAt\}/);
+    expect(src).toMatch(/toLocaleTimeString\(undefined, \{ hour: "numeric", minute: "2-digit" \}\)/);
+    expect(src).not.toMatch(/AZ SOC Live/);
   });
 
   it("styles Ask DE discovery and Get Support issues as graphite grouped stacks", () => {

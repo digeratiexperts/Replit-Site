@@ -104,10 +104,11 @@ const StoreLanding = () => {
   const showFullCatalog = mode === "catalog";
 
   useSEO({
+    noIndex: true,
     title: "IT Services Store | Digerati Experts",
     description:
       "Guided IT storefront from Digerati Experts — shop by outcome, curated merchandising rails, managed packages, and co-managed products with live catalog pricing.",
-    canonical: "/store",
+    canonical: "/internal/warehouse",
   });
 
   const contractOnlyProducts = getContractOnlyProducts();
@@ -153,7 +154,7 @@ const StoreLanding = () => {
   const handleOutcomeSelect = (id: StoreOutcomeId | null) => {
     setOutcomeHighlight(id);
     if (id) {
-      setLocation(`/store/co-managed?outcome=${id}#store-catalog`);
+      setLocation(`/internal/warehouse/co-managed?outcome=${id}#store-catalog`);
     }
   };
 
@@ -245,7 +246,7 @@ const StoreLanding = () => {
                       Ask DE
                     </Button>
                     {showFullCatalog && (
-                      <Link href="/store/co-managed?catalog=full">
+                      <Link href="/internal/warehouse/co-managed?catalog=full">
                         <Button
                           variant="ghost"
                           className="h-12 w-full px-6 text-base text-white/70 hover:bg-white/5 hover:text-white sm:w-auto"
@@ -301,7 +302,7 @@ const StoreLanding = () => {
                       </p>
                       <div className="mt-4">
                         <Button asChild className="h-11 bg-de-accent text-white hover:bg-[#6548ff]">
-                          <Link href="/store/managed">See this plan</Link>
+                          <Link href="/internal/warehouse/managed">See this plan</Link>
                         </Button>
                       </div>
                     </div>
@@ -411,7 +412,7 @@ const StoreLanding = () => {
                     <span className="text-base text-white/50">
                       {contractOnlyProducts.length} packages available
                     </span>
-                    <Link href="/store/managed">
+                    <Link href="/internal/warehouse/managed">
                       <Button
                         className="h-11 w-full bg-de-accent px-5 text-base text-white hover:bg-[#6548ff] sm:w-auto"
                         data-testid="button-view-managed"
@@ -446,7 +447,7 @@ const StoreLanding = () => {
                     <span className="text-base text-white/50">
                       {checkoutProducts.length} products available
                     </span>
-                    <Link href="/store/co-managed">
+                    <Link href="/internal/warehouse/co-managed">
                       <Button
                         className="h-11 w-full border-none bg-de-accent px-5 text-base text-white hover:bg-[#6548ff] sm:w-auto"
                         data-testid="button-view-comanaged"
@@ -510,7 +511,7 @@ const StoreLanding = () => {
                 const productCount = storeProducts.filter((p) => p.category === category).length;
                 return (
                   <motion.div key={category} variants={itemVariants}>
-                    <Link href={`/store/co-managed?category=${category}`}>
+                    <Link href={`/internal/warehouse/co-managed?category=${category}`}>
                       <div
                         className="group flex h-full cursor-pointer items-center gap-3 rounded-xl border border-white/10 bg-[#141414] px-3.5 py-3 text-left transition-colors duration-200 hover:border-de-accent/30 hover:bg-[#171717]"
                         data-testid={`category-${category}`}
@@ -546,7 +547,7 @@ const StoreLanding = () => {
                 <h2 className="mb-2 text-2xl font-bold text-white md:text-3xl">Available for checkout</h2>
                 <p className="text-white/60">Configure or add these catalog items now.</p>
               </div>
-              <Link href="/store/co-managed">
+              <Link href="/internal/warehouse/co-managed">
                 <Button
                   variant="outline"
                   className="w-full border-white/20 text-white hover:bg-white/10 sm:w-auto"

@@ -169,6 +169,29 @@ const SolutionsIndex = () => {
               </Button>
             </div>
 
+            <div className="mx-auto mt-10 grid max-w-4xl gap-4 text-left sm:grid-cols-2" data-testid="solutions-two-doors">
+              <a
+                href="/solutions/proactive-ecosystem"
+                className="rounded-2xl border border-de-hairline bg-de-raised p-6 transition-colors hover:border-[#D3126A]"
+              >
+                <p className="text-xs font-semibold uppercase tracking-wide text-de-accent-ink">Door 1</p>
+                <h2 className="mt-2 font-heading text-xl text-white">Handle Our IT</h2>
+                <p className="mt-2 text-sm leading-relaxed text-white/65">
+                  ProActive operating models. Assessment first — not a catalog checkout.
+                </p>
+              </a>
+              <a
+                href="/store"
+                className="rounded-2xl border border-de-hairline bg-de-raised p-6 transition-colors hover:border-[#D3126A]"
+              >
+                <p className="text-xs font-semibold uppercase tracking-wide text-de-accent-ink">Door 2</p>
+                <h2 className="mt-2 font-heading text-xl text-white">Solve a Business Need</h2>
+                <p className="mt-2 text-sm leading-relaxed text-white/65">
+                  Thirteen solution families. Request a scoped recommendation — not a catalog checkout.
+                </p>
+              </a>
+            </div>
+
             {/* Factual Proof Chips */}
             <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
               <ProofChip metric="24/7" label="Human-Led SOC" icon={Lock} />

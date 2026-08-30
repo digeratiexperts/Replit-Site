@@ -246,6 +246,7 @@ export function MegaMenu() {
             { title: 'ProActive Ecosystem', description: 'Cybersecurity-first operating model: IT → Office → Business → Enterprise', icon: <Layers className="h-5 w-5" />, url: '/solutions/proactive-ecosystem' },
             { title: 'Co-Managed IT', description: 'Extend your internal IT team without replacing it', icon: <Users className="h-5 w-5" />, url: '/solutions/co-managed-it' },
             { title: 'Standalone Services', description: 'A specific gap — backup, UCaaS, awareness, or a project', icon: <Server className="h-5 w-5" />, url: '/solutions/standalone-services' },
+            { title: 'Solve a Business Need', description: 'Curated DE solutions organized around the outcome you need', icon: <ClipboardCheck className="h-5 w-5" />, url: '/store' },
             { title: 'Cyber Risk Assessment', description: 'Match the operating model to your environment', icon: <ClipboardCheck className="h-5 w-5" />, url: '/book' },
           ]
         },

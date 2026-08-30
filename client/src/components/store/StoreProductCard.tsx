@@ -119,7 +119,7 @@ export function StoreProductCard({
         </label>
       )}
 
-      <Link href={`/store/product/${product.sku}`} className="relative block">
+      <Link href={`/internal/warehouse/product/${product.sku}`} className="relative block">
         <ProductMedia
           product={product}
           variant="card"
@@ -154,7 +154,7 @@ export function StoreProductCard({
           <h3
             className="text-base font-bold leading-snug text-[#1A1228] transition-colors group-hover:text-de-accent line-clamp-2"
           >
-            <Link href={`/store/product/${product.sku}`}>
+            <Link href={`/internal/warehouse/product/${product.sku}`}>
               <span title={product.name}>
                 {product.name}
               </span>
@@ -213,7 +213,7 @@ export function StoreProductCard({
           </div>
 
           <div className="flex gap-2">
-            <Link href={`/store/product/${product.sku}`} className="flex-1">
+            <Link href={`/internal/warehouse/product/${product.sku}`} className="flex-1">
               <Button
                 variant="outline"
                 size="sm"

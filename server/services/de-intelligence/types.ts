@@ -15,6 +15,7 @@ export type KnowledgeType =
   | "troubleshooting_guide";
 
 export type KnowledgeStatus = "active" | "draft" | "superseded" | "expired";
+export type KnowledgeReviewState = "proposed" | "approved" | "rejected" | "needs_review";
 
 export type KnowledgeSource = {
   kind: "canonical" | "policy" | "website" | "vendor" | "ticket" | "document" | "procedure";
@@ -30,6 +31,8 @@ export type KnowledgeRecord = {
   scope: KnowledgeScope;
   type: KnowledgeType;
   status: KnowledgeStatus;
+  /** Review approval is a hard retrieval gate for storage-backed knowledge. */
+  reviewState?: KnowledgeReviewState;
   /** 0-100. Higher values win when sources disagree. */
   authority: number;
   effectiveDate?: string;
@@ -42,6 +45,13 @@ export type KnowledgeRecord = {
   modes?: string[];
   pageTypes?: string[];
   source: KnowledgeSource;
+  /** Storage-backed provenance. Bootstrap records may omit these fields. */
+  sourceDocumentId?: string;
+  chunkIndex?: number;
+  ingestedAt?: string;
+  confidence?: number;
+  reviewedBy?: string;
+  supersedesId?: string;
 };
 
 export type KnowledgeRetrievalRequest = {
