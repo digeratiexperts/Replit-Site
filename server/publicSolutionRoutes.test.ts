@@ -107,7 +107,7 @@ describe("public solution Door 2 API", () => {
       body: JSON.stringify({
         selectedNeeds: [
           { familyId: "identity_access", offerId: "de-identity-co-managed", deliveryModel: "co_managed" },
-          { familyId: "backup_continuity", offerId: "de-backup-continuity-co-managed", deliveryModel: "co_managed" },
+          { familyId: "backup_continuity", offerId: "de-continuity-co-managed", deliveryModel: "co_managed" },
           { familyId: "email_collaboration", offerId: "de-collaboration-co-managed", deliveryModel: "co_managed" },
         ],
         deliveryPreference: "co_managed",
