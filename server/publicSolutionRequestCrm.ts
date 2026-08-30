@@ -1,25 +1,7 @@
-import { curatedSolutionFamilies, type CuratedSolutionFamily } from "../client/src/data/curatedSolutions";
-import { sizingFieldsForFamily } from "../client/src/data/solutionSizingFields";
+import { curatedSolutionFamilies } from "../client/src/data/curatedSolutions";
 import { zohoClient } from "./zoho/zohoClient";
 import { zohoCRMService } from "./zoho/zohoCRM";
 import type { PublicSolutionRequest } from "./publicSolutionRequestStore";
-
-function describeSizing(familyId: string | null, answers: Record<string, string>): string {
-  if (!familyId || !answers || Object.keys(answers).length === 0) return "";
-  const fields = sizingFieldsForFamily(familyId as CuratedSolutionFamily["id"]);
-  const parts = fields
-    .map((field) => {
-      const value = answers[field.key];
-      if (!value) return null;
-      if (field.type === "select") {
-        const option = field.options?.find((entry) => entry.value === value);
-        return `${field.label}: ${option?.label ?? value}`;
-      }
-      return `${field.label}: ${value}${field.unit ? ` ${field.unit}` : ""}`;
-    })
-    .filter((part): part is string => !!part);
-  return parts.join("; ");
-}
 
 function splitName(fullName: string): { first: string; last: string } {
   const parts = fullName.trim().split(/\s+/).filter(Boolean);
@@ -72,7 +54,6 @@ export function buildPublicSolutionRequestDescription(record: PublicSolutionRequ
     env.currentProvider ? `Current provider: ${env.currentProvider}` : "",
     env.urgency ? `Urgency: ${env.urgency}` : "",
     record.organizationName ? `Organization: ${record.organizationName}` : "",
-    describeSizing(record.familyId, record.sizingAnswers) ? `Sizing: ${describeSizing(record.familyId, record.sizingAnswers)}` : "",
     record.notes ? `Notes: ${record.notes.slice(0, 500)}` : "",
   ]
     .filter(Boolean)

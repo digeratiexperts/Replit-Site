@@ -90,7 +90,6 @@ export function registerPublicSolutionRoutes(app: Express): void {
       contactEmail: req.body?.contactEmail,
       contactPhone: req.body?.contactPhone,
       notes: req.body?.notes,
-      sizingAnswers: req.body?.sizingAnswers,
     });
     return res.json({ request: publicSolutionRequestView(record) });
   });
@@ -120,7 +119,6 @@ export function registerPublicSolutionRoutes(app: Express): void {
       contactEmail,
       contactPhone: req.body?.contactPhone,
       notes: req.body?.notes,
-      sizingAnswers: req.body?.sizingAnswers,
     });
 
     if (!draft.familyId && draft.selectedNeeds.length === 0) {
