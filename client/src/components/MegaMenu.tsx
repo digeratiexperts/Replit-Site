@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback, useId } from 'react';
 import { Link } from 'wouter';
 import { ChevronDown, Shield, Server, Users, FileCheck, Phone, ExternalLink, X, ArrowRight, Monitor, Cloud, Lock, Zap, HeadphonesIcon, Building, BarChart3, ClipboardCheck, Layers, TrendingUp, Star, CheckCircle, Award, LayoutGrid } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { AskDeGlyph } from '@/components/icons/AskDeGlyph';
+import logoImage from '@assets/DE-Logo-new_1762461524794.webp';
 import ebookCover from '@/assets/images/ebook-defending-digital-realm-cover.png';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as Tooltip from '@radix-ui/react-tooltip';
@@ -763,37 +763,23 @@ export function MegaMenu() {
             className={`flex items-center justify-between gap-3 px-3 xl:px-5 transition-all duration-300 max-lg:overflow-hidden ${
             isScrolled ? 'min-h-[var(--de-nav-h-scrolled)] h-[var(--de-nav-h-scrolled)] overflow-hidden' : 'min-h-[var(--de-nav-h)] h-[var(--de-nav-h)] overflow-visible'
           }`}>
-            {/* Logo — DE speech-bubble lockup per the approved reference direction */}
+            {/* Logo — the real DE logo stays (Preservation Law §18: recognizable
+                branded elements are canonical; the speech-bubble glyph belongs
+                to Ask DE chrome, not the masthead). */}
             <a
               href="/"
               className="flex items-center flex-shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-de-accent focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded"
               aria-label="Digerati Experts home"
             >
-              <span
-                className="flex items-center gap-2.5 text-white transition-all duration-300"
+              <img
+                src={logoImage}
+                alt="Digerati Experts Logo"
+                className={`transition-all duration-300 ${
+                  isScrolled ? 'h-10' : 'h-[3.25rem]'
+                }`}
+                style={{ width: 'auto', maxWidth: '220px' }}
                 data-testid="logo-header"
-              >
-                <AskDeGlyph
-                  className={`shrink-0 transition-all duration-300 ${isScrolled ? 'h-8 w-8' : 'h-10 w-10'}`}
-                />
-                <span className="flex flex-col leading-none">
-                  <span
-                    className={`font-heading font-bold tracking-widest transition-all duration-300 ${
-                      isScrolled ? 'text-lg' : 'text-xl'
-                    }`}
-                  >
-                    DIGERATI
-                  </span>
-                  <span
-                    className="mt-1 flex items-center gap-1.5 text-[11px] font-semibold text-white/85"
-                    style={{ letterSpacing: '0.38em' }}
-                  >
-                    <span className="h-px w-3 bg-white/70" aria-hidden="true" />
-                    EXPERTS
-                    <span className="h-px w-3 bg-white/70" aria-hidden="true" />
-                  </span>
-                </span>
-              </span>
+              />
             </a>
 
             {/* Desktop Navigation - Center */}
