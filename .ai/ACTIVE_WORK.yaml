@@ -1,13 +1,23 @@
-# DE shared AI work registry.
-# Mandatory coordination source; governed by docs/AI-ENGINEERING-GOVERNANCE.md.
+# DE shared AI work registry mirror.
+# Governed by docs/AI-ENGINEERING-GOVERNANCE.md and docs/ACTIVE-WORK-COORDINATION.md.
 #
-# IMPORTANT: an empty registry does NOT prove there is no concurrent work.
-# Before claiming work, also inspect current open PRs/branches and docs/SITE-VISUAL-TASKS.md.
-# Add a claim before implementation and remove/close it when merged, abandoned, or superseded.
+# IMPORTANT: GitHub-visible open work is the authoritative concurrency lock.
+# Before changing code, every agent MUST inspect:
+#   1. open GitHub issues whose title/status marks ACTIVE/P0/IN PROGRESS;
+#   2. all open pull requests and their changed files;
+#   3. current remote branches relevant to the subsystem;
+#   4. this YAML mirror;
+#   5. docs/SITE-VISUAL-TASKS.md for visual work.
+#
+# A claim written only on an unmerged feature branch cannot protect other agents,
+# because they will not see it from origin/main. Therefore this file is a mirror,
+# never the sole source of truth. Create/update the GitHub issue first, then mirror
+# the claim here when useful. An empty `claims` list NEVER means the repo is idle.
 #
 # Example:
 # claims:
 #   - id: ask-de-launcher-svg
+#     issue: 123
 #     owner: claude
 #     subsystem: de-desk
 #     branch: claude/ask-de-launcher-svg
@@ -18,5 +28,5 @@
 #     status: active
 #     started: 2026-08-30
 
-version: 1
+version: 2
 claims: []
