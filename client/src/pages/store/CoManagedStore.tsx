@@ -54,7 +54,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/contexts/CartContext";
 import { useStoreAuth } from "@/hooks/useStoreAuth";
-import { PORTAL_LOGIN } from "@/lib/portalUrls";
+import { portalMarketplaceLoginUrl } from "@/lib/portalUrls";
 import { openMspAdvisor } from "@/lib/openMspAdvisor";
 import {
   isGuidedFullCatalog,
@@ -877,9 +877,12 @@ const CoManagedStore = () => {
                     <h3 className="mb-2 font-semibold text-white">Client-only products</h3>
                     <p className="text-sm text-white/60">
                       Some products require an existing client relationship.{" "}
-                      <Link href={PORTAL_LOGIN} className="text-de-accent-ink hover:text-de-accent-ink">
-                        Log in to your portal
-                      </Link>{" "}
+                      <a
+                        href={portalMarketplaceLoginUrl()}
+                        className="text-de-accent-ink hover:text-de-accent-ink"
+                      >
+                        Log in to the Client Marketplace
+                      </a>{" "}
                       for exclusive pricing.
                     </p>
                   </div>
