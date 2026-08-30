@@ -58,6 +58,9 @@ for (const viewport of viewports) {
 
   await page.locator("[data-testid='continue-building']").click();
   await page.waitForURL(/\/store\/solution/);
+  // URL updates before the lazy-rendered workspace is necessarily committed.
+  // Gate assertions on the actual page heading so 390/768/1440 validate the same rendered state.
+  await page.getByRole("heading", { name: "Build one complete solution", exact: true }).waitFor();
   const workspaceSequence = await page.getByText(/Profile → pain or need → offer → package → delivery → contact/).count();
   const saveButton = await page.getByRole("button", { name: "Save progress", exact: true }).count();
 
