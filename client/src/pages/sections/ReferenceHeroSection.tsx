@@ -10,23 +10,34 @@ const trustItems = [
   {
     icon: ShieldCheck,
     title: "Cybersecurity First",
-    body: "Security and IT operate as one system.",
+    body: "We secure your business from the inside out.",
   },
   {
     icon: CheckCircle2,
     title: "Proactive IT",
-    body: "Reduce issues before they interrupt work.",
+    body: "Prevent issues before they impact your business.",
   },
   {
     icon: ClipboardCheck,
     title: "Compliance Ready",
-    body: "Controls and evidence aligned to your needs.",
+    body: "Stay compliant with industry standards and regulations.",
   },
   {
     icon: MapPin,
-    title: "Arizona Accountable",
-    body: "Local, principal-led guidance and support.",
+    title: "Local & Responsive",
+    body: "Arizona-based team, always here when you need us.",
   },
+];
+
+/** Real DE stack vendors (same merchandising set the Store uses) — shown as
+ * restrained monochrome marks, not fabricated partnership claims. */
+const stackVendors = [
+  { slug: "jumpcloud", name: "JumpCloud", heightClass: "h-6 sm:h-7" },
+  { slug: "coro", name: "Coro", heightClass: "h-6 sm:h-7" },
+  { slug: "opti9", name: "Opti9", heightClass: "h-6 sm:h-7" },
+  // Cytracom's mark is a 20px-tall wordmark — keep it at native height so it
+  // stays crisp and doesn't dwarf the other marks.
+  { slug: "cytracom", name: "Cytracom", heightClass: "h-4 sm:h-5" },
 ];
 
 function ShieldIllustration() {
@@ -114,15 +125,16 @@ export function ReferenceHeroSection(): JSX.Element {
           </p>
           <h1
             className="font-semibold text-[#fbfaf8]"
-            style={{ maxWidth: 730, fontSize: "clamp(2.7rem,5.3vw,5.55rem)", lineHeight: 0.98, letterSpacing: "-0.055em" }}
+            style={{ maxWidth: 730, fontSize: "clamp(2.2rem,4.6vw,4.75rem)", lineHeight: 1.04, letterSpacing: "-0.045em" }}
           >
-            Cybersecurity-First IT That Powers{" "}
-            <span className="bg-gradient-to-r from-[#9a8bff] via-[#7b6cff] to-[#d3126a] bg-clip-text text-transparent">
+            <span className="lg:block">Cybersecurity-First</span>{" "}
+            <span className="lg:block">IT That Powers</span>{" "}
+            <span className="block w-fit bg-gradient-to-r from-[#9a8bff] via-[#7b6cff] to-[#d3126a] bg-clip-text text-transparent">
               Your Business
             </span>
           </h1>
           <p className="mt-7 leading-7 text-white/72 sm:leading-8" style={{ maxWidth: 650, fontSize: 17 }}>
-            Managed IT, cybersecurity, and compliance for Arizona businesses that cannot afford downtime, uncertainty, or fragmented technology ownership.
+            Managed IT, security, and compliance &mdash; built for Arizona businesses that can&apos;t afford downtime.
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -148,12 +160,24 @@ export function ReferenceHeroSection(): JSX.Element {
             </Button>
           </div>
 
-          <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-white/58">
-            <span>Assessment-led</span>
-            <span aria-hidden="true">·</span>
-            <span>Client-owned access</span>
-            <span aria-hidden="true">·</span>
-            <span>Fully managed or co-managed</span>
+          <div className="mt-10">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/40">
+              Our security stack
+            </p>
+            <div className="mt-4 flex flex-wrap items-center gap-x-9 gap-y-4">
+              {stackVendors.map(({ slug, name, heightClass }) => (
+                <img
+                  key={slug}
+                  src={`/images/vendors/${slug}.png`}
+                  alt={name}
+                  loading="lazy"
+                  decoding="async"
+                  className={`${heightClass} w-auto opacity-65 transition-opacity hover:opacity-90`}
+                  style={{ filter: "brightness(0) invert(1)" }}
+                  data-testid={`hero-stack-${slug}`}
+                />
+              ))}
+            </div>
           </div>
         </motion.div>
 
@@ -170,7 +194,7 @@ export function ReferenceHeroSection(): JSX.Element {
       <div className="relative border-t border-black/10 bg-[#f7f5f2] text-[#17141f]">
         <div className="mx-auto max-w-[var(--de-canvas)] px-5 py-8 sm:px-8 lg:px-10 xl:px-12">
           <p className="mb-5 text-xl font-semibold sm:text-2xl" style={{ letterSpacing: "-0.02em" }}>
-            Trusted technology partner for Arizona businesses
+            Trusted IT Partner for Arizona Businesses
           </p>
           <div className="grid overflow-hidden rounded-xl border border-black/10 bg-white sm:grid-cols-2 lg:grid-cols-4">
             {trustItems.map(({ icon: Icon, title, body }, index) => (

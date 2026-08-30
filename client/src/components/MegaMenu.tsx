@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback, useId } from 'react';
 import { Link } from 'wouter';
 import { ChevronDown, Shield, Server, Users, FileCheck, Phone, ExternalLink, X, ArrowRight, Monitor, Cloud, Lock, Zap, HeadphonesIcon, Building, BarChart3, ClipboardCheck, Layers, TrendingUp, Star, CheckCircle, Award, LayoutGrid } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import logoImage from '@assets/DE-Logo-new_1762461524794.webp';
+import { AskDeGlyph } from '@/components/icons/AskDeGlyph';
 import ebookCover from '@/assets/images/ebook-defending-digital-realm-cover.png';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as Tooltip from '@radix-ui/react-tooltip';
@@ -195,6 +195,24 @@ export function MegaMenu() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const { openBooking } = useBooking();
+  // Top assessment announcement strip (reference direction). Dismiss lasts the
+  // tab session so it never nags on every navigation.
+  const [announceDismissed, setAnnounceDismissed] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    try {
+      return window.sessionStorage.getItem('de-assessment-announce-dismissed') === '1';
+    } catch {
+      return false;
+    }
+  });
+  const dismissAnnounce = () => {
+    setAnnounceDismissed(true);
+    try {
+      window.sessionStorage.setItem('de-assessment-announce-dismissed', '1');
+    } catch {
+      /* private mode — dismiss for this render only */
+    }
+  };
   const [hoveredColumn, setHoveredColumn] = useState<number | null>(null);
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -658,6 +676,35 @@ export function MegaMenu() {
             background: 'linear-gradient(90deg, transparent 0%, transparent 50%, rgba(139, 92, 246, 0.3) 80%, rgba(139, 92, 246, 0.2) 100%)',
           }}
         />
+        {/* Assessment announcement strip — reference-style top bar */}
+        {!announceDismissed && (
+          <div className="relative z-10 w-full border-b border-white/[0.08] bg-black">
+            <div className="max-w-[var(--de-canvas)] mx-auto relative flex w-full items-center justify-center gap-x-4 px-12 py-2">
+              <p className="text-base font-medium leading-snug text-white/90">
+                <span aria-hidden="true" className="mr-1.5">🚀</span>
+                Get Your Free Cybersecurity Assessment &ndash; See Where You Stand Today!
+              </p>
+              <button
+                type="button"
+                onClick={() => openBooking('announcement-bar')}
+                className="inline-flex shrink-0 items-center gap-1.5 text-base font-semibold leading-snug text-white underline underline-offset-4 transition-colors hover:text-white/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 rounded"
+                data-testid="announce-start-assessment"
+              >
+                Start My Assessment
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                onClick={dismissAnnounce}
+                className="absolute right-3 lg:right-5 flex h-7 w-7 items-center justify-center rounded text-white/60 transition-colors hover:bg-white/10 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+                aria-label="Dismiss announcement"
+                data-testid="announce-dismiss"
+              >
+                <X className="h-4 w-4" aria-hidden="true" />
+              </button>
+            </div>
+          </div>
+        )}
         <div className="max-w-[var(--de-canvas)] mx-auto px-3 lg:px-5 flex flex-col md:flex-row items-center justify-end py-1.5 relative z-10 w-full">
           <div className="flex items-center flex-wrap gap-x-5 gap-y-1.5 md:gap-x-7 justify-center md:justify-end">
             <a
@@ -716,21 +763,37 @@ export function MegaMenu() {
             className={`flex items-center justify-between gap-3 px-3 xl:px-5 transition-all duration-300 max-lg:overflow-hidden ${
             isScrolled ? 'min-h-[var(--de-nav-h-scrolled)] h-[var(--de-nav-h-scrolled)] overflow-hidden' : 'min-h-[var(--de-nav-h)] h-[var(--de-nav-h)] overflow-visible'
           }`}>
-            {/* Logo */}
+            {/* Logo — DE speech-bubble lockup per the approved reference direction */}
             <a
               href="/"
               className="flex items-center flex-shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-de-accent focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded"
               aria-label="Digerati Experts home"
             >
-              <img 
-                src={logoImage} 
-                alt="Digerati Experts Logo" 
-                className={`transition-all duration-300 ${
-                  isScrolled ? 'h-10' : 'h-[3.25rem]'
-                }`}
-                style={{ width: 'auto', maxWidth: '220px' }}
+              <span
+                className="flex items-center gap-2.5 text-white transition-all duration-300"
                 data-testid="logo-header"
-              />
+              >
+                <AskDeGlyph
+                  className={`shrink-0 transition-all duration-300 ${isScrolled ? 'h-8 w-8' : 'h-10 w-10'}`}
+                />
+                <span className="flex flex-col leading-none">
+                  <span
+                    className={`font-heading font-bold tracking-widest transition-all duration-300 ${
+                      isScrolled ? 'text-lg' : 'text-xl'
+                    }`}
+                  >
+                    DIGERATI
+                  </span>
+                  <span
+                    className="mt-1 flex items-center gap-1.5 text-[11px] font-semibold text-white/85"
+                    style={{ letterSpacing: '0.38em' }}
+                  >
+                    <span className="h-px w-3 bg-white/70" aria-hidden="true" />
+                    EXPERTS
+                    <span className="h-px w-3 bg-white/70" aria-hidden="true" />
+                  </span>
+                </span>
+              </span>
             </a>
 
             {/* Desktop Navigation - Center */}

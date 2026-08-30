@@ -29,4 +29,21 @@
 #     started: 2026-08-30
 
 version: 2
-claims: []
+claims:
+  - id: homepage-ask-de-reference-redesign
+    issue: 118
+    owner: claude
+    subsystem: homepage-support-chrome
+    branch: claude/homepage-ask-de-visual-19b3aa
+    base_sha: 0b8b93fb0b4b973e90d830600a068c167b5eabda
+    files:
+      - client/src/pages/DigeratiHomepage.tsx
+      - client/src/pages/sections/ReferenceHeroSection.tsx
+      - client/src/components/SiteBottomBar.tsx
+      - client/src/components/MarketingChrome.tsx
+      - client/src/components/MegaMenu.tsx
+      - client/src/components/icons/AskDeGlyph.tsx
+      - client/src/assets/ask-de.svg
+      - client/src/components/deDeskReferenceStyle.ts
+    status: active
+    started: 2026-08-30

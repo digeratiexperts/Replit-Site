@@ -223,6 +223,7 @@ export const DE_DESK_REFERENCE_STYLE = String.raw`
   }
 
   .de-desk-perk-list,
+  .de-desk-perk-list li,
   .de-desk-route-note,
   .de-desk-more-toggle,
   .de-desk-field-error,
