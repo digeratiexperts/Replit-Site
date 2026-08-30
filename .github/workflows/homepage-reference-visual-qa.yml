@@ -1,0 +1,74 @@
+name: Homepage Reference Visual QA
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  visual-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Production build
+        run: npm run build
+
+      - name: Render homepage and Ask DE at 390 / 768 / 1440
+        shell: bash
+        run: |
+          set -euo pipefail
+          LOG=/tmp/homepage-reference-visual-qa.log
+          NODE_ENV=production PORT=3300 node dist/index.js >"$LOG" 2>&1 &
+          SERVER_PID=$!
+          cleanup() {
+            kill "$SERVER_PID" 2>/dev/null || true
+            wait "$SERVER_PID" 2>/dev/null || true
+          }
+          trap cleanup EXIT
+
+          READY=0
+          for _ in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:3300/healthz >/dev/null; then
+              READY=1
+              break
+            fi
+            if ! kill -0 "$SERVER_PID" 2>/dev/null; then
+              break
+            fi
+            sleep 1
+          done
+
+          if [ "$READY" != "1" ]; then
+            cat "$LOG"
+            exit 1
+          fi
+
+          BASE_URL=http://127.0.0.1:3300 node scripts/homepage-reference-visual-qa.mjs
+
+      - name: Upload visual QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: homepage-reference-visual-qa
+          path: tmp/homepage-visual-qa
+          if-no-files-found: warn
+          retention-days: 7
