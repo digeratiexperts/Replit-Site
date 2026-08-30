@@ -5,7 +5,8 @@ import { useSEO } from "@/hooks/useSEO";
 import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/JsonLd";
 
 // Import all section components
-import { ModernHeroSection } from "./sections/ModernHeroSection";
+// Keep ModernHeroSection in the repository as the preserved previous homepage hero.
+import { ReferenceHeroSection } from "./sections/ReferenceHeroSection";
 import { DigeratiAlertBanner } from "./sections/DigeratiAlertBanner";
 import { DigeratiServicesSection } from "./sections/DigeratiServicesSection";
 import { DigeratiHowWeProtectSection } from "./sections/DigeratiHowWeProtectSection";
@@ -55,11 +56,7 @@ export const DigeratiHomepage = (): JSX.Element => {
 
   return (
     <FullPageScrollProvider sections={homepageSections} enableOnMobile={false}>
-      {/* Live shade well + A+C canvas base. Ask DE sits bottom-right.
-          Chapter fields are neighbor-aware: hero well → paper (why we exist) →
-          well → paper (problems) → surface → paper (protect) → process band →
-          well → paper (trust) → well → style-box → surface → well (insights) →
-          paper (lead+FAQ) → surface (newsletter) → paper (CTA) → quiet well (contact). */}
+      {/* Existing homepage story/content remains intact; this pass changes the hero presentation only. */}
       <div className="de-dark-well min-h-screen bg-[#050312] pb-8">
         <OrganizationJsonLd />
         <WebSiteJsonLd />
@@ -67,9 +64,9 @@ export const DigeratiHomepage = (): JSX.Element => {
         <MegaMenu />
         <SiteBottomBar />
 
-        {/* Home — Cybersecurity-First hero + Assessment / Talk to Expert CTAs */}
+        {/* Home — reference-style presentation, existing legacy hero remains preserved in source. */}
         <ScrollSectionAuto id="hero" chapter>
-          <ModernHeroSection />
+          <ReferenceHeroSection />
           <DigeratiAlertBanner />
         </ScrollSectionAuto>
 

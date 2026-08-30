@@ -1,5 +1,9 @@
+import { mkdir } from "node:fs/promises";
+import { chromium } from "playwright";
+
 /**
  * Smoke-test indexable marketing routes against a running server.
+ * Includes rendered homepage/Ask DE regression checks at 390 / 768 / 1440.
  * Usage: BASE_URL=http://127.0.0.1:3300 node scripts/public-route-smoke.mjs
  */
 const BASE = process.env.BASE_URL || "http://127.0.0.1:3300";
@@ -121,11 +125,88 @@ for (const path of routes) {
   }
 }
 
+// Render the real homepage at the required DE visual-review widths and exercise
+// the single-pane Ask DE chooser. This is intentionally part of the canonical
+// smoke gate so a later merge cannot silently restore a source-correct but
+// visually broken homepage/support shell.
+{
+  const widths = [390, 768, 1440];
+  const screenshotDir = "tmp/public-visual-smoke";
+  await mkdir(screenshotDir, { recursive: true });
+  const browser = await chromium.launch({ headless: true });
+
+  try {
+    for (const width of widths) {
+      const height = width === 390 ? 844 : width === 768 ? 1024 : 900;
+      const context = await browser.newContext({ viewport: { width, height }, reducedMotion: "reduce" });
+      const page = await context.newPage();
+      const pageErrors = [];
+      page.on("pageerror", (error) => pageErrors.push(error.message));
+
+      try {
+        await page.goto(`${BASE}/`, { waitUntil: "domcontentloaded", timeout: 30_000 });
+        await page.waitForLoadState("networkidle", { timeout: 15_000 }).catch(() => {});
+        await page.waitForTimeout(250);
+
+        const h1 = page.locator("h1").first();
+        await h1.waitFor({ state: "visible", timeout: 10_000 });
+        const headline = ((await h1.textContent()) || "").replace(/\s+/g, " ").trim();
+        if (!headline.includes("Cybersecurity-First IT That Powers") || !headline.includes("Your Business")) {
+          fails.push(`homepage ${width}px → unexpected H1: ${headline}`);
+        }
+
+        for (const testId of ["button-hero-schedule", "button-hero-solutions", "button-open-asap-widget"]) {
+          await page.locator(`[data-testid="${testId}"]`).waitFor({ state: "visible", timeout: 10_000 });
+        }
+
+        const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+        if (overflow > 2) fails.push(`homepage ${width}px → horizontal overflow ${overflow}px`);
+        await page.screenshot({ path: `${screenshotDir}/homepage-${width}.png`, fullPage: true });
+
+        await page.locator('[data-testid="button-open-asap-widget"]').click({ force: true });
+        const chooser = page.locator('[data-testid="ask-de-quick-menu"]');
+        await chooser.waitFor({ state: "visible", timeout: 5_000 });
+
+        for (const testId of [
+          "ask-de-choice-support",
+          "ask-de-choice-help",
+          "ask-de-choice-tools",
+          "ask-de-choice-feedback",
+        ]) {
+          await page.locator(`[data-testid="${testId}"]`).waitFor({ state: "visible", timeout: 5_000 });
+        }
+
+        const chooserBox = await chooser.boundingBox();
+        if (!chooserBox) {
+          fails.push(`Ask DE ${width}px → chooser has no rendered box`);
+        } else if (chooserBox.x < -1 || chooserBox.x + chooserBox.width > width + 1) {
+          fails.push(`Ask DE ${width}px → chooser clips viewport`);
+        }
+        await page.screenshot({ path: `${screenshotDir}/ask-de-chooser-${width}.png`, fullPage: false });
+
+        await page.locator('[data-testid="ask-de-choice-support"]').click({ force: true });
+        await page.locator(".de-desk-shell").first().waitFor({ state: "visible", timeout: 7_500 });
+        const deskOverflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+        if (deskOverflow > 2) fails.push(`support desk ${width}px → horizontal overflow ${deskOverflow}px`);
+        await page.screenshot({ path: `${screenshotDir}/support-desk-${width}.png`, fullPage: false });
+
+        if (pageErrors.length) fails.push(`homepage ${width}px → page errors: ${pageErrors.join(" | ")}`);
+      } catch (err) {
+        fails.push(`homepage/Ask DE ${width}px → ${err.message}`);
+      } finally {
+        await context.close();
+      }
+    }
+  } finally {
+    await browser.close();
+  }
+}
+
 if (fails.length) {
   console.error("Public route smoke FAILED:");
   for (const f of fails) console.error(" -", f);
   process.exit(1);
 }
 console.log(
-  `Public route smoke OK (${routes.length} routes + google-reviews + bbp_search 410 + internal-tool noindex) against ${BASE}`,
+  `Public route smoke OK (${routes.length} routes + google-reviews + bbp_search 410 + internal-tool noindex + rendered homepage/Ask DE 390/768/1440) against ${BASE}`,
 );
