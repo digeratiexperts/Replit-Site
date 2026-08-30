@@ -19,4 +19,17 @@
 #     started: 2026-08-30
 
 version: 1
-claims: []
+claims:
+  - id: homepage-support-reference-style
+    owner: chatgpt
+    subsystem: homepage-and-de-desk
+    branch: chatgpt/homepage-support-reference-style
+    base_sha: d9cd1867c04bb221f40ec9dfb78e012beb8b436a
+    files:
+      - client/src/pages/DigeratiHomepage.tsx
+      - client/src/pages/sections/ReferenceHeroSection.tsx
+      - client/src/components/SiteBottomBar.tsx
+      - client/src/components/MarketingChrome.tsx
+      - client/src/components/deDeskReferenceStyle.ts
+    status: active
+    started: 2026-08-30
