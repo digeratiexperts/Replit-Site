@@ -2,6 +2,10 @@
 
 **Decision:** The DE Solution is the canonical commerce object. Zoho Payments remains the money path. Portal auth remains the identity path. Stripe, Typesense, Redis, and a second customer identity system are **not** introduced in this slice.
 
+Public Door 2 is **not** this engine. Prospects use a Solution Draft / Solution Builder (`docs/PUBLIC-SOLUTION-BUILDER.md`) with no cart, no checkout, and no Pay Now. Real cart/checkout belongs to the authenticated Client Marketplace and the staff warehouse.
+
+## Why this exists
+
 ## Why this exists
 
 The storefront already had a client-side “Your Solution” cart (`localStorage`) plus Zoho checkout. That cart died across devices and was not recalculated server-side except at payment time.

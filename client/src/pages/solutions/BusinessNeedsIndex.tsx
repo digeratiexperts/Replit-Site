@@ -1,7 +1,7 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "wouter";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, Briefcase, CheckCircle2, Eye, FileText, GraduationCap, HardDrive, Headphones, KeyRound, LockKeyhole, Mail, Network, Phone, RefreshCw, Search, Server, Shield, ShieldAlert, ShoppingCart } from "lucide-react";
+import { ArrowRight, Briefcase, CheckCircle2, Eye, FileText, GraduationCap, HardDrive, Headphones, KeyRound, LockKeyhole, Mail, Network, Phone, RefreshCw, Search, Server, Shield, ShieldAlert } from "lucide-react";
 import { MegaMenu } from "@/components/MegaMenu";
 import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhancedFooterSection";
 import { Button } from "@/components/ui/button";
@@ -10,9 +10,9 @@ import { StorePageAtmosphere } from "@/components/store/StorePageAtmosphere";
 import { PublicSolutionCart } from "@/components/store/PublicSolutionCart";
 import { useSEO } from "@/hooks/useSEO";
 import { curatedSolutionFamilies, type CuratedSolutionFamily } from "@/data/curatedSolutions";
-import { familyPath } from "@/lib/businessNeeds";
+import { BUSINESS_GOALS, familyPath, type BusinessGoalId } from "@/lib/businessNeeds";
 import { PORTAL_LOGIN } from "@/lib/portalUrls";
-import { addSolutionCartItem } from "@/lib/publicSolutionCart";
+import { emptyDraft, readSolutionDraft, SOLUTION_DRAFT_EVENT, toggleDraftNeed, type SolutionDraft } from "@/lib/solutionDraft";
 import { useToast } from "@/hooks/use-toast";
 
 const FAMILY_ICONS: Record<CuratedSolutionFamily["id"], typeof Shield> = {
@@ -50,7 +50,20 @@ const FAMILY_ACCENTS: Record<CuratedSolutionFamily["id"], string> = {
 export default function BusinessNeedsIndex() {
   const prefersReducedMotion = useReducedMotion();
   const [query, setQuery] = useState("");
+  const [goal, setGoal] = useState<BusinessGoalId | "all">("all");
+  const [draft, setDraft] = useState<SolutionDraft>(emptyDraft);
   const { toast } = useToast();
+
+  useEffect(() => {
+    const refresh = () => setDraft(readSolutionDraft());
+    refresh();
+    window.addEventListener(SOLUTION_DRAFT_EVENT, refresh);
+    window.addEventListener("storage", refresh);
+    return () => {
+      window.removeEventListener(SOLUTION_DRAFT_EVENT, refresh);
+      window.removeEventListener("storage", refresh);
+    };
+  }, []);
 
   useSEO({
     title: "IT Solutions Store | Digerati Experts",
@@ -60,14 +73,17 @@ export default function BusinessNeedsIndex() {
 
   const families = useMemo(() => {
     const needle = query.trim().toLowerCase();
-    if (!needle) return curatedSolutionFamilies;
-    return curatedSolutionFamilies.filter((family) =>
-      [family.label, family.description, ...family.offers.flatMap((offer) => [offer.name, offer.summary, ...offer.outcomes, ...offer.includes])]
+    const goalFamilyIds =
+      goal === "all" ? null : new Set(BUSINESS_GOALS.find((entry) => entry.id === goal)?.familyIds ?? []);
+    return curatedSolutionFamilies.filter((family) => {
+      if (goalFamilyIds && !goalFamilyIds.has(family.id)) return false;
+      if (!needle) return true;
+      return [family.label, family.description, ...family.offers.flatMap((offer) => [offer.name, offer.summary, ...offer.outcomes, ...offer.includes])]
         .join(" ")
         .toLowerCase()
-        .includes(needle),
-    );
-  }, [query]);
+        .includes(needle);
+    });
+  }, [query, goal]);
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#0a0a0a]">
@@ -80,7 +96,7 @@ export default function BusinessNeedsIndex() {
               <motion.div initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
                 <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-de-accent/30 bg-de-accent/10 px-4 py-2">
                   <Shield className="h-4 w-4 text-de-accent-ink" aria-hidden="true" />
-                  <span className="text-sm font-medium text-de-accent-ink">Digerati Experts Store</span>
+                  <span className="text-sm font-medium text-de-accent-ink">Solution Builder</span>
                 </div>
                 <h1 className="max-w-4xl text-[clamp(2.5rem,6vw,4.75rem)] font-bold leading-[1.02] tracking-[-0.04em] text-white" data-testid="heading-business-needs">
                   Start with what your business needs to <span className="text-de-accent-ink">solve.</span>
@@ -107,9 +123,9 @@ export default function BusinessNeedsIndex() {
 
             <section className="mb-12 grid gap-4 rounded-2xl border border-white/10 bg-[#121212]/90 p-5 sm:grid-cols-3 sm:p-6" aria-label="How the Store works">
               {[
-                ["1", "Choose a business need", "Start with the outcome, not a manufacturer."],
-                ["2", "Build Your Solution", "Choose the delivery approach and approved options."],
-                ["3", "Review and continue", "Use the cart to request a quote, assessment, or eligible checkout."],
+                ["1", "Choose what to improve", "Start with the outcome, not a manufacturer."],
+                ["2", "Tell us how DE should help", "DE managed, with your IT team, or not sure yet."],
+                ["3", "Review Your Solution", "One summary, then one recommended next step."],
               ].map(([number, title, body]) => (
                 <div key={number} className="flex gap-3">
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-de-accent/30 bg-de-accent/10 font-mono text-sm text-de-accent-ink">{number}</span>
@@ -129,6 +145,36 @@ export default function BusinessNeedsIndex() {
                   <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-white/40" aria-hidden="true" />
                   <Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search business needs" className="h-12 border-white/15 bg-[#121212] pl-12 text-white placeholder:text-white/35" />
                 </label>
+              </div>
+              <div className="mb-6 flex flex-wrap gap-2" role="group" aria-label="Start from a business goal">
+                <button
+                  type="button"
+                  className={`h-10 rounded-full border px-4 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] ${
+                    goal === "all"
+                      ? "border-[#D3126A] text-white"
+                      : "border-white/15 text-white/70 hover:bg-white/5"
+                  }`}
+                  aria-pressed={goal === "all"}
+                  onClick={() => setGoal("all")}
+                >
+                  Browse all solutions
+                </button>
+                {BUSINESS_GOALS.map((entry) => (
+                  <button
+                    key={entry.id}
+                    type="button"
+                    className={`h-10 rounded-full border px-4 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] ${
+                      goal === entry.id
+                        ? "border-[#D3126A] text-white"
+                        : "border-white/15 text-white/70 hover:bg-white/5"
+                    }`}
+                    aria-pressed={goal === entry.id}
+                    onClick={() => setGoal(entry.id)}
+                    data-testid={`business-goal-${entry.id}`}
+                  >
+                    {entry.label}
+                  </button>
+                ))}
               </div>
 
               {families.length ? (
@@ -157,8 +203,8 @@ export default function BusinessNeedsIndex() {
                               {(family.offers[0]?.outcomes ?? []).slice(0, 2).map((outcome) => <li key={outcome} className="flex gap-2 text-xs leading-relaxed text-[#4A4556]"><CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-de-accent" aria-hidden="true" />{outcome}</li>)}
                             </ul>
                             <div className="mt-auto grid grid-cols-2 gap-2 border-t border-black/10 pt-4">
-                              <Button asChild variant="outline" size="sm" className="h-10 min-w-0 border-black/15 bg-white px-2 text-xs font-semibold text-[#1A1228] hover:bg-black/5 sm:px-3"><Link href={familyPath(family.id)}><Eye className="mr-1 h-3.5 w-3.5" />Details</Link></Button>
-                              <Button size="sm" className="h-10 min-w-0 bg-de-accent px-2 text-xs font-bold text-white hover:bg-[#6548ff] sm:px-3" onClick={() => { addSolutionCartItem({ familyId: family.id, delivery: "standalone" }); toast({ title: "Added to Your Solution", description: `${family.label} is ready to configure.` }); }}><ShoppingCart className="mr-1 h-3.5 w-3.5" />Add</Button>
+                              <Button asChild variant="outline" size="sm" className="h-10 min-w-0 border-black/15 bg-white px-2 text-xs font-semibold text-[#1A1228] hover:bg-black/5 sm:px-3"><Link href={familyPath(family.id)}><Eye className="mr-1 h-3.5 w-3.5" />Explore</Link></Button>
+                              <Button size="sm" className="h-10 min-w-0 bg-de-accent px-2 text-xs font-bold text-white hover:bg-[#6548ff] sm:px-3" aria-pressed={draft.needs.some((need) => need.familyId === family.id)} onClick={() => { const next = toggleDraftNeed(family.id); const included = next.needs.some((need) => need.familyId === family.id); toast({ title: included ? "Added to Your Solution" : "Removed from Your Solution", description: included ? `${family.label} is in Your Solution.` : `${family.label} was removed.` }); }}>{draft.needs.some((need) => need.familyId === family.id) ? "Included" : "Include"}</Button>
                             </div>
                           </div>
                         </article>

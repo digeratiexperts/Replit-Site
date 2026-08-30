@@ -387,6 +387,7 @@ export function setSecurityHeaders(req: Request, res: Response, next: NextFuncti
     p === "/login" ||
     p === "/signup" ||
     p.startsWith("/store/checkout") ||
+    p.startsWith("/store/solution") ||
     p.startsWith("/store/cart") ||
     p.startsWith("/store/order-confirmation") ||
     p.startsWith("/store/quote-confirmation") ||

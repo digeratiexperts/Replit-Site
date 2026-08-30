@@ -242,6 +242,11 @@ function Router() {
           <BusinessNeedsFamily />
         </Suspense>
       )} />
+      <Route path="/store/solution" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <PublicStoreCheckout />
+        </Suspense>
+      )} />
       <Route path="/store/checkout" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <PublicStoreCheckout />

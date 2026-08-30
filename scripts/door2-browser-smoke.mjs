@@ -25,25 +25,32 @@ for (const viewport of viewports) {
   const emailInputs = await page.locator("main input[type='email']").count();
   const payNow = await page.getByText("Pay Now", { exact: false }).count();
   const obsoleteCardBadges = await page.getByText("Curated DE solution", { exact: true }).count();
+  const addButtons = await page.getByRole("button", { name: "Add", exact: true }).count();
   const indexOverflow = await hasHorizontalOverflow(page);
 
-  // Exercise the actual public cart/drawer and verify the sitewide bottom dock
-  // participates in the same shared overlay lock as the legacy Store drawers.
-  await page.locator("[data-testid='family-card-identity_access']").getByRole("button", { name: "Add" }).click();
+  await page.locator("[data-testid='family-card-identity_access']").getByRole("button", { name: "Include" }).click();
   await page.locator("[data-testid='public-solution-cart']").click();
   const dockHiddenWhileCartOpen = await page.evaluate(() => document.documentElement.dataset.dockHidden === "true");
   await page.keyboard.press("Escape");
   await page.screenshot({ path: `${outDir}/index-${viewport.name}.png`, fullPage: true });
 
-  await page.locator("[data-testid='family-card-identity_access']").getByRole("link", { name: /Identity|Details/i }).first().click();
+  await page.locator("[data-testid='family-card-identity_access']").getByRole("link", { name: /Identity|Explore/i }).first().click();
   await page.waitForSelector("[data-testid='heading-family']");
   const heading = await page.locator("[data-testid='heading-family']").innerText();
   await page.locator("[data-testid='delivery-co_managed']").click();
   const offer = await page.locator("[data-testid='offer-panel']").innerText();
+  const competingCtas = await page.getByRole("link", { name: /Request a quote|Start an assessment|Schedule a consultation/i }).count();
+  await page.locator("[data-testid='continue-building']").click();
   const familyOverflow = await hasHorizontalOverflow(page);
   await page.screenshot({ path: `${outDir}/family-${viewport.name}.png`, fullPage: true });
 
-  await page.getByRole("link", { name: "Request a quote" }).click();
+  await page.locator("[data-testid='public-solution-cart']").click();
+  await page.getByRole("link", { name: "Review Your Solution" }).click();
+  await page.waitForSelector("h1");
+  const workspaceOverflow = await hasHorizontalOverflow(page);
+  await page.screenshot({ path: `${outDir}/workspace-${viewport.name}.png`, fullPage: true });
+
+  await page.locator("[data-testid='recommended-next-step']").click();
   await page.waitForSelector("[data-testid='heading-solution-request']");
   const requestOverflow = await hasHorizontalOverflow(page);
   await page.screenshot({ path: `${outDir}/request-${viewport.name}.png`, fullPage: true });
@@ -58,13 +65,16 @@ for (const viewport of viewports) {
     emailInputs,
     payNow,
     obsoleteCardBadges,
+    addButtons,
     dockHiddenWhileCartOpen,
     heading,
     offerHasCoManaged: /co-managed/i.test(offer),
+    competingCtas,
     notFound,
     overflow: {
       index: indexOverflow,
       family: familyOverflow,
+      workspace: workspaceOverflow,
       request: requestOverflow,
       notFound: notFoundOverflow,
     },
@@ -80,6 +90,8 @@ const failed = results.some((row) =>
   row.emailInputs > 0 ||
   row.payNow > 0 ||
   row.obsoleteCardBadges > 0 ||
+  row.addButtons > 0 ||
+  row.competingCtas > 0 ||
   !row.dockHiddenWhileCartOpen ||
   row.notFound < 1 ||
   Object.values(row.overflow).some(Boolean),

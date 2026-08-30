@@ -11,7 +11,7 @@ The former public `/store` workshop (SKU catalog, vendor marks, coverage heurist
 | Surface | Route | Auth |
 | --- | --- | --- |
 | Warehouse | `/internal/warehouse` and product/checkout subroutes | Live `admin` at route **and** catalog API |
-| Public curated Store | `/store`, `/store/solutions/:family`, `/store/checkout` | Public-safe DE solution data only |
+| Public curated Store | `/store`, `/store/solutions/:family`, `/store/solution` (`/store/checkout` alias) | Public Solution Builder — no vendor catalog, no Pay Now |
 | Legacy catalog paths | `/store/managed`, `/store/co-managed` | 301 to the appropriate public solution path |
 | Staff-only SKU URLs | `/store/product/:sku` except four ProActive models | Generic 404 — same body as unknown, no `Location` |
 | Client Marketplace | `/portal/marketplace` | Authenticated client; fail-safe Request Approval (no Hub catalog) |
