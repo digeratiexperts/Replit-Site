@@ -48,7 +48,7 @@ describe("public solution Door 2 API", () => {
     resetPublicSolutionRequestsForTests();
   });
 
-  it("returns 13 public families without warehouse fields", async () => {
+  it("returns 13 public families with package policy and without private fields", async () => {
     const response = await fetch(`${baseUrl}/api/public/solutions/families`);
     expect(response.status).toBe(200);
     const body = await response.json();
@@ -58,11 +58,10 @@ describe("public solution Door 2 API", () => {
         "co_managed",
         "standalone",
       ]);
+      expect(family.offers.every((offer: { package?: unknown }) => !!offer.package)).toBe(true);
     }
     const raw = JSON.stringify(body).toLowerCase();
-    for (const term of prohibited) {
-      expect(raw).not.toContain(term);
-    }
+    for (const term of prohibited) expect(raw).not.toContain(term);
   });
 
   it("returns a generic 404 for an unknown family", async () => {
@@ -73,22 +72,59 @@ describe("public solution Door 2 API", () => {
     expect(JSON.stringify(body).toLowerCase()).not.toContain("sku");
   });
 
-  it("lets a guest submit several families as one Solution Request", async () => {
+  it("saves a profile, package selection, and fulfillment without contact or lead submission", async () => {
+    const response = await fetch(`${baseUrl}/api/public/solutions/request`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        selectedNeeds: [{ familyId: "identity_access", offerId: "de-identity-standalone", deliveryModel: "standalone" }],
+        deliveryPreference: "standalone",
+        environment: {
+          userCount: "25",
+          workstationCount: "32",
+          mobileDeviceCount: "18",
+          siteCount: "2",
+          deviceOwnership: "hybrid",
+          internalIt: "no",
+        },
+        fulfillment: { installation: "remote_assist", remoteSupport: "as_needed" },
+        intent: "quote",
+      }),
+    });
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body.request.status).toBe("draft");
+    expect(body.request.contactEmail).toBe("");
+    expect(body.request.environment.workstationCount).toBe("32");
+    expect(body.request.environment.mobileDeviceCount).toBe("18");
+    expect(body.request.fulfillment).toEqual({ installation: "remote_assist", remoteSupport: "as_needed" });
+  });
+
+  it("lets a guest submit several families as one composed solution", async () => {
     const response = await fetch(`${baseUrl}/api/public/solutions/request`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         selectedNeeds: [
-          { familyId: "identity_access", deliveryModel: "unsure" },
-          { familyId: "backup_continuity", deliveryModel: "unsure" },
-          { familyId: "email_collaboration", deliveryModel: "co_managed" },
+          { familyId: "identity_access", offerId: "de-identity-co-managed", deliveryModel: "co_managed" },
+          { familyId: "backup_continuity", offerId: "de-backup-continuity-co-managed", deliveryModel: "co_managed" },
+          { familyId: "email_collaboration", offerId: "de-collaboration-co-managed", deliveryModel: "co_managed" },
         ],
-        deliveryPreference: "unsure",
-        intent: "assessment",
+        deliveryPreference: "co_managed",
+        intent: "quote",
         contactName: "Jordan Buyer",
         contactEmail: "jordan@example.com",
+        contactPhone: "480-555-0100",
         organizationName: "Example Medical",
-        environment: { userCount: "42", deviceOwnership: "hybrid", internalIt: "yes" },
+        environment: {
+          userCount: "42",
+          workstationCount: "48",
+          mobileDeviceCount: "20",
+          siteCount: "2",
+          deviceOwnership: "hybrid",
+          internalIt: "yes",
+        },
+        fulfillment: { installation: "remote_assist", remoteSupport: "ongoing" },
       }),
     });
     expect(response.status).toBe(200);
@@ -101,12 +137,13 @@ describe("public solution Door 2 API", () => {
       "email_collaboration",
     ]);
     expect(body.request.environment.userCount).toBe("42");
-    expect(body.request.environment.deviceOwnership).toBe("hybrid");
+    expect(body.request.environment.workstationCount).toBe("48");
+    expect(body.request.fulfillment.remoteSupport).toBe("ongoing");
     expect(body.message).toContain("saved");
     expect(JSON.stringify(body).toLowerCase()).not.toContain("sku");
   });
 
-  it("lets a guest submit a Solution Request without portal login", async () => {
+  it("lets a guest submit without portal login when all four contact fields are present", async () => {
     const response = await fetch(`${baseUrl}/api/public/solutions/request`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -114,9 +151,11 @@ describe("public solution Door 2 API", () => {
         familyId: "identity_access",
         offerId: "de-identity-standalone",
         deliveryModel: "standalone",
-        intent: "request",
+        deliveryPreference: "standalone",
+        intent: "quote",
         contactName: "Jordan Buyer",
         contactEmail: "jordan@example.com",
+        contactPhone: "480-555-0100",
         organizationName: "Example Medical",
       }),
     });
@@ -126,41 +165,38 @@ describe("public solution Door 2 API", () => {
     expect(body.correlationId).toMatch(/-/);
     expect(body.crm).toBe("pending");
     expect(body.message).toContain("saved");
-    expect(JSON.stringify(body).toLowerCase()).not.toContain("sku");
   });
 
-  it("rejects submit without contact and replays idempotent submits", async () => {
+  it("rejects missing four-field contact and replays idempotent submits", async () => {
     const missing = await fetch(`${baseUrl}/api/public/solutions/request`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ familyId: "identity_access" }),
+      body: JSON.stringify({ familyId: "identity_access", contactName: "Jordan Buyer", contactEmail: "jordan@example.com" }),
     });
     expect(missing.status).toBe(400);
 
+    const payload = {
+      familyId: "identity_access",
+      offerId: "de-identity-standalone",
+      deliveryModel: "standalone",
+      deliveryPreference: "standalone",
+      contactName: "Jordan Buyer",
+      contactEmail: "jordan@example.com",
+      contactPhone: "480-555-0100",
+      organizationName: "Example Medical",
+      idempotencyKey: "door2-test-key",
+    };
     const first = await fetch(`${baseUrl}/api/public/solutions/request`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        familyId: "identity_access",
-        offerId: "de-identity-standalone",
-        deliveryModel: "standalone",
-        contactName: "Jordan Buyer",
-        contactEmail: "jordan@example.com",
-        idempotencyKey: "door2-test-key",
-      }),
+      body: JSON.stringify(payload),
     });
+    expect(first.status).toBe(200);
     const firstBody = await first.json();
     const second = await fetch(`${baseUrl}/api/public/solutions/request`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        familyId: "identity_access",
-        offerId: "de-identity-standalone",
-        deliveryModel: "standalone",
-        contactName: "Jordan Buyer",
-        contactEmail: "jordan@example.com",
-        idempotencyKey: "door2-test-key",
-      }),
+      body: JSON.stringify(payload),
     });
     const secondBody = await second.json();
     expect(secondBody.replayed).toBe(true);
