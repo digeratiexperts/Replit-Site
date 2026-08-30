@@ -11,7 +11,7 @@ import { PublicSolutionCart } from "@/components/store/PublicSolutionCart";
 import { useSEO } from "@/hooks/useSEO";
 import { curatedSolutionFamilies, type CuratedSolutionFamily } from "@/data/curatedSolutions";
 import { BUSINESS_GOALS, familyPath, type BusinessGoalId } from "@/lib/businessNeeds";
-import { PORTAL_LOGIN } from "@/lib/portalUrls";
+import { portalMarketplaceLoginUrl } from "@/lib/portalUrls";
 import { emptyDraft, readSolutionDraft, SOLUTION_DRAFT_EVENT, toggleDraftNeed, type SolutionDraft } from "@/lib/solutionDraft";
 import { useToast } from "@/hooks/use-toast";
 
@@ -103,7 +103,11 @@ export default function BusinessNeedsIndex() {
                 </p>
                 <p className="mt-8 text-sm text-white/45">
                   Client or DE staff?{" "}
-                  <a href={PORTAL_LOGIN} className="font-medium text-de-accent-ink underline-offset-4 hover:underline">
+                  <a
+                    href={portalMarketplaceLoginUrl()}
+                    className="font-medium text-de-accent-ink underline-offset-4 hover:underline"
+                    data-testid="link-client-marketplace"
+                  >
                     Open Client Marketplace
                   </a>
                 </p>

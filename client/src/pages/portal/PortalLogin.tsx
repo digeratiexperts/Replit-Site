@@ -7,6 +7,8 @@ import { useLocation } from "wouter";
 import logoImage from "@assets/DE-Logo-new_1762461524794.webp";
 import TurnstileWidget from "@/components/TurnstileWidget";
 import { useSEO } from "@/hooks/useSEO";
+import { portalReturnLabel } from "@/lib/portalUrls";
+import { marketplaceReturnTo } from "@shared/portalReturnTo";
 
 type LoginStep = "credentials" | "mfa";
 
@@ -50,7 +52,7 @@ export default function PortalLogin() {
     const zohoSso = readQueryParam("zoho_sso");
     const err = readQueryParam("error");
     const message = readQueryParam("message");
-    const returnTo = readQueryParam("returnTo") || "/portal/dashboard";
+    const returnTo = marketplaceReturnTo(readQueryParam("returnTo"));
 
     if (err) {
       setError(message || "Sign-in failed. Please try again.");
@@ -97,10 +99,7 @@ export default function PortalLogin() {
           } catch {
             /* navigate with token; capabilities refresh on next /me */
           }
-          const dest =
-            returnTo.startsWith("/portal") && !returnTo.startsWith("//")
-              ? returnTo
-              : "/portal/dashboard";
+          const dest = marketplaceReturnTo(returnTo);
           window.history.replaceState({}, "", "/portal/login");
           navigate(dest);
         } catch {
@@ -118,6 +117,30 @@ export default function PortalLogin() {
         if (!cancelled) setZohoConfigured(Boolean(data?.configured));
       } catch {
         if (!cancelled) setZohoConfigured(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [navigate]);
+
+  useEffect(() => {
+    if (readQueryParam("zoho_sso") === "1") return;
+    const token = localStorage.getItem("portalToken");
+    if (!token) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const meRes = await fetch("/api/portal/me", {
+          headers: { Authorization: `Bearer ${token}` },
+          credentials: "include",
+        });
+        if (!meRes.ok || cancelled) return;
+        const meData = await meRes.json();
+        if (cancelled || !meData?.user) return;
+        navigate(marketplaceReturnTo(readQueryParam("returnTo")));
+      } catch {
+        /* stay on login when the stored token is stale */
       }
     })();
     return () => {
@@ -157,12 +180,7 @@ export default function PortalLogin() {
       localStorage.setItem("portalToken", data.token);
       localStorage.setItem("portalUserId", data.user?.id || "portal-user");
       localStorage.setItem("userEmail", email);
-      const returnTo = readQueryParam("returnTo");
-      const dest =
-        returnTo.startsWith("/portal") && !returnTo.startsWith("//")
-          ? returnTo
-          : "/portal/dashboard";
-      navigate(dest);
+      navigate(marketplaceReturnTo(readQueryParam("returnTo")));
     } catch (err) {
       setError("Connection error. Please try again.");
     } finally {
@@ -194,12 +212,7 @@ export default function PortalLogin() {
       localStorage.setItem("portalToken", data.token);
       localStorage.setItem("portalUserId", data.user?.id || "portal-user");
       localStorage.setItem("userEmail", email);
-      const returnTo = readQueryParam("returnTo");
-      const dest =
-        returnTo.startsWith("/portal") && !returnTo.startsWith("//")
-          ? returnTo
-          : "/portal/dashboard";
-      navigate(dest);
+      navigate(marketplaceReturnTo(readQueryParam("returnTo")));
     } catch (err) {
       setError("Connection error. Please try again.");
     } finally {
@@ -207,11 +220,9 @@ export default function PortalLogin() {
     }
   };
 
-  const returnToForZoho = (() => {
-    const r = readQueryParam("returnTo");
-    return r.startsWith("/portal") && !r.startsWith("//") ? r : "/portal/dashboard";
-  })();
+  const returnToForZoho = marketplaceReturnTo(readQueryParam("returnTo"));
   const zohoStartHref = `/api/portal/auth/zoho/start?returnTo=${encodeURIComponent(returnToForZoho)}`;
+  const returnLabel = portalReturnLabel(returnToForZoho);
   const showZoho = zohoConfigured !== false;
 
   return (
@@ -227,7 +238,9 @@ export default function PortalLogin() {
               <CardHeader className="space-y-2">
                 <CardTitle className="text-2xl text-white">Client Portal</CardTitle>
                 <CardDescription className="text-gray-300">
-                  Sign in to access your account and manage support
+                  {returnToForZoho === "/portal/marketplace"
+                    ? "Sign in to continue to the Client Marketplace."
+                    : `Sign in to continue to ${returnLabel}.`}
                 </CardDescription>
               </CardHeader>
 

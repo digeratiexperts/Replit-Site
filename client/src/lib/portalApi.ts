@@ -1,7 +1,5 @@
 import { PORTAL_LOGIN } from "./portalUrls";
-
-/** Path-only login route for same-host pathname checks (never compare against absolute URL). */
-const PORTAL_LOGIN_PATH = "/portal/login";
+import { marketplaceReturnTo, PORTAL_DASHBOARD_PATH, PORTAL_LOGIN_PATH } from "@shared/portalReturnTo";
 
 function portalAuthHeaders(extra?: HeadersInit): Record<string, string> {
   const headers: Record<string, string> = {};
@@ -36,14 +34,8 @@ export function redirectToPortalLogin(returnTo?: string) {
   const path = window.location.pathname || "";
   if (path === PORTAL_LOGIN_PATH || path.startsWith(`${PORTAL_LOGIN_PATH}?`)) return;
 
-  const dest =
-    returnTo && returnTo.startsWith("/portal") && !returnTo.startsWith("//")
-      ? returnTo
-      : `${path}${window.location.search || ""}`;
-  const safeReturn =
-    dest.startsWith("/portal") && !dest.startsWith("//") && dest !== PORTAL_LOGIN_PATH
-      ? dest
-      : "/portal/dashboard";
+  const dest = marketplaceReturnTo(returnTo || `${path}${window.location.search || ""}`);
+  const safeReturn = dest === PORTAL_LOGIN_PATH ? PORTAL_DASHBOARD_PATH : dest;
 
   clearPortalLocalSession();
   const qs = new URLSearchParams({ returnTo: safeReturn });

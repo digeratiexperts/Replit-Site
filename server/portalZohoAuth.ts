@@ -127,13 +127,9 @@ export function isMasterPortalEmail(email: string): boolean {
   return MASTER_EMAILS.has(email.trim().toLowerCase());
 }
 
-export function sanitizeReturnTo(raw: unknown): string {
-  if (typeof raw !== "string" || !raw.startsWith("/") || raw.startsWith("//")) {
-    return "/portal/dashboard";
-  }
-  if (!raw.startsWith("/portal")) return "/portal/dashboard";
-  return raw;
-}
+import { marketplaceReturnTo, sanitizeReturnTo } from "@shared/portalReturnTo";
+
+export { marketplaceReturnTo, sanitizeReturnTo };
 
 export function portalLoginErrorRedirect(code: string, message?: string): string {
   const params = new URLSearchParams({ error: code });
@@ -169,7 +165,7 @@ export function createZohoStartPayload(returnTo?: string): {
   const state = signState({
     v: 1,
     exp: Date.now() + 10 * 60 * 1000,
-    r: sanitizeReturnTo(returnTo),
+    r: marketplaceReturnTo(returnTo),
     n: b64url(randomBytes(16)),
   });
   return {
@@ -181,7 +177,7 @@ export function createZohoStartPayload(returnTo?: string): {
 export function verifyZohoOAuthState(state: string): { returnTo: string } | null {
   const parsed = verifyState(state);
   if (!parsed) return null;
-  return { returnTo: sanitizeReturnTo(parsed.r) };
+  return { returnTo: marketplaceReturnTo(parsed.r) };
 }
 
 export async function exchangeZohoAuthCode(opts: {

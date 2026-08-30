@@ -23,7 +23,7 @@ import {
   isMasterPortalEmail,
   portalLoginErrorRedirect,
   readZohoPkceCookie,
-  sanitizeReturnTo,
+  marketplaceReturnTo,
   setZohoPkceCookie,
   verifyZohoOAuthState,
 } from "./portalZohoAuth";
@@ -2501,7 +2501,7 @@ export async function registerRoutes(app: Express) {
     const params = new URLSearchParams({
       zoho_sso: "1",
       token,
-      returnTo: sanitizeReturnTo(returnTo),
+      returnTo: marketplaceReturnTo(returnTo),
     });
     return res.redirect(`/portal/login?${params.toString()}`);
   }
@@ -2642,7 +2642,7 @@ export async function registerRoutes(app: Express) {
       userAgent: typeof req.headers?.["user-agent"] === "string" ? req.headers["user-agent"] : null,
       path: "/api/portal/auth/zoho/start",
     });
-    const returnTo = sanitizeReturnTo(req.query.returnTo);
+    const returnTo = marketplaceReturnTo(req.query.returnTo);
     const { authorizeUrl, codeVerifier } = createZohoStartPayload(returnTo);
     setZohoPkceCookie(res, codeVerifier);
     return res.redirect(authorizeUrl);

@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import type { ClientType } from "@/data/storeProducts";
-import { PORTAL_LOGIN } from "@/lib/portalUrls";
+import { portalLoginWithReturn } from "@/lib/portalUrls";
+import { marketplaceReturnTo } from "@shared/portalReturnTo";
 
 // Store role types for RBAC
 export type StoreRole = 'public' | 'prospect' | 'managed' | 'comanaged' | 'admin';
@@ -136,8 +137,7 @@ export function useStoreAuth(): StoreAuthState {
     const currentPath = window.location.pathname;
     localStorage.setItem("storeRedirectAfterLogin", currentPath);
     // Absolute portal host — apex /portal/login is mangled by Cloudflare to //login
-    const returnTo = `${window.location.origin}${currentPath}`;
-    window.location.href = `${PORTAL_LOGIN}?returnTo=${encodeURIComponent(returnTo)}`;
+    window.location.href = portalLoginWithReturn(marketplaceReturnTo(currentPath));
   }, []);
 
   const logout = useCallback(() => {
