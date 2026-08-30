@@ -10,12 +10,14 @@ import { eventBus, EventTypes } from "./eventBus";
 import { syncPublicSolutionRequestToCrm } from "./publicSolutionRequestCrm";
 import {
   createPublicSolutionRequest,
-  findPublicSolutionRequest,
-  markPublicSolutionRequestCrm,
+  findPublicSolutionRequestDurable,
+  getPublicSolutionRequestDurable,
+  markPublicSolutionRequestCrmDurable,
   publicFamilyExists,
   publicSolutionRequestView,
-  submitPublicSolutionRequest,
-  upsertPublicSolutionRequest,
+  submitPublicSolutionRequestDurable,
+  upsertPublicSolutionRequestDurable,
+  type PublicSolutionRequest,
 } from "./publicSolutionRequestStore";
 
 const SESSION_COOKIE = "de_solution_request";
@@ -76,17 +78,42 @@ export function registerPublicSolutionRoutes(app: Express): void {
     return res.json({ family: toPublicFamily(family) });
   });
 
-  app.get("/api/public/solutions/request", (req, res) => {
+  app.get("/api/public/solutions/request", async (req, res) => {
     const sessionId = ensureSession(req, res);
-    const existing = findPublicSolutionRequest(sessionId);
-    const record = existing ?? createPublicSolutionRequest(sessionId);
+    // A "resume" link (?draftId=) lets a visitor continue a saved draft from
+    // a different browser/device. The id is an unguessable random UUID, so
+    // possession of it is the trust boundary — same model as a Stripe
+    // Checkout or Calendly reschedule link. On a hit, this device's session
+    // cookie is re-pointed at that draft's own session so subsequent saves
+    // update the same row instead of forking a new draft.
+    const draftId = typeof req.query.draftId === "string" ? req.query.draftId.trim().slice(0, 80) : "";
+    let record: PublicSolutionRequest | undefined;
+    let resolvedSessionId = sessionId;
+    if (draftId) {
+      record = await getPublicSolutionRequestDurable(draftId);
+      if (record) resolvedSessionId = record.sessionId;
+    }
+    if (!record) {
+      record = await findPublicSolutionRequestDurable(sessionId);
+    }
+    if (!record) {
+      record = createPublicSolutionRequest(sessionId);
+    }
+    if (resolvedSessionId !== sessionId) {
+      res.cookie(SESSION_COOKIE, resolvedSessionId, {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        maxAge: 1000 * 60 * 60 * 24 * 30,
+      });
+    }
     return res.json({ request: publicSolutionRequestView(record) });
   });
 
   // Save progress without collecting contact information. This does not create a lead.
-  app.put("/api/public/solutions/request", (req, res) => {
+  app.put("/api/public/solutions/request", async (req, res) => {
     const sessionId = ensureSession(req, res);
-    const record = upsertPublicSolutionRequest(requestInput(req, sessionId));
+    const record = await upsertPublicSolutionRequestDurable(requestInput(req, sessionId));
     return res.json({ request: publicSolutionRequestView(record) });
   });
 
@@ -105,7 +132,7 @@ export function registerPublicSolutionRoutes(app: Express): void {
       return res.status(400).json({ error: "Company, name, email, and phone are required." });
     }
 
-    const draft = upsertPublicSolutionRequest({
+    const draft = await upsertPublicSolutionRequestDurable({
       ...requestInput(req, sessionId),
       organizationName,
       contactName,
@@ -119,7 +146,7 @@ export function registerPublicSolutionRoutes(app: Express): void {
 
     let submitted;
     try {
-      submitted = submitPublicSolutionRequest(
+      submitted = await submitPublicSolutionRequestDurable(
         draft,
         { name: contactName, email: contactEmail, phone: contactPhone, organizationName },
         typeof req.body?.idempotencyKey === "string" ? req.body.idempotencyKey : undefined,
@@ -143,11 +170,11 @@ export function registerPublicSolutionRoutes(app: Express): void {
         intent: submitted.record.intent,
       });
       void syncPublicSolutionRequestToCrm(submitted.record)
-        .then((crmStatus) => markPublicSolutionRequestCrm(submitted.record.id, crmStatus))
+        .then((crmStatus) => markPublicSolutionRequestCrmDurable(submitted.record.id, crmStatus))
         .catch((error: any) => console.warn("[solution-request] CRM follow-up pending:", error?.message || error));
     }
 
-    const latest = markPublicSolutionRequestCrm(submitted.record.id, "pending");
+    const latest = await markPublicSolutionRequestCrmDurable(submitted.record.id, "pending");
     const view = publicSolutionRequestView(latest ?? submitted.record);
     return res.json({
       request: view,
