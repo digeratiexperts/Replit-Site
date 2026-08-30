@@ -8,11 +8,21 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { StorePageAtmosphere } from "@/components/store/StorePageAtmosphere";
 import { PublicSolutionCart } from "@/components/store/PublicSolutionCart";
+import { SolutionProfileForm } from "@/components/store/SolutionProfileForm";
 import { useSEO } from "@/hooks/useSEO";
 import { curatedSolutionFamilies, type CuratedSolutionFamily } from "@/data/curatedSolutions";
 import { BUSINESS_GOALS, familyPath, type BusinessGoalId } from "@/lib/businessNeeds";
 import { portalMarketplaceLoginUrl } from "@/lib/portalUrls";
-import { emptyDraft, readSolutionDraft, SOLUTION_DRAFT_EVENT, toggleDraftNeed, type SolutionDraft } from "@/lib/solutionDraft";
+import {
+  emptyDraft,
+  patchEnvironment,
+  readSolutionDraft,
+  SOLUTION_DRAFT_EVENT,
+  toggleDraftNeed,
+  writeSolutionDraft,
+  type SolutionDraft,
+  type SolutionEnvironment,
+} from "@/lib/solutionDraft";
 import { useToast } from "@/hooks/use-toast";
 
 const FAMILY_ICONS: Record<CuratedSolutionFamily["id"], typeof Shield> = {
@@ -67,7 +77,7 @@ export default function BusinessNeedsIndex() {
 
   useSEO({
     title: "IT Solutions Store | Digerati Experts",
-    description: "Browse curated Digerati Experts technology and cybersecurity solutions by business need.",
+    description: "Build a Digerati Experts solution from your business profile and business need.",
     canonical: "/store",
   });
 
@@ -85,6 +95,11 @@ export default function BusinessNeedsIndex() {
     });
   }, [query, goal]);
 
+  const setProfile = <K extends keyof SolutionEnvironment>(key: K, value: SolutionEnvironment[K]) => {
+    const next = writeSolutionDraft(patchEnvironment(readSolutionDraft(), { [key]: value }));
+    setDraft(next);
+  };
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#0a0a0a]">
       <StorePageAtmosphere />
@@ -92,17 +107,17 @@ export default function BusinessNeedsIndex() {
         <MegaMenu />
         <main className="de-nav-clear pb-24">
           <div className="mx-auto max-w-[var(--de-canvas)] px-4 sm:px-6 lg:px-8">
-            <header className="max-w-3xl pb-16 pt-8 md:pb-20 md:pt-14">
+            <header className="max-w-3xl pb-10 pt-8 md:pt-14">
               <motion.div initial={prefersReducedMotion ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-de-accent-ink">Solution Builder</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-de-accent-ink">Business Solution Builder</p>
                 <h1 className="mt-5 text-[clamp(2.25rem,5.4vw,4.25rem)] font-bold leading-[1.08] tracking-[-0.035em] text-white" data-testid="heading-business-needs">
-                  Start with what your business needs to <span className="text-de-accent-ink">solve.</span>
+                  Start with your business. Then solve what <span className="text-de-accent-ink">hurts.</span>
                 </h1>
-                <p className="mt-6 max-w-xl text-base leading-relaxed text-white/65 md:text-lg">
-                  Browse complete DE solutions by outcome without an email address. We choose and manage the technology behind each solution, so you never have to compare a public wall of manufacturers and product codes.
+                <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/65 md:text-lg">
+                  Set your users, devices, and sites once. Then DE can size every preconfigured solution consistently while you browse—without forcing you into a managed-services contract or exposing a vendor catalog.
                 </p>
                 <p className="mt-8 text-sm text-white/45">
-                  Client or DE staff?{" "}
+                  Existing client or DE staff?{" "}
                   <a
                     href={portalMarketplaceLoginUrl()}
                     className="font-medium text-de-accent-ink underline-offset-4 hover:underline"
@@ -114,11 +129,14 @@ export default function BusinessNeedsIndex() {
               </motion.div>
             </header>
 
-            <ol className="mb-16 grid gap-8 border-y border-white/10 py-8 sm:grid-cols-3 sm:gap-10 sm:py-10" aria-label="How the Store works">
+            <SolutionProfileForm environment={draft.environment} onChange={setProfile} />
+
+            <ol className="my-12 grid gap-8 border-y border-white/10 py-8 sm:grid-cols-2 lg:grid-cols-4 sm:gap-10 sm:py-10" aria-label="How the Solution Builder works">
               {[
-                ["01", "Choose what to improve", "Start with the outcome, not a manufacturer."],
-                ["02", "Tell us how DE should help", "DE managed, with your IT team, or not sure yet."],
-                ["03", "Review Your Solution", "One summary, then one recommended next step."],
+                ["01", "Pain or need", "Tell us what is not working, risky, expensive, or holding the business back."],
+                ["02", "Solution", "Choose a standalone or co-managed DE offer—or ask DE to help decide."],
+                ["03", "Package & delivery", "See included line items, sizing, shipping, install options, and support."],
+                ["04", "Contact", "Only name, company, email, and phone when you are ready to continue."],
               ].map(([number, title, body]) => (
                 <li key={number}>
                   <p className="font-mono text-[11px] tracking-[0.16em] text-de-accent-ink">{number}</p>
@@ -131,19 +149,20 @@ export default function BusinessNeedsIndex() {
             <section aria-labelledby="curated-solutions-heading">
               <div className="mb-6 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
                 <div className="max-w-xl">
-                  <h2 id="curated-solutions-heading" className="text-2xl font-semibold tracking-tight text-white md:text-3xl">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-de-accent-ink">Step 1 · Pain or need</p>
+                  <h2 id="curated-solutions-heading" className="mt-2 text-2xl font-semibold tracking-tight text-white md:text-3xl">
                     {goal === "all"
                       ? "What needs attention?"
                       : BUSINESS_GOALS.find((entry) => entry.id === goal)?.label}
                   </h2>
                   <p className="mt-2 text-sm leading-relaxed text-white/50">
-                    Pick a business goal, or browse all thirteen solutions.
+                    Start with a plain-English business goal or browse all thirteen solution families.
                   </p>
                 </div>
                 <label className="relative block w-full lg:w-80">
                   <span className="sr-only">Search solutions</span>
                   <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" aria-hidden="true" />
-                  <Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search business needs" className="h-11 border-white/10 bg-transparent pl-11 text-white placeholder:text-white/35" />
+                  <Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search pains or solutions" className="h-11 border-white/10 bg-transparent pl-11 text-white placeholder:text-white/35" />
                 </label>
               </div>
               <div className="mb-8 flex flex-wrap gap-2" role="group" aria-label="Start from a business goal">
@@ -223,12 +242,12 @@ export default function BusinessNeedsIndex() {
                                   const next = toggleDraftNeed(family.id);
                                   const nowIncluded = next.needs.some((need) => need.familyId === family.id);
                                   toast({
-                                    title: nowIncluded ? "Added to Your Solution" : "Removed from Your Solution",
+                                    title: nowIncluded ? "Pain / need added" : "Pain / need removed",
                                     description: nowIncluded ? `${family.label} is in Your Solution.` : `${family.label} was removed.`,
                                   });
                                 }}
                               >
-                                {included ? "Included" : "Include"}
+                                {included ? "Included" : "Add need"}
                               </Button>
                             </div>
                           </div>
