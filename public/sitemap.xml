@@ -87,22 +87,22 @@
   <url><loc>https://digeratiexperts.com/legal/privacy-policy</loc><changefreq>yearly</changefreq><priority>0.4</priority></url>
   <url><loc>https://digeratiexperts.com/legal/terms-of-use</loc><changefreq>yearly</changefreq><priority>0.4</priority></url>
   <url><loc>https://digeratiexperts.com/contact</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://digeratiexperts.com/solutions/business-needs</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://digeratiexperts.com/store</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://digeratiexperts.com/solutions/request</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>
   <!-- Door 2 solution families (13) -->
-  <url><loc>https://digeratiexperts.com/solutions/business-needs/it-operations</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://digeratiexperts.com/solutions/business-needs/endpoint-devices</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://digeratiexperts.com/solutions/business-needs/identity-access</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://digeratiexperts.com/solutions/business-needs/email-collaboration</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://digeratiexperts.com/solutions/business-needs/cybersecurity-operations</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://digeratiexperts.com/solutions/business-needs/network-connectivity</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://digeratiexperts.com/solutions/business-needs/backup-continuity</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://digeratiexperts.com/solutions/business-needs/compliance-risk</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://digeratiexperts.com/solutions/business-needs/security-awareness</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://digeratiexperts.com/solutions/business-needs/business-communications</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://digeratiexperts.com/solutions/business-needs/hardware-lifecycle</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://digeratiexperts.com/solutions/business-needs/documentation-standards</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://digeratiexperts.com/solutions/business-needs/technology-strategy</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://digeratiexperts.com/store/solutions/it-operations</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://digeratiexperts.com/store/solutions/endpoint-devices</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://digeratiexperts.com/store/solutions/identity-access</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://digeratiexperts.com/store/solutions/email-collaboration</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://digeratiexperts.com/store/solutions/cybersecurity-operations</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://digeratiexperts.com/store/solutions/network-connectivity</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://digeratiexperts.com/store/solutions/backup-continuity</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://digeratiexperts.com/store/solutions/compliance-risk</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://digeratiexperts.com/store/solutions/security-awareness</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://digeratiexperts.com/store/solutions/business-communications</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://digeratiexperts.com/store/solutions/hardware-lifecycle</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://digeratiexperts.com/store/solutions/documentation-standards</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://digeratiexperts.com/store/solutions/technology-strategy</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <!-- Resource PDFs (13) -->
   <url><loc>https://digeratiexperts.com/resources/reports/cyber-risk-assessment-sample</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://digeratiexperts.com/resources/checklists/security-readiness-checklist</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>

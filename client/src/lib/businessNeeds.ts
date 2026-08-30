@@ -7,7 +7,7 @@ import {
 
 export type { CuratedDeliveryModel, CuratedSolutionFamily, CuratedSolutionOffer };
 
-export const BUSINESS_NEEDS_INDEX_PATH = "/solutions/business-needs";
+export const BUSINESS_NEEDS_INDEX_PATH = "/store";
 export const SOLUTION_REQUEST_PATH = "/solutions/request";
 
 export function familyToSlug(id: CuratedSolutionFamily["id"]): string {
@@ -82,5 +82,5 @@ export function requestPath(opts: {
 }
 
 export function familyPath(id: CuratedSolutionFamily["id"]): string {
-  return `${BUSINESS_NEEDS_INDEX_PATH}/${familyToSlug(id)}`;
+  return `${BUSINESS_NEEDS_INDEX_PATH}/solutions/${familyToSlug(id)}`;
 }

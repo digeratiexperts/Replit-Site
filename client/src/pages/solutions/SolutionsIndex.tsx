@@ -181,7 +181,7 @@ const SolutionsIndex = () => {
                 </p>
               </a>
               <a
-                href="/solutions/business-needs"
+                href="/store"
                 className="rounded-2xl border border-de-hairline bg-de-raised p-6 transition-colors hover:border-[#D3126A]"
               >
                 <p className="text-xs font-semibold uppercase tracking-wide text-de-accent-ink">Door 2</p>

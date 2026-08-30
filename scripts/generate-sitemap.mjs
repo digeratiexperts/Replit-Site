@@ -97,7 +97,7 @@ const STATIC = [
   ["/legal/privacy-policy", "yearly", "0.4"],
   ["/legal/terms-of-use", "yearly", "0.4"],
   ["/contact", "monthly", "0.7"],
-  ["/solutions/business-needs", "weekly", "0.8"],
+  ["/store", "weekly", "0.8"],
   ["/solutions/request", "monthly", "0.3"],
 ];
 
@@ -110,7 +110,7 @@ const familyIds = [
     ),
   ),
 ];
-const familyPaths = familyIds.map((id) => `/solutions/business-needs/${id.replaceAll("_", "-")}`);
+const familyPaths = familyIds.map((id) => `/store/solutions/${id.replaceAll("_", "-")}`);
 
 const registryPath = path.join(root, "client/src/data/resourceRegistry.v2.json");
 const registry = JSON.parse(fs.readFileSync(registryPath, "utf8"));

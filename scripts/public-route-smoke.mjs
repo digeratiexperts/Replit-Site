@@ -27,7 +27,7 @@ const routes = [
   "/trust",
   "/trust/trust-center",
   "/contact",
-  "/solutions/business-needs",
+  "/store",
   "/about/press",
 ];
 
@@ -72,12 +72,8 @@ for (const path of routes) {
 }
 
 {
-  const destaged = await fetch(`${BASE}/store`, { redirect: "manual" });
-  if (destaged.status !== 301) {
-    fails.push(`/store → expected 301 destage, got ${destaged.status}`);
-  } else if ((destaged.headers.get("location") || "") !== "/solutions/business-needs") {
-    fails.push(`/store → expected Location /solutions/business-needs, got ${destaged.headers.get("location")}`);
-  }
+  const publicStore = await fetch(`${BASE}/store`, { redirect: "manual" });
+  if (publicStore.status !== 200) fails.push(`/store → expected public Store 200, got ${publicStore.status}`);
 
   const warehouse = await fetch(`${BASE}/internal/warehouse`, { redirect: "manual" });
   const staffSku = await fetch(`${BASE}/store/product/DE-SVC-CM-ENDPOINT-EDR-MO`, {

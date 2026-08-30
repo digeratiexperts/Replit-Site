@@ -150,6 +150,7 @@ const ContactPage = lazy(() => import("@/pages/Contact"));
 const DigeratiHomepage = lazy(() => import("@/pages/DigeratiHomepage").then((m) => ({ default: m.DigeratiHomepage })));
 
 const WarehouseGate = lazy(() => import("@/pages/store/WarehouseGate"));
+const PublicStoreCheckout = lazy(() => import("@/pages/store/PublicStoreCheckout"));
 
 // Internal DE sales pages were removed from the public bundle for security.
 // They now live behind authentication in the Intelligence Hub (techsales).
@@ -232,6 +233,21 @@ function Router() {
         </Suspense>
       )} />
       <Route path="/solutions/business-needs" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <BusinessNeedsIndex />
+        </Suspense>
+      )} />
+      <Route path="/store/solutions/:family" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <BusinessNeedsFamily />
+        </Suspense>
+      )} />
+      <Route path="/store/checkout" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <PublicStoreCheckout />
+        </Suspense>
+      )} />
+      <Route path="/store" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <BusinessNeedsIndex />
         </Suspense>
@@ -897,7 +913,7 @@ function AppContent() {
   useStoreChromeGestures(location);
   const isPortal = location.startsWith("/portal");
   const isHome = location === "/";
-  const hideDoor2HelpDock = isDoor2Path(location) && location.split("?")[0] !== "/solutions/business-needs";
+  const hideDoor2HelpDock = isDoor2Path(location) && !["/store", "/solutions/business-needs"].includes(location.split("?")[0]);
   const hideWarehouseChrome = isWarehousePath(location);
   const accent = isPortal ? undefined : accentFor(location);
 

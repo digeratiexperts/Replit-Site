@@ -33,6 +33,7 @@ describe("warehouse HTTP gates", () => {
     const app = express();
     app.use(cookieParser());
     registerWarehouseGates(app);
+    app.get("/store", (_req, res) => res.status(200).send("PUBLIC_STORE"));
     app.get("/api/store/solutions/current", (_req, res) => res.json({ leaked: true }));
     app.get("/internal/warehouse", (_req, res) => res.status(200).send("WAREHOUSE_OK"));
     app.get("/internal/warehouse/product/:sku", (_req, res) => res.status(200).send("WAREHOUSE_PDP"));
@@ -56,10 +57,11 @@ describe("warehouse HTTP gates", () => {
     getUser.mockReset();
   });
 
-  it("301s public /store to Door 2 without a warehouse Location", async () => {
+  it("serves the curated public Store without exposing a warehouse Location", async () => {
     const response = await fetch(`${baseUrl}/store`, { redirect: "manual" });
-    expect(response.status).toBe(301);
-    expect(response.headers.get("location")).toBe("/solutions/business-needs");
+    expect(response.status).toBe(200);
+    expect(await response.text()).toBe("PUBLIC_STORE");
+    expect(response.headers.get("location")).toBeNull();
     expect(response.headers.get("location") || "").not.toContain("/internal");
   });
 
