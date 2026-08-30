@@ -5,10 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { getFamilyById, offerForDelivery } from "@/lib/businessNeeds";
 import { readSolutionCart, removeSolutionCartItem, SOLUTION_CART_EVENT, type PublicSolutionCartItem } from "@/lib/publicSolutionCart";
+import { useDockHiddenWhileOpen } from "@/hooks/useDockHiddenWhileOpen";
 
 export function PublicSolutionCart() {
   const [items, setItems] = useState<PublicSolutionCartItem[]>([]);
+  const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
+
+  useDockHiddenWhileOpen(open);
 
   useEffect(() => {
     const refresh = () => setItems(readSolutionCart());
@@ -41,7 +45,7 @@ export function PublicSolutionCart() {
   }, []);
 
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button
           ref={triggerRef}
@@ -75,7 +79,7 @@ export function PublicSolutionCart() {
         </div>
         {items.length ? (
           <Button asChild className="mt-6 h-12 w-full bg-[#D3126A] text-white hover:bg-[#b90f5d]">
-            <Link href="/store/checkout">Review and continue</Link>
+            <Link href="/store/checkout" onClick={() => setOpen(false)}>Review and continue</Link>
           </Button>
         ) : (
           <Button className="mt-6 h-12 w-full" disabled>Review and continue</Button>
