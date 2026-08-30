@@ -86,8 +86,6 @@ export default function BusinessNeedsFamily() {
     });
   };
 
-  const showingFallbackOffer = delivery !== "co_managed" && delivery !== "standalone";
-
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#0a0a0a]">
       <StorePageAtmosphere />
@@ -124,10 +122,10 @@ export default function BusinessNeedsFamily() {
                 type="button"
                 role="tab"
                 aria-selected={delivery === value}
-                className={`h-11 rounded-lg px-3 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] ${
+                className={`h-11 rounded-lg px-3 text-left text-sm font-semibold sm:text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] ${
                   delivery === value
                     ? "bg-[#D3126A] text-white"
-                    : "text-white/70 hover:bg-white/5"
+                    : "bg-white/5 text-white/70 hover:bg-white/10"
                 }`}
                 onClick={() => setDelivery(value)}
                 data-testid={`delivery-${value}`}
@@ -146,15 +144,13 @@ export default function BusinessNeedsFamily() {
                 ? "Shared delivery"
                 : delivery === "standalone"
                   ? "DE-managed delivery"
-                  : "We'll help you choose"}
+                  : "Select how DE should be involved"}
             </p>
             <h2 className="mb-3 text-2xl font-semibold text-white">
-              {showingFallbackOffer ? family.label : offer.name}
+              {delivery === "co_managed" || delivery === "standalone" ? offer.name : family.label}
             </h2>
             <p className="mb-8 text-white/75 leading-relaxed">
-              {showingFallbackOffer
-                ? "Tell us whether DE should manage this, work with your IT team, or help you decide. The outcomes below stay the same."
-                : offer.summary}
+              {delivery === "co_managed" || delivery === "standalone" ? offer.summary : family.description}
             </p>
 
             <div className="grid gap-8 md:grid-cols-2">

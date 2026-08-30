@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "wouter";
-import { ArrowLeft, CheckCircle2, ClipboardCheck, Layers, Trash2 } from "lucide-react";
+import { ArrowLeft, ClipboardCheck, Layers, Trash2 } from "lucide-react";
 import { MegaMenu } from "@/components/MegaMenu";
 import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhancedFooterSection";
 import { StorePageAtmosphere } from "@/components/store/StorePageAtmosphere";
@@ -55,7 +55,7 @@ function deliveryLabel(value: string): string {
   if (value === "co_managed") return "Work with your IT team";
   if (value === "standalone") return "Managed by DE";
   if (value === "unsure") return "Help me decide";
-  return "Choose how DE is involved";
+  return "";
 }
 
 export default function PublicStoreCheckout() {
@@ -120,8 +120,8 @@ export default function PublicStoreCheckout() {
                     type="button"
                     role="tab"
                     aria-selected={draft.deliveryPreference === value}
-                    className={`h-11 rounded-lg px-3 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] ${
-                      draft.deliveryPreference === value ? "bg-[#D3126A] text-white" : "text-white/70 hover:bg-white/5"
+                    className={`h-11 rounded-lg px-3 text-left text-sm font-semibold sm:text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] ${
+                      draft.deliveryPreference === value ? "bg-[#D3126A] text-white" : "bg-white/5 text-white/70 hover:bg-white/10"
                     }`}
                     onClick={() => setDraft(patchSolutionDraft({ deliveryPreference: value }))}
                   >
@@ -142,8 +142,10 @@ export default function PublicStoreCheckout() {
                       <article key={item.familyId} className="rounded-2xl border border-white/10 bg-[#121212] p-5 sm:p-6">
                         <div className="flex items-start justify-between gap-4">
                           <div>
-                            <p className="text-xs uppercase tracking-wide text-de-accent-ink">{deliveryLabel(delivery)}</p>
-                            <h2 className="mt-2 text-xl font-semibold text-white">{family.label}</h2>
+                            {deliveryLabel(delivery) ? (
+                              <p className="text-xs uppercase tracking-wide text-de-accent-ink">{deliveryLabel(delivery)}</p>
+                            ) : null}
+                            <h2 className={`text-xl font-semibold text-white ${deliveryLabel(delivery) ? "mt-2" : ""}`}>{family.label}</h2>
                             <p className="mt-2 text-sm leading-relaxed text-white/60">{offer?.summary ?? family.description}</p>
                           </div>
                           <button
@@ -194,7 +196,7 @@ export default function PublicStoreCheckout() {
                             key={value}
                             type="button"
                             className={`h-11 rounded-lg text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] ${
-                              draft.environment.deviceOwnership === value ? "bg-[#D3126A] text-white" : "text-white/70 hover:bg-white/5"
+                              draft.environment.deviceOwnership === value ? "bg-[#D3126A] text-white" : "bg-white/5 text-white/70 hover:bg-white/10"
                             }`}
                             onClick={() => setEnv("deviceOwnership", value)}
                           >
@@ -215,7 +217,7 @@ export default function PublicStoreCheckout() {
                             key={value}
                             type="button"
                             className={`h-11 rounded-lg text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] ${
-                              draft.environment.internalIt === value ? "bg-[#D3126A] text-white" : "text-white/70 hover:bg-white/5"
+                              draft.environment.internalIt === value ? "bg-[#D3126A] text-white" : "bg-white/5 text-white/70 hover:bg-white/10"
                             }`}
                             onClick={() => setEnv("internalIt", value)}
                           >
@@ -276,10 +278,6 @@ export default function PublicStoreCheckout() {
               >
                 Ask DE
               </Button>
-              <p className="mt-5 flex items-start gap-2 text-sm text-white/55">
-                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-de-accent-ink" />
-                No payment is required. We'll confirm fit, scope, and pricing before you commit.
-              </p>
               <Link href={BUSINESS_NEEDS_INDEX_PATH} className="mt-4 inline-flex min-h-11 items-center text-sm text-white/55 hover:text-white">
                 Add another business need
               </Link>
