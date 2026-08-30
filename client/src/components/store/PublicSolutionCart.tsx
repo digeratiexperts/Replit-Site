@@ -79,13 +79,13 @@ export function PublicSolutionCart() {
           {needs.length > 0 && <span className="ml-2 rounded-full bg-de-accent px-2 py-0.5 text-xs font-bold text-white">{needs.length}</span>}
         </Button>
       </SheetTrigger>
-      <SheetContent className="w-[min(92vw,28rem)] border-white/10 bg-[#0d0d0d] text-white sm:max-w-md">
+      <SheetContent className="de-store-jelly-sheet w-[min(92vw,28rem)] border-white/10 bg-[#0d0d0d] text-white sm:max-w-md">
         <SheetHeader>
           <SheetTitle className="text-2xl text-white">Your Solution</SheetTitle>
           <SheetDescription className="text-white/55">One profile, one set of business needs, one composed solution.</SheetDescription>
         </SheetHeader>
 
-        <div className="mt-6 rounded-xl border border-white/10 bg-[#151515] p-4">
+        <div data-de-jelly-surface className="mt-6 rounded-xl border border-white/10 bg-[#151515] p-4">
           <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-de-accent-ink">Profile</p>
           <p className="mt-2 text-sm leading-relaxed text-white/65">{profileSummary(draft.environment)}</p>
           <p className={`mt-2 text-xs ${profileReady ? "text-emerald-300" : "text-amber-200"}`}>
@@ -97,7 +97,7 @@ export function PublicSolutionCart() {
           {needs.length ? needs.map((item) => {
             const family = getFamilyById(item.familyId);
             if (!family) return null;
-            return <div key={item.familyId} className="rounded-xl border border-white/10 bg-[#151515] p-4">
+            return <div key={item.familyId} data-de-jelly-surface className="rounded-xl border border-white/10 bg-[#151515] p-4">
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <h3 className="font-semibold text-white">{family.label}</h3>
@@ -108,7 +108,7 @@ export function PublicSolutionCart() {
                 </button>
               </div>
             </div>;
-          }) : <div className="rounded-xl border border-dashed border-white/15 p-8 text-center"><Layers className="mx-auto h-7 w-7 text-white/30" /><p className="mt-3 text-white/60">No business needs selected yet.</p></div>}
+          }) : <div data-de-jelly-surface className="rounded-xl border border-dashed border-white/15 p-8 text-center"><Layers className="mx-auto h-7 w-7 text-white/30" /><p className="mt-3 text-white/60">No business needs selected yet.</p></div>}
         </div>
         {needs.length ? (
           <Button asChild className="mt-6 h-12 w-full bg-[#D3126A] text-white hover:bg-[#b90f5d]">
