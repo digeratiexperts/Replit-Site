@@ -29,4 +29,16 @@
 #     started: 2026-08-30
 
 version: 2
-claims: []
+claims:
+  - id: store-durable-save-progress
+    issue: 120
+    owner: claude
+    subsystem: store-solution-request-persistence
+    branch: claude/store-p0-durable-drafts-2026-08-30
+    base_sha: eaf8198b9d8b79ffc6e72ad4ca8f3709f84f1fa2
+    files:
+      - server/publicSolutionRequestStore.ts
+      - server/publicSolutionRequestPersistence.ts
+      - server/publicSolutionRoutes.ts
+    status: active
+    started: 2026-08-30
