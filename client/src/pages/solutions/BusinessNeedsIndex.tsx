@@ -1,7 +1,7 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "wouter";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, Briefcase, CheckCircle2, Eye, FileText, GraduationCap, HardDrive, Headphones, KeyRound, LockKeyhole, Mail, Network, Phone, RefreshCw, Search, Server, Shield, ShieldAlert, ShoppingCart } from "lucide-react";
+import { ArrowRight, Briefcase, FileText, GraduationCap, HardDrive, Headphones, KeyRound, Mail, Network, Phone, RefreshCw, Search, Server, Shield, ShieldAlert } from "lucide-react";
 import { MegaMenu } from "@/components/MegaMenu";
 import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhancedFooterSection";
 import { Button } from "@/components/ui/button";
@@ -10,9 +10,9 @@ import { StorePageAtmosphere } from "@/components/store/StorePageAtmosphere";
 import { PublicSolutionCart } from "@/components/store/PublicSolutionCart";
 import { useSEO } from "@/hooks/useSEO";
 import { curatedSolutionFamilies, type CuratedSolutionFamily } from "@/data/curatedSolutions";
-import { familyPath } from "@/lib/businessNeeds";
+import { BUSINESS_GOALS, familyPath, type BusinessGoalId } from "@/lib/businessNeeds";
 import { PORTAL_LOGIN } from "@/lib/portalUrls";
-import { addSolutionCartItem } from "@/lib/publicSolutionCart";
+import { emptyDraft, readSolutionDraft, SOLUTION_DRAFT_EVENT, toggleDraftNeed, type SolutionDraft } from "@/lib/solutionDraft";
 import { useToast } from "@/hooks/use-toast";
 
 const FAMILY_ICONS: Record<CuratedSolutionFamily["id"], typeof Shield> = {
@@ -50,7 +50,20 @@ const FAMILY_ACCENTS: Record<CuratedSolutionFamily["id"], string> = {
 export default function BusinessNeedsIndex() {
   const prefersReducedMotion = useReducedMotion();
   const [query, setQuery] = useState("");
+  const [goal, setGoal] = useState<BusinessGoalId | "all">("all");
+  const [draft, setDraft] = useState<SolutionDraft>(emptyDraft);
   const { toast } = useToast();
+
+  useEffect(() => {
+    const refresh = () => setDraft(readSolutionDraft());
+    refresh();
+    window.addEventListener(SOLUTION_DRAFT_EVENT, refresh);
+    window.addEventListener("storage", refresh);
+    return () => {
+      window.removeEventListener(SOLUTION_DRAFT_EVENT, refresh);
+      window.removeEventListener("storage", refresh);
+    };
+  }, []);
 
   useSEO({
     title: "IT Solutions Store | Digerati Experts",
@@ -60,14 +73,17 @@ export default function BusinessNeedsIndex() {
 
   const families = useMemo(() => {
     const needle = query.trim().toLowerCase();
-    if (!needle) return curatedSolutionFamilies;
-    return curatedSolutionFamilies.filter((family) =>
-      [family.label, family.description, ...family.offers.flatMap((offer) => [offer.name, offer.summary, ...offer.outcomes, ...offer.includes])]
+    const goalFamilyIds =
+      goal === "all" ? null : new Set(BUSINESS_GOALS.find((entry) => entry.id === goal)?.familyIds ?? []);
+    return curatedSolutionFamilies.filter((family) => {
+      if (goalFamilyIds && !goalFamilyIds.has(family.id)) return false;
+      if (!needle) return true;
+      return [family.label, family.description, ...family.offers.flatMap((offer) => [offer.name, offer.summary, ...offer.outcomes, ...offer.includes])]
         .join(" ")
         .toLowerCase()
-        .includes(needle),
-    );
-  }, [query]);
+        .includes(needle);
+    });
+  }, [query, goal]);
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#0a0a0a]">
@@ -76,89 +92,140 @@ export default function BusinessNeedsIndex() {
         <MegaMenu />
         <main className="de-nav-clear pb-24">
           <div className="mx-auto max-w-[var(--de-canvas)] px-4 sm:px-6 lg:px-8">
-            <header className="grid gap-8 pb-10 pt-2 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-end">
-              <motion.div initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
-                <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-de-accent/30 bg-de-accent/10 px-4 py-2">
-                  <Shield className="h-4 w-4 text-de-accent-ink" aria-hidden="true" />
-                  <span className="text-sm font-medium text-de-accent-ink">Digerati Experts Store</span>
-                </div>
-                <h1 className="max-w-4xl text-[clamp(2.5rem,6vw,4.75rem)] font-bold leading-[1.02] tracking-[-0.04em] text-white" data-testid="heading-business-needs">
+            <header className="max-w-3xl pb-16 pt-8 md:pb-20 md:pt-14">
+              <motion.div initial={prefersReducedMotion ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-de-accent-ink">Solution Builder</p>
+                <h1 className="mt-5 text-[clamp(2.25rem,5.4vw,4.25rem)] font-bold leading-[1.08] tracking-[-0.035em] text-white" data-testid="heading-business-needs">
                   Start with what your business needs to <span className="text-de-accent-ink">solve.</span>
                 </h1>
-                <p className="mt-6 max-w-3xl text-lg leading-relaxed text-white/70 md:text-xl">
+                <p className="mt-6 max-w-xl text-base leading-relaxed text-white/65 md:text-lg">
                   Browse complete DE solutions by outcome without an email address. We choose and manage the technology behind each solution, so you never have to compare a public wall of manufacturers and product codes.
                 </p>
+                <p className="mt-8 text-sm text-white/45">
+                  Client or DE staff?{" "}
+                  <a href={PORTAL_LOGIN} className="font-medium text-de-accent-ink underline-offset-4 hover:underline">
+                    Open Client Marketplace
+                  </a>
+                </p>
               </motion.div>
-              <aside className="rounded-2xl border border-white/10 bg-[#121212]/95 p-5">
-                <div className="flex gap-3">
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-de-accent/25 bg-de-accent/10">
-                    <LockKeyhole className="h-5 w-5 text-de-accent-ink" aria-hidden="true" />
-                  </span>
-                  <div>
-                    <h2 className="font-semibold text-white">Client or DE staff?</h2>
-                    <p className="mt-1 text-sm text-white/55">Sign in for approved purchasing, client pricing, and the private catalog.</p>
-                  </div>
-                </div>
-                <Button asChild variant="outline" className="mt-5 h-11 w-full border-de-accent/40 bg-transparent text-de-accent-ink hover:bg-de-accent/10">
-                  <a href={PORTAL_LOGIN}>Open Client Marketplace</a>
-                </Button>
-              </aside>
             </header>
 
-            <section className="mb-12 grid gap-4 rounded-2xl border border-white/10 bg-[#121212]/90 p-5 sm:grid-cols-3 sm:p-6" aria-label="How the Store works">
+            <ol className="mb-16 grid gap-8 border-y border-white/10 py-8 sm:grid-cols-3 sm:gap-10 sm:py-10" aria-label="How the Store works">
               {[
-                ["1", "Choose a business need", "Start with the outcome, not a manufacturer."],
-                ["2", "Build Your Solution", "Choose the delivery approach and approved options."],
-                ["3", "Review and continue", "Use the cart to request a quote, assessment, or eligible checkout."],
+                ["01", "Choose what to improve", "Start with the outcome, not a manufacturer."],
+                ["02", "Tell us how DE should help", "DE managed, with your IT team, or not sure yet."],
+                ["03", "Review Your Solution", "One summary, then one recommended next step."],
               ].map(([number, title, body]) => (
-                <div key={number} className="flex gap-3">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-de-accent/30 bg-de-accent/10 font-mono text-sm text-de-accent-ink">{number}</span>
-                  <div><h2 className="font-semibold text-white">{title}</h2><p className="mt-1 text-sm leading-relaxed text-white/50">{body}</p></div>
-                </div>
+                <li key={number}>
+                  <p className="font-mono text-[11px] tracking-[0.16em] text-de-accent-ink">{number}</p>
+                  <h2 className="mt-3 text-lg font-semibold text-white">{title}</h2>
+                  <p className="mt-2 max-w-xs text-sm leading-relaxed text-white/50">{body}</p>
+                </li>
               ))}
-            </section>
+            </ol>
 
             <section aria-labelledby="curated-solutions-heading">
-              <div className="mb-7 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-de-accent-ink">Curated solution lanes</p>
-                  <h2 id="curated-solutions-heading" className="mt-2 text-3xl font-bold text-white md:text-4xl">Everything DE offers, organized by use case</h2>
+              <div className="mb-6 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+                <div className="max-w-xl">
+                  <h2 id="curated-solutions-heading" className="text-2xl font-semibold tracking-tight text-white md:text-3xl">
+                    {goal === "all"
+                      ? "What needs attention?"
+                      : BUSINESS_GOALS.find((entry) => entry.id === goal)?.label}
+                  </h2>
+                  <p className="mt-2 text-sm leading-relaxed text-white/50">
+                    Pick a business goal, or browse all thirteen solutions.
+                  </p>
                 </div>
-                <label className="relative block w-full md:w-80">
+                <label className="relative block w-full lg:w-80">
                   <span className="sr-only">Search solutions</span>
-                  <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-white/40" aria-hidden="true" />
-                  <Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search business needs" className="h-12 border-white/15 bg-[#121212] pl-12 text-white placeholder:text-white/35" />
+                  <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" aria-hidden="true" />
+                  <Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search business needs" className="h-11 border-white/10 bg-transparent pl-11 text-white placeholder:text-white/35" />
                 </label>
+              </div>
+              <div className="mb-8 flex flex-wrap gap-2" role="group" aria-label="Start from a business goal">
+                <button
+                  type="button"
+                  className={`h-10 rounded-full px-4 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] ${
+                    goal === "all"
+                      ? "border border-de-accent bg-transparent text-white"
+                      : "border border-white/12 text-white/65 hover:border-white/25 hover:text-white"
+                  }`}
+                  aria-pressed={goal === "all"}
+                  onClick={() => setGoal("all")}
+                >
+                  Browse all solutions
+                </button>
+                {BUSINESS_GOALS.map((entry) => (
+                  <button
+                    key={entry.id}
+                    type="button"
+                    className={`h-10 rounded-full px-4 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] ${
+                      goal === entry.id
+                        ? "border border-de-accent bg-transparent text-white"
+                        : "border border-white/12 text-white/65 hover:border-white/25 hover:text-white"
+                    }`}
+                    aria-pressed={goal === entry.id}
+                    onClick={() => setGoal(entry.id)}
+                    data-testid={`business-goal-${entry.id}`}
+                  >
+                    {entry.label}
+                  </button>
+                ))}
               </div>
 
               {families.length ? (
-                <ul className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3" data-testid="business-needs-families">
+                <ul className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3" data-testid="business-needs-families">
                   {families.map((family) => {
                     const Icon = FAMILY_ICONS[family.id];
+                    const included = draft.needs.some((need) => need.familyId === family.id);
+                    const leadOutcome = family.offers[0]?.outcomes[0];
                     return (
                       <li key={family.id}>
-                        <article className="group flex h-full min-h-[19rem] flex-col overflow-hidden rounded-2xl border border-black/10 bg-[#FAF9F6] text-[#1A1228] transition-all duration-300 hover:-translate-y-1.5 hover:border-de-accent/50 hover:bg-white hover:shadow-[0_20px_50px_rgba(0,0,0,0.25)] sm:min-h-[20rem]" data-testid={`family-card-${family.id}`}>
-                          <Link href={familyPath(family.id)} className="relative flex min-h-[6.75rem] items-center overflow-hidden border-b border-black/10 bg-[#181520] p-4 sm:min-h-[7.5rem] sm:p-5">
-                            <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(29,111,242,0.30),transparent_52%)]" aria-hidden="true" />
-                            <div className="relative flex w-full items-center gap-3.5">
-                              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-de-accent/30 bg-de-accent/10 sm:h-12 sm:w-12">
-                                <Icon className={`h-5 w-5 sm:h-6 sm:w-6 ${FAMILY_ACCENTS[family.id]}`} aria-hidden="true" />
+                        <article
+                          className={`group flex h-full flex-col overflow-hidden rounded-2xl bg-[#F7F5F2] text-[#1A1228] transition-transform duration-300 hover:-translate-y-1 ${
+                            included ? "ring-1 ring-de-accent" : "ring-1 ring-black/10"
+                          }`}
+                          data-testid={`family-card-${family.id}`}
+                        >
+                          <Link href={familyPath(family.id)} className="relative overflow-hidden bg-[#0c0c10] px-5 pb-6 pt-5">
+                            <div className="absolute inset-0 bg-[radial-gradient(circle_at_88%_0%,rgba(29,111,242,0.28),transparent_58%)]" aria-hidden="true" />
+                            <div className="relative">
+                              <span className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-black/30">
+                                <Icon className={`h-5 w-5 ${FAMILY_ACCENTS[family.id]}`} aria-hidden="true" />
                               </span>
-                              <div className="min-w-0">
-                                <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-white/45">Business need</p>
-                                <h3 className="mt-1 text-base font-bold leading-tight text-white sm:text-lg">{family.label}</h3>
-                              </div>
-                              <ArrowRight className="ml-auto h-4 w-4 shrink-0 text-white/35 transition-transform group-hover:translate-x-1 group-hover:text-de-accent-ink" aria-hidden="true" />
+                              <h3 className="mt-5 text-xl font-semibold leading-snug tracking-tight text-white">{family.label}</h3>
                             </div>
                           </Link>
-                          <div className="flex flex-1 flex-col p-4 sm:p-5">
-                            <p className="text-sm font-medium leading-relaxed text-[#4A4556]">{family.description}</p>
-                            <ul className="mt-4 space-y-2.5">
-                              {(family.offers[0]?.outcomes ?? []).slice(0, 2).map((outcome) => <li key={outcome} className="flex gap-2 text-xs leading-relaxed text-[#4A4556]"><CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-de-accent" aria-hidden="true" />{outcome}</li>)}
-                            </ul>
-                            <div className="mt-auto grid grid-cols-2 gap-2 border-t border-black/10 pt-4">
-                              <Button asChild variant="outline" size="sm" className="h-10 min-w-0 border-black/15 bg-white px-2 text-xs font-semibold text-[#1A1228] hover:bg-black/5 sm:px-3"><Link href={familyPath(family.id)}><Eye className="mr-1 h-3.5 w-3.5" />Details</Link></Button>
-                              <Button size="sm" className="h-10 min-w-0 bg-de-accent px-2 text-xs font-bold text-white hover:bg-[#6548ff] sm:px-3" onClick={() => { addSolutionCartItem({ familyId: family.id, delivery: "standalone" }); toast({ title: "Added to Your Solution", description: `${family.label} is ready to configure.` }); }}><ShoppingCart className="mr-1 h-3.5 w-3.5" />Add</Button>
+                          <div className="flex flex-1 flex-col px-5 pb-5 pt-4">
+                            <p className="text-[15px] leading-relaxed text-[#4A4556]">{family.description}</p>
+                            {leadOutcome ? (
+                              <p className="mt-4 text-sm leading-relaxed text-[#1A1228]">
+                                <span className="text-de-accent">/</span> {leadOutcome}
+                              </p>
+                            ) : null}
+                            <div className="mt-auto flex items-center justify-between gap-3 pt-6">
+                              <Link
+                                href={familyPath(family.id)}
+                                className="inline-flex h-11 items-center text-sm font-semibold text-[#1A1228] underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]"
+                              >
+                                Explore
+                                <ArrowRight className="ml-1.5 h-3.5 w-3.5" aria-hidden="true" />
+                              </Link>
+                              <Button
+                                size="sm"
+                                className="h-11 min-w-[6.5rem] bg-de-accent px-4 text-sm font-semibold text-white hover:bg-de-accent/90"
+                                aria-pressed={included}
+                                onClick={() => {
+                                  const next = toggleDraftNeed(family.id);
+                                  const nowIncluded = next.needs.some((need) => need.familyId === family.id);
+                                  toast({
+                                    title: nowIncluded ? "Added to Your Solution" : "Removed from Your Solution",
+                                    description: nowIncluded ? `${family.label} is in Your Solution.` : `${family.label} was removed.`,
+                                  });
+                                }}
+                              >
+                                {included ? "Included" : "Include"}
+                              </Button>
                             </div>
                           </div>
                         </article>
@@ -167,7 +234,7 @@ export default function BusinessNeedsIndex() {
                   })}
                 </ul>
               ) : (
-                <div className="rounded-2xl border border-white/10 bg-[#121212] px-6 py-14 text-center" role="status">
+                <div className="rounded-2xl border border-white/10 px-6 py-14 text-center" role="status">
                   <Search className="mx-auto h-8 w-8 text-white/30" aria-hidden="true" /><h3 className="mt-4 text-xl font-semibold text-white">No matching solution</h3><Button variant="outline" className="mt-5 border-white/20 text-white" onClick={() => setQuery("")}>Clear search</Button>
                 </div>
               )}
