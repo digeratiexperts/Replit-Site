@@ -1,56 +1,136 @@
 # Store Solution Engine
 
-**Decision:** The DE Solution is the canonical commerce object. Zoho Payments remains the money path. Portal auth remains the identity path. Stripe, Typesense, Redis, and a second customer identity system are **not** introduced in this slice.
+**Decision:** DE has three intentionally separate commerce surfaces. They share terminology and handoff contracts, but they do not share one giant client-side cart.
 
-Public Door 2 is **not** this engine. Prospects use a Solution Draft / Solution Builder (`docs/PUBLIC-SOLUTION-BUILDER.md`) with no cart, no checkout, and no Pay Now. Real cart/checkout belongs to the authenticated Client Marketplace and the staff warehouse.
+```text
+Door 2 — Public Business Solution Builder
+Profile + need + offer + package + fulfillment + contact
+No public payment
 
-## Why this exists
+Door 3 — Authenticated Client Marketplace
+Approved client items + client pricing + real cart + checkout
 
-## Why this exists
+Door 4 — DE Digital Warehouse
+Internal commercial, sourcing, implementation, and mapping data
+```
 
-The storefront already had a client-side “Your Solution” cart (`localStorage`) plus Zoho checkout. That cart died across devices and was not recalculated server-side except at payment time.
+## 1. Public builder object
 
-This layer adds a durable Solution so:
+The public canonical object is `SolutionDraft` in `client/src/lib/solutionDraft.ts`.
 
-`Store → product → another page → login → return later → request quote`
+It owns:
 
-can keep the same configuration.
+- business profile
+- selected pains / needs
+- standalone / co-managed relationship
+- fulfillment preferences
+- request intent
 
-## What shipped (P0 / P1 slice)
+`client/src/lib/solutionPackage.ts` converts the approved public solution family into the package presentation shown to the prospect:
 
-- Shared pricing math in `shared/storeCommerce.ts` — catalog list prices only
-- In-memory Solution store + `/api/store/solutions/current` and `/claim`
-- Cart drawer: Due today / Monthly / Annual, undo remove, save for later, continue shopping, checkout via `/store/checkout` (billing required)
-- Anonymous session persist + merge on portal login
-- Coverage and “recommended because” copy (heuristic stack coverage, not a security audit)
-- Mobile sticky solution bar on `/store*`
+- customer-readable line items
+- quantity basis from the profile
+- standard vs preferred commercial position
+- assessment policy
+- shipping / provisioning behavior
+- installation modes
+- technician policy
+- remote support behavior
 
-## What shipped (persistence / pricing / quote slice)
+The public object deliberately does not become a payment cart.
 
-- Solutions write through to Postgres `store_carts` when `DATABASE_URL` is healthy. The `items` jsonb holds `{ version, items, savedForLater, name, status }`. Guest TTL 30 days, signed-in 90 days. Memory remains the fallback when the database is unset or the write fails (including userId FK misses).
-- Canonical Zoho checkout honors `store_client_pricing` (DB rows when present, otherwise the existing demo overlay). Browser `unitPrice` is still ignored. Overrides apply only when `0 < customPrice < catalog list`.
-- Quote requests canonicalize against the catalog (including contract-only SKUs), generate a preliminary PDF at `GET /api/store/quote-requests/:id/pdf`, and best-effort sync Contact / Account / Deal / Lead / Quotes to Zoho CRM. CRM failure never fails the HTTP create. PDF is regenerated from stored lines — no Puppeteer, no filesystem source of truth.
+## 2. Authenticated commerce object
 
-## Explicitly not in this slice
+The existing Store/Marketplace Solution engine remains the durable commerce object for standardized client purchasing.
 
-- Stripe Checkout / Billing / Tax
-- Typesense
-- Company RBAC, PO terms, admin catalog CMS
-- Shareable read-only solution links
-- Changing Zoho as the payment authority
+It owns:
 
-## Source of truth
+- approved purchasable items
+- quantities
+- save-for-later
+- client-facing prices
+- quote/payment eligibility
+- checkout
+- post-order state
 
-| Object | Owner |
-|--------|--------|
-| Solution (items, qty, saved-for-later) | DE API + `store_carts` (memory fallback) |
-| Catalog / list price | `client/src/data/storeProducts.ts` |
-| Client list price | `store_client_pricing` then demo overlay |
-| Money movement | Zoho Payments via `secureStoreCheckout.ts` |
-| Quote PDF | Regenerated from stored canonical lines |
-| Identity | Existing portal JWT |
+Money movement remains on the existing payment authority. Portal authentication remains the identity path.
 
-## Next slices (when DE asks)
+## 3. Internal warehouse object
 
-1. Shareable read-only solution links
-2. Provisioning state machine after paid Zoho orders
+The warehouse owns internal-only information needed to assemble, source, price, approve, and implement what the public and client surfaces describe.
+
+The warehouse is not imported into the public builder.
+
+## Cross-layer law
+
+### One concept, one owner
+
+| Concept | Owner |
+|---|---|
+| Public business profile | `SolutionDraft.environment` |
+| Public selected needs | `SolutionDraft.needs` |
+| Standalone / co-managed relationship | `SolutionDraft.deliveryPreference` |
+| Public package and fulfillment rules | `solutionPackage.ts` |
+| Public browser persistence | `de-solution-draft-v2` |
+| Public server-session save | `/api/public/solutions/request` `PUT` |
+| Public final submission | `/api/public/solutions/request` `POST` |
+| Authenticated purchasing | Client Marketplace commerce engine |
+| Money movement | Existing payment integration |
+| Internal commercial/implementation mapping | Digital Warehouse / authoritative back-office systems |
+
+### No duplicate qualification questionnaires
+
+Users, computers, mobile devices, sites, ownership model, and internal IT status are captured once in Step 0 and reused throughout the public builder.
+
+Additional questions should be conditional and package-specific. Do not rebuild a second generic environment questionnaire later in the funnel.
+
+### No public cart vocabulary
+
+The public surface uses:
+
+- Your Solution
+- Solution Draft
+- Package
+- Delivery & Setup
+- Submit Solution
+
+Real cart and checkout vocabulary belongs to the authenticated purchasing surface.
+
+### No universal assessment
+
+Assessment behavior is a package policy:
+
+- `required`
+- `recommended`
+- `not_required`
+
+A package that does not require an assessment must not be routed through one just because another legacy service flow used that pattern.
+
+### No false standalone semantics
+
+Standalone means the buyer is purchasing a packaged solution without joining DE's traditional managed-services operating model. It must never be labeled "DE managed."
+
+Co-managed means shared responsibilities and may qualify for preferred pricing when the commercial engine supports it. It is not a blanket percentage discount.
+
+## Persistence
+
+Public browser draft: `de-solution-draft-v2`.
+
+Public server-session draft:
+
+- 30-day browser-session cookie
+- `GET` creates/returns current draft record
+- `PUT` saves progress without contact information and without creating a lead
+- `POST` submits after company, name, email, and phone are supplied
+
+The current server request store is memory-backed. Durable database persistence remains a follow-on requirement before the public save feature should be marketed as cross-device or guaranteed long-term storage.
+
+## Follow-on engineering priorities
+
+1. Persist public solution drafts in the database instead of memory-only server storage.
+2. Add package-specific compatibility questions and dependencies without duplicating the Step 0 profile.
+3. Connect preferred co-managed pricing to the authoritative pricing engine rather than hardcoding discounts in UI.
+4. Add inventory/availability-backed shipment estimates for hardware-bearing packages.
+5. Add technician scheduling eligibility and calendar handoff after scope determines on-site work is needed.
+6. Add shareable authenticated/read-only solution links only after authorization rules are defined.
+7. Keep client marketplace checkout and public builder regression suites separate so one door cannot accidentally re-enable another door's behavior.
