@@ -31,21 +31,11 @@ function readSessionId(req: Request): string {
 function ensureSession(req: Request, res: Response): string {
   const existing = readSessionId(req);
   if (existing) {
-    res.cookie(SESSION_COOKIE, existing, {
-      httpOnly: true,
-      sameSite: "lax",
-      path: "/",
-      maxAge: 1000 * 60 * 60 * 24 * 30,
-    });
+    res.cookie(SESSION_COOKIE, existing, { httpOnly: true, sameSite: "lax", path: "/", maxAge: 1000 * 60 * 60 * 24 * 30 });
     return existing;
   }
   const sessionId = randomUUID();
-  res.cookie(SESSION_COOKIE, sessionId, {
-    httpOnly: true,
-    sameSite: "lax",
-    path: "/",
-    maxAge: 1000 * 60 * 60 * 24 * 30,
-  });
+  res.cookie(SESSION_COOKIE, sessionId, { httpOnly: true, sameSite: "lax", path: "/", maxAge: 1000 * 60 * 60 * 24 * 30 });
   return sessionId;
 }
 
@@ -93,8 +83,7 @@ export function registerPublicSolutionRoutes(app: Express): void {
     return res.json({ request: publicSolutionRequestView(record) });
   });
 
-  // Save progress without collecting contact information. This is the server-side
-  // companion to the browser autosave and intentionally does not submit a lead.
+  // Save progress without collecting contact information. This does not create a lead.
   app.put("/api/public/solutions/request", (req, res) => {
     const sessionId = ensureSession(req, res);
     const record = upsertPublicSolutionRequest(requestInput(req, sessionId));
@@ -103,16 +92,25 @@ export function registerPublicSolutionRoutes(app: Express): void {
 
   app.post("/api/public/solutions/request", async (req, res) => {
     const sessionId = ensureSession(req, res);
+    const organizationName = typeof req.body?.organizationName === "string" ? req.body.organizationName.trim() : "";
     const contactName = typeof req.body?.contactName === "string" ? req.body.contactName.trim() : "";
     const contactEmail = typeof req.body?.contactEmail === "string" ? req.body.contactEmail.trim() : "";
-    if (contactName.length < 2 || !EMAIL_RE.test(contactEmail)) {
-      return res.status(400).json({ error: "A name and email are required to submit this solution." });
+    const contactPhone = typeof req.body?.contactPhone === "string" ? req.body.contactPhone.trim() : "";
+    if (
+      organizationName.length < 2 ||
+      contactName.length < 2 ||
+      !EMAIL_RE.test(contactEmail) ||
+      contactPhone.replace(/\D/g, "").length < 7
+    ) {
+      return res.status(400).json({ error: "Company, name, email, and phone are required." });
     }
 
     const draft = upsertPublicSolutionRequest({
       ...requestInput(req, sessionId),
+      organizationName,
       contactName,
       contactEmail,
+      contactPhone,
     });
 
     if (!draft.familyId && draft.selectedNeeds.length === 0) {
@@ -123,12 +121,7 @@ export function registerPublicSolutionRoutes(app: Express): void {
     try {
       submitted = submitPublicSolutionRequest(
         draft,
-        {
-          name: contactName,
-          email: contactEmail,
-          phone: typeof req.body?.contactPhone === "string" ? req.body.contactPhone : "",
-          organizationName: typeof req.body?.organizationName === "string" ? req.body.organizationName : "",
-        },
+        { name: contactName, email: contactEmail, phone: contactPhone, organizationName },
         typeof req.body?.idempotencyKey === "string" ? req.body.idempotencyKey : undefined,
       );
     } catch (error: any) {
@@ -151,9 +144,7 @@ export function registerPublicSolutionRoutes(app: Express): void {
       });
       void syncPublicSolutionRequestToCrm(submitted.record)
         .then((crmStatus) => markPublicSolutionRequestCrm(submitted.record.id, crmStatus))
-        .catch((error: any) => {
-          console.warn("[solution-request] CRM follow-up pending:", error?.message || error);
-        });
+        .catch((error: any) => console.warn("[solution-request] CRM follow-up pending:", error?.message || error));
     }
 
     const latest = markPublicSolutionRequestCrm(submitted.record.id, "pending");
