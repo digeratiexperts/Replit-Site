@@ -11,9 +11,25 @@ function splitName(fullName: string): { first: string; last: string } {
 }
 
 function deliveryLabel(value: string): string {
-  if (value === "co_managed") return "Work with internal IT";
-  if (value === "standalone") return "DE managed";
-  if (value === "unsure") return "Help me decide";
+  if (value === "co_managed") return "Co-managed / shared responsibility";
+  if (value === "standalone") return "Standalone / customer-operated";
+  if (value === "unsure") return "Needs DE recommendation";
+  return value;
+}
+
+function installationLabel(value: string): string {
+  if (value === "self_install") return "Self-install";
+  if (value === "remote_assist") return "Remote DE setup";
+  if (value === "onsite") return "On-site technician";
+  if (value === "unsure") return "Needs DE recommendation";
+  return value;
+}
+
+function supportLabel(value: string): string {
+  if (value === "none") return "No remote support requested";
+  if (value === "as_needed") return "Remote support as needed";
+  if (value === "ongoing") return "Ongoing shared support";
+  if (value === "unsure") return "Needs DE recommendation";
   return value;
 }
 
@@ -21,40 +37,35 @@ export function buildPublicSolutionRequestDescription(record: PublicSolutionRequ
   const needs = record.selectedNeeds.length
     ? record.selectedNeeds
     : record.familyId
-      ? [
-          {
-            familyId: record.familyId,
-            offerId: record.offerId,
-            deliveryModel: record.deliveryModel,
-          },
-        ]
+      ? [{ familyId: record.familyId, offerId: record.offerId, deliveryModel: record.deliveryModel }]
       : [];
   const needLines = needs.flatMap((need) => {
     const family = curatedSolutionFamilies.find((entry) => entry.id === need.familyId);
-    const offer =
-      need.offerId && family ? family.offers.find((item) => item.id === need.offerId) : null;
+    const offer = need.offerId && family ? family.offers.find((item) => item.id === need.offerId) : null;
     return [
       family ? `- ${family.label} (${deliveryLabel(need.deliveryModel)})` : "",
-      offer ? `  Offer: ${offer.name}` : "",
+      offer ? `  Offer ID: ${offer.id}` : "",
     ];
   });
   const env = record.environment;
   return [
     `Solution Request ${record.correlationId}`,
     `Intent: ${record.intent}`,
-    record.deliveryPreference ? `Delivery preference: ${deliveryLabel(record.deliveryPreference)}` : "",
-    needs.length ? "Selected needs:" : "",
+    record.deliveryPreference ? `Offer relationship: ${deliveryLabel(record.deliveryPreference)}` : "",
+    needs.length ? "Selected pains / needs:" : "",
     ...needLines,
     env.userCount ? `Users: ${env.userCount}` : "",
+    env.workstationCount ? `Computers: ${env.workstationCount}` : "",
+    env.mobileDeviceCount ? `Mobile devices: ${env.mobileDeviceCount}` : "",
     env.siteCount ? `Sites: ${env.siteCount}` : "",
     env.deviceOwnership ? `Device ownership: ${env.deviceOwnership}` : "",
-    env.deviceMix ? `Device mix: ${env.deviceMix}` : "",
     env.internalIt ? `Internal IT: ${env.internalIt}` : "",
-    env.complianceNeeds ? `Compliance: ${env.complianceNeeds}` : "",
+    record.fulfillment.installation ? `Installation: ${installationLabel(record.fulfillment.installation)}` : "",
+    record.fulfillment.remoteSupport ? `Remote support: ${supportLabel(record.fulfillment.remoteSupport)}` : "",
+    env.complianceNeeds ? `Compliance context: ${env.complianceNeeds}` : "",
     env.currentProvider ? `Current provider: ${env.currentProvider}` : "",
     env.urgency ? `Urgency: ${env.urgency}` : "",
     record.organizationName ? `Organization: ${record.organizationName}` : "",
-    record.notes ? `Notes: ${record.notes.slice(0, 500)}` : "",
   ]
     .filter(Boolean)
     .join("\n")
