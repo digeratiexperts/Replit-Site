@@ -28,10 +28,10 @@ for (const viewport of viewports) {
   const profileFirst = await page.getByText("Step 0 · Profile", { exact: false }).count();
   const painStep = await page.getByText("Step 1 · Pain or need", { exact: false }).count();
 
-  await page.getByLabel("Users").fill("25");
-  await page.getByLabel("Computers").fill("32");
-  await page.getByLabel("Mobile devices").fill("18");
-  await page.getByLabel("Sites / locations").fill("2");
+  await page.locator("#profile-users").fill("25");
+  await page.locator("#profile-computers").fill("32");
+  await page.locator("#profile-mobile").fill("18");
+  await page.locator("#profile-sites").fill("2");
   await page.getByRole("button", { name: "Hybrid", exact: true }).click();
   await page.getByRole("button", { name: "No", exact: true }).click();
   const profileSaved = await page.getByText("Profile saved", { exact: true }).count();
