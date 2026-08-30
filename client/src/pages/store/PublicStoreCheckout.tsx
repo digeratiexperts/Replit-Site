@@ -34,7 +34,7 @@ import { useSEO } from "@/hooks/useSEO";
 const DELIVERY_OPTIONS: Array<[DeliveryPreference, string, string]> = [
   ["standalone", "Standalone", "Standard pricing. You or your existing IT provider own implementation and ongoing operation."],
   ["co_managed", "Co-Managed", "Preferred pricing where applicable. Your team and DE share defined responsibilities."],
-  ["unsure", "Help me choose", "Save the need now and let DE recommend the operating relationship."],
+  ["unsure", "Help me choose", "Save the need now and let DE recommend the operating relationship before final package submission."],
 ];
 
 const INSTALL_OPTIONS: Array<[InstallationPreference, string]> = [
@@ -112,7 +112,10 @@ export default function PublicStoreCheckout() {
 
   const intent = recommendedIntent(draft);
   const profileReady = isProfileComplete(draft.environment);
-  const offerReady = draft.needs.length > 0 && !!draft.deliveryPreference;
+  const offerReady =
+    draft.needs.length > 0 &&
+    (draft.deliveryPreference === "standalone" || draft.deliveryPreference === "co_managed") &&
+    packages.length === draft.needs.length;
   const fulfillmentReady = !!draft.fulfillment.installation && !!draft.fulfillment.remoteSupport;
   const readyForContact = profileReady && offerReady && fulfillmentReady;
 
@@ -237,6 +240,9 @@ export default function PublicStoreCheckout() {
                     </button>
                   ))}
                 </div>
+                {draft.deliveryPreference === "unsure" ? (
+                  <p className="mt-4 text-sm text-amber-200/80">Help me choose is saved, but a final package cannot be submitted until DE or the buyer selects Standalone or Co-Managed.</p>
+                ) : null}
               </section>
 
               <section className="rounded-2xl border border-white/10 bg-[#111111] p-5 sm:p-7" aria-labelledby="package-heading">
@@ -268,7 +274,7 @@ export default function PublicStoreCheckout() {
                     </article>
                   )) : (
                     <div className="rounded-xl border border-dashed border-white/15 px-5 py-9 text-center text-white/55">
-                      Choose an offer type above to generate package line items and fulfillment rules.
+                      Choose Standalone or Co-Managed above to generate package line items and fulfillment rules.
                     </div>
                   )}
                 </div>
@@ -338,17 +344,19 @@ export default function PublicStoreCheckout() {
               <div className="mt-5 space-y-3 text-sm">
                 <StatusLine ready={profileReady} label="Profile" detail={profileSummary(draft.environment)} />
                 <StatusLine ready={draft.needs.length > 0} label="Pain / need" detail={`${draft.needs.length} selected`} />
-                <StatusLine ready={!!draft.deliveryPreference} label="Offer" detail={draft.deliveryPreference || "Not selected"} />
-                <StatusLine ready={packages.length > 0} label="Package" detail={`${packages.length} package${packages.length === 1 ? "" : "s"}`} />
+                <StatusLine ready={offerReady} label="Offer" detail={draft.deliveryPreference === "unsure" ? "Needs DE recommendation" : draft.deliveryPreference || "Not selected"} />
+                <StatusLine ready={packages.length === draft.needs.length && packages.length > 0} label="Package" detail={`${packages.length} package${packages.length === 1 ? "" : "s"}`} />
                 <StatusLine ready={fulfillmentReady} label="Delivery" detail={fulfillmentReady ? "Selected" : "Choose setup + support"} />
               </div>
 
               <div className="mt-6 border-t border-white/10 pt-5">
                 <p className="text-xs uppercase tracking-wide text-white/40">Next</p>
                 <p className="mt-2 text-sm leading-relaxed text-white/60">
-                  {intent === "assessment"
-                    ? "This solution contains work that requires an assessment before final scope. Contact details come next; the assessment is routed after submission."
-                    : "Contact details come last. DE will confirm scope, fulfillment, and package pricing before commitment."}
+                  {draft.deliveryPreference === "unsure"
+                    ? "Ask DE to recommend Standalone or Co-Managed before final package submission."
+                    : intent === "assessment"
+                      ? "This solution contains work that requires an assessment before final scope. Contact details come next; the assessment is routed after submission."
+                      : "Contact details come last. DE will confirm scope, fulfillment, and package pricing before commitment."}
                 </p>
                 {readyForContact ? (
                   <Button asChild className="mt-5 h-11 w-full bg-[#D3126A] text-white hover:bg-[#b90f5d]">
