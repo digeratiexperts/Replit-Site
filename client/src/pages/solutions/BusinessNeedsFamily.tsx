@@ -94,21 +94,23 @@ export default function BusinessNeedsFamily() {
         <main className="de-nav-clear mx-auto max-w-5xl px-4 pb-40 sm:px-6 lg:px-8">
           <Link
             href={BUSINESS_NEEDS_INDEX_PATH}
-            className="mb-8 inline-flex h-11 items-center text-sm text-white/65 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-[#050312]"
+            className="mb-10 inline-flex h-11 items-center text-sm text-white/55 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-[#050312]"
           >
             <ArrowLeft className="mr-2 h-4 w-4" aria-hidden="true" />
             Back to the Store
           </Link>
 
-          <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-de-accent-ink">
-            Curated DE solution
-          </p>
-          <h1 className="mb-4 text-4xl font-bold text-white md:text-5xl" data-testid="heading-family">
-            {family.label}
-          </h1>
-          <p className="mb-8 max-w-3xl text-lg leading-relaxed text-white/75">{family.description}</p>
+          <header className="max-w-3xl pb-10">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-de-accent-ink">
+              Curated DE solution
+            </p>
+            <h1 className="mt-4 text-[clamp(2.25rem,5vw,3.75rem)] font-bold leading-[1.08] tracking-[-0.035em] text-white" data-testid="heading-family">
+              {family.label}
+            </h1>
+            <p className="mt-5 max-w-xl text-lg leading-relaxed text-white/65">{family.description}</p>
+          </header>
 
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-white/55">
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-white/45">
             What fits your organization?
           </h2>
           <div

@@ -94,15 +94,15 @@ export default function PublicStoreCheckout() {
       <div className="relative z-10">
         <MegaMenu />
         <main className="de-nav-clear mx-auto max-w-6xl px-4 pb-28 sm:px-6 lg:px-8">
-          <Link href="/store" className="mb-7 inline-flex min-h-11 items-center text-sm text-white/65 hover:text-white">
+          <Link href="/store" className="mb-10 inline-flex min-h-11 items-center text-sm text-white/55 hover:text-white">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Continue browsing
           </Link>
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_22rem]">
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem]">
             <section>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-de-accent-ink">Your Solution</p>
-              <h1 className="mt-2 text-4xl font-bold text-white md:text-5xl">Review Your Solution</h1>
-              <p className="mt-3 max-w-2xl text-lg text-white/65">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-de-accent-ink">Your Solution</p>
+              <h1 className="mt-4 text-[clamp(2.25rem,5vw,3.75rem)] font-bold leading-[1.08] tracking-[-0.035em] text-white">Review Your Solution</h1>
+              <p className="mt-5 max-w-xl text-lg leading-relaxed text-white/65">
                 These business needs will be scoped together. No payment is required. We'll confirm fit, scope, and pricing before you commit.
               </p>
 
