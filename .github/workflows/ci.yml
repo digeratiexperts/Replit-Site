@@ -35,6 +35,9 @@ jobs:
       - name: Install dependencies
         run: npm ci --no-audit --no-fund
 
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
       - name: Production dependency audit
         run: npm audit --omit=dev --audit-level=high
 
@@ -87,6 +90,7 @@ jobs:
           fi
 
           BASE_URL=http://127.0.0.1:3300 npm run smoke:public
+          DOOR2_BASE=http://127.0.0.1:3300 npm run smoke:door2
 
   # Production is a CyberPanel/OpenLiteSpeed VPS, not a Replit deployment.
   # This job is pinned to a repo-scoped production runner. Generic Linux
