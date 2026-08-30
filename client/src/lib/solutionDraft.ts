@@ -1,36 +1,57 @@
 import type { CuratedSolutionFamily } from "@/data/curatedSolutions";
-import { getFamilyById, offerForDelivery } from "@/lib/businessNeeds";
+import { getFamilyById } from "@/lib/businessNeeds";
+import {
+  buildSolutionPackage,
+  type InstallMode,
+} from "@/lib/solutionPackage";
 
 export type DeliveryPreference = "standalone" | "co_managed" | "unsure";
 export type DeviceOwnership = "company" | "byod" | "hybrid" | "";
 export type InternalItStatus = "yes" | "no" | "unsure" | "";
 export type SolutionRequestIntent = "request" | "quote" | "assessment" | "consultation";
+export type RemoteSupportPreference = "none" | "as_needed" | "ongoing" | "unsure" | "";
+export type InstallationPreference = InstallMode | "unsure" | "";
 
 export type SolutionDraftNeed = {
   familyId: CuratedSolutionFamily["id"];
   delivery?: DeliveryPreference;
 };
 
+/**
+ * Public business profile. These sizing facts are intentionally collected before
+ * the prospect chooses a solution so every downstream package can use one source
+ * of truth for quantities and fulfillment.
+ */
 export type SolutionEnvironment = {
   userCount: string;
+  workstationCount: string;
+  mobileDeviceCount: string;
   siteCount: string;
   deviceOwnership: DeviceOwnership;
-  deviceMix: string;
   internalIt: InternalItStatus;
+  /** Compatibility/context fields retained for older drafts and future conditional questions. */
+  deviceMix: string;
   complianceNeeds: string;
   currentProvider: string;
   urgency: string;
 };
 
+export type SolutionFulfillmentPreference = {
+  installation: InstallationPreference;
+  remoteSupport: RemoteSupportPreference;
+};
+
 export type SolutionDraft = {
-  version: 1;
+  version: 2;
   needs: SolutionDraftNeed[];
   deliveryPreference: DeliveryPreference | "";
   environment: SolutionEnvironment;
+  fulfillment: SolutionFulfillmentPreference;
   intent: SolutionRequestIntent;
 };
 
-const STORAGE_KEY = "de-solution-draft-v1";
+const STORAGE_KEY = "de-solution-draft-v2";
+const LEGACY_V1_KEY = "de-solution-draft-v1";
 const LEGACY_CART_KEY = "de-public-solution-cart-v1";
 export const SOLUTION_DRAFT_EVENT = "de-solution-draft-change";
 /** @deprecated Use SOLUTION_DRAFT_EVENT. Kept so existing listeners keep working. */
@@ -55,23 +76,33 @@ const FAMILY_IDS = new Set<string>([
 export function emptyEnvironment(): SolutionEnvironment {
   return {
     userCount: "",
+    workstationCount: "",
+    mobileDeviceCount: "",
     siteCount: "",
     deviceOwnership: "",
-    deviceMix: "",
     internalIt: "",
+    deviceMix: "",
     complianceNeeds: "",
     currentProvider: "",
     urgency: "",
   };
 }
 
+export function emptyFulfillment(): SolutionFulfillmentPreference {
+  return {
+    installation: "",
+    remoteSupport: "",
+  };
+}
+
 export function emptyDraft(): SolutionDraft {
   return {
-    version: 1,
+    version: 2,
     needs: [],
     deliveryPreference: "",
     environment: emptyEnvironment(),
-    intent: "assessment",
+    fulfillment: emptyFulfillment(),
+    intent: "request",
   };
 }
 
@@ -98,7 +129,19 @@ function asIntent(value: unknown): SolutionRequestIntent {
   if (value === "quote" || value === "assessment" || value === "consultation" || value === "request") {
     return value;
   }
-  return "assessment";
+  return "request";
+}
+
+function asInstallation(value: unknown): InstallationPreference {
+  if (value === "self_install" || value === "remote_assist" || value === "onsite" || value === "unsure") {
+    return value;
+  }
+  return "";
+}
+
+function asRemoteSupport(value: unknown): RemoteSupportPreference {
+  if (value === "none" || value === "as_needed" || value === "ongoing" || value === "unsure") return value;
+  return "";
 }
 
 function clip(value: unknown, max: number): string {
@@ -128,20 +171,30 @@ export function parseDraft(raw: unknown): SolutionDraft {
     input.environment && typeof input.environment === "object"
       ? (input.environment as Record<string, unknown>)
       : {};
+  const fulfillmentInput =
+    input.fulfillment && typeof input.fulfillment === "object"
+      ? (input.fulfillment as Record<string, unknown>)
+      : {};
   return {
-    version: 1,
+    version: 2,
     needs: uniqueNeeds,
     deliveryPreference: asDeliveryPreference(input.deliveryPreference) ?? "",
     intent: asIntent(input.intent),
     environment: {
       userCount: clip(environmentInput.userCount, 12),
+      workstationCount: clip(environmentInput.workstationCount, 12),
+      mobileDeviceCount: clip(environmentInput.mobileDeviceCount, 12),
       siteCount: clip(environmentInput.siteCount, 12),
       deviceOwnership: asDeviceOwnership(environmentInput.deviceOwnership),
-      deviceMix: clip(environmentInput.deviceMix, 200),
       internalIt: asInternalIt(environmentInput.internalIt),
+      deviceMix: clip(environmentInput.deviceMix, 200),
       complianceNeeds: clip(environmentInput.complianceNeeds, 400),
       currentProvider: clip(environmentInput.currentProvider, 200),
       urgency: clip(environmentInput.urgency, 200),
+    },
+    fulfillment: {
+      installation: asInstallation(fulfillmentInput.installation),
+      remoteSupport: asRemoteSupport(fulfillmentInput.remoteSupport),
     },
   };
 }
@@ -191,26 +244,60 @@ export function patchEnvironment(
   };
 }
 
+export function patchFulfillment(
+  draft: SolutionDraft,
+  patch: Partial<SolutionFulfillmentPreference>,
+): SolutionDraft {
+  return {
+    ...draft,
+    fulfillment: { ...draft.fulfillment, ...patch },
+  };
+}
+
+function countReady(value: string, allowZero = false): boolean {
+  if (!/^\d{1,6}$/.test(value.trim())) return false;
+  const count = Number(value);
+  return allowZero ? count >= 0 : count > 0;
+}
+
+export function isProfileComplete(environment: SolutionEnvironment): boolean {
+  return (
+    countReady(environment.userCount) &&
+    countReady(environment.workstationCount, true) &&
+    countReady(environment.mobileDeviceCount, true) &&
+    countReady(environment.siteCount) &&
+    !!environment.deviceOwnership &&
+    !!environment.internalIt
+  );
+}
+
+export function profileSummary(environment: SolutionEnvironment): string {
+  const parts = [
+    environment.userCount ? `${environment.userCount} users` : "users not set",
+    environment.workstationCount ? `${environment.workstationCount} computers` : "computers not set",
+    environment.mobileDeviceCount ? `${environment.mobileDeviceCount} mobile` : "mobile not set",
+    environment.siteCount ? `${environment.siteCount} sites` : "sites not set",
+  ];
+  return parts.join(" · ");
+}
+
 export function recommendedIntent(draft: SolutionDraft): SolutionRequestIntent {
-  const steps = draft.needs.flatMap((need) => {
+  const packages = draft.needs.flatMap((need) => {
     const family = getFamilyById(need.familyId);
     if (!family) return [];
     const delivery = resolvedNeedDelivery(need, draft.deliveryPreference);
-    if (delivery === "standalone" || delivery === "co_managed") {
-      return [offerForDelivery(family, delivery).nextStep];
-    }
-    return family.offers.map((offer) => offer.nextStep);
+    if (delivery !== "standalone" && delivery !== "co_managed") return [];
+    return [buildSolutionPackage(family, delivery, draft.environment)];
   });
-  if (steps.some((step) => /assess/i.test(step))) return "assessment";
-  if (steps.some((step) => /consult/i.test(step))) return "consultation";
-  if (steps.some((step) => /quote/i.test(step))) return "quote";
+  if (packages.some((entry) => entry.assessmentPolicy === "required")) return "assessment";
+  if (packages.length > 0) return "quote";
   return draft.intent || "request";
 }
 
 export function recommendedCtaLabel(intent: SolutionRequestIntent): string {
-  if (intent === "assessment") return "Start a Cyber Risk Assessment";
+  if (intent === "assessment") return "Start required assessment";
   if (intent === "consultation") return "Schedule a consultation";
-  if (intent === "quote") return "Request a quote";
+  if (intent === "quote") return "Continue to contact details";
   return "Submit this solution";
 }
 
@@ -228,7 +315,7 @@ export function toRequestNeeds(draft: SolutionDraft): PublicSolutionNeedPayload[
     const delivery = resolvedNeedDelivery(need, preference) || "unsure";
     const offer =
       delivery === "standalone" || delivery === "co_managed"
-        ? offerForDelivery(family, delivery)
+        ? family.offers.find((entry) => entry.deliveryModel === delivery) ?? null
         : null;
     return [
       {
@@ -255,11 +342,23 @@ function migrateLegacyCart(): SolutionDraftNeed[] {
   }
 }
 
+function readStoredDraft(): SolutionDraft | null {
+  if (typeof window === "undefined") return null;
+  const current = window.localStorage.getItem(STORAGE_KEY);
+  if (current) return parseDraft(JSON.parse(current));
+  const legacyV1 = window.localStorage.getItem(LEGACY_V1_KEY);
+  if (legacyV1) return parseDraft(JSON.parse(legacyV1));
+  return null;
+}
+
 export function readSolutionDraft(): SolutionDraft {
   if (typeof window === "undefined") return emptyDraft();
   try {
-    const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (stored) return parseDraft(JSON.parse(stored));
+    const stored = readStoredDraft();
+    if (stored) {
+      if (!window.localStorage.getItem(STORAGE_KEY)) writeSolutionDraft(stored);
+      return stored;
+    }
     const migrated = migrateLegacyCart();
     if (migrated.length === 0) return emptyDraft();
     const draft = { ...emptyDraft(), needs: migrated };
@@ -275,6 +374,7 @@ export function writeSolutionDraft(draft: SolutionDraft): SolutionDraft {
   const next = parseDraft(draft);
   if (typeof window !== "undefined") {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    window.localStorage.removeItem(LEGACY_V1_KEY);
     window.dispatchEvent(new CustomEvent(SOLUTION_DRAFT_EVENT));
   }
   return next;
