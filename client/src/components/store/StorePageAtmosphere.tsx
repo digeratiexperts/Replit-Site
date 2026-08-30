@@ -1,10 +1,13 @@
 import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import atmosphere from "@assets/de-section-atmosphere-electric.svg";
+import "../../styles/store-jelly.css";
 
 /**
  * Store field depth — electric lighting only (store accent lock).
  * Parallax is a few percent of travel and stops for reduced motion.
+ * Store-only motion CSS is imported here so Vite can keep it out of the
+ * global entry stylesheet and load it with Store/Solution Builder chunks.
  */
 export function StorePageAtmosphere() {
   const ref = useRef<HTMLDivElement>(null);
