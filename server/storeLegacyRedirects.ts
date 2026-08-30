@@ -43,7 +43,7 @@ export function classifyLegacyStorePath(pathname: string): LegacyStoreClassifica
     if (dest) return { kind: "public_redirect", to: dest };
     return { kind: "generic_deny" };
   }
-  if (path === "/store" || path === "/store/checkout" || path.startsWith("/store/solutions/")) {
+  if (path === "/store" || path === "/store/checkout" || path === "/store/solution" || path.startsWith("/store/solutions/")) {
     return { kind: "public_store" };
   }
   if (path.startsWith("/store/")) {

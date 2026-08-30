@@ -1,13 +1,26 @@
 import { randomUUID } from "crypto";
-import {
-  curatedSolutionFamilies,
-  type CuratedDeliveryModel,
-  type CuratedSolutionFamily,
-} from "../client/src/data/curatedSolutions";
-import { SOLUTION_SIZING_FIELDS } from "../client/src/data/solutionSizingFields";
+import { curatedSolutionFamilies, type CuratedDeliveryModel } from "../client/src/data/curatedSolutions";
 
 export type SolutionRequestIntent = "request" | "quote" | "assessment" | "consultation";
 export type SolutionRequestStatus = "draft" | "submitted";
+export type DeliveryPreference = CuratedDeliveryModel | "unsure";
+
+export type PublicSolutionNeed = {
+  familyId: string;
+  offerId: string | null;
+  deliveryModel: DeliveryPreference;
+};
+
+export type PublicSolutionEnvironment = {
+  userCount: string;
+  siteCount: string;
+  deviceOwnership: string;
+  deviceMix: string;
+  internalIt: string;
+  complianceNeeds: string;
+  currentProvider: string;
+  urgency: string;
+};
 
 export type PublicSolutionRequest = {
   id: string;
@@ -15,15 +28,16 @@ export type PublicSolutionRequest = {
   correlationId: string;
   familyId: string | null;
   offerId: string | null;
-  deliveryModel: CuratedDeliveryModel;
+  deliveryModel: DeliveryPreference;
+  deliveryPreference: DeliveryPreference | "";
+  selectedNeeds: PublicSolutionNeed[];
+  environment: PublicSolutionEnvironment;
   intent: SolutionRequestIntent;
   organizationName: string;
   contactName: string;
   contactEmail: string;
   contactPhone: string;
   notes: string;
-  /** Scope-sizing answers keyed by field key — see solutionSizingFields.ts. No pricing, ever. */
-  sizingAnswers: Record<string, string>;
   status: SolutionRequestStatus;
   crmStatus: "not_requested" | "pending" | "recorded";
   createdAt: string;
@@ -38,9 +52,26 @@ export function publicFamilyExists(familyId: string): boolean {
   return curatedSolutionFamilies.some((family) => family.id === familyId);
 }
 
-export function publicOfferInFamily(familyId: string, offerId: string, delivery: CuratedDeliveryModel): boolean {
+export function publicOfferInFamily(
+  familyId: string,
+  offerId: string,
+  delivery: CuratedDeliveryModel,
+): boolean {
   const family = curatedSolutionFamilies.find((entry) => entry.id === familyId);
   return !!family?.offers.some((offer) => offer.id === offerId && offer.deliveryModel === delivery);
+}
+
+function emptyEnvironment(): PublicSolutionEnvironment {
+  return {
+    userCount: "",
+    siteCount: "",
+    deviceOwnership: "",
+    deviceMix: "",
+    internalIt: "",
+    complianceNeeds: "",
+    currentProvider: "",
+    urgency: "",
+  };
 }
 
 function expireDrafts() {
@@ -60,21 +91,23 @@ export function createPublicSolutionRequest(sessionId: string): PublicSolutionRe
     correlationId: randomUUID(),
     familyId: null,
     offerId: null,
-    deliveryModel: "standalone",
+    deliveryModel: "unsure",
+    deliveryPreference: "",
+    selectedNeeds: [],
+    environment: emptyEnvironment(),
     intent: "request",
     organizationName: "",
     contactName: "",
     contactEmail: "",
     contactPhone: "",
     notes: "",
-    sizingAnswers: {},
     status: "draft",
     crmStatus: "not_requested",
     createdAt: now,
     updatedAt: now,
   };
   records.set(record.id, record);
-  return { ...record };
+  return { ...record, selectedNeeds: [...record.selectedNeeds], environment: { ...record.environment } };
 }
 
 export function findPublicSolutionRequest(sessionId: string): PublicSolutionRequest | undefined {
@@ -82,12 +115,20 @@ export function findPublicSolutionRequest(sessionId: string): PublicSolutionRequ
   const matches = [...records.values()]
     .filter((record) => record.sessionId === sessionId)
     .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
-  return matches[0] ? { ...matches[0] } : undefined;
+  return matches[0] ? cloneRequest(matches[0]) : undefined;
 }
 
 export function getPublicSolutionRequest(id: string): PublicSolutionRequest | undefined {
   const record = records.get(id);
-  return record ? { ...record } : undefined;
+  return record ? cloneRequest(record) : undefined;
+}
+
+function cloneRequest(record: PublicSolutionRequest): PublicSolutionRequest {
+  return {
+    ...record,
+    selectedNeeds: record.selectedNeeds.map((need) => ({ ...need })),
+    environment: { ...record.environment },
+  };
 }
 
 function asIntent(value: unknown): SolutionRequestIntent {
@@ -97,27 +138,77 @@ function asIntent(value: unknown): SolutionRequestIntent {
   return "request";
 }
 
-function asDelivery(value: unknown): CuratedDeliveryModel {
-  return value === "co_managed" ? "co_managed" : "standalone";
+function asDelivery(value: unknown): DeliveryPreference | "" {
+  if (value === "co_managed" || value === "standalone" || value === "unsure") return value;
+  return "";
 }
 
 function clip(value: unknown, max: number): string {
   return typeof value === "string" ? value.trim().slice(0, max) : "";
 }
 
-/** Keep only known field keys for this family, each clipped to a short value. Drops anything else. */
-function sanitizeSizingAnswers(familyId: string | null, value: unknown): Record<string, string> {
-  if (!familyId || typeof value !== "object" || value === null) return {};
-  const allowedKeys = new Set(
-    (SOLUTION_SIZING_FIELDS[familyId as CuratedSolutionFamily["id"]] ?? []).map((field) => field.key),
-  );
-  const answers: Record<string, string> = {};
-  for (const [key, raw] of Object.entries(value as Record<string, unknown>)) {
-    if (!allowedKeys.has(key)) continue;
-    const text = clip(raw, 60);
-    if (text) answers[key] = text;
+function parseEnvironment(value: unknown, fallback: PublicSolutionEnvironment): PublicSolutionEnvironment {
+  const input = value && typeof value === "object" ? (value as Record<string, unknown>) : {};
+  return {
+    userCount: clip(input.userCount ?? fallback.userCount, 12),
+    siteCount: clip(input.siteCount ?? fallback.siteCount, 12),
+    deviceOwnership: clip(input.deviceOwnership ?? fallback.deviceOwnership, 24),
+    deviceMix: clip(input.deviceMix ?? fallback.deviceMix, 200),
+    internalIt: clip(input.internalIt ?? fallback.internalIt, 24),
+    complianceNeeds: clip(input.complianceNeeds ?? fallback.complianceNeeds, 400),
+    currentProvider: clip(input.currentProvider ?? fallback.currentProvider, 200),
+    urgency: clip(input.urgency ?? fallback.urgency, 200),
+  };
+}
+
+function parseNeed(value: unknown): PublicSolutionNeed | null {
+  if (!value || typeof value !== "object") return null;
+  const input = value as Record<string, unknown>;
+  const familyId = clip(input.familyId, 80);
+  if (!publicFamilyExists(familyId)) return null;
+  const delivery = asDelivery(input.deliveryModel) || "unsure";
+  const offerId = clip(input.offerId, 80);
+  const offerOk =
+    offerId && (delivery === "standalone" || delivery === "co_managed")
+      ? publicOfferInFamily(familyId, offerId, delivery)
+      : false;
+  return {
+    familyId,
+    offerId: offerOk ? offerId : null,
+    deliveryModel: delivery || "unsure",
+  };
+}
+
+function parseSelectedNeeds(value: unknown, fallback: PublicSolutionNeed[]): PublicSolutionNeed[] {
+  if (!Array.isArray(value)) return fallback.map((need) => ({ ...need }));
+  const seen = new Set<string>();
+  const needs: PublicSolutionNeed[] = [];
+  for (const entry of value.slice(0, 13)) {
+    const need = parseNeed(entry);
+    if (!need || seen.has(need.familyId)) continue;
+    seen.add(need.familyId);
+    needs.push(need);
   }
-  return answers;
+  return needs;
+}
+
+function synthesizeNeed(
+  familyId: string | null,
+  offerId: string | null,
+  deliveryModel: DeliveryPreference,
+): PublicSolutionNeed[] {
+  if (!familyId || !publicFamilyExists(familyId)) return [];
+  const offerOk =
+    offerId && (deliveryModel === "standalone" || deliveryModel === "co_managed")
+      ? publicOfferInFamily(familyId, offerId, deliveryModel)
+      : false;
+  return [
+    {
+      familyId,
+      offerId: offerOk ? offerId : null,
+      deliveryModel,
+    },
+  ];
 }
 
 export function upsertPublicSolutionRequest(input: {
@@ -126,44 +217,59 @@ export function upsertPublicSolutionRequest(input: {
   familyId?: string | null;
   offerId?: string | null;
   deliveryModel?: unknown;
+  deliveryPreference?: unknown;
+  selectedNeeds?: unknown;
+  environment?: unknown;
   intent?: unknown;
   organizationName?: unknown;
   contactName?: unknown;
   contactEmail?: unknown;
   contactPhone?: unknown;
   notes?: unknown;
-  sizingAnswers?: unknown;
 }): PublicSolutionRequest {
   expireDrafts();
   const existing =
     (input.id ? records.get(input.id) : undefined) ??
     [...records.values()].find((record) => record.sessionId === input.sessionId && record.status === "draft");
   const base = existing ?? createPublicSolutionRequest(input.sessionId);
-  const familyId = clip(input.familyId, 80) || base.familyId;
-  const deliveryModel = asDelivery(input.deliveryModel ?? base.deliveryModel);
-  const offerId = clip(input.offerId, 80) || base.offerId;
-  const resolvedFamilyId = familyId && publicFamilyExists(familyId) ? familyId : null;
+  const deliveryPreference =
+    asDelivery(input.deliveryPreference) || asDelivery(input.deliveryModel) || base.deliveryPreference;
+  const selectedNeeds = parseSelectedNeeds(input.selectedNeeds, base.selectedNeeds);
+  const familyId = clip(input.familyId, 80) || selectedNeeds[0]?.familyId || base.familyId;
+  const deliveryModel =
+    asDelivery(input.deliveryModel) ||
+    selectedNeeds[0]?.deliveryModel ||
+    deliveryPreference ||
+    base.deliveryModel ||
+    "unsure";
+  const offerId = clip(input.offerId, 80) || selectedNeeds[0]?.offerId || base.offerId;
+  const nextNeeds =
+    selectedNeeds.length > 0
+      ? selectedNeeds
+      : synthesizeNeed(
+          familyId && publicFamilyExists(familyId) ? familyId : null,
+          offerId,
+          deliveryModel || "unsure",
+        );
   const next: PublicSolutionRequest = {
     ...base,
     sessionId: input.sessionId,
-    familyId: resolvedFamilyId,
-    offerId:
-      familyId && offerId && publicOfferInFamily(familyId, offerId, deliveryModel) ? offerId : null,
-    deliveryModel,
+    familyId: nextNeeds[0]?.familyId ?? null,
+    offerId: nextNeeds[0]?.offerId ?? null,
+    deliveryModel: nextNeeds[0]?.deliveryModel || deliveryModel || "unsure",
+    deliveryPreference,
+    selectedNeeds: nextNeeds,
+    environment: parseEnvironment(input.environment, base.environment),
     intent: asIntent(input.intent ?? base.intent),
     organizationName: clip(input.organizationName ?? base.organizationName, 200),
     contactName: clip(input.contactName ?? base.contactName, 120),
     contactEmail: clip(input.contactEmail ?? base.contactEmail, 200).toLowerCase(),
-    sizingAnswers:
-      input.sizingAnswers !== undefined
-        ? sanitizeSizingAnswers(resolvedFamilyId, input.sizingAnswers)
-        : base.sizingAnswers,
     contactPhone: clip(input.contactPhone ?? base.contactPhone, 40),
     notes: clip(input.notes ?? base.notes, 2000),
     updatedAt: new Date().toISOString(),
   };
   records.set(next.id, next);
-  return { ...next };
+  return cloneRequest(next);
 }
 
 export function submitPublicSolutionRequest(
@@ -171,13 +277,17 @@ export function submitPublicSolutionRequest(
   contact: { name: string; email: string; phone?: string; organizationName?: string },
   idempotencyKey?: string,
 ): { record: PublicSolutionRequest; replayed: boolean } {
+  const composedKey = record.selectedNeeds
+    .map((need) => need.familyId)
+    .sort()
+    .join(",");
   const key =
-    idempotencyKey?.trim().slice(0, 120) ||
-    `${contact.email.trim().toLowerCase()}|${record.familyId || ""}|${record.offerId || ""}|${record.deliveryModel}|${record.intent}`;
+    idempotencyKey?.trim().slice(0, 200) ||
+    `${contact.email.trim().toLowerCase()}|${composedKey || record.familyId || ""}|${record.deliveryPreference || record.deliveryModel}|${record.intent}`;
   const existingId = idempotency.get(key);
   if (existingId) {
     const prior = records.get(existingId);
-    if (prior) return { record: { ...prior }, replayed: true };
+    if (prior) return { record: cloneRequest(prior), replayed: true };
   }
 
   const submitted: PublicSolutionRequest = {
@@ -192,7 +302,7 @@ export function submitPublicSolutionRequest(
   };
   records.set(submitted.id, submitted);
   idempotency.set(key, submitted.id);
-  return { record: { ...submitted }, replayed: false };
+  return { record: cloneRequest(submitted), replayed: false };
 }
 
 export function markPublicSolutionRequestCrm(
@@ -203,7 +313,7 @@ export function markPublicSolutionRequestCrm(
   if (!record) return undefined;
   const next = { ...record, crmStatus, updatedAt: new Date().toISOString() };
   records.set(id, next);
-  return { ...next };
+  return cloneRequest(next);
 }
 
 export function publicSolutionRequestView(record: PublicSolutionRequest) {
@@ -213,13 +323,15 @@ export function publicSolutionRequestView(record: PublicSolutionRequest) {
     familyId: record.familyId,
     offerId: record.offerId,
     deliveryModel: record.deliveryModel,
+    deliveryPreference: record.deliveryPreference,
+    selectedNeeds: record.selectedNeeds,
+    environment: record.environment,
     intent: record.intent,
     organizationName: record.organizationName,
     contactName: record.contactName,
     contactEmail: record.contactEmail,
     contactPhone: record.contactPhone,
     notes: record.notes,
-    sizingAnswers: record.sizingAnswers,
     status: record.status,
     crmStatus: record.crmStatus,
     updatedAt: record.updatedAt,

@@ -28,17 +28,49 @@ function splitName(fullName: string): { first: string; last: string } {
   return { first: parts[0], last: parts.slice(1).join(" ") };
 }
 
+function deliveryLabel(value: string): string {
+  if (value === "co_managed") return "Work with internal IT";
+  if (value === "standalone") return "DE managed";
+  if (value === "unsure") return "Help me decide";
+  return value;
+}
+
 export function buildPublicSolutionRequestDescription(record: PublicSolutionRequest): string {
-  const family = record.familyId
-    ? curatedSolutionFamilies.find((entry) => entry.id === record.familyId)
-    : null;
-  const offer = family?.offers.find((item) => item.id === record.offerId);
+  const needs = record.selectedNeeds.length
+    ? record.selectedNeeds
+    : record.familyId
+      ? [
+          {
+            familyId: record.familyId,
+            offerId: record.offerId,
+            deliveryModel: record.deliveryModel,
+          },
+        ]
+      : [];
+  const needLines = needs.flatMap((need) => {
+    const family = curatedSolutionFamilies.find((entry) => entry.id === need.familyId);
+    const offer =
+      need.offerId && family ? family.offers.find((item) => item.id === need.offerId) : null;
+    return [
+      family ? `- ${family.label} (${deliveryLabel(need.deliveryModel)})` : "",
+      offer ? `  Offer: ${offer.name}` : "",
+    ];
+  });
+  const env = record.environment;
   return [
     `Solution Request ${record.correlationId}`,
     `Intent: ${record.intent}`,
-    family ? `Family: ${family.label}` : "",
-    offer ? `Offer: ${offer.name}` : "",
-    `Delivery: ${record.deliveryModel === "co_managed" ? "Co-managed" : "Standalone"}`,
+    record.deliveryPreference ? `Delivery preference: ${deliveryLabel(record.deliveryPreference)}` : "",
+    needs.length ? "Selected needs:" : "",
+    ...needLines,
+    env.userCount ? `Users: ${env.userCount}` : "",
+    env.siteCount ? `Sites: ${env.siteCount}` : "",
+    env.deviceOwnership ? `Device ownership: ${env.deviceOwnership}` : "",
+    env.deviceMix ? `Device mix: ${env.deviceMix}` : "",
+    env.internalIt ? `Internal IT: ${env.internalIt}` : "",
+    env.complianceNeeds ? `Compliance: ${env.complianceNeeds}` : "",
+    env.currentProvider ? `Current provider: ${env.currentProvider}` : "",
+    env.urgency ? `Urgency: ${env.urgency}` : "",
     record.organizationName ? `Organization: ${record.organizationName}` : "",
     describeSizing(record.familyId, record.sizingAnswers) ? `Sizing: ${describeSizing(record.familyId, record.sizingAnswers)}` : "",
     record.notes ? `Notes: ${record.notes.slice(0, 500)}` : "",

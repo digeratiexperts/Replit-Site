@@ -73,6 +73,39 @@ describe("public solution Door 2 API", () => {
     expect(JSON.stringify(body).toLowerCase()).not.toContain("sku");
   });
 
+  it("lets a guest submit several families as one Solution Request", async () => {
+    const response = await fetch(`${baseUrl}/api/public/solutions/request`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        selectedNeeds: [
+          { familyId: "identity_access", deliveryModel: "unsure" },
+          { familyId: "backup_continuity", deliveryModel: "unsure" },
+          { familyId: "email_collaboration", deliveryModel: "co_managed" },
+        ],
+        deliveryPreference: "unsure",
+        intent: "assessment",
+        contactName: "Jordan Buyer",
+        contactEmail: "jordan@example.com",
+        organizationName: "Example Medical",
+        environment: { userCount: "42", deviceOwnership: "hybrid", internalIt: "yes" },
+      }),
+    });
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body.request.status).toBe("submitted");
+    expect(body.request.selectedNeeds).toHaveLength(3);
+    expect(body.request.selectedNeeds.map((need: { familyId: string }) => need.familyId)).toEqual([
+      "identity_access",
+      "backup_continuity",
+      "email_collaboration",
+    ]);
+    expect(body.request.environment.userCount).toBe("42");
+    expect(body.request.environment.deviceOwnership).toBe("hybrid");
+    expect(body.message).toContain("saved");
+    expect(JSON.stringify(body).toLowerCase()).not.toContain("sku");
+  });
+
   it("lets a guest submit a Solution Request without portal login", async () => {
     const response = await fetch(`${baseUrl}/api/public/solutions/request`, {
       method: "POST",

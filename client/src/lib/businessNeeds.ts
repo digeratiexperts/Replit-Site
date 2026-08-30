@@ -8,7 +8,42 @@ import {
 export type { CuratedDeliveryModel, CuratedSolutionFamily, CuratedSolutionOffer };
 
 export const BUSINESS_NEEDS_INDEX_PATH = "/store";
+export const SOLUTION_WORKSPACE_PATH = "/store/solution";
 export const SOLUTION_REQUEST_PATH = "/solutions/request";
+
+export const BUSINESS_GOALS = [
+  {
+    id: "productive",
+    label: "Keep my team productive",
+    familyIds: ["it_operations", "endpoint_devices"],
+  },
+  {
+    id: "protect",
+    label: "Protect the business",
+    familyIds: ["identity_access", "email_collaboration", "cybersecurity_operations", "backup_continuity"],
+  },
+  {
+    id: "requirements",
+    label: "Meet requirements",
+    familyIds: ["compliance_risk", "documentation_standards", "security_awareness"],
+  },
+  {
+    id: "connect",
+    label: "Connect my people & locations",
+    familyIds: ["network_connectivity", "business_communications"],
+  },
+  {
+    id: "modernize",
+    label: "Equip & modernize",
+    familyIds: ["hardware_lifecycle", "technology_strategy"],
+  },
+] as const satisfies ReadonlyArray<{
+  id: string;
+  label: string;
+  familyIds: CuratedSolutionFamily["id"][];
+}>;
+
+export type BusinessGoalId = (typeof BUSINESS_GOALS)[number]["id"];
 
 export function familyToSlug(id: CuratedSolutionFamily["id"]): string {
   return id.replaceAll("_", "-");
@@ -41,6 +76,13 @@ export function parseDeliveryModel(value: string | null | undefined): CuratedDel
   return value === "co_managed" ? "co_managed" : "standalone";
 }
 
+export function parseDeliveryPreference(
+  value: string | null | undefined,
+): "standalone" | "co_managed" | "unsure" | "" {
+  if (value === "standalone" || value === "co_managed" || value === "unsure") return value;
+  return "";
+}
+
 /** Public wire contract — #101 fields only. */
 export function toPublicFamily(family: CuratedSolutionFamily) {
   return {
@@ -69,16 +111,17 @@ export function publicSolutionFamilies() {
   return curatedSolutionFamilies.map(toPublicFamily);
 }
 
-export function requestPath(opts: {
-  family: CuratedSolutionFamily["id"] | string;
-  delivery?: CuratedDeliveryModel;
+export function requestPath(opts?: {
+  family?: CuratedSolutionFamily["id"] | string;
+  delivery?: CuratedDeliveryModel | "unsure";
   intent?: "request" | "quote" | "assessment" | "consultation";
 }): string {
   const params = new URLSearchParams();
-  params.set("family", familyToSlug(opts.family as CuratedSolutionFamily["id"]));
-  if (opts.delivery) params.set("delivery", opts.delivery);
-  if (opts.intent) params.set("intent", opts.intent);
-  return `${SOLUTION_REQUEST_PATH}?${params.toString()}`;
+  if (opts?.family) params.set("family", familyToSlug(opts.family as CuratedSolutionFamily["id"]));
+  if (opts?.delivery) params.set("delivery", opts.delivery);
+  if (opts?.intent) params.set("intent", opts.intent);
+  const query = params.toString();
+  return query ? `${SOLUTION_REQUEST_PATH}?${query}` : SOLUTION_REQUEST_PATH;
 }
 
 export function familyPath(id: CuratedSolutionFamily["id"]): string {

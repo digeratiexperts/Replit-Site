@@ -1,6 +1,6 @@
 import { Link, useParams } from "wouter";
-import { useMemo, useState } from "react";
-import { ArrowLeft, ArrowRight, CheckCircle2, ShoppingCart } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { ArrowLeft, CheckCircle2 } from "lucide-react";
 import { MegaMenu } from "@/components/MegaMenu";
 import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhancedFooterSection";
 import { Button } from "@/components/ui/button";
@@ -11,14 +11,11 @@ import {
   familyPath,
   getFamilyBySlug,
   offerForDelivery,
-  parseDeliveryModel,
-  requestPath,
-  type CuratedDeliveryModel,
 } from "@/lib/businessNeeds";
 import { openMspAdvisor } from "@/lib/openMspAdvisor";
 import { StorePageAtmosphere } from "@/components/store/StorePageAtmosphere";
 import { PublicSolutionCart } from "@/components/store/PublicSolutionCart";
-import { addSolutionCartItem } from "@/lib/publicSolutionCart";
+import { addDraftNeed, patchSolutionDraft, readSolutionDraft, type DeliveryPreference } from "@/lib/solutionDraft";
 import { useToast } from "@/hooks/use-toast";
 
 function OfferList({ title, items }: { title: string; items: string[] }) {
@@ -36,13 +33,33 @@ function OfferList({ title, items }: { title: string; items: string[] }) {
   );
 }
 
+const DELIVERY_OPTIONS: Array<[DeliveryPreference, string]> = [
+  ["standalone", "DE manages this"],
+  ["co_managed", "Work with our IT team"],
+  ["unsure", "Not sure — help me decide"],
+];
+
 export default function BusinessNeedsFamily() {
   const params = useParams<{ family?: string }>();
   const family = getFamilyBySlug(params.family || "");
-  const [delivery, setDelivery] = useState<CuratedDeliveryModel>("standalone");
+  const [delivery, setDelivery] = useState<DeliveryPreference | "">("");
   const { toast } = useToast();
 
-  const offer = useMemo(() => (family ? offerForDelivery(family, delivery) : null), [family, delivery]);
+  useEffect(() => {
+    if (!family) return;
+    const draft = readSolutionDraft();
+    setDelivery(
+      draft.needs.find((need) => need.familyId === family.id)?.delivery || draft.deliveryPreference || "",
+    );
+  }, [family?.id]);
+
+  const offer = useMemo(() => {
+    if (!family) return null;
+    if (delivery === "co_managed" || delivery === "standalone") {
+      return offerForDelivery(family, delivery);
+    }
+    return offerForDelivery(family, "standalone");
+  }, [family, delivery]);
 
   useSEO(
     family
@@ -65,9 +82,7 @@ export default function BusinessNeedsFamily() {
   const askAbout = () => {
     openMspAdvisor({
       context: "other",
-      seedMessage: `I am reviewing the Digerati Experts ${family.label} ${
-        delivery === "co_managed" ? "co-managed" : "standalone"
-      } solution and want to ask about fit, scope, and next steps.`,
+      seedMessage: `I am reviewing the Digerati Experts ${family.label} solution and want to ask about fit, scope, and next steps.`,
     });
   };
 
@@ -79,40 +94,40 @@ export default function BusinessNeedsFamily() {
         <main className="de-nav-clear mx-auto max-w-5xl px-4 pb-40 sm:px-6 lg:px-8">
           <Link
             href={BUSINESS_NEEDS_INDEX_PATH}
-            className="mb-8 inline-flex h-11 items-center text-sm text-white/65 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-[#050312]"
+            className="mb-10 inline-flex h-11 items-center text-sm text-white/55 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-[#050312]"
           >
             <ArrowLeft className="mr-2 h-4 w-4" aria-hidden="true" />
             Back to the Store
           </Link>
 
-          <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-de-accent-ink">
-            Curated DE solution
-          </p>
-          <h1 className="mb-4 text-4xl font-bold text-white md:text-5xl" data-testid="heading-family">
-            {family.label}
-          </h1>
-          <p className="mb-8 max-w-3xl text-lg leading-relaxed text-white/75">{family.description}</p>
+          <header className="max-w-3xl pb-10">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-de-accent-ink">
+              Curated DE solution
+            </p>
+            <h1 className="mt-4 text-[clamp(2.25rem,5vw,3.75rem)] font-bold leading-[1.08] tracking-[-0.035em] text-white" data-testid="heading-family">
+              {family.label}
+            </h1>
+            <p className="mt-5 max-w-xl text-lg leading-relaxed text-white/65">{family.description}</p>
+          </header>
 
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-white/45">
+            What fits your organization?
+          </h2>
           <div
-            className="mb-8 grid grid-cols-2 gap-2 rounded-xl border border-de-hairline bg-de-raised p-2"
+            className="mb-8 grid grid-cols-1 gap-2 rounded-xl border border-de-hairline bg-de-raised p-2 sm:grid-cols-3"
             role="tablist"
-            aria-label="Delivery model"
+            aria-label="What fits your organization?"
           >
-            {(
-              [
-                ["standalone", "DE owns this solution"],
-                ["co_managed", "Work with your IT team"],
-              ] as const
-            ).map(([value, label]) => (
+            {DELIVERY_OPTIONS.map(([value, label]) => (
               <button
                 key={value}
                 type="button"
                 role="tab"
                 aria-selected={delivery === value}
-                className={`h-11 rounded-lg text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] ${
+                className={`h-11 rounded-lg px-3 text-left text-sm font-semibold sm:text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] ${
                   delivery === value
                     ? "bg-[#D3126A] text-white"
-                    : "text-white/70 hover:bg-white/5"
+                    : "bg-white/5 text-white/70 hover:bg-white/10"
                 }`}
                 onClick={() => setDelivery(value)}
                 data-testid={`delivery-${value}`}
@@ -127,10 +142,18 @@ export default function BusinessNeedsFamily() {
             data-testid="offer-panel"
           >
             <p className="mb-2 text-xs uppercase tracking-wide text-de-accent-ink">
-              {delivery === "co_managed" ? "Shared delivery" : "DE-managed delivery"}
+              {delivery === "co_managed"
+                ? "Shared delivery"
+                : delivery === "standalone"
+                  ? "DE-managed delivery"
+                  : "Select how DE should be involved"}
             </p>
-            <h2 className="mb-3 text-2xl font-semibold text-white">{offer.name}</h2>
-            <p className="mb-8 text-white/75 leading-relaxed">{offer.summary}</p>
+            <h2 className="mb-3 text-2xl font-semibold text-white">
+              {delivery === "co_managed" || delivery === "standalone" ? offer.name : family.label}
+            </h2>
+            <p className="mb-8 text-white/75 leading-relaxed">
+              {delivery === "co_managed" || delivery === "standalone" ? offer.summary : family.description}
+            </p>
 
             <div className="grid gap-8 md:grid-cols-2">
               <section>
@@ -174,26 +197,28 @@ export default function BusinessNeedsFamily() {
 
           <section className="mt-8" aria-label="Solution actions">
             <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <Button variant="brand" className="h-11" onClick={() => {
-                addSolutionCartItem({ familyId: family.id, delivery });
-                toast({ title: "Added to Your Solution", description: `${offer.name} is ready to review.` });
-              }}>
-                <ShoppingCart className="mr-2 h-4 w-4" aria-hidden="true" />Add to Your Solution
-              </Button>
-              <Button asChild variant="outline" className="h-11 border-white/20 text-white hover:bg-white/10">
-                <Link href={requestPath({ family: family.id, delivery, intent: "quote" })}>
-                  Request a quote
-                </Link>
-              </Button>
-              <Button asChild variant="outline" className="h-11 border-white/20 text-white hover:bg-white/10">
-                <Link href={requestPath({ family: family.id, delivery, intent: "assessment" })}>
-                  Start an assessment
-                </Link>
-              </Button>
-              <Button asChild variant="outline" className="h-11 border-white/20 text-white hover:bg-white/10">
-                <Link href={requestPath({ family: family.id, delivery, intent: "consultation" })}>
-                  Schedule a consultation
-                </Link>
+              <Button
+                variant="brand"
+                className="h-11"
+                disabled={!delivery}
+                data-testid="continue-building"
+                onClick={() => {
+                  if (!delivery) return;
+                  addDraftNeed({
+                    familyId: family.id,
+                    delivery,
+                  });
+                  const current = readSolutionDraft();
+                  if (!current.deliveryPreference) {
+                    patchSolutionDraft({ deliveryPreference: delivery });
+                  }
+                  toast({
+                    title: "Added to Your Solution",
+                    description: `${family.label} is in Your Solution.`,
+                  });
+                }}
+              >
+                Continue building
               </Button>
               <Button
                 type="button"
@@ -205,7 +230,10 @@ export default function BusinessNeedsFamily() {
                 Ask DE about this solution
               </Button>
             </div>
-            <p className="mt-4 flex items-start gap-2 text-sm text-white/50"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-de-accent-ink" />Your cart stays public-safe. Manufacturers, product codes, costs, and internal implementation mappings remain private.</p>
+            <p className="mt-4 flex items-start gap-2 text-sm text-white/50">
+              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-de-accent-ink" />
+              No payment is required. We'll confirm fit, scope, and pricing before you commit.
+            </p>
           </section>
         </main>
         <PublicSolutionCart />

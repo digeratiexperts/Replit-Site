@@ -10,27 +10,35 @@ import { useSEO } from "@/hooks/useSEO";
 import {
   BUSINESS_NEEDS_INDEX_PATH,
   familyPath,
+  getFamilyById,
   getFamilyBySlug,
   offerForDelivery,
-  parseDeliveryModel,
-  type CuratedDeliveryModel,
+  parseDeliveryPreference,
+  SOLUTION_WORKSPACE_PATH,
 } from "@/lib/businessNeeds";
 import { DOOR_2_ELIGIBILITY } from "@shared/checkoutEligibility";
-import { defaultSizingAnswers, sizingFieldsForFamily } from "@/data/solutionSizingFields";
-import { SolutionSizingFields } from "@/components/solutions/SolutionSizingFields";
+import {
+  addDraftNeed,
+  emptyDraft,
+  patchSolutionDraft,
+  readSolutionDraft,
+  recommendedCtaLabel,
+  recommendedIntent,
+  toRequestNeeds,
+  type SolutionDraft,
+  type SolutionRequestIntent,
+} from "@/lib/solutionDraft";
 
-type Intent = "request" | "quote" | "assessment" | "consultation";
-
-const INTENT_LABEL: Record<Intent, string> = {
-  request: "Request this solution",
+const INTENT_LABEL: Record<SolutionRequestIntent, string> = {
+  request: "Submit this solution",
   quote: "Request a quote",
-  assessment: "Start an assessment",
+  assessment: "Start a Cyber Risk Assessment",
   consultation: "Schedule a consultation",
 };
 
-function parseIntent(value: string | null): Intent {
-  if (value === "quote" || value === "assessment" || value === "consultation") return value;
-  return "request";
+function parseIntent(value: string | null): SolutionRequestIntent {
+  if (value === "quote" || value === "assessment" || value === "consultation" || value === "request") return value;
+  return "assessment";
 }
 
 type FormState = {
@@ -44,10 +52,31 @@ type FormState = {
 export default function SolutionRequest() {
   const search = useSearch();
   const params = useMemo(() => new URLSearchParams(search), [search]);
-  const family = getFamilyBySlug(params.get("family") || "");
-  const delivery: CuratedDeliveryModel = parseDeliveryModel(params.get("delivery"));
-  const intent = parseIntent(params.get("intent"));
-  const offer = family ? offerForDelivery(family, delivery) : null;
+  const [draft, setDraft] = useState<SolutionDraft>(emptyDraft);
+
+  useEffect(() => {
+    const current = readSolutionDraft();
+    const family = getFamilyBySlug(params.get("family") || "");
+    const delivery = parseDeliveryPreference(params.get("delivery"));
+    const intent = parseIntent(params.get("intent"));
+    let next = current;
+    if (family) {
+      next = addDraftNeed({
+        familyId: family.id,
+        ...(delivery ? { delivery } : {}),
+      });
+    }
+    if (delivery && !next.deliveryPreference) {
+      next = patchSolutionDraft({ deliveryPreference: delivery });
+    }
+    if (intent) {
+      next = patchSolutionDraft({ intent });
+    }
+    setDraft(next);
+  }, [params]);
+
+  const intent = parseIntent(params.get("intent")) || recommendedIntent(draft);
+  const needs = toRequestNeeds(draft);
 
   const [form, setForm] = useState<FormState>({
     organizationName: "",
@@ -56,19 +85,11 @@ export default function SolutionRequest() {
     contactPhone: "",
     notes: "",
   });
-  const sizingFields = useMemo(() => (family ? sizingFieldsForFamily(family.id) : []), [family]);
-  const [sizingAnswers, setSizingAnswers] = useState<Record<string, string>>(() =>
-    family ? defaultSizingAnswers(family.id) : {},
-  );
-  useEffect(() => {
-    setSizingAnswers(family ? defaultSizingAnswers(family.id) : {});
-  }, [family?.id]);
   const [requestId, setRequestId] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [result, setResult] = useState<{
     correlationId: string;
-    crm: string;
     message: string;
   } | null>(null);
 
@@ -94,14 +115,6 @@ export default function SolutionRequest() {
           contactPhone: data.request.contactPhone || current.contactPhone,
           notes: data.request.notes || current.notes,
         }));
-        if (
-          family &&
-          data.request.familyId === family.id &&
-          data.request.sizingAnswers &&
-          Object.keys(data.request.sizingAnswers).length > 0
-        ) {
-          setSizingAnswers((current) => ({ ...current, ...data.request.sizingAnswers }));
-        }
       })
       .catch(() => {
         /* draft load is optional; submit still persists */
@@ -115,12 +128,12 @@ export default function SolutionRequest() {
     event.preventDefault();
     setError("");
     setResult(null);
-    if (!family || !offer) {
-      setError("Select a solution family before submitting this Solution Request.");
+    if (needs.length === 0) {
+      setError("Select at least one business need before submitting this solution.");
       return;
     }
     if (form.contactName.trim().length < 2 || !form.contactEmail.includes("@")) {
-      setError("A name and email are required to submit or save this Solution Request.");
+      setError("A name and email are required to submit this solution.");
       return;
     }
 
@@ -132,35 +145,43 @@ export default function SolutionRequest() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           id: requestId,
-          familyId: family.id,
-          offerId: offer.id,
-          deliveryModel: delivery,
+          familyId: needs[0]?.familyId,
+          offerId: needs[0]?.offerId,
+          deliveryModel: needs[0]?.deliveryModel,
+          deliveryPreference: draft.deliveryPreference || "unsure",
+          selectedNeeds: needs,
+          environment: draft.environment,
           intent,
           organizationName: form.organizationName,
           contactName: form.contactName,
           contactEmail: form.contactEmail,
           contactPhone: form.contactPhone,
           notes: form.notes,
-          sizingAnswers,
-          idempotencyKey: `${form.contactEmail.trim().toLowerCase()}|${offer.id}|${delivery}|${intent}`,
+          idempotencyKey: `${form.contactEmail.trim().toLowerCase()}|${needs
+            .map((need) => need.familyId)
+            .sort()
+            .join(",")}|${draft.deliveryPreference || "unsure"}|${intent}`,
         }),
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
-        setError(typeof data.error === "string" ? data.error : "We could not save your Solution Request. Please try again.");
+        setError(typeof data.error === "string" ? data.error : "We could not save your solution request. Please try again.");
         return;
       }
       setResult({
         correlationId: data.correlationId,
-        crm: data.crm,
         message: data.message,
       });
     } catch {
-      setError("We could not save your Solution Request. Please try again.");
+      setError("We could not save your solution request. Please try again.");
     } finally {
       setSubmitting(false);
     }
   };
+
+  const backHref = needs[0]?.familyId
+    ? familyPath(needs[0].familyId as Parameters<typeof familyPath>[0])
+    : SOLUTION_WORKSPACE_PATH;
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-de-bg">
@@ -168,7 +189,7 @@ export default function SolutionRequest() {
         <MegaMenu />
         <main className="de-nav-clear mx-auto max-w-3xl px-4 pb-40 sm:px-6 lg:px-8">
           <Link
-            href={family ? familyPath(family.id) : BUSINESS_NEEDS_INDEX_PATH}
+            href={backHref}
             className="mb-8 inline-flex h-11 items-center text-sm text-white/65 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-[#050312]"
           >
             <ArrowLeft className="mr-2 h-4 w-4" aria-hidden="true" />
@@ -182,20 +203,36 @@ export default function SolutionRequest() {
             {INTENT_LABEL[intent]}
           </h1>
           <p className="mb-8 text-white/70">
-            This is a Solution Request, not a cart. You are asking Digerati Experts to follow up —
-            not paying online.
+            No payment is required. We'll confirm fit, scope, and pricing before you commit.
           </p>
 
           <section className="mb-8 rounded-2xl border border-de-hairline bg-de-raised p-6" data-testid="request-selection">
-            {family && offer ? (
+            {needs.length ? (
               <>
-                <p className="text-sm text-white/50">Selected solution</p>
-                <h2 className="mt-1 text-xl font-semibold text-white">{offer.name}</h2>
-                <p className="mt-2 text-sm text-white/65">
-                  {family.label} · {delivery === "co_managed" ? "Co-managed" : "Standalone"}
-                </p>
-                <p className="mt-4 text-sm leading-relaxed text-white/75">{offer.summary}</p>
-                <p className="mt-4 text-sm text-white/55">Next step: {offer.nextStep}</p>
+                <p className="text-sm text-white/50">Your Solution</p>
+                <ul className="mt-3 space-y-3">
+                  {needs.map((need) => {
+                    const family = getFamilyById(need.familyId);
+                    if (!family) return null;
+                    const offer =
+                      need.deliveryModel === "co_managed" || need.deliveryModel === "standalone"
+                        ? offerForDelivery(family, need.deliveryModel)
+                        : null;
+                    return (
+                      <li key={need.familyId}>
+                        <h2 className="text-xl font-semibold text-white">{family.label}</h2>
+                        <p className="mt-1 text-sm text-white/65">
+                          {need.deliveryModel === "co_managed"
+                            ? "Work with your IT team"
+                            : need.deliveryModel === "standalone"
+                              ? "DE managed"
+                              : "We'll help you decide how DE is involved"}
+                        </p>
+                        {offer ? <p className="mt-2 text-sm leading-relaxed text-white/75">{offer.summary}</p> : null}
+                      </li>
+                    );
+                  })}
+                </ul>
               </>
             ) : (
               <p className="text-sm text-white/70">
@@ -208,27 +245,6 @@ export default function SolutionRequest() {
             )}
           </section>
 
-          {family && offer && sizingFields.length > 0 && !result ? (
-            <section
-              className="mb-8 rounded-2xl border border-de-hairline bg-de-raised p-6"
-              data-testid="request-sizing"
-            >
-              <p className="text-sm text-white/50">Help us size this</p>
-              <h2 className="mt-1 text-xl font-semibold text-white">A few quick scope questions</h2>
-              <p className="mt-2 text-sm leading-relaxed text-white/65">
-                These are not a price quote — they just help DE come back with an accurate one
-                instead of a generic range. {offer.nextStep} still applies.
-              </p>
-              <div className="mt-5">
-                <SolutionSizingFields
-                  fields={sizingFields}
-                  values={sizingAnswers}
-                  onChange={(key, value) => setSizingAnswers((current) => ({ ...current, [key]: value }))}
-                />
-              </div>
-            </section>
-          ) : null}
-
           {result ? (
             <section
               className="rounded-2xl border border-de-hairline bg-de-raised p-6"
@@ -236,10 +252,7 @@ export default function SolutionRequest() {
             >
               <h2 className="text-xl font-semibold text-white">Request saved</h2>
               <p className="mt-3 text-white/75">{result.message}</p>
-              <p className="mt-3 text-sm text-white/55">
-                Reference: {result.correlationId}
-                {result.crm === "pending" ? " · Follow-up is pending" : ""}
-              </p>
+              <p className="mt-3 text-sm text-white/55">Reference: {result.correlationId}</p>
               <Button asChild variant="outline" className="mt-6 h-11 border-white/20 text-white hover:bg-white/10">
                 <Link href={BUSINESS_NEEDS_INDEX_PATH}>Browse another family</Link>
               </Button>
@@ -319,11 +332,10 @@ export default function SolutionRequest() {
               </div>
 
               <Button type="submit" variant="brand" className="h-11 w-full sm:w-auto" disabled={submitting}>
-                {submitting ? "Saving…" : INTENT_LABEL[intent]}
+                {submitting ? "Saving…" : recommendedCtaLabel(intent)}
               </Button>
               <p className="text-xs text-white/45">
-                Contact details are used only to save this Solution Request. We will not claim a CRM
-                handoff succeeded unless the request is stored first.
+                Contact details are used only to follow up on this solution. No payment is required.
               </p>
             </form>
           )}

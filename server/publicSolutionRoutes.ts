@@ -81,6 +81,9 @@ export function registerPublicSolutionRoutes(app: Express): void {
       familyId: req.body?.familyId,
       offerId: req.body?.offerId,
       deliveryModel: req.body?.deliveryModel,
+      deliveryPreference: req.body?.deliveryPreference,
+      selectedNeeds: req.body?.selectedNeeds,
+      environment: req.body?.environment,
       intent: req.body?.intent,
       organizationName: req.body?.organizationName,
       contactName: req.body?.contactName,
@@ -108,6 +111,9 @@ export function registerPublicSolutionRoutes(app: Express): void {
       familyId: req.body?.familyId,
       offerId: req.body?.offerId,
       deliveryModel: req.body?.deliveryModel,
+      deliveryPreference: req.body?.deliveryPreference,
+      selectedNeeds: req.body?.selectedNeeds,
+      environment: req.body?.environment,
       intent: req.body?.intent,
       organizationName: req.body?.organizationName,
       contactName,
@@ -117,7 +123,7 @@ export function registerPublicSolutionRoutes(app: Express): void {
       sizingAnswers: req.body?.sizingAnswers,
     });
 
-    if (!draft.familyId) {
+    if (!draft.familyId && draft.selectedNeeds.length === 0) {
       return res.status(400).json({ error: "Select a solution family before submitting." });
     }
 
@@ -146,6 +152,8 @@ export function registerPublicSolutionRoutes(app: Express): void {
         familyId: submitted.record.familyId,
         offerId: submitted.record.offerId,
         deliveryModel: submitted.record.deliveryModel,
+        deliveryPreference: submitted.record.deliveryPreference,
+        selectedNeeds: submitted.record.selectedNeeds.map((need) => need.familyId),
         intent: submitted.record.intent,
       });
       void syncPublicSolutionRequestToCrm(submitted.record)
@@ -162,10 +170,7 @@ export function registerPublicSolutionRoutes(app: Express): void {
       correlationId: view.correlationId,
       crm: view.crmStatus,
       replayed: submitted.replayed,
-      message:
-        view.crmStatus === "recorded"
-          ? "Your Solution Request was saved."
-          : "Your Solution Request was saved. Follow-up is pending.",
+      message: "Your solution request was saved. We'll confirm fit, scope, and pricing before you commit.",
     });
   });
 }
