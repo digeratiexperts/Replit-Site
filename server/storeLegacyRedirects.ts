@@ -1,12 +1,10 @@
 /** Public destage map for legacy /store URLs. Server-only — no vendor/SKU catalog dump. */
 
 export const PUBLIC_STORE_PATH_REDIRECTS: Record<string, string> = {
-  "/store": "/solutions/business-needs",
   "/store/managed": "/solutions/proactive-ecosystem",
-  "/store/co-managed": "/solutions/business-needs",
-  "/store/checkout": "/solutions/request",
+  "/store/co-managed": "/store",
   "/store/quote-request": "/solutions/request",
-  "/store/order-confirmation": "/solutions/business-needs",
+  "/store/order-confirmation": "/store",
 };
 
 /** Four public ProActive operating-model SKUs → Door 1 pages. Everything else is generic deny. */
@@ -18,6 +16,7 @@ export const PUBLIC_SKU_REDIRECTS: Record<string, string> = {
 };
 
 export type LegacyStoreClassification =
+  | { kind: "public_store" }
   | { kind: "public_redirect"; to: string }
   | { kind: "generic_deny" };
 
@@ -44,7 +43,10 @@ export function classifyLegacyStorePath(pathname: string): LegacyStoreClassifica
     if (dest) return { kind: "public_redirect", to: dest };
     return { kind: "generic_deny" };
   }
-  if (path === "/store" || path.startsWith("/store/")) {
+  if (path === "/store" || path === "/store/checkout" || path.startsWith("/store/solutions/")) {
+    return { kind: "public_store" };
+  }
+  if (path.startsWith("/store/")) {
     return { kind: "generic_deny" };
   }
   return { kind: "generic_deny" };

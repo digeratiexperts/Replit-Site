@@ -18,7 +18,7 @@ describe("Door 2 business-needs helpers", () => {
       expect(slug).not.toContain("_");
       expect(slugToFamilyId(slug)).toBe(family.id);
       expect(getFamilyBySlug(slug)?.id).toBe(family.id);
-      expect(familyPath(family.id)).toBe(`${BUSINESS_NEEDS_INDEX_PATH}/${slug}`);
+      expect(familyPath(family.id)).toBe(`${BUSINESS_NEEDS_INDEX_PATH}/solutions/${slug}`);
     }
   });
 

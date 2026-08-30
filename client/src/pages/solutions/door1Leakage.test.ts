@@ -23,7 +23,7 @@ describe("Door 1 public leakage", () => {
     }
     const index = readFileSync(path.join(root, "client/src/pages/solutions/SolutionsIndex.tsx"), "utf8");
     expect(index).toContain("/solutions/proactive-ecosystem");
-    expect(index).toContain("/solutions/business-needs");
+    expect(index).toContain("/store");
     expect(index).toContain("/book");
   });
 });

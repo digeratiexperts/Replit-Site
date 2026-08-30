@@ -3,17 +3,16 @@ import { classifyLegacyStorePath, toWarehousePath } from "./storeLegacyRedirects
 
 describe("legacy /store destage", () => {
   it("sends public workshop URLs to Door 1 or Door 2", () => {
-    expect(classifyLegacyStorePath("/store")).toEqual({
-      kind: "public_redirect",
-      to: "/solutions/business-needs",
-    });
+    expect(classifyLegacyStorePath("/store")).toEqual({ kind: "public_store" });
+    expect(classifyLegacyStorePath("/store/checkout")).toEqual({ kind: "public_store" });
+    expect(classifyLegacyStorePath("/store/solutions/identity-access")).toEqual({ kind: "public_store" });
     expect(classifyLegacyStorePath("/store/managed")).toEqual({
       kind: "public_redirect",
       to: "/solutions/proactive-ecosystem",
     });
     expect(classifyLegacyStorePath("/store/co-managed")).toEqual({
       kind: "public_redirect",
-      to: "/solutions/business-needs",
+      to: "/store",
     });
     expect(classifyLegacyStorePath("/store/product/DE-SVC-MGD-IT-MO")).toEqual({
       kind: "public_redirect",

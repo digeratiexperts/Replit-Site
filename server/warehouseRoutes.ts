@@ -40,6 +40,11 @@ export function registerWarehouseGates(app: Express): void {
     }
 
     const classified = classifyLegacyStorePath(path);
+    if (classified.kind === "public_store") {
+      res.removeHeader("X-Robots-Tag");
+      res.removeHeader("Cache-Control");
+      return next();
+    }
     if (classified.kind === "public_redirect") {
       return res.redirect(301, withQuery(req, classified.to));
     }
