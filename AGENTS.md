@@ -2,11 +2,11 @@
 
 ## AI engineering governance — mandatory
 
-Authoritative multi-agent policy: **`docs/AI-ENGINEERING-GOVERNANCE.md`**. Shared coordination registry: **`.ai/ACTIVE_WORK.yaml`**. This policy is mandatory for Claude Code, Cursor, Antigravity/Gemini, ChatGPT-assisted repository work, and other agents.
+Authoritative multi-agent policy: **`docs/AI-ENGINEERING-GOVERNANCE.md`**. GitHub-visible active issues + open PRs are the authoritative concurrency locks; **`.ai/ACTIVE_WORK.yaml`** is a mirror only. Required procedure: **`docs/ACTIVE-WORK-COORDINATION.md`**. This policy is mandatory for Claude Code, Cursor, Antigravity/Gemini, ChatGPT-assisted repository work, and other agents.
 
 Default authority: Joe is final product/release authority; Claude Code is the default lead website implementation/integration agent; Cursor and Antigravity/Gemini are specialist/review agents unless Joe explicitly reassigns the role for a specific task. There is only one website integration authority at a time.
 
-Every agent must use an isolated branch/worktree, check active claims plus current open PRs before editing, reconcile against current `origin/main` before merge, and treat `MERGED` and `LIVE` as separate states. Specialist agents do not independently merge/deploy website work by default.
+Every agent must use an isolated branch/worktree, check open active GitHub issues + all current open PRs + relevant remote branches before editing, then inspect the YAML mirror. Reconcile against current `origin/main` before merge, and treat `MERGED` and `LIVE` as separate states. Specialist agents do not independently merge/deploy website work by default.
 
 For visual work, rendered quality is an acceptance gate separate from code correctness. Inspect the actual UI in context before changing it and verify at 390 / 768 / 1440.
 
@@ -41,7 +41,7 @@ You are working in a multi-agent repository. Other agents may be modifying the s
 **Before working:**
 
 1. Fetch the latest `origin/main`.
-2. Read `docs/AI-ENGINEERING-GOVERNANCE.md` and `.ai/ACTIVE_WORK.yaml`, then inspect current open PRs/branches for concurrent work.
+2. Read `docs/AI-ENGINEERING-GOVERNANCE.md` and `docs/ACTIVE-WORK-COORDINATION.md`; inspect open ACTIVE/P0/IN PROGRESS GitHub issues, all current open PRs, and relevant remote branches; then inspect `.ai/ACTIVE_WORK.yaml` as a mirror.
 3. Read `design/BRAND.md`, `DESIGN_SYSTEM.md`, `UX_PRINCIPLES.md`, `IMAGERY.md`, and the Visual System v2 documents.
 4. Read `docs/SITE-VISUAL-TASKS.md`.
 5. Confirm your task has one assigned owner and is not already IN PROGRESS elsewhere.
