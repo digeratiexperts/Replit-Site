@@ -31,11 +31,17 @@ const trustItems = [
 
 function ShieldIllustration() {
   return (
-    <div className="relative mx-auto aspect-[1/1.05] w-full max-w-[500px]" aria-hidden="true">
-      <div className="absolute inset-[7%] rounded-full border border-[#725cff]/20" />
-      <div className="absolute inset-[15%] rounded-full border border-[#d3126a]/15" />
-      <div className="absolute left-[9%] top-[46%] h-px w-[82%] bg-gradient-to-r from-transparent via-[#7b6cff]/50 to-transparent" />
-      <div className="absolute left-[49.8%] top-[10%] h-[78%] w-px bg-gradient-to-b from-transparent via-[#7b6cff]/45 to-transparent" />
+    <div className="relative mx-auto w-full" style={{ aspectRatio: "1 / 1.05", maxWidth: 500 }} aria-hidden="true">
+      <div className="absolute rounded-full border" style={{ inset: "7%", borderColor: "rgba(114,92,255,0.2)" }} />
+      <div className="absolute rounded-full border" style={{ inset: "15%", borderColor: "rgba(211,18,106,0.15)" }} />
+      <div
+        className="absolute h-px bg-gradient-to-r from-transparent via-[#7b6cff]/50 to-transparent"
+        style={{ left: "9%", top: "46%", width: "82%" }}
+      />
+      <div
+        className="absolute w-px bg-gradient-to-b from-transparent via-[#7b6cff]/45 to-transparent"
+        style={{ left: "49.8%", top: "10%", height: "78%" }}
+      />
       <svg viewBox="0 0 420 460" className="relative h-full w-full overflow-visible">
         <defs>
           <linearGradient id="de-ref-shield" x1="70" y1="40" x2="350" y2="390" gradientUnits="userSpaceOnUse">
@@ -84,9 +90,10 @@ export function ReferenceHeroSection(): JSX.Element {
         }}
       />
       <div
-        className="pointer-events-none absolute inset-y-0 right-0 w-[58%] opacity-30"
+        className="pointer-events-none absolute inset-y-0 right-0 opacity-30"
         aria-hidden="true"
         style={{
+          width: "58%",
           backgroundImage:
             "linear-gradient(rgba(123,108,255,0.14) 1px, transparent 1px), linear-gradient(90deg, rgba(123,108,255,0.14) 1px, transparent 1px)",
           backgroundSize: "52px 52px",
@@ -99,18 +106,22 @@ export function ReferenceHeroSection(): JSX.Element {
           initial={prefersReducedMotion ? false : { opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: prefersReducedMotion ? 0 : 0.42, ease: "easeOut" }}
-          className="relative z-10 max-w-[760px]"
+          className="relative z-10"
+          style={{ maxWidth: 760 }}
         >
-          <p className="mb-5 text-xs font-semibold uppercase tracking-[0.2em] text-[#a99cff] sm:text-sm">
+          <p className="mb-5 text-xs font-semibold uppercase text-[#a99cff] sm:text-sm" style={{ letterSpacing: "0.2em" }}>
             Arizona MSP · Cybersecurity &amp; Managed IT
           </p>
-          <h1 className="max-w-[730px] text-[clamp(2.7rem,5.3vw,5.55rem)] font-semibold leading-[0.98] tracking-[-0.055em] text-[#fbfaf8]">
+          <h1
+            className="font-semibold text-[#fbfaf8]"
+            style={{ maxWidth: 730, fontSize: "clamp(2.7rem,5.3vw,5.55rem)", lineHeight: 0.98, letterSpacing: "-0.055em" }}
+          >
             Cybersecurity-First IT That Powers{" "}
             <span className="bg-gradient-to-r from-[#9a8bff] via-[#7b6cff] to-[#d3126a] bg-clip-text text-transparent">
               Your Business
             </span>
           </h1>
-          <p className="mt-7 max-w-[650px] text-[17px] leading-7 text-white/72 sm:text-lg sm:leading-8">
+          <p className="mt-7 leading-7 text-white/72 sm:leading-8" style={{ maxWidth: 650, fontSize: 17 }}>
             Managed IT, cybersecurity, and compliance for Arizona businesses that cannot afford downtime, uncertainty, or fragmented technology ownership.
           </p>
 
@@ -119,7 +130,8 @@ export function ReferenceHeroSection(): JSX.Element {
               type="button"
               onClick={openAssessment}
               size="lg"
-              className="h-12 rounded-lg border-0 bg-gradient-to-r from-[#5f4ae8] to-[#7d5cf4] px-7 text-base font-semibold text-white shadow-[0_14px_36px_-18px_rgba(111,92,255,0.9)] hover:brightness-110"
+              className="h-12 rounded-lg border-0 bg-gradient-to-r from-[#5f4ae8] to-[#7d5cf4] px-7 text-base font-semibold text-white hover:brightness-110"
+              style={{ boxShadow: "0 14px 36px -18px rgba(111,92,255,0.9)" }}
               data-testid="button-hero-schedule"
             >
               {CTA.primary}
@@ -129,7 +141,7 @@ export function ReferenceHeroSection(): JSX.Element {
               asChild
               size="lg"
               variant="outline"
-              className="h-12 rounded-lg border border-white/20 bg-transparent px-7 text-base font-semibold text-white hover:border-white/40 hover:bg-white/[0.06] hover:text-white"
+              className="h-12 rounded-lg border border-white/20 bg-transparent px-7 text-base font-semibold text-white hover:border-white/40 hover:bg-white/5 hover:text-white"
               data-testid="button-hero-solutions"
             >
               <Link href="/solutions">View Our Solutions</Link>
@@ -149,7 +161,7 @@ export function ReferenceHeroSection(): JSX.Element {
           initial={prefersReducedMotion ? false : { opacity: 0, x: 24 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: prefersReducedMotion ? 0 : 0.52, delay: prefersReducedMotion ? 0 : 0.08, ease: "easeOut" }}
-          className="relative z-[1] hidden lg:block"
+          className="relative z-10 hidden lg:block"
         >
           <ShieldIllustration />
         </motion.div>
@@ -157,18 +169,19 @@ export function ReferenceHeroSection(): JSX.Element {
 
       <div className="relative border-t border-black/10 bg-[#f7f5f2] text-[#17141f]">
         <div className="mx-auto max-w-[var(--de-canvas)] px-5 py-8 sm:px-8 lg:px-10 xl:px-12">
-          <p className="mb-5 text-xl font-semibold tracking-[-0.02em] sm:text-2xl">
+          <p className="mb-5 text-xl font-semibold sm:text-2xl" style={{ letterSpacing: "-0.02em" }}>
             Trusted technology partner for Arizona businesses
           </p>
           <div className="grid overflow-hidden rounded-xl border border-black/10 bg-white sm:grid-cols-2 lg:grid-cols-4">
             {trustItems.map(({ icon: Icon, title, body }, index) => (
               <div
                 key={title}
-                className={`flex min-h-[128px] gap-3 px-5 py-5 ${index > 0 ? "border-t border-black/10 sm:border-t-0 sm:border-l" : ""} ${index === 2 ? "sm:border-l-0 lg:border-l" : ""}`}
+                className={`flex gap-3 px-5 py-5 ${index > 0 ? "border-t border-black/10 sm:border-t-0 sm:border-l" : ""} ${index === 2 ? "sm:border-l-0 lg:border-l" : ""}`}
+                style={{ minHeight: 128 }}
               >
                 <Icon className="mt-0.5 h-5 w-5 shrink-0 text-[#17141f]" strokeWidth={1.8} aria-hidden="true" />
                 <div>
-                  <h2 className="text-[15px] font-semibold">{title}</h2>
+                  <h2 className="font-semibold" style={{ fontSize: 15 }}>{title}</h2>
                   <p className="mt-2 text-sm leading-6 text-[#5e5868]">{body}</p>
                 </div>
               </div>
