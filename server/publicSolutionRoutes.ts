@@ -53,6 +53,26 @@ function genericNotFound(res: Response) {
   return res.status(404).json({ error: "Not found" });
 }
 
+function requestInput(req: Request, sessionId: string) {
+  return {
+    sessionId,
+    id: typeof req.body?.id === "string" ? req.body.id : undefined,
+    familyId: req.body?.familyId,
+    offerId: req.body?.offerId,
+    deliveryModel: req.body?.deliveryModel,
+    deliveryPreference: req.body?.deliveryPreference,
+    selectedNeeds: req.body?.selectedNeeds,
+    environment: req.body?.environment,
+    fulfillment: req.body?.fulfillment,
+    intent: req.body?.intent,
+    organizationName: req.body?.organizationName,
+    contactName: req.body?.contactName,
+    contactEmail: req.body?.contactEmail,
+    contactPhone: req.body?.contactPhone,
+    notes: req.body?.notes,
+  };
+}
+
 export function registerPublicSolutionRoutes(app: Express): void {
   app.get("/api/public/solutions/families", (_req, res) => {
     res.json({ families: publicSolutionFamilies() });
@@ -73,24 +93,11 @@ export function registerPublicSolutionRoutes(app: Express): void {
     return res.json({ request: publicSolutionRequestView(record) });
   });
 
+  // Save progress without collecting contact information. This is the server-side
+  // companion to the browser autosave and intentionally does not submit a lead.
   app.put("/api/public/solutions/request", (req, res) => {
     const sessionId = ensureSession(req, res);
-    const record = upsertPublicSolutionRequest({
-      sessionId,
-      id: typeof req.body?.id === "string" ? req.body.id : undefined,
-      familyId: req.body?.familyId,
-      offerId: req.body?.offerId,
-      deliveryModel: req.body?.deliveryModel,
-      deliveryPreference: req.body?.deliveryPreference,
-      selectedNeeds: req.body?.selectedNeeds,
-      environment: req.body?.environment,
-      intent: req.body?.intent,
-      organizationName: req.body?.organizationName,
-      contactName: req.body?.contactName,
-      contactEmail: req.body?.contactEmail,
-      contactPhone: req.body?.contactPhone,
-      notes: req.body?.notes,
-    });
+    const record = upsertPublicSolutionRequest(requestInput(req, sessionId));
     return res.json({ request: publicSolutionRequestView(record) });
   });
 
@@ -99,30 +106,17 @@ export function registerPublicSolutionRoutes(app: Express): void {
     const contactName = typeof req.body?.contactName === "string" ? req.body.contactName.trim() : "";
     const contactEmail = typeof req.body?.contactEmail === "string" ? req.body.contactEmail.trim() : "";
     if (contactName.length < 2 || !EMAIL_RE.test(contactEmail)) {
-      return res.status(400).json({
-        error: "A name and work email are required to submit or save this Solution Request.",
-      });
+      return res.status(400).json({ error: "A name and email are required to submit this solution." });
     }
 
     const draft = upsertPublicSolutionRequest({
-      sessionId,
-      id: typeof req.body?.id === "string" ? req.body.id : undefined,
-      familyId: req.body?.familyId,
-      offerId: req.body?.offerId,
-      deliveryModel: req.body?.deliveryModel,
-      deliveryPreference: req.body?.deliveryPreference,
-      selectedNeeds: req.body?.selectedNeeds,
-      environment: req.body?.environment,
-      intent: req.body?.intent,
-      organizationName: req.body?.organizationName,
+      ...requestInput(req, sessionId),
       contactName,
       contactEmail,
-      contactPhone: req.body?.contactPhone,
-      notes: req.body?.notes,
     });
 
     if (!draft.familyId && draft.selectedNeeds.length === 0) {
-      return res.status(400).json({ error: "Select a solution family before submitting." });
+      return res.status(400).json({ error: "Select at least one business need before submitting." });
     }
 
     let submitted;
@@ -133,14 +127,13 @@ export function registerPublicSolutionRoutes(app: Express): void {
           name: contactName,
           email: contactEmail,
           phone: typeof req.body?.contactPhone === "string" ? req.body.contactPhone : "",
-          organizationName:
-            typeof req.body?.organizationName === "string" ? req.body.organizationName : "",
+          organizationName: typeof req.body?.organizationName === "string" ? req.body.organizationName : "",
         },
         typeof req.body?.idempotencyKey === "string" ? req.body.idempotencyKey : undefined,
       );
     } catch (error: any) {
       console.error("[solution-request] persist failed", error);
-      return res.status(500).json({ error: "We could not save your Solution Request. Please try again." });
+      return res.status(500).json({ error: "We could not save your solution request. Please try again." });
     }
 
     if (!submitted.replayed) {
@@ -152,6 +145,8 @@ export function registerPublicSolutionRoutes(app: Express): void {
         deliveryModel: submitted.record.deliveryModel,
         deliveryPreference: submitted.record.deliveryPreference,
         selectedNeeds: submitted.record.selectedNeeds.map((need) => need.familyId),
+        installation: submitted.record.fulfillment.installation,
+        remoteSupport: submitted.record.fulfillment.remoteSupport,
         intent: submitted.record.intent,
       });
       void syncPublicSolutionRequestToCrm(submitted.record)
@@ -168,7 +163,7 @@ export function registerPublicSolutionRoutes(app: Express): void {
       correlationId: view.correlationId,
       crm: view.crmStatus,
       replayed: submitted.replayed,
-      message: "Your solution request was saved. We'll confirm fit, scope, and pricing before you commit.",
+      message: "Your solution was saved. DE will confirm package fit, scope, fulfillment, and pricing before you commit.",
     });
   });
 }
