@@ -1,10 +1,12 @@
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, CheckCircle2, ClipboardCheck, MapPin, ShieldCheck } from "lucide-react";
+import { ArrowRight, Check, CheckCircle2, ClipboardCheck, MapPin, ShieldCheck } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
+import { DashboardMockup } from "@/components/graphics";
 import { useBooking } from "@/contexts/BookingContext";
 import { analytics } from "@/lib/analytics";
 import { CTA } from "@/lib/ctaCopy";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 
 const trustItems = [
   {
@@ -32,46 +34,10 @@ const trustItems = [
 // Per Joe (2026-08-30): no vendor names in the hero — DE does not surface
 // stack vendors on the public homepage. Positioning line only.
 
-function ShieldIllustration() {
-  return (
-    <div className="relative mx-auto w-full" style={{ aspectRatio: "1 / 1.05", maxWidth: 500 }} aria-hidden="true">
-      <div className="absolute rounded-full border" style={{ inset: "7%", borderColor: "rgba(114,92,255,0.2)" }} />
-      <div className="absolute rounded-full border" style={{ inset: "15%", borderColor: "rgba(211,18,106,0.15)" }} />
-      <div
-        className="absolute h-px bg-gradient-to-r from-transparent via-[#7b6cff]/50 to-transparent"
-        style={{ left: "9%", top: "46%", width: "82%" }}
-      />
-      <div
-        className="absolute w-px bg-gradient-to-b from-transparent via-[#7b6cff]/45 to-transparent"
-        style={{ left: "49.8%", top: "10%", height: "78%" }}
-      />
-      <svg viewBox="0 0 420 460" className="relative h-full w-full overflow-visible">
-        <defs>
-          <linearGradient id="de-ref-shield" x1="70" y1="40" x2="350" y2="390" gradientUnits="userSpaceOnUse">
-            <stop stopColor="#fbfaf8" />
-            <stop offset="0.38" stopColor="#9d90ff" />
-            <stop offset="0.72" stopColor="#6f5cff" />
-            <stop offset="1" stopColor="#d3126a" />
-          </linearGradient>
-          <radialGradient id="de-ref-glow" cx="0" cy="0" r="1" gradientTransform="translate(220 220) rotate(90) scale(185)">
-            <stop stopColor="#6757ff" stopOpacity="0.22" />
-            <stop offset="1" stopColor="#6757ff" stopOpacity="0" />
-          </radialGradient>
-        </defs>
-        <circle cx="210" cy="220" r="185" fill="url(#de-ref-glow)" />
-        <g fill="none" stroke="url(#de-ref-shield)" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M210 62 332 112v100c0 92-47 157-122 194C135 369 88 304 88 212V112L210 62Z" strokeWidth="2.4" />
-          <path d="M210 86 309 127v85c0 75-37 129-99 162-62-33-99-87-99-162v-85l99-41Z" strokeWidth="1.1" opacity="0.55" />
-          <path d="m152 223 38 39 79-88" strokeWidth="3" />
-          <path d="M117 137 210 86l99 41M107 182l103-51 108 55M105 235l105-49 108 49M126 299l84-58 82 58M169 355l41-67 42 67" strokeWidth="0.65" opacity="0.3" />
-        </g>
-        {[107, 152, 210, 269, 309].map((cx, index) => (
-          <circle key={cx} cx={cx} cy={[182, 223, 131, 174, 235][index]} r="3.2" fill={index === 4 ? "#d3126a" : "#8c7cff"} />
-        ))}
-      </svg>
-    </div>
-  );
-}
+// The invented generic ShieldIllustration was removed under the DE Product
+// Preservation Law (governance §18): the hero's visual is DE's own Cyber Risk
+// Assessment preview (DashboardMockup), upgraded into the reference's dark
+// precision field — not replaced by borrowed imagery.
 
 export function ReferenceHeroSection(): JSX.Element {
   const { openBooking } = useBooking();
@@ -146,10 +112,28 @@ export function ReferenceHeroSection(): JSX.Element {
               size="lg"
               variant="outline"
               className="h-12 rounded-lg border border-white/20 bg-transparent px-7 text-base font-semibold text-white hover:border-white/40 hover:bg-white/5 hover:text-white"
-              data-testid="button-hero-solutions"
+              data-testid="button-hero-pricing"
             >
-              <Link href="/solutions">View Our Solutions</Link>
+              <Link href={CTA.secondaryHref}>{CTA.secondary}</Link>
             </Button>
+          </div>
+
+          <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-[14px] text-white/70">
+            <span className="inline-flex items-center gap-1.5">
+              <Check className="h-3.5 w-3.5 text-emerald-400" aria-hidden="true" />
+              No obligation
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <Check className="h-3.5 w-3.5 text-emerald-400" aria-hidden="true" />
+              Response within one business day
+            </span>
+            <a
+              href={PRIMARY_PHONE.telHref}
+              className="font-medium text-white/80 underline decoration-white/25 underline-offset-4 transition-colors hover:text-white hover:decoration-white/50"
+              data-testid="link-hero-phone"
+            >
+              Call {PRIMARY_PHONE.display}
+            </a>
           </div>
 
           <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-white/58">
@@ -161,13 +145,27 @@ export function ReferenceHeroSection(): JSX.Element {
           </div>
         </motion.div>
 
+        {/* DE Cyber Risk Assessment preview — the existing product artwork,
+            upgraded with the reference field's violet depth glow. Visible on
+            all breakpoints (stacked under copy on mobile), as before. */}
         <motion.div
           initial={prefersReducedMotion ? false : { opacity: 0, x: 24 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: prefersReducedMotion ? 0 : 0.52, delay: prefersReducedMotion ? 0 : 0.08, ease: "easeOut" }}
-          className="relative z-10 hidden lg:block"
+          className="relative z-10 flex w-full justify-center lg:justify-end"
+          data-testid="hero-assessment-card"
         >
-          <ShieldIllustration />
+          <div className="relative w-full max-w-[560px] lg:max-w-[600px]">
+            <div
+              className="pointer-events-none absolute -inset-6 -z-10 rounded-3xl"
+              aria-hidden="true"
+              style={{
+                background:
+                  "radial-gradient(ellipse at center, rgba(91, 69, 224, 0.18) 0%, transparent 68%)",
+              }}
+            />
+            <DashboardMockup className="w-full" />
+          </div>
         </motion.div>
       </div>
 
