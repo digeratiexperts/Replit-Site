@@ -1,348 +1,177 @@
-import { motion, useReducedMotion } from "framer-motion";
+import { Link } from "wouter";
+import {
+  ArrowRight,
+  CheckCircle2,
+  Layers3,
+  PackageCheck,
+  ShieldCheck,
+  SlidersHorizontal,
+  Truck,
+  Wrench,
+} from "lucide-react";
 import { MegaMenu } from "@/components/MegaMenu";
 import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhancedFooterSection";
 import { Button } from "@/components/ui/button";
 import { useSEO } from "@/hooks/useSEO";
-import { Link } from "wouter";
-import { CTA } from "@/lib/ctaCopy";
-import { ConversionPathBar } from "@/components/ConversionPathBar";
-import {
-  Monitor, Shield, Radar, Database, Network, GraduationCap,
-  FileCheck, Briefcase, ArrowRight, CheckCircle, ClipboardCheck,
-  Map, FileText, PlayCircle, Search,
-} from "lucide-react";
 
-const standaloneServices = [
+const standalonePrinciples = [
   {
-    icon: Monitor,
-    title: "Managed Workplace / User Support",
-    description:
-      "Secure user access, devices, productivity apps, and employee lifecycle changes — without turning your entire environment over to a new provider.",
-    meta: "Project or monthly engagement · Assessment required for final scope",
+    icon: PackageCheck,
+    title: "A preconfigured DE solution",
+    body: "Start from an approved business need and receive a customer-readable package with included line items and sizing based on your business profile.",
   },
   {
-    icon: Radar,
-    title: "Threat Detection",
-    description:
-      "Visibility into endpoint risks, security alerts, and suspicious activity so meaningful threats surface instead of hiding in noise.",
-    meta: "Monthly engagement · Assessment-based pricing",
+    icon: SlidersHorizontal,
+    title: "Standard standalone pricing",
+    body: "Standalone is the normal transactional price position. It does not assume an ongoing shared operating relationship with DE.",
   },
   {
-    icon: Shield,
-    title: "Security Operations / SOC",
-    description:
-      "Alert review, triage, escalation, and response coordination — an ongoing security operations process layered on top of detection.",
-    meta: "Monthly engagement · Assessment-based pricing",
+    icon: Wrench,
+    title: "Choose how it gets implemented",
+    body: "Self-install where supported, add remote DE implementation help, or schedule hands-on technical work when the package requires it.",
   },
   {
-    icon: Database,
-    title: "Cloud Backup & Recovery",
-    description:
-      "Protect business data and recover from accidents, ransomware, or hardware failure without rebuilding from scratch.",
-    meta: "Monthly engagement · Assessment-based pricing",
-  },
-  {
-    icon: Network,
-    title: "Network & Secure Access",
-    description:
-      "Give employees secure, reliable access to work from the office, home, or anywhere — without exposing the network.",
-    meta: "Project or monthly · Assessment required",
-  },
-  {
-    icon: GraduationCap,
-    title: "Security Awareness",
-    description:
-      "Reduce phishing and human-error incidents with training that actually changes employee security behavior.",
-    meta: "Monthly engagement · Per-user pricing after assessment",
-  },
-  {
-    icon: FileCheck,
-    title: "Compliance Reporting",
-    description:
-      "Show leadership, insurers, and auditors that your security posture is mapped, measured, and improving.",
-    meta: "Project or quarterly · Assessment required",
-  },
-  {
-    icon: Briefcase,
-    title: "Technology & Cyber Strategy (vCIO)",
-    description:
-      "Executive-level technology and cybersecurity advisory — risk-based planning, roadmap, and decision support for leadership.",
-    meta: "Monthly or quarterly advisory · Best when internal IT already exists",
+    icon: ShieldCheck,
+    title: "No managed-IT enrollment",
+    body: "Your business or existing IT provider owns ongoing operation unless you separately select DE support or move into a Co-Managed or ProActive relationship.",
   },
 ];
 
-const assessmentDeliverables = [
-  "Risk and environment review",
-  "Scope recommendation",
-  "Responsibility map",
-  "Priority remediation items",
-  "Recommended next step",
+const flow = [
+  ["0", "Profile", "Users, computers, mobile devices, sites, ownership model, and internal IT."],
+  ["1", "Pain / Need", "Start with the business problem instead of choosing technology manufacturers."],
+  ["2", "Solution", "Select the Standalone offer and review the package built for that need."],
+  ["3", "Package & Delivery", "See included line items, sizing, shipping/provisioning, installation, and support options."],
+  ["4", "Contact", "Company, name, email, and phone only when you are ready to continue."],
 ];
 
-const engagementSteps = [
-  {
-    icon: Search,
-    title: "Cyber Risk Assessment",
-    description: "We review the environment, risk, and business need before scoping any work.",
-  },
-  {
-    icon: ClipboardCheck,
-    title: "Site Survey / Environment Review",
-    description: "Where applicable, we review the site, systems, users, vendors, and current support model.",
-  },
-  {
-    icon: Map,
-    title: "Scope & Responsibility Map",
-    description:
-      "We define what Digerati Experts owns, what the client owns, and what any other provider remains responsible for.",
-  },
-  {
-    icon: FileText,
-    title: "Proposal / SOW",
-    description:
-      "Written agreement with deliverables, supported systems, approval points, exclusions, and service boundaries.",
-  },
-  {
-    icon: PlayCircle,
-    title: "Implementation or Ongoing Service",
-    description:
-      "We begin the standalone engagement — or recommend a ProActive Ecosystem package if the environment requires broader ownership.",
-  },
-];
-
-const boundaries = [
-  "Supported systems are documented before work begins",
-  "Responsibilities are defined in writing",
-  "Internal IT or existing providers remain responsible for areas outside the scope",
-  "Security gaps may need to be resolved before service begins",
-  "Destructive access, admin control, and production changes require approval",
+const comparisons = [
+  ["Operating model", "You / your current IT operate it", "Shared with DE", "DE owns the broader IT operating model"],
+  ["Pricing position", "Standard", "Preferred where commercially justified", "ProActive plan pricing"],
+  ["Implementation", "Self / existing IT / optional DE help", "Joint plan", "DE-led within plan scope"],
+  ["Ongoing support", "Optional", "Shared / defined", "Included by service agreement"],
+  ["Best fit", "You want the solution without changing IT providers", "You have IT capability and want DE involved", "You want DE to act as the IT department"],
 ];
 
 export default function StandaloneServices() {
-  const prefersReducedMotion = useReducedMotion();
-
   useSEO({
-    title: "Standalone IT & Cybersecurity Services",
+    title: "Standalone IT & Cybersecurity Solutions | Digerati Experts",
     description:
-      "Need one critical IT or security gap covered? Digerati Experts can step into a clearly defined technology or security role — backup, threat detection, SOC, secure access, compliance reporting, workplace technology, security awareness, or vCIO advisory — after we assess the environment and document the scope.",
+      "Buy a preconfigured Digerati Experts technology or cybersecurity solution without enrolling in a traditional managed IT program. Choose self-install, remote implementation help, or on-site support where available.",
     canonical: "/solutions/standalone-services",
   });
 
-  const fadeIn = prefersReducedMotion
-    ? undefined
-    : { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4 } } };
-
   return (
-    <div className="relative min-h-screen overflow-hidden bg-de-bg">
-      <div className="relative z-10">
-        <MegaMenu />
-
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 de-nav-clear pb-20">
-          {/* Hero */}
-          <motion.header
-            className="text-center max-w-3xl mx-auto mb-16"
-            initial={prefersReducedMotion ? undefined : "hidden"}
-            animate={prefersReducedMotion ? undefined : "visible"}
-            variants={fadeIn}
-          >
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight" data-testid="heading-standalone-hero">
-              Need One Critical IT or{" "}
-              <span className="text-de-accent-ink">
-                Security Gap
-              </span>{" "}
-              Covered?
+    <div className="min-h-screen bg-de-bg text-white">
+      <MegaMenu />
+      <main className="de-nav-clear pb-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <header className="mx-auto max-w-4xl py-12 text-center md:py-20">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-de-accent-ink">Standalone Solutions</p>
+            <h1 className="mt-5 text-4xl font-bold leading-tight tracking-[-0.035em] md:text-6xl" data-testid="heading-standalone-hero">
+              Buy the solution. <span className="text-de-accent-ink">Keep control of your IT.</span>
             </h1>
-            <p className="text-lg md:text-xl text-white/80 leading-relaxed">
-              When you do not need a full managed IT program yet, Digerati Experts can step into a clearly defined
-              technology or security role — after we assess the environment, document the scope, and confirm ownership.
+            <p className="mx-auto mt-6 max-w-3xl text-lg leading-relaxed text-white/70 md:text-xl">
+              Standalone means you can buy a DE-designed package for a specific business need without turning your whole environment over to a new managed-services provider.
             </p>
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 mt-10">
-              <Button asChild size="lg" variant="brand" className="w-full">
-                  <a href="/book" data-testid="cta-hero-assessment">
-                    {CTA.primary}
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                  </a>
-                </Button>
-              <Link href="/proactive-ecosystem-pricing">
-                <Button size="lg" variant="outline" className="w-full border-white/20 text-white hover:bg-white/10" data-testid="cta-hero-compare">
-                  Compare ProActive Ecosystem
-                </Button>
-              </Link>
-            </div>
-          </motion.header>
-
-          {/* Standalone vs Ecosystem */}
-          <section className="grid md:grid-cols-2 gap-6 mb-20" aria-label="Standalone versus ProActive Ecosystem">
-            <div className="rounded-2xl border border-de-hairline bg-de-raised p-7" data-testid="compare-standalone">
-              <h2 className="text-xl font-bold text-white mb-4">Standalone Services</h2>
-              <ul className="space-y-3 mb-6">
-                {[
-                  "Narrow, documented scope",
-                  "Works alongside internal IT or another provider",
-                  "Starts with a Cyber Risk Assessment",
-                  "Clear responsibilities before work begins",
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-3 text-white/70">
-                    <CheckCircle className="w-5 h-5 text-de-accent-ink mt-0.5 flex-shrink-0" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-              <Button asChild variant="outline" className="border-white/20 text-white hover:bg-white/10">
-                  <a href="/book" data-testid="cta-standalone-scope">
-                    Request Standalone Scope
-                  </a>
-                </Button>
-            </div>
-            <div className="rounded-2xl border border-de-hairline bg-de-raised p-7" data-testid="compare-ecosystem">
-              <h2 className="text-xl font-bold text-white mb-4">ProActive Ecosystem</h2>
-              <ul className="space-y-3 mb-6">
-                {[
-                  "Ongoing operational responsibility",
-                  "Package-based architecture: IT, Office, Business, Enterprise",
-                  "Security-first technology management",
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-3 text-white/70">
-                    <CheckCircle className="w-5 h-5 text-de-accent-ink mt-0.5 flex-shrink-0" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-              <Link href="/proactive-ecosystem-pricing">
-                <Button variant="outline" className="border-white/20 text-white hover:bg-white/10" data-testid="link-proactive-ecosystem">
-                  Explore ProActive Ecosystem
-                </Button>
-              </Link>
-            </div>
-          </section>
-
-          {/* Required first step */}
-          <motion.section
-            className="mb-20 rounded-2xl border border-de-hairline bg-de-raised p-8 md:p-10"
-            initial={prefersReducedMotion ? undefined : "hidden"}
-            whileInView={prefersReducedMotion ? undefined : "visible"}
-            viewport={{ once: true }}
-            variants={fadeIn}
-            aria-labelledby="assessment-heading"
-          >
-            <span className="mb-4 inline-block rounded-full border border-de-hairline bg-de-bg px-3 py-1 text-xs font-semibold uppercase tracking-wide text-de-accent-ink">
-              Required First Step
-            </span>
-            <h2 id="assessment-heading" className="text-3xl font-bold text-white mb-4">
-              The Cyber Risk Assessment Is the Entry Point
-            </h2>
-            <p className="text-white/70 leading-relaxed mb-4 max-w-3xl">
-              The Cyber Risk Assessment gives Digerati Experts a clear view of your environment before we accept
-              responsibility for any system. We review key risks, users, devices, access, vendors, backup posture,
-              network exposure, and current support model.
-            </p>
-            <p className="text-white/70 leading-relaxed mb-8 max-w-3xl">
-              From there, we define the right scope, identify immediate gaps, and recommend either a standalone service
-              or a ProActive Ecosystem package — whichever is the safer path for your business.
-            </p>
-            <h3 className="text-lg font-semibold text-white mb-4">What You Receive</h3>
-            <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {assessmentDeliverables.map((item) => (
-                <li key={item} className="flex items-start gap-3 text-white/70">
-                  <CheckCircle className="w-5 h-5 text-de-accent-ink mt-0.5 flex-shrink-0" />
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-          </motion.section>
-
-          {/* Service roles */}
-          <section className="mb-20" aria-labelledby="roles-heading">
-            <div className="text-center mb-10">
-              <h2 id="roles-heading" className="text-3xl font-bold text-white mb-3">Standalone Service Roles</h2>
-              <p className="text-white/60 max-w-2xl mx-auto">
-                Pick the role you need Digerati Experts to fill. Final pricing and scope are set after the Cyber Risk
-                Assessment.
-              </p>
-            </div>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-              {standaloneServices.map((service) => (
-                <motion.article
-                  key={service.title}
-                  className="flex flex-col rounded-2xl border border-de-hairline bg-de-raised p-6"
-                  initial={prefersReducedMotion ? undefined : "hidden"}
-                  whileInView={prefersReducedMotion ? undefined : "visible"}
-                  viewport={{ once: true }}
-                  variants={fadeIn}
-                >
-                  <span className="w-11 h-11 rounded-xl bg-de-raised flex items-center justify-center mb-4">
-                    <service.icon className="w-5 h-5 text-de-accent-ink" />
-                  </span>
-                  <h3 className="font-semibold text-white mb-2">{service.title}</h3>
-                  <p className="text-sm text-white/60 leading-relaxed mb-4 flex-1">{service.description}</p>
-                  <p className="text-xs text-white/55">{service.meta}</p>
-                </motion.article>
-              ))}
-            </div>
-          </section>
-
-          {/* Engagement process */}
-          <section className="mb-20" aria-labelledby="process-heading">
-            <div className="text-center mb-10">
-              <h2 id="process-heading" className="text-3xl font-bold text-white mb-3">How Standalone Engagements Work</h2>
-              <p className="text-white/60 max-w-2xl mx-auto">
-                We do not guess, overpromise, or take silent responsibility for systems we have not reviewed. Every
-                engagement follows a clear path.
-              </p>
-            </div>
-            <ol className="grid md:grid-cols-5 gap-5">
-              {engagementSteps.map((step, index) => (
-                <li key={step.title} className="rounded-2xl border border-de-hairline bg-de-raised p-5">
-                  <div className="flex items-center gap-3 mb-3">
-                    <span className="w-8 h-8 rounded-full bg-de-raised text-de-accent-ink text-sm font-bold flex items-center justify-center">
-                      {index + 1}
-                    </span>
-                    <step.icon className="w-5 h-5 text-white/55" />
-                  </div>
-                  <h3 className="font-semibold text-white text-sm mb-2">{step.title}</h3>
-                  <p className="text-xs text-white/55 leading-relaxed">{step.description}</p>
-                </li>
-              ))}
-            </ol>
-          </section>
-
-          {/* Boundaries */}
-          <section className="mb-20 rounded-2xl border border-de-hairline bg-de-raised p-8 md:p-10" aria-labelledby="boundaries-heading">
-            <h2 id="boundaries-heading" className="text-3xl font-bold text-white mb-3">
-              No Blind Spots. No Finger-Pointing. No Unclear Ownership.
-            </h2>
-            <p className="text-white/70 leading-relaxed mb-6 max-w-3xl">
-              Standalone services only work when the boundaries are clear. Before we begin, we document supported
-              systems, access requirements, approval points, and who owns the areas outside our scope.
-            </p>
-            <ul className="space-y-3">
-              {boundaries.map((item) => (
-                <li key={item} className="flex items-start gap-3 text-white/70">
-                  <CheckCircle className="w-5 h-5 text-de-accent-ink mt-0.5 flex-shrink-0" />
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
-
-          <ConversionPathBar
-            headline="Not sure whether you need one service or full coverage?"
-            body="Start with a Cyber Risk Assessment. We will identify the risks, clarify the scope, and recommend whether a standalone service or ProActive Ecosystem package is the safer path forward."
-            extraAction={
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="h-12 border-white/70 bg-transparent px-8 font-semibold text-white hover:bg-white/10 hover:text-white"
-              >
-                <Link href="/proactive-ecosystem-pricing">Compare ProActive Ecosystem</Link>
+            <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
+              <Button asChild variant="brand" size="lg" className="h-12">
+                <Link href="/store">
+                  Build a standalone solution <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
               </Button>
-            }
-          />
-        </main>
+              <Button asChild variant="outline" size="lg" className="h-12 border-white/15 text-white hover:bg-white/5">
+                <Link href="/solutions/co-managed-it">Compare Co-Managed</Link>
+              </Button>
+            </div>
+            <p className="mt-4 text-sm text-white/45">No payment is taken in the public builder. DE confirms package fit, scope, fulfillment, and pricing before commitment.</p>
+          </header>
 
-        <DigeratiEnhancedFooterSection />
-      </div>
+          <section className="border-y border-white/10 py-12" aria-labelledby="standalone-means">
+            <div className="mb-8 max-w-2xl">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-de-accent-ink">One definition everywhere</p>
+              <h2 id="standalone-means" className="mt-2 text-3xl font-semibold tracking-tight">What Standalone means at DE</h2>
+            </div>
+            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+              {standalonePrinciples.map(({ icon: Icon, title, body }) => (
+                <article key={title} className="rounded-2xl border border-white/10 bg-de-raised p-6">
+                  <Icon className="h-6 w-6 text-de-accent-ink" aria-hidden="true" />
+                  <h3 className="mt-5 text-lg font-semibold">{title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-white/60">{body}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <section className="py-14" aria-labelledby="standalone-flow">
+            <div className="grid gap-10 lg:grid-cols-[20rem_minmax(0,1fr)]">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-de-accent-ink">Same Store engine</p>
+                <h2 id="standalone-flow" className="mt-2 text-3xl font-semibold tracking-tight">One buying flow, not another mini-store</h2>
+                <p className="mt-4 text-sm leading-relaxed text-white/55">
+                  This page explains the relationship. The actual package, quantities, fulfillment, and submission all come from the same Business Solution Builder used across Door 2.
+                </p>
+              </div>
+              <ol className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+                {flow.map(([number, title, body]) => (
+                  <li key={number} className="rounded-xl border border-white/10 bg-de-raised p-5">
+                    <p className="font-mono text-xs text-de-accent-ink">{number}</p>
+                    <h3 className="mt-3 font-semibold">{title}</h3>
+                    <p className="mt-2 text-xs leading-relaxed text-white/50">{body}</p>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </section>
+
+          <section className="rounded-2xl border border-white/10 bg-de-raised p-6 md:p-8" aria-labelledby="relationship-compare">
+            <div className="flex items-center gap-3">
+              <Layers3 className="h-6 w-6 text-de-accent-ink" aria-hidden="true" />
+              <h2 id="relationship-compare" className="text-2xl font-semibold">Choose the relationship, not a duplicate catalog</h2>
+            </div>
+            <div className="mt-7 overflow-x-auto">
+              <table className="w-full min-w-[760px] border-collapse text-left text-sm">
+                <thead>
+                  <tr className="border-b border-white/10 text-white/50">
+                    <th className="px-3 py-3 font-medium">Dimension</th>
+                    <th className="px-3 py-3 font-medium text-white">Standalone</th>
+                    <th className="px-3 py-3 font-medium text-white">Co-Managed</th>
+                    <th className="px-3 py-3 font-medium text-white">ProActive Managed IT</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {comparisons.map(([dimension, standalone, coManaged, proactive]) => (
+                    <tr key={dimension} className="border-b border-white/8 align-top last:border-0">
+                      <th className="px-3 py-4 font-medium text-white/70">{dimension}</th>
+                      <td className="px-3 py-4 leading-relaxed text-white/60">{standalone}</td>
+                      <td className="px-3 py-4 leading-relaxed text-white/60">{coManaged}</td>
+                      <td className="px-3 py-4 leading-relaxed text-white/60">{proactive}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section className="mx-auto max-w-3xl py-16 text-center">
+            <Truck className="mx-auto h-7 w-7 text-de-accent-ink" aria-hidden="true" />
+            <h2 className="mt-4 text-3xl font-semibold">Start with your profile, then pick the need</h2>
+            <p className="mx-auto mt-4 max-w-2xl text-white/60">
+              The Store will show what is included, how quantities are sized, whether anything ships, and whether self-install, remote setup, or a technician makes sense for that package.
+            </p>
+            <Button asChild variant="brand" size="lg" className="mt-7 h-12">
+              <Link href="/store">
+                Open the Solution Builder <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+            <p className="mt-5 inline-flex items-start gap-2 text-left text-sm text-white/45">
+              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-de-accent-ink" aria-hidden="true" />
+              If a package genuinely requires an assessment, the builder will say so. DE does not force the same assessment step onto every standalone purchase.
+            </p>
+          </section>
+        </div>
+      </main>
+      <DigeratiEnhancedFooterSection />
     </div>
   );
 }

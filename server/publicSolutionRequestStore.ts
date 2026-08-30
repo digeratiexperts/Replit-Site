@@ -13,6 +13,8 @@ export type PublicSolutionNeed = {
 
 export type PublicSolutionEnvironment = {
   userCount: string;
+  workstationCount: string;
+  mobileDeviceCount: string;
   siteCount: string;
   deviceOwnership: string;
   deviceMix: string;
@@ -20,6 +22,11 @@ export type PublicSolutionEnvironment = {
   complianceNeeds: string;
   currentProvider: string;
   urgency: string;
+};
+
+export type PublicSolutionFulfillment = {
+  installation: "self_install" | "remote_assist" | "onsite" | "unsure" | "";
+  remoteSupport: "none" | "as_needed" | "ongoing" | "unsure" | "";
 };
 
 export type PublicSolutionRequest = {
@@ -32,6 +39,7 @@ export type PublicSolutionRequest = {
   deliveryPreference: DeliveryPreference | "";
   selectedNeeds: PublicSolutionNeed[];
   environment: PublicSolutionEnvironment;
+  fulfillment: PublicSolutionFulfillment;
   intent: SolutionRequestIntent;
   organizationName: string;
   contactName: string;
@@ -64,6 +72,8 @@ export function publicOfferInFamily(
 function emptyEnvironment(): PublicSolutionEnvironment {
   return {
     userCount: "",
+    workstationCount: "",
+    mobileDeviceCount: "",
     siteCount: "",
     deviceOwnership: "",
     deviceMix: "",
@@ -72,6 +82,10 @@ function emptyEnvironment(): PublicSolutionEnvironment {
     currentProvider: "",
     urgency: "",
   };
+}
+
+function emptyFulfillment(): PublicSolutionFulfillment {
+  return { installation: "", remoteSupport: "" };
 }
 
 function expireDrafts() {
@@ -95,6 +109,7 @@ export function createPublicSolutionRequest(sessionId: string): PublicSolutionRe
     deliveryPreference: "",
     selectedNeeds: [],
     environment: emptyEnvironment(),
+    fulfillment: emptyFulfillment(),
     intent: "request",
     organizationName: "",
     contactName: "",
@@ -107,7 +122,7 @@ export function createPublicSolutionRequest(sessionId: string): PublicSolutionRe
     updatedAt: now,
   };
   records.set(record.id, record);
-  return { ...record, selectedNeeds: [...record.selectedNeeds], environment: { ...record.environment } };
+  return cloneRequest(record);
 }
 
 export function findPublicSolutionRequest(sessionId: string): PublicSolutionRequest | undefined {
@@ -128,18 +143,27 @@ function cloneRequest(record: PublicSolutionRequest): PublicSolutionRequest {
     ...record,
     selectedNeeds: record.selectedNeeds.map((need) => ({ ...need })),
     environment: { ...record.environment },
+    fulfillment: { ...record.fulfillment },
   };
 }
 
 function asIntent(value: unknown): SolutionRequestIntent {
-  if (value === "quote" || value === "assessment" || value === "consultation" || value === "request") {
-    return value;
-  }
+  if (value === "quote" || value === "assessment" || value === "consultation" || value === "request") return value;
   return "request";
 }
 
 function asDelivery(value: unknown): DeliveryPreference | "" {
   if (value === "co_managed" || value === "standalone" || value === "unsure") return value;
+  return "";
+}
+
+function asInstallation(value: unknown): PublicSolutionFulfillment["installation"] {
+  if (value === "self_install" || value === "remote_assist" || value === "onsite" || value === "unsure") return value;
+  return "";
+}
+
+function asRemoteSupport(value: unknown): PublicSolutionFulfillment["remoteSupport"] {
+  if (value === "none" || value === "as_needed" || value === "ongoing" || value === "unsure") return value;
   return "";
 }
 
@@ -151,6 +175,8 @@ function parseEnvironment(value: unknown, fallback: PublicSolutionEnvironment): 
   const input = value && typeof value === "object" ? (value as Record<string, unknown>) : {};
   return {
     userCount: clip(input.userCount ?? fallback.userCount, 12),
+    workstationCount: clip(input.workstationCount ?? fallback.workstationCount, 12),
+    mobileDeviceCount: clip(input.mobileDeviceCount ?? fallback.mobileDeviceCount, 12),
     siteCount: clip(input.siteCount ?? fallback.siteCount, 12),
     deviceOwnership: clip(input.deviceOwnership ?? fallback.deviceOwnership, 24),
     deviceMix: clip(input.deviceMix ?? fallback.deviceMix, 200),
@@ -158,6 +184,14 @@ function parseEnvironment(value: unknown, fallback: PublicSolutionEnvironment): 
     complianceNeeds: clip(input.complianceNeeds ?? fallback.complianceNeeds, 400),
     currentProvider: clip(input.currentProvider ?? fallback.currentProvider, 200),
     urgency: clip(input.urgency ?? fallback.urgency, 200),
+  };
+}
+
+function parseFulfillment(value: unknown, fallback: PublicSolutionFulfillment): PublicSolutionFulfillment {
+  const input = value && typeof value === "object" ? (value as Record<string, unknown>) : {};
+  return {
+    installation: asInstallation(input.installation ?? fallback.installation),
+    remoteSupport: asRemoteSupport(input.remoteSupport ?? fallback.remoteSupport),
   };
 }
 
@@ -202,13 +236,7 @@ function synthesizeNeed(
     offerId && (deliveryModel === "standalone" || deliveryModel === "co_managed")
       ? publicOfferInFamily(familyId, offerId, deliveryModel)
       : false;
-  return [
-    {
-      familyId,
-      offerId: offerOk ? offerId : null,
-      deliveryModel,
-    },
-  ];
+  return [{ familyId, offerId: offerOk ? offerId : null, deliveryModel }];
 }
 
 export function upsertPublicSolutionRequest(input: {
@@ -220,6 +248,7 @@ export function upsertPublicSolutionRequest(input: {
   deliveryPreference?: unknown;
   selectedNeeds?: unknown;
   environment?: unknown;
+  fulfillment?: unknown;
   intent?: unknown;
   organizationName?: unknown;
   contactName?: unknown;
@@ -232,25 +261,19 @@ export function upsertPublicSolutionRequest(input: {
     (input.id ? records.get(input.id) : undefined) ??
     [...records.values()].find((record) => record.sessionId === input.sessionId && record.status === "draft");
   const base = existing ?? createPublicSolutionRequest(input.sessionId);
-  const deliveryPreference =
-    asDelivery(input.deliveryPreference) || asDelivery(input.deliveryModel) || base.deliveryPreference;
+  const deliveryPreference = asDelivery(input.deliveryPreference) || asDelivery(input.deliveryModel) || base.deliveryPreference;
   const selectedNeeds = parseSelectedNeeds(input.selectedNeeds, base.selectedNeeds);
   const familyId = clip(input.familyId, 80) || selectedNeeds[0]?.familyId || base.familyId;
   const deliveryModel =
-    asDelivery(input.deliveryModel) ||
-    selectedNeeds[0]?.deliveryModel ||
-    deliveryPreference ||
-    base.deliveryModel ||
-    "unsure";
+    asDelivery(input.deliveryModel) || selectedNeeds[0]?.deliveryModel || deliveryPreference || base.deliveryModel || "unsure";
   const offerId = clip(input.offerId, 80) || selectedNeeds[0]?.offerId || base.offerId;
-  const nextNeeds =
-    selectedNeeds.length > 0
-      ? selectedNeeds
-      : synthesizeNeed(
-          familyId && publicFamilyExists(familyId) ? familyId : null,
-          offerId,
-          deliveryModel || "unsure",
-        );
+  const nextNeeds = selectedNeeds.length > 0
+    ? selectedNeeds
+    : synthesizeNeed(
+        familyId && publicFamilyExists(familyId) ? familyId : null,
+        offerId,
+        deliveryModel || "unsure",
+      );
   const next: PublicSolutionRequest = {
     ...base,
     sessionId: input.sessionId,
@@ -260,6 +283,7 @@ export function upsertPublicSolutionRequest(input: {
     deliveryPreference,
     selectedNeeds: nextNeeds,
     environment: parseEnvironment(input.environment, base.environment),
+    fulfillment: parseFulfillment(input.fulfillment, base.fulfillment),
     intent: asIntent(input.intent ?? base.intent),
     organizationName: clip(input.organizationName ?? base.organizationName, 200),
     contactName: clip(input.contactName ?? base.contactName, 120),
@@ -277,10 +301,7 @@ export function submitPublicSolutionRequest(
   contact: { name: string; email: string; phone?: string; organizationName?: string },
   idempotencyKey?: string,
 ): { record: PublicSolutionRequest; replayed: boolean } {
-  const composedKey = record.selectedNeeds
-    .map((need) => need.familyId)
-    .sort()
-    .join(",");
+  const composedKey = record.selectedNeeds.map((need) => need.familyId).sort().join(",");
   const key =
     idempotencyKey?.trim().slice(0, 200) ||
     `${contact.email.trim().toLowerCase()}|${composedKey || record.familyId || ""}|${record.deliveryPreference || record.deliveryModel}|${record.intent}`;
@@ -326,6 +347,7 @@ export function publicSolutionRequestView(record: PublicSolutionRequest) {
     deliveryPreference: record.deliveryPreference,
     selectedNeeds: record.selectedNeeds,
     environment: record.environment,
+    fulfillment: record.fulfillment,
     intent: record.intent,
     organizationName: record.organizationName,
     contactName: record.contactName,
