@@ -133,4 +133,32 @@ describe("public solution Door 2 API", () => {
     expect(secondBody.replayed).toBe(true);
     expect(secondBody.request.id).toBe(firstBody.request.id);
   });
+
+  it("keeps only known sizing fields for the selected family and drops unrelated or invented keys", async () => {
+    const response = await fetch(`${baseUrl}/api/public/solutions/request`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        familyId: "network_connectivity",
+        offerId: "de-network-standalone",
+        deliveryModel: "standalone",
+        contactName: "Jordan Buyer",
+        contactEmail: "jordan-sizing@example.com",
+        sizingAnswers: {
+          sites: "12",
+          devices: "40",
+          // not a real field on this family — must be dropped, not stored
+          monthlyPrice: "999",
+          // not a field on any family — must be dropped
+          madeUpKey: "hello",
+        },
+      }),
+    });
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body.request.sizingAnswers).toEqual({ sites: "12", devices: "40" });
+    const raw = JSON.stringify(body).toLowerCase();
+    expect(raw).not.toContain("monthlyprice");
+    expect(raw).not.toContain("madeupkey");
+  });
 });

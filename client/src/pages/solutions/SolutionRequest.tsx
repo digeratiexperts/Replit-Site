@@ -16,6 +16,8 @@ import {
   type CuratedDeliveryModel,
 } from "@/lib/businessNeeds";
 import { DOOR_2_ELIGIBILITY } from "@shared/checkoutEligibility";
+import { defaultSizingAnswers, sizingFieldsForFamily } from "@/data/solutionSizingFields";
+import { SolutionSizingFields } from "@/components/solutions/SolutionSizingFields";
 
 type Intent = "request" | "quote" | "assessment" | "consultation";
 
@@ -54,6 +56,13 @@ export default function SolutionRequest() {
     contactPhone: "",
     notes: "",
   });
+  const sizingFields = useMemo(() => (family ? sizingFieldsForFamily(family.id) : []), [family]);
+  const [sizingAnswers, setSizingAnswers] = useState<Record<string, string>>(() =>
+    family ? defaultSizingAnswers(family.id) : {},
+  );
+  useEffect(() => {
+    setSizingAnswers(family ? defaultSizingAnswers(family.id) : {});
+  }, [family?.id]);
   const [requestId, setRequestId] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -85,6 +94,14 @@ export default function SolutionRequest() {
           contactPhone: data.request.contactPhone || current.contactPhone,
           notes: data.request.notes || current.notes,
         }));
+        if (
+          family &&
+          data.request.familyId === family.id &&
+          data.request.sizingAnswers &&
+          Object.keys(data.request.sizingAnswers).length > 0
+        ) {
+          setSizingAnswers((current) => ({ ...current, ...data.request.sizingAnswers }));
+        }
       })
       .catch(() => {
         /* draft load is optional; submit still persists */
@@ -124,6 +141,7 @@ export default function SolutionRequest() {
           contactEmail: form.contactEmail,
           contactPhone: form.contactPhone,
           notes: form.notes,
+          sizingAnswers,
           idempotencyKey: `${form.contactEmail.trim().toLowerCase()}|${offer.id}|${delivery}|${intent}`,
         }),
       });
@@ -189,6 +207,27 @@ export default function SolutionRequest() {
               </p>
             )}
           </section>
+
+          {family && offer && sizingFields.length > 0 && !result ? (
+            <section
+              className="mb-8 rounded-2xl border border-de-hairline bg-de-raised p-6"
+              data-testid="request-sizing"
+            >
+              <p className="text-sm text-white/50">Help us size this</p>
+              <h2 className="mt-1 text-xl font-semibold text-white">A few quick scope questions</h2>
+              <p className="mt-2 text-sm leading-relaxed text-white/65">
+                These are not a price quote — they just help DE come back with an accurate one
+                instead of a generic range. {offer.nextStep} still applies.
+              </p>
+              <div className="mt-5">
+                <SolutionSizingFields
+                  fields={sizingFields}
+                  values={sizingAnswers}
+                  onChange={(key, value) => setSizingAnswers((current) => ({ ...current, [key]: value }))}
+                />
+              </div>
+            </section>
+          ) : null}
 
           {result ? (
             <section

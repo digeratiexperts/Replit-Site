@@ -2,7 +2,9 @@ import { randomUUID } from "crypto";
 import {
   curatedSolutionFamilies,
   type CuratedDeliveryModel,
+  type CuratedSolutionFamily,
 } from "../client/src/data/curatedSolutions";
+import { SOLUTION_SIZING_FIELDS } from "../client/src/data/solutionSizingFields";
 
 export type SolutionRequestIntent = "request" | "quote" | "assessment" | "consultation";
 export type SolutionRequestStatus = "draft" | "submitted";
@@ -20,6 +22,8 @@ export type PublicSolutionRequest = {
   contactEmail: string;
   contactPhone: string;
   notes: string;
+  /** Scope-sizing answers keyed by field key — see solutionSizingFields.ts. No pricing, ever. */
+  sizingAnswers: Record<string, string>;
   status: SolutionRequestStatus;
   crmStatus: "not_requested" | "pending" | "recorded";
   createdAt: string;
@@ -63,6 +67,7 @@ export function createPublicSolutionRequest(sessionId: string): PublicSolutionRe
     contactEmail: "",
     contactPhone: "",
     notes: "",
+    sizingAnswers: {},
     status: "draft",
     crmStatus: "not_requested",
     createdAt: now,
@@ -100,6 +105,21 @@ function clip(value: unknown, max: number): string {
   return typeof value === "string" ? value.trim().slice(0, max) : "";
 }
 
+/** Keep only known field keys for this family, each clipped to a short value. Drops anything else. */
+function sanitizeSizingAnswers(familyId: string | null, value: unknown): Record<string, string> {
+  if (!familyId || typeof value !== "object" || value === null) return {};
+  const allowedKeys = new Set(
+    (SOLUTION_SIZING_FIELDS[familyId as CuratedSolutionFamily["id"]] ?? []).map((field) => field.key),
+  );
+  const answers: Record<string, string> = {};
+  for (const [key, raw] of Object.entries(value as Record<string, unknown>)) {
+    if (!allowedKeys.has(key)) continue;
+    const text = clip(raw, 60);
+    if (text) answers[key] = text;
+  }
+  return answers;
+}
+
 export function upsertPublicSolutionRequest(input: {
   sessionId: string;
   id?: string;
@@ -112,6 +132,7 @@ export function upsertPublicSolutionRequest(input: {
   contactEmail?: unknown;
   contactPhone?: unknown;
   notes?: unknown;
+  sizingAnswers?: unknown;
 }): PublicSolutionRequest {
   expireDrafts();
   const existing =
@@ -121,10 +142,11 @@ export function upsertPublicSolutionRequest(input: {
   const familyId = clip(input.familyId, 80) || base.familyId;
   const deliveryModel = asDelivery(input.deliveryModel ?? base.deliveryModel);
   const offerId = clip(input.offerId, 80) || base.offerId;
+  const resolvedFamilyId = familyId && publicFamilyExists(familyId) ? familyId : null;
   const next: PublicSolutionRequest = {
     ...base,
     sessionId: input.sessionId,
-    familyId: familyId && publicFamilyExists(familyId) ? familyId : null,
+    familyId: resolvedFamilyId,
     offerId:
       familyId && offerId && publicOfferInFamily(familyId, offerId, deliveryModel) ? offerId : null,
     deliveryModel,
@@ -132,6 +154,10 @@ export function upsertPublicSolutionRequest(input: {
     organizationName: clip(input.organizationName ?? base.organizationName, 200),
     contactName: clip(input.contactName ?? base.contactName, 120),
     contactEmail: clip(input.contactEmail ?? base.contactEmail, 200).toLowerCase(),
+    sizingAnswers:
+      input.sizingAnswers !== undefined
+        ? sanitizeSizingAnswers(resolvedFamilyId, input.sizingAnswers)
+        : base.sizingAnswers,
     contactPhone: clip(input.contactPhone ?? base.contactPhone, 40),
     notes: clip(input.notes ?? base.notes, 2000),
     updatedAt: new Date().toISOString(),
@@ -193,6 +219,7 @@ export function publicSolutionRequestView(record: PublicSolutionRequest) {
     contactEmail: record.contactEmail,
     contactPhone: record.contactPhone,
     notes: record.notes,
+    sizingAnswers: record.sizingAnswers,
     status: record.status,
     crmStatus: record.crmStatus,
     updatedAt: record.updatedAt,
