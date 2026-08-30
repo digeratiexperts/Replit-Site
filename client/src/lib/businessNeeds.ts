@@ -83,7 +83,10 @@ function publicOfferView(family: CuratedSolutionFamily, offer: CuratedSolutionOf
       ? "DE provides the approved package and any separately selected implementation or support. Ongoing operation remains with the customer or its existing IT provider unless Co-Managed is selected."
       : offer.serviceLevel,
     commercialModel: packageView.pricingLabel,
-    nextStep: offer.nextStep,
+    nextStep:
+      packageView.assessmentPolicy === "required"
+        ? "Assessment required before final scope"
+        : "Package review and scope confirmation",
     package: {
       pricingPosition: packageView.pricingPosition,
       lineItems: packageView.lineItems,
@@ -100,7 +103,7 @@ function publicOfferView(family: CuratedSolutionFamily, offer: CuratedSolutionOf
   };
 }
 
-/** Public wire contract. Never join vendor, SKU, cost, margin, or distributor data here. */
+/** Public wire contract. Keep internal catalog and commercial-private data out of this object. */
 export function toPublicFamily(family: CuratedSolutionFamily) {
   return {
     id: family.id,
