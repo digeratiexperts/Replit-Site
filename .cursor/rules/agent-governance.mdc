@@ -1,0 +1,25 @@
+---
+description: DE AI engineering governance — one integrator, isolated work, overlap locks, visual and production gates
+alwaysApply: true
+---
+
+# DE AI engineering governance
+
+Mandatory authority: `docs/AI-ENGINEERING-GOVERNANCE.md`.
+
+Before any implementation:
+
+1. read `AGENTS.md`;
+2. read `docs/AI-ENGINEERING-GOVERNANCE.md`;
+3. inspect `.ai/ACTIVE_WORK.yaml` and current open PRs/branches;
+4. fetch current `origin/main` and record its SHA;
+5. use an isolated branch/worktree;
+6. claim non-overlapping work before editing.
+
+Cursor is a **specialist implementation agent by default**, not an independent website integration authority. Claude Code is the default lead website implementation/integration agent unless Joe explicitly reassigns that role for a specific task.
+
+Do not merge or deploy website work unless Joe explicitly authorizes the exception. Do not edit a subsystem already claimed by another active agent. Do not resolve overlap by blindly replacing whole files.
+
+For UI work, inspect the actual rendered context before changing it and verify at 390 / 768 / 1440. Code correctness is not visual acceptance.
+
+`MERGED` != `LIVE`. Production must be verified separately.

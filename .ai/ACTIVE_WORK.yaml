@@ -1,0 +1,22 @@
+# DE shared AI work registry.
+# Mandatory coordination source; governed by docs/AI-ENGINEERING-GOVERNANCE.md.
+#
+# IMPORTANT: an empty registry does NOT prove there is no concurrent work.
+# Before claiming work, also inspect current open PRs/branches and docs/SITE-VISUAL-TASKS.md.
+# Add a claim before implementation and remove/close it when merged, abandoned, or superseded.
+#
+# Example:
+# claims:
+#   - id: ask-de-launcher-svg
+#     owner: claude
+#     subsystem: de-desk
+#     branch: claude/ask-de-launcher-svg
+#     base_sha: abc123...
+#     files:
+#       - client/src/components/ZohoASAPWidget.tsx
+#       - client/src/assets/ask-de.svg
+#     status: active
+#     started: 2026-08-30
+
+version: 1
+claims: []

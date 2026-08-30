@@ -1,6 +1,16 @@
 # Agent workflow (Digerati Experts)
 
-Authoritative policy: **`.cursorrules`** (sections 1-42, including section 9A Visual System v2). Always-applied pointers: `.cursor/rules/00-follow-cursorrules.mdc`, `.cursor/rules/de-ecosystem.mdc`.
+## AI engineering governance — mandatory
+
+Authoritative multi-agent policy: **`docs/AI-ENGINEERING-GOVERNANCE.md`**. Shared coordination registry: **`.ai/ACTIVE_WORK.yaml`**. This policy is mandatory for Claude Code, Cursor, Antigravity/Gemini, ChatGPT-assisted repository work, and other agents.
+
+Default authority: Joe is final product/release authority; Claude Code is the default lead website implementation/integration agent; Cursor and Antigravity/Gemini are specialist/review agents unless Joe explicitly reassigns the role for a specific task. There is only one website integration authority at a time.
+
+Every agent must use an isolated branch/worktree, check active claims plus current open PRs before editing, reconcile against current `origin/main` before merge, and treat `MERGED` and `LIVE` as separate states. Specialist agents do not independently merge/deploy website work by default.
+
+For visual work, rendered quality is an acceptance gate separate from code correctness. Inspect the actual UI in context before changing it and verify at 390 / 768 / 1440.
+
+Authoritative policy: **`.cursorrules`** (sections 1-42, including section 9A Visual System v2). Always-applied pointers: `.cursor/rules/00-follow-cursorrules.mdc`, `.cursor/rules/de-ecosystem.mdc`, `.cursor/rules/agent-governance.mdc`.
 
 Design OS (execution layer, does not replace `.cursorrules`): `.cursor/rules/ui-ux.mdc`, `brand.mdc`, `frontend.mdc`, `visual-system-v2.mdc` + `design/DESIGN_SYSTEM.md` + `design/VISUAL_SYSTEM_V2.md`. Never judge UI from source code alone. Blog/Journal and Store colors are locked: `.cursor/rules/blog-store-color-lock.mdc`.
 
@@ -31,10 +41,11 @@ You are working in a multi-agent repository. Other agents may be modifying the s
 **Before working:**
 
 1. Fetch the latest `origin/main`.
-2. Read `design/BRAND.md`, `DESIGN_SYSTEM.md`, `UX_PRINCIPLES.md`, `IMAGERY.md`, and the Visual System v2 documents.
-3. Read `docs/SITE-VISUAL-TASKS.md`.
-4. Confirm your task has one assigned owner and is not already IN PROGRESS elsewhere.
-5. Work on an isolated branch/worktree.
+2. Read `docs/AI-ENGINEERING-GOVERNANCE.md` and `.ai/ACTIVE_WORK.yaml`, then inspect current open PRs/branches for concurrent work.
+3. Read `design/BRAND.md`, `DESIGN_SYSTEM.md`, `UX_PRINCIPLES.md`, `IMAGERY.md`, and the Visual System v2 documents.
+4. Read `docs/SITE-VISUAL-TASKS.md`.
+5. Confirm your task has one assigned owner and is not already IN PROGRESS elsewhere.
+6. Work on an isolated branch/worktree.
 
 **Brand foundation is locked:** graphite `#050312`, warm paper `#F7F5F2`, magenta `#D3126A`, restrained violet illumination, Space Grotesk / Inter / Oxanium, Store electric blue remains Store-specific. Do not redesign the foundational palette or typography.
 
@@ -42,9 +53,9 @@ You are working in a multi-agent repository. Other agents may be modifying the s
 
 **During implementation:** inspect → architect → implement → render → screenshot → critique → refine. Verify at 390 / 768 / 1440.
 
-**Before PR:** Fetch origin/main again. Identify every commit that landed on main since your branch began. Compare overlapping files. Preserve newer unrelated work. Never resolve conflicts by blindly taking a whole-file "ours" or "theirs." Run typecheck/tests/build. Include the concurrency report and visual evidence in the PR. **Do not merge your own PR.**
+**Before PR:** Fetch origin/main again. Identify every commit that landed on main since your branch began. Compare overlapping files and active-agent claims. Preserve newer unrelated work. Never resolve conflicts by blindly taking a whole-file "ours" or "theirs." Run typecheck/tests/build. Include the concurrency report and visual evidence in the PR. **Do not merge your own PR unless Joe has explicitly authorized an exception under the governance law.**
 
-A task is not finished until reviewed, merged, production-verified, and marked LIVE in the shared task ledger.
+A task is not finished until reviewed, merged, production-verified, and marked LIVE in the shared task ledger/coordination state.
 
 ## Closed loop (UI work)
 
