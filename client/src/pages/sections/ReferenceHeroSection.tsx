@@ -29,16 +29,8 @@ const trustItems = [
   },
 ];
 
-/** Real DE stack vendors (same merchandising set the Store uses) — shown as
- * restrained monochrome marks, not fabricated partnership claims. */
-const stackVendors = [
-  { slug: "jumpcloud", name: "JumpCloud", heightClass: "h-6 sm:h-7" },
-  { slug: "coro", name: "Coro", heightClass: "h-6 sm:h-7" },
-  { slug: "opti9", name: "Opti9", heightClass: "h-6 sm:h-7" },
-  // Cytracom's mark is a 20px-tall wordmark — keep it at native height so it
-  // stays crisp and doesn't dwarf the other marks.
-  { slug: "cytracom", name: "Cytracom", heightClass: "h-4 sm:h-5" },
-];
+// Per Joe (2026-08-30): no vendor names in the hero — DE does not surface
+// stack vendors on the public homepage. Positioning line only.
 
 function ShieldIllustration() {
   return (
@@ -160,24 +152,12 @@ export function ReferenceHeroSection(): JSX.Element {
             </Button>
           </div>
 
-          <div className="mt-10">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/40">
-              Our security stack
-            </p>
-            <div className="mt-4 flex flex-wrap items-center gap-x-9 gap-y-4">
-              {stackVendors.map(({ slug, name, heightClass }) => (
-                <img
-                  key={slug}
-                  src={`/images/vendors/${slug}.png`}
-                  alt={name}
-                  loading="lazy"
-                  decoding="async"
-                  className={`${heightClass} w-auto opacity-65 transition-opacity hover:opacity-90`}
-                  style={{ filter: "brightness(0) invert(1)" }}
-                  data-testid={`hero-stack-${slug}`}
-                />
-              ))}
-            </div>
+          <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-white/58">
+            <span>Assessment-led</span>
+            <span aria-hidden="true">·</span>
+            <span>Client-owned access</span>
+            <span aria-hidden="true">·</span>
+            <span>Fully managed or co-managed</span>
           </div>
         </motion.div>
 
