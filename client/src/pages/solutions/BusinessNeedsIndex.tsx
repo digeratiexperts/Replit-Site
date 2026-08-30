@@ -137,21 +137,28 @@ export default function BusinessNeedsIndex() {
                     const Icon = FAMILY_ICONS[family.id];
                     return (
                       <li key={family.id}>
-                        <article className="group flex h-full min-h-[22rem] flex-col overflow-hidden rounded-2xl border border-black/10 bg-[#FAF9F6] text-[#1A1228] transition-all duration-300 hover:-translate-y-1.5 hover:border-de-accent/50 hover:bg-white hover:shadow-[0_20px_50px_rgba(0,0,0,0.25)]" data-testid={`family-card-${family.id}`}>
-                          <Link href={familyPath(family.id)} className="relative flex h-32 items-end overflow-hidden border-b border-black/10 bg-[#181520] p-5">
-                            <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_20%,rgba(29,111,242,0.28),transparent_52%)]" aria-hidden="true" />
-                            <span className={`absolute left-3 top-3 rounded-full bg-[#181520]/90 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm ${FAMILY_ACCENTS[family.id]}`}>Curated DE solution</span>
-                            <span className="relative flex h-12 w-12 items-center justify-center rounded-xl border border-de-accent/30 bg-de-accent/10"><Icon className="h-6 w-6 text-de-accent-ink" aria-hidden="true" /></span>
+                        <article className="group flex h-full min-h-[19rem] flex-col overflow-hidden rounded-2xl border border-black/10 bg-[#FAF9F6] text-[#1A1228] transition-all duration-300 hover:-translate-y-1.5 hover:border-de-accent/50 hover:bg-white hover:shadow-[0_20px_50px_rgba(0,0,0,0.25)] sm:min-h-[20rem]" data-testid={`family-card-${family.id}`}>
+                          <Link href={familyPath(family.id)} className="relative flex min-h-[6.75rem] items-center overflow-hidden border-b border-black/10 bg-[#181520] p-4 sm:min-h-[7.5rem] sm:p-5">
+                            <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(29,111,242,0.30),transparent_52%)]" aria-hidden="true" />
+                            <div className="relative flex w-full items-center gap-3.5">
+                              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-de-accent/30 bg-de-accent/10 sm:h-12 sm:w-12">
+                                <Icon className={`h-5 w-5 sm:h-6 sm:w-6 ${FAMILY_ACCENTS[family.id]}`} aria-hidden="true" />
+                              </span>
+                              <div className="min-w-0">
+                                <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-white/45">Business need</p>
+                                <h3 className="mt-1 text-base font-bold leading-tight text-white sm:text-lg">{family.label}</h3>
+                              </div>
+                              <ArrowRight className="ml-auto h-4 w-4 shrink-0 text-white/35 transition-transform group-hover:translate-x-1 group-hover:text-de-accent-ink" aria-hidden="true" />
+                            </div>
                           </Link>
-                          <div className="flex flex-1 flex-col p-5">
-                            <Link href={familyPath(family.id)}><h3 className="text-lg font-bold leading-snug text-[#1A1228] transition-colors group-hover:text-de-accent">{family.label}</h3></Link>
-                            <p className="mt-2 text-sm font-medium leading-relaxed text-[#4A4556]">{family.description}</p>
-                            <ul className="mt-4 space-y-2">
-                              {(family.offers[0]?.outcomes ?? []).slice(0, 2).map((outcome) => <li key={outcome} className="flex gap-2 text-xs text-[#4A4556]"><CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-de-accent" aria-hidden="true" />{outcome}</li>)}
+                          <div className="flex flex-1 flex-col p-4 sm:p-5">
+                            <p className="text-sm font-medium leading-relaxed text-[#4A4556]">{family.description}</p>
+                            <ul className="mt-4 space-y-2.5">
+                              {(family.offers[0]?.outcomes ?? []).slice(0, 2).map((outcome) => <li key={outcome} className="flex gap-2 text-xs leading-relaxed text-[#4A4556]"><CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-de-accent" aria-hidden="true" />{outcome}</li>)}
                             </ul>
-                            <div className="mt-auto flex gap-2 border-t border-black/10 pt-4">
-                              <Button asChild variant="outline" size="sm" className="h-10 flex-1 border-black/15 bg-white text-xs font-semibold text-[#1A1228] hover:bg-black/5"><Link href={familyPath(family.id)}><Eye className="mr-1 h-3.5 w-3.5" />Details</Link></Button>
-                              <Button size="sm" className="h-10 flex-1 bg-de-accent text-xs font-bold text-white hover:bg-[#6548ff]" onClick={() => { addSolutionCartItem({ familyId: family.id, delivery: "standalone" }); toast({ title: "Added to Your Solution", description: `${family.label} is ready to configure.` }); }}><ShoppingCart className="mr-1 h-3.5 w-3.5" />Add</Button>
+                            <div className="mt-auto grid grid-cols-2 gap-2 border-t border-black/10 pt-4">
+                              <Button asChild variant="outline" size="sm" className="h-10 min-w-0 border-black/15 bg-white px-2 text-xs font-semibold text-[#1A1228] hover:bg-black/5 sm:px-3"><Link href={familyPath(family.id)}><Eye className="mr-1 h-3.5 w-3.5" />Details</Link></Button>
+                              <Button size="sm" className="h-10 min-w-0 bg-de-accent px-2 text-xs font-bold text-white hover:bg-[#6548ff] sm:px-3" onClick={() => { addSolutionCartItem({ familyId: family.id, delivery: "standalone" }); toast({ title: "Added to Your Solution", description: `${family.label} is ready to configure.` }); }}><ShoppingCart className="mr-1 h-3.5 w-3.5" />Add</Button>
                             </div>
                           </div>
                         </article>
