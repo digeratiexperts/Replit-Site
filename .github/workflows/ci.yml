@@ -92,6 +92,47 @@ jobs:
           BASE_URL=http://127.0.0.1:3300 npm run smoke:public
           DOOR2_BASE=http://127.0.0.1:3300 npm run smoke:door2
 
+      - name: Temporary homepage reference visual QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          LOG=/tmp/homepage-reference-visual-qa.log
+          NODE_ENV=production PORT=3300 node dist/index.js >"$LOG" 2>&1 &
+          SERVER_PID=$!
+          cleanup() {
+            kill "$SERVER_PID" 2>/dev/null || true
+            wait "$SERVER_PID" 2>/dev/null || true
+          }
+          trap cleanup EXIT
+
+          READY=0
+          for _ in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:3300/healthz >/dev/null; then
+              READY=1
+              break
+            fi
+            if ! kill -0 "$SERVER_PID" 2>/dev/null; then
+              break
+            fi
+            sleep 1
+          done
+
+          if [ "$READY" != "1" ]; then
+            cat "$LOG"
+            exit 1
+          fi
+
+          BASE_URL=http://127.0.0.1:3300 node scripts/homepage-reference-visual-qa.mjs
+
+      - name: Upload homepage visual QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: homepage-reference-visual-qa
+          path: tmp/homepage-visual-qa
+          if-no-files-found: warn
+          retention-days: 7
+
   # Production is a CyberPanel/OpenLiteSpeed VPS, not a Replit deployment.
   # This job is pinned to a repo-scoped production runner. Generic Linux
   # self-hosted runners (RackNerd security runner, Zorin laptop, etc.) are not
