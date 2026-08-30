@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 import { ShoppingCart, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,7 @@ import { readSolutionCart, removeSolutionCartItem, SOLUTION_CART_EVENT, type Pub
 
 export function PublicSolutionCart() {
   const [items, setItems] = useState<PublicSolutionCartItem[]>([]);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const refresh = () => setItems(readSolutionCart());
@@ -20,10 +21,39 @@ export function PublicSolutionCart() {
     };
   }, []);
 
+  // Publish this button's height so other fixed chrome (e.g. the Ask DE
+  // callout) can stack above it instead of guessing an offset and overlapping.
+  useEffect(() => {
+    const root = document.documentElement;
+    const el = triggerRef.current;
+    if (!el) {
+      root.style.setProperty("--de-store-cart-h", "0px");
+      return;
+    }
+    const publish = () => root.style.setProperty("--de-store-cart-h", `${Math.round(el.offsetHeight)}px`);
+    publish();
+    const ro = new ResizeObserver(publish);
+    ro.observe(el);
+    return () => {
+      ro.disconnect();
+      root.style.setProperty("--de-store-cart-h", "0px");
+    };
+  }, []);
+
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline" className="fixed bottom-5 right-5 z-40 h-12 border-de-accent/45 bg-[#121212] px-4 text-white shadow-2xl hover:bg-[#181818]" data-testid="public-solution-cart">
+        <Button
+          ref={triggerRef}
+          variant="outline"
+          className="fixed z-40 h-12 border-de-accent/45 bg-[#121212] px-4 text-white shadow-2xl hover:bg-[#181818]"
+          style={{
+            right: "calc(var(--de-canvas-gutter) + var(--de-chrome-inset))",
+            bottom:
+              "calc(var(--de-chrome-inset) + var(--de-cookie-h, 0px) + var(--de-unified-bar-h, 0px) + 0.75rem)",
+          }}
+          data-testid="public-solution-cart"
+        >
           <ShoppingCart className="mr-2 h-5 w-5 text-de-accent-ink" />Your Solution
           {items.length > 0 && <span className="ml-2 rounded-full bg-de-accent px-2 py-0.5 text-xs font-bold text-white">{items.length}</span>}
         </Button>
