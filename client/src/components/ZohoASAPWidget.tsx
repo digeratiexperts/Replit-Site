@@ -437,7 +437,7 @@ export const ZohoASAPWidget = ({
       const detail = (event as CustomEvent<OpenMspAdvisorDetail>).detail || {};
       ignoreDismissUntilRef.current = Date.now() + 400;
       setIsOpen(true);
-      setActiveTab("chat");
+      setActiveTab(detail.tab ?? "chat");
       const seed =
         detail.seedMessage ||
         (detail.context === "store" ||

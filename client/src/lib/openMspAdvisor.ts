@@ -5,6 +5,8 @@
 export type OpenMspAdvisorDetail = {
   seedMessage?: string;
   context?: "store" | "home" | "other";
+  /** Deep-link straight to a Desk tab instead of always opening on Ask DE chat. */
+  tab?: "chat" | "ticket" | "resources";
 };
 
 export function openMspAdvisor(detail: OpenMspAdvisorDetail = {}) {

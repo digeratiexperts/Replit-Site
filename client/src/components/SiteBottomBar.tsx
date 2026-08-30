@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowUp } from "lucide-react";
+import { ArrowUp, X } from "lucide-react";
 import { useLocation } from "wouter";
 import {
   HomepageDockActions,
@@ -8,30 +8,119 @@ import {
   useHomepageDockVisibility,
 } from "@/components/HomepageSectionNav";
 import { openMspAdvisor } from "@/lib/openMspAdvisor";
+import { isDoor2Path } from "@/lib/isDoor2Path";
+import { PRIMARY_PHONE } from "@shared/companyContact";
 
 /** Original used 0.28s easeOut layout + 300ms grid. Keep that pacing without transform. */
 const EXPAND_S = 0.4;
 const EXPAND_EASE = "easeOut" as const;
 
-function AskDELauncherButton() {
+/** Shown once per tab session so the compact Store launcher doesn't nag on every render. */
+const STORE_CALLOUT_SEEN_KEY = "de-store-ask-callout-seen";
+
+/**
+ * On Store/Door 2 pages the storefront has its own floating "Your Solution"
+ * button in the same bottom-right corner. Full Ask DE (icon + two lines of
+ * text) crowded that button, so here it balls up to the round icon only and
+ * surfaces a small dismissible callout pointing at Get Support / a live call
+ * instead of relying on the wide label to explain itself.
+ */
+function AskDELauncherButton({ compact = false }: { compact?: boolean }) {
+  const [showCallout, setShowCallout] = useState(false);
+
+  useEffect(() => {
+    if (!compact) {
+      setShowCallout(false);
+      return;
+    }
+    if (typeof window === "undefined") return;
+    if (window.sessionStorage.getItem(STORE_CALLOUT_SEEN_KEY)) return;
+    const timer = window.setTimeout(() => setShowCallout(true), 900);
+    return () => window.clearTimeout(timer);
+  }, [compact]);
+
+  const dismissCallout = () => {
+    setShowCallout(false);
+    window.sessionStorage?.setItem(STORE_CALLOUT_SEEN_KEY, "1");
+  };
+
   return (
-    <button
-      type="button"
-      onClick={() => openMspAdvisor()}
-      className="group flex h-10 shrink-0 items-center gap-2 rounded-full px-1 pr-1.5 text-white transition-colors duration-200 hover:bg-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-      data-testid="button-open-asap-widget"
-      aria-label="Open DE Desk"
-      aria-expanded={false}
-    >
-      <span className="relative flex h-8 w-8 items-center justify-center rounded-full bg-[#D3126A] text-sm font-bold tracking-tight">
-        DE
-        <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full border-2 border-[#0a0a0a] bg-emerald-400" />
-      </span>
-      <span className="hidden text-left sm:block">
-        <span className="block text-base font-semibold leading-4 tracking-tight">Ask DE</span>
-        <span className="block text-base leading-4 text-white/70">We&apos;re here to help.</span>
-      </span>
-    </button>
+    <div className="relative flex shrink-0 items-center">
+      <AnimatePresence>
+        {showCallout && (
+          <motion.div
+            initial={{ opacity: 0, y: 6, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 6, scale: 0.96 }}
+            transition={{ duration: 0.18 }}
+            className="absolute right-0 z-10 w-60 rounded-2xl border border-[#D3126A]/50 bg-[#141014] p-3 text-left shadow-[0_10px_32px_rgba(211,18,106,0.4)]"
+            style={{
+              bottom: "calc(100% + var(--de-store-cart-h, 0px) + 1.25rem)",
+            }}
+            role="status"
+            data-testid="store-ask-de-callout"
+          >
+            <button
+              type="button"
+              onClick={dismissCallout}
+              className="absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full text-white/50 hover:bg-white/10 hover:text-white"
+              aria-label="Dismiss"
+              data-testid="button-dismiss-store-ask-callout"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+            <p className="pr-5 text-sm font-semibold text-white">Need a hand with this?</p>
+            <div className="mt-2 flex flex-col gap-1.5">
+              <button
+                type="button"
+                onClick={() => {
+                  dismissCallout();
+                  openMspAdvisor({ tab: "ticket" });
+                }}
+                className="text-left text-sm font-medium text-[#F04C97] hover:underline"
+                data-testid="button-store-callout-support"
+              >
+                Get support &rarr;
+              </button>
+              <a
+                href={PRIMARY_PHONE.telHref}
+                onClick={dismissCallout}
+                className="text-left text-sm font-medium text-white/75 hover:text-white hover:underline"
+                data-testid="link-store-callout-call"
+              >
+                Talk to a live person &rarr;
+              </a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <button
+        type="button"
+        onClick={() => {
+          dismissCallout();
+          openMspAdvisor();
+        }}
+        className="group flex h-10 shrink-0 items-center gap-2 rounded-full px-1 pr-1.5 text-white transition-colors duration-200 hover:bg-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+        data-testid="button-open-asap-widget"
+        aria-label={compact ? "Open DE Desk for support" : "Open DE Desk"}
+        aria-expanded={false}
+      >
+        <span
+          className={`relative flex h-8 w-8 items-center justify-center rounded-full bg-[#D3126A] text-sm font-bold tracking-tight ${
+            compact ? "ring-2 ring-[#D3126A]/40 ring-offset-2 ring-offset-black" : ""
+          }`}
+        >
+          DE
+          <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full border-2 border-[#0a0a0a] bg-emerald-400" />
+        </span>
+        {!compact && (
+          <span className="hidden text-left sm:block">
+            <span className="block text-base font-semibold leading-4 tracking-tight">Ask DE</span>
+            <span className="block text-base leading-4 text-white/70">We&apos;re here to help.</span>
+          </span>
+        )}
+      </button>
+    </div>
   );
 }
 
@@ -85,6 +174,7 @@ export function SiteBottomBar() {
 
   const showScrollTop = farDown;
   const showAskDE = !deskOpen;
+  const compactAskDE = isDoor2Path(location);
   const expanded = showMenu;
   const showBar = !isPortal && (showAskDE || expanded || showScrollTop);
 
@@ -216,7 +306,7 @@ export function SiteBottomBar() {
               )}
             </AnimatePresence>
 
-            {showAskDE && <AskDELauncherButton />}
+            {showAskDE && <AskDELauncherButton compact={compactAskDE} />}
           </div>
         </div>
       </motion.div>
