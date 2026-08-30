@@ -1,5 +1,10 @@
 import { randomUUID } from "crypto";
 import { curatedSolutionFamilies, type CuratedDeliveryModel } from "../client/src/data/curatedSolutions";
+import {
+  loadPublicSolutionRequestById,
+  loadPublicSolutionRequestBySession,
+  persistPublicSolutionRequest,
+} from "./publicSolutionRequestPersistence";
 
 export type SolutionRequestIntent = "request" | "quote" | "assessment" | "consultation";
 export type SolutionRequestStatus = "draft" | "submitted";
@@ -301,6 +306,14 @@ export function submitPublicSolutionRequest(
   contact: { name: string; email: string; phone?: string; organizationName?: string },
   idempotencyKey?: string,
 ): { record: PublicSolutionRequest; replayed: boolean } {
+  // The in-memory idempotency Map only catches a replay within the same
+  // process. A retry that arrives after a restart recovers this same
+  // durable record via upsert-durable first, so if it already reads back as
+  // submitted, that alone is proof of an earlier successful submit —
+  // treat it as a replay regardless of whether the key map survived.
+  if (record.status === "submitted") {
+    return { record: cloneRequest(record), replayed: true };
+  }
   const composedKey = record.selectedNeeds.map((need) => need.familyId).sort().join(",");
   const key =
     idempotencyKey?.trim().slice(0, 200) ||
@@ -364,4 +377,68 @@ export function publicSolutionRequestView(record: PublicSolutionRequest) {
 export function resetPublicSolutionRequestsForTests() {
   records.clear();
   idempotency.clear();
+}
+
+// --- Durable (Postgres-backed when available) wrappers — #120 -------------
+//
+// Memory stays the fast path and the fallback when DATABASE_URL is unset or
+// unreachable. These wrappers add a DB round trip on top so a draft survives
+// a server restart and can resume on a different device, without changing
+// any of the synchronous behavior above.
+
+function hydrateFromDb(record: PublicSolutionRequest | null): PublicSolutionRequest | undefined {
+  if (!record) return undefined;
+  records.set(record.id, record);
+  return cloneRequest(record);
+}
+
+/** Cross-restart/cross-device continuation for an anonymous session cookie. */
+export async function findPublicSolutionRequestDurable(sessionId: string): Promise<PublicSolutionRequest | undefined> {
+  const memory = findPublicSolutionRequest(sessionId);
+  if (memory) return memory;
+  return hydrateFromDb(await loadPublicSolutionRequestBySession(sessionId));
+}
+
+/** Continuation by the draft's own id (e.g. a bookmarked/shared "resume" link). */
+export async function getPublicSolutionRequestDurable(id: string): Promise<PublicSolutionRequest | undefined> {
+  const memory = getPublicSolutionRequest(id);
+  if (memory) return memory;
+  return hydrateFromDb(await loadPublicSolutionRequestById(id));
+}
+
+export async function upsertPublicSolutionRequestDurable(
+  input: Parameters<typeof upsertPublicSolutionRequest>[0],
+): Promise<PublicSolutionRequest> {
+  // A returning visitor may still own a durable draft that isn't in this
+  // process's memory (server restart, new instance). Recover it first so
+  // upsert updates that same row instead of silently forking a duplicate
+  // that shadows it. Prefer the client's own remembered draft id; fall back
+  // to the session cookie if it has none yet.
+  if (input.id) {
+    await getPublicSolutionRequestDurable(input.id);
+  } else {
+    await findPublicSolutionRequestDurable(input.sessionId);
+  }
+  const record = upsertPublicSolutionRequest(input);
+  await persistPublicSolutionRequest(record);
+  return record;
+}
+
+export async function submitPublicSolutionRequestDurable(
+  record: PublicSolutionRequest,
+  contact: { name: string; email: string; phone?: string; organizationName?: string },
+  idempotencyKey?: string,
+): Promise<{ record: PublicSolutionRequest; replayed: boolean }> {
+  const result = submitPublicSolutionRequest(record, contact, idempotencyKey);
+  await persistPublicSolutionRequest(result.record);
+  return result;
+}
+
+export async function markPublicSolutionRequestCrmDurable(
+  id: string,
+  crmStatus: "pending" | "recorded",
+): Promise<PublicSolutionRequest | undefined> {
+  const next = markPublicSolutionRequestCrm(id, crmStatus);
+  if (next) await persistPublicSolutionRequest(next);
+  return next;
 }
