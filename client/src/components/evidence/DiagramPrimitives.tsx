@@ -66,9 +66,9 @@ export const DiagramNode: React.FC<DiagramNodeProps> = ({
 }) => {
   const isPaper = tone === "paper";
   const statusStyles = {
-    healthy: isPaper ? "border-emerald-600/35" : "border-emerald-500/30",
+    healthy: "border-emerald-500/30",
     monitored: isPaper ? "border-[var(--de-paper-hairline)]" : "border-de-hairline",
-    alert: isPaper ? "border-amber-600/40" : "border-amber-500/35",
+    alert: "border-amber-500/35",
     isolated: "border-[#D3126A]/45",
   }[status];
 
@@ -78,7 +78,7 @@ export const DiagramNode: React.FC<DiagramNodeProps> = ({
         {Icon && (
           <div
             className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-md border ${
-              isPaper ? "border-[var(--de-paper-hairline)] bg-[var(--de-paper)]" : "border-de-hairline bg-de-raised"
+              isPaper ? "border-[var(--de-paper-hairline)] bg-de-paper" : "border-de-hairline bg-de-raised"
             }`}
           >
             <Icon className={`h-4 w-4 ${isPaper ? "text-[#A30E52]" : "text-[#F04C97]"}`} aria-hidden="true" />
