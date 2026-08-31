@@ -136,7 +136,7 @@ export function PronunciationCard({ className = "" }: PronunciationCardProps): J
               aria-label="Hear Digerati pronounced dij-uh-RAH-tee"
               data-testid="button-play-digerati-pronunciation"
             >
-              <Play className="h-3.5 w-3.5 fill-current" aria-hidden="true" />
+              <Play className="h-3.5 w-3.5" fill="currentColor" aria-hidden="true" />
               Hear it
             </button>
           </div>
