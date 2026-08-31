@@ -1,6 +1,6 @@
 # DE Program Roadmap — next steps per project
 
-Requested by Joe 2026-08-30 (directive item 11). Living document; the lead
+Requested by Joe 2026-08-30 (directive item 11). Baseline correction 2026-08-31: the approved homepage/Ask DE integration merged via **PR #147** and production serves `main @ 9c5e7f9` — PR #146 is closed; all new work starts from current production main. Living document; the lead
 integrator updates it as work lands. Governance: `docs/AI-ENGINEERING-GOVERNANCE.md`
 (incl. §18 Preservation Law). One bounded task at a time; every item gets its
 own claim/branch when picked up.
@@ -13,9 +13,9 @@ Status: 🟢 in flight · 🟡 ready to start · 🔵 needs Joe decision · ⚪ 
 
 | # | Item | Status |
 |---|---|---|
-| 1.1 | PR #146: hero Phoenix-lights background (faint), premium chat + fullscreen expand, bottom-bar smoothness — Fable pass | 🟢 |
-| 1.2 | PR #146: Joe's four-question local review → correction pass | 🟢 awaiting notes |
-| 1.3 | Lower-homepage section upgrades — take the "ugliest" sections to the new hero's bar, each restyled to showcase its own message (directive #6); candidates from render audit: Testimonials/Proof shells, ProActive Ecosystem switcher, Newsletter band, AI-assistance teaser | 🟡 Fable batch 2 |
+| 1.1 | Fable visual batch (new PR off production main): hero Phoenix-lights background (faint), premium chat + fullscreen expand, bottom-bar smoothness | 🟢 |
+| 1.2 | Joe's four-question local review → correction pass (new lane) | 🟢 awaiting notes |
+| 1.3 | Lower-homepage section upgrades — take the "ugliest" sections to the new hero's bar, each restyled to showcase its own message (directive #6); candidates from render audit: Testimonials/Proof shells, ProActive Ecosystem switcher, Newsletter band, AI-assistance teaser | 🟢 Fable batch 2 (sitewide polish sweep) |
 | 1.4 | Homepage final-version sign-off per section (directive #4) — tracked against `design/UI-STYLE-RULES.md` §5 archetypes; answered by Joe's review, not assumed | 🔵 |
 | 1.5 | Tier-1 staging deploy (`deploy/vps/staging-review-safety.md`) — needs one-time staging provisioning on the VPS (root/CyberPanel) | 🔵 Joe runs setup |
 | 1.6 | Hero background REPLACE decision (dusk photo treatment now returning via 1.1) | 🟢 resolves with 1.1 |
@@ -39,7 +39,7 @@ Status: 🟢 in flight · 🟡 ready to start · 🔵 needs Joe decision · ⚪ 
 
 | # | Item | Status |
 |---|---|---|
-| 3.1 | Portal login page visual upgrade to the new premium system (directive #9) — Fable batch after #146 merges so it inherits final chrome | 🟡 |
+| 3.1 | Portal login page visual upgrade to the new premium system (directive #9) — Fable batch now that the approved integration is live (PR #147, main @ 9c5e7f9) | 🟡 |
 | 3.2 | "Fully functional account" verification: OIDC configured ✓, login 200 ✓, returnTo sanitizer verified ✓ (live 302 with portal-scoped redirect URI + signed state). Remaining: one real end-to-end login by Joe (dashboard, tickets, marketplace, sign-out), then fix list | 🔵 Joe's 5-min click-through |
 | 3.3 | Marketplace returnTo end-to-end (post-login landing) — closes with 3.2 | 🔵 |
 | 3.4 | Portal ↔ Desk ticket views: timestamps/actions parity with the upgraded public Desk | 🟡 |
@@ -81,7 +81,7 @@ generation pipeline exists.
 |---|---|---|
 | 7.1 | Zoho CRM renewal 2026-11-23 | 🔵 calendar |
 | 7.2 | Main branch protection (issues #124/#115/#100) | 🔵 P0, GitHub settings |
-| 7.3 | Production re-audit of open PRs/branches after reconciliation (issue #127) | 🟡 after #146 |
+| 7.3 | Production re-audit of open PRs/branches after reconciliation (issue #127) | 🟡 |
 | 7.4 | Portal-auth test flake: **closed — not reproducible** (3 standalone + multiple full-suite green runs; single occurrence attributed to bcrypt cost under local CPU contention; CI unaffected) | 🟢 done |
 
 ## Quick-wins log (directive #8)
