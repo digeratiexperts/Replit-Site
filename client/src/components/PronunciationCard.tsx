@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Play, Volume2 } from "lucide-react";
 
-const SPOKEN_PRONUNCIATION = "dij-uh-RAH-tee";
 const AUDIO_SRC = "/audio/digerati-pronunciation.mp3";
 // Gold is intentionally fixed to the DE wordmark bars; page accents must not recolor the logo mark.
 const WORDMARK_GOLD = "#E7B20D";
