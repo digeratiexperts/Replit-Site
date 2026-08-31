@@ -74,6 +74,8 @@ generation pipeline exists.
 | 6.3 | Zoho ↔ Hub record parity spot-check: pick 3 real clients, compare CRM account ↔ Hub tenant ↔ portal org (tenantIdentity mapping) | 🔵 with Joe (real data) |
 | 6.4 | TechSales knowledge ingestion → advisor answers: covered by tests; production eval run (`npm run eval:advisor`) as a periodic gate | 🟡 |
 | 6.5 | Ecosystem scoreboard: do not declare done until Hub Issue #122 completion gate passes (AGENTS.md) | ⚪ standing rule |
+| 6.6 | **TechSales AI intelligence upgrade** (Joe 2026-08-31: "ultra smart, roleplay-capable"). Repository authority: the TechSales AI lives in `digeratiexperts/Intelligence-Hub` — this repo can't implement it; needs a Hub-side lane. Design outline: (a) model upgrade to a frontier model (website's public advisor runs `gpt-4o-mini` — cheap tier; Hub deserves the strong tier), (b) roleplay mode = persona engine (AI plays prospect/objection-handler so Joe can practice pitches; scenario library seeded from real DE solution families), (c) grounding on DE Intelligence knowledge + CRM context, (d) eval harness like the website's `eval:advisor`. Decisions needed: model/budget ceiling, roleplay scenarios wanted first | 🔵 Hub-side lane + Joe scoping |
+| 6.7 | Website-side contribution to 6.6: advisor model-tier review (`server/services/msp-advisor/advisor.ts`), knowledge retrieval quality pass, richer eval set | 🟡 |
 
 ## 7. Cross-cutting
 
@@ -83,6 +85,33 @@ generation pipeline exists.
 | 7.2 | Main branch protection (issues #124/#115/#100) | 🔵 P0, GitHub settings |
 | 7.3 | Production re-audit of open PRs/branches after reconciliation (issue #127) | 🟡 |
 | 7.4 | Portal-auth test flake: **closed — not reproducible** (3 standalone + multiple full-suite green runs; single occurrence attributed to bcrypt cost under local CPU contention; CI unaffected) | 🟢 done |
+
+## 8. Sales tax platform (new workstream, Joe 2026-08-31)
+
+Joe: "finish the sales tax project and embed routes into all our projects —
+store, techsales portal, client portal — always correct, connected to the
+proper gov databases at all times."
+
+**Honest current state:** there is no sales-tax implementation in this repo —
+Store checkout hardcodes `tax: "0"` (`server/secureStoreCheckout.ts`) and the
+orders schema defaults tax to 0. If a sales-tax project exists, it lives in
+the Intelligence-Hub repo; otherwise this is a greenfield build.
+
+**Engineering reality on "gov databases":** no government runs a real-time
+tax-calculation API suitable for checkout. The correct-by-construction pattern
+is a maintained tax engine as the source of truth, with government data as the
+verification layer: AZDOR publishes the official TPT rate tables and an
+address-level rate lookup — right for AZ verification/audit, not for live
+multi-jurisdiction checkout math.
+
+| # | Item | Status |
+|---|---|---|
+| 8.1 | Nexus + taxability decisions (Joe + accountant): which states DE collects in (AZ TPT at minimum); which catalog items are taxable (AZ services vs retail differ materially) | 🔵 blocking |
+| 8.2 | Engine selection: Zoho Books/Commerce tax (already licensed under Zoho One, Books API connected) vs Avalara/TaxJar. Recommendation: start Zoho-native, keep an adapter seam | 🔵 |
+| 8.3 | One shared service (`server/services/salesTax.ts`): address+line-items → jurisdiction, rate, tax; provider adapter; fail-closed (no silent 0-tax on engine failure for taxable items) | 🟡 after 8.1/8.2 |
+| 8.4 | AZDOR TPT verification job: scheduled pull of official rate tables, alert on drift vs engine | 🟡 |
+| 8.5 | Embed: Store authenticated checkout (replace hardcoded 0) → client-portal invoices/marketplace → Hub via deSync bridge (one engine, every surface) | ⚪ after 8.3 |
+| 8.6 | Order/tax audit trail: persist jurisdiction + rate + engine version per order line | ⚪ |
 
 ## Quick-wins log (directive #8)
 
