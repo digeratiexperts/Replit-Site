@@ -83,7 +83,7 @@ export function PronunciationCard({ className = "" }: PronunciationCardProps): J
       <div className="px-5 py-5 sm:px-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <div className="flex flex-wrap items-baseline" style={{ columnGap: 12, rowGap: 4 }}>
               <span
                 className="font-heading font-semibold text-white"
                 style={{ fontSize: "1.65rem", letterSpacing: "-0.035em" }}
@@ -131,7 +131,7 @@ export function PronunciationCard({ className = "" }: PronunciationCardProps): J
             <button
               type="button"
               onClick={playPronunciation}
-              className="flex shrink-0 items-center gap-2 whitespace-nowrap rounded-lg px-4 text-sm font-semibold text-white transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="flex shrink-0 items-center gap-2 whitespace-nowrap rounded-lg px-4 text-sm font-semibold text-white transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               style={{ backgroundColor: MAGENTA, minHeight: 44, boxShadow: "0 10px 28px -16px rgba(211,18,106,0.95)" }}
               aria-label="Hear Digerati pronounced dij-uh-RAH-tee"
               data-testid="button-play-digerati-pronunciation"
