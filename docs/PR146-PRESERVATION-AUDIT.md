@@ -35,8 +35,8 @@ Status legend: ✅ done · 🔄 in progress · ⏳ queued · ❓ needs Joe
 - ⏳ **Compact message actions** — audit the small message-action icon set for completeness
 - ⏳ **Contextual / right-click-equivalent message controls** — verify a keyboard- and touch-accessible equivalent exists
 - ⏳ **Floating-layer collision audit** — Ask DE × "Your Solution" × Store autosave chip × cookie banner × sticky CTA × unified bottom bar, rendered at 390/768/1440 (`UX_PRINCIPLES.md` no-overlapping-layers hard rule)
-- ⏳ **Portal Marketplace `returnTo` verification** — live check that post-login redirect targets resolve correctly
-- ⏳ **Portal auth timing flake** — `server/portalAuthFailClosed.test.ts` "denies a validly signed JWT whose user has no live record" hit its 3s timeout once under full-suite load; passes standalone. Reproduce; if real, fix or raise the timeout with justification
+- ✅ **Portal Marketplace `returnTo` verification** (2026-08-30) — `shared/portalReturnTo.ts` sanitizer blocks `//`, backslashes, `javascript:`/`data:`, off-site hosts, and auth-path loops (5 tests green). Live production: `GET /api/portal/auth/zoho/start?returnTo=/portal/marketplace` → 302 to accounts.zoho.com with the redirect URI scoped to `portal.digeratiexperts.com` and returnTo carried in signed 10-min-expiry state. Remaining slice: one real completed login landing on `/portal/marketplace` (Joe)
+- ✅ **Portal auth timing flake** (2026-08-30) — **not reproducible**: 3 consecutive standalone runs + multiple full 81-file suite runs all green. Single occurrence attributed to bcrypt cost under local CPU contention (dev server + Playwright + build concurrently). No code change warranted; CI unaffected
 
 ## C. Explicitly out of scope (separate governed workstreams)
 
