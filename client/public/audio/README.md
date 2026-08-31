@@ -12,6 +12,23 @@ The **Hear it** button must use this file. It must not fall back to browser spee
 - Display IPA: `/ˌdɪdʒəˈrɑːti/`
 - Primary stress: third syllable (`RAH`)
 
+## Canonical source
+
+The build vendors the US-English human recording published through Wiktionary / Lingua Libre / Wikimedia Commons:
+
+- Commons title: `File:LL-Q1860 (eng)-Flame, not lame-digerati.wav`
+- License reported by Commons metadata: **CC0**
+- Pinned original WAV SHA-1: `561153b800e1484dd9f5cf1e83f1510db982b1c6`
+- Original source format measured in CI: 48,000 Hz, mono, 16-bit PCM
+- Measured duration: 1.387 s
+- Measured peak: 0.628 full scale
+- Measured RMS: -20.2 dBFS
+- Measured DC offset: 0.0000
+- Measured clipped samples: 0.0000%
+- Commons MP3 derivative observed in CI: 24,866 bytes
+
+`scripts/vendor-pronunciation-audio.mjs` refuses to build if the source digest changes, the license is no longer CC0/public domain, the WAV fails its PCM/signal checks, or the MP3 derivative fails the browser-asset checks.
+
 ## Production acceptance
 
 Use a clean human recording with:
@@ -25,12 +42,10 @@ Use a clean human recording with:
 - mono or stereo MP3 suitable for browser playback;
 - file size between 12 KB and 2 MB.
 
-The canonical public smoke test enforces presence, audio MIME type, and the size bounds above. Human listening review is still required before release.
+The canonical public smoke test enforces presence, audio MIME type, and the size bounds above. Human listening review is still required before release; the automated signal checks establish technical cleanliness, not subjective voice quality.
 
-Per-syllable practice buttons may use browser speech synthesis because they are teaching aids. The full-word **Hear it** control is the authoritative pronunciation and must use the fixed recording.
+Per-syllable practice buttons may use browser speech synthesis because they are teaching aids. The full-word **Hear it** control is the authoritative pronunciation and must use the fixed human recording.
 
-## Source / provenance
+## Replacement rule
 
-Record provenance and license here when the final asset is chosen. Prefer an original DE recording or a redistributable public-domain/CC0 human pronunciation. Do not copy proprietary dictionary audio into the repository.
-
-A US-English Wiktionary/Lingua Libre recording for `digerati` has been identified as a possible fallback source, but it must be auditioned and its exact Commons file/license verified before adoption.
+If a better original DE recording is approved later, replace the source deliberately, update the pinned provenance/digest, and rerun the same signal and browser gates. Do not silently swap the canonical recording and do not copy proprietary dictionary audio into the repository.
