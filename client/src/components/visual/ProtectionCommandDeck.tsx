@@ -198,7 +198,7 @@ export const ProtectionCommandDeck: React.FC = () => {
               className={`flex min-h-11 items-center gap-2 rounded-lg border px-3.5 py-2 font-mono text-xs font-semibold transition-colors ${
                 isSelected
                   ? "border-[#D3126A] bg-[#D3126A] text-white"
-                  : "border-[var(--de-paper-hairline)] bg-white text-[#3A3448] hover:border-[#D3126A]/45 hover:text-[#1A1228]"
+                  : "border-[var(--de-paper-hairline)] bg-white text-[#3A3448] hover:border-[#D3126A]/40 hover:text-[#1A1228]"
               }`}
               data-testid={`domain-tab-${domain.id}`}
             >

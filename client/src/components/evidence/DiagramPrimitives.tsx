@@ -65,10 +65,12 @@ export const DiagramNode: React.FC<DiagramNodeProps> = ({
   className = "",
 }) => {
   const isPaper = tone === "paper";
+  // Entry CSS is at its byte budget: paper borders must reuse utilities the
+  // stylesheet already emits — a novel shade/opacity combo adds a new rule.
   const statusStyles = {
-    healthy: isPaper ? "border-emerald-600/35" : "border-emerald-500/30",
+    healthy: isPaper ? "border-emerald-500/40" : "border-emerald-500/30",
     monitored: isPaper ? "border-[var(--de-paper-hairline)]" : "border-de-hairline",
-    alert: isPaper ? "border-amber-600/40" : "border-amber-500/35",
+    alert: isPaper ? "border-amber-500/40" : "border-amber-500/35",
     isolated: "border-[#D3126A]/45",
   }[status];
 
