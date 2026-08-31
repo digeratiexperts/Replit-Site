@@ -155,7 +155,7 @@ for (const path of routes) {
           fails.push(`homepage ${width}px → unexpected H1: ${headline}`);
         }
 
-        for (const testId of ["button-hero-schedule", "button-hero-solutions", "button-open-asap-widget"]) {
+        for (const testId of ["button-hero-schedule", "button-hero-pricing", "button-open-asap-widget"]) {
           await page.locator(`[data-testid="${testId}"]`).waitFor({ state: "visible", timeout: 10_000 });
         }
 
