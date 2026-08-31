@@ -197,7 +197,9 @@ export function ReferenceHeroSection(): JSX.Element {
             <span>Fully managed or co-managed</span>
           </div>
 
-          <PronunciationCard className="mt-7 max-w-[620px]" />
+          <div className="mt-7" style={{ maxWidth: 620 }}>
+            <PronunciationCard />
+          </div>
         </motion.div>
 
         {/* DE Cyber Risk Assessment preview — the existing product artwork,
