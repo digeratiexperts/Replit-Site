@@ -60,6 +60,32 @@ for (const path of routes) {
   }
 }
 
+// The pronunciation card exists to settle the company name once, consistently.
+// A browser-TTS fallback is not an acceptable production substitute for the
+// canonical full-word recording, so the public release gate verifies the asset.
+{
+  try {
+    const res = await fetch(`${BASE}/audio/digerati-pronunciation.mp3`, { redirect: "manual" });
+    if (!res.ok) {
+      fails.push(`/audio/digerati-pronunciation.mp3 → required canonical audio missing (HTTP ${res.status})`);
+    } else {
+      const contentType = res.headers.get("content-type") || "";
+      const bytes = (await res.arrayBuffer()).byteLength;
+      if (!/^audio\//i.test(contentType)) {
+        fails.push(`/audio/digerati-pronunciation.mp3 → expected audio content-type, got ${contentType || "none"}`);
+      }
+      if (bytes < 12_000) {
+        fails.push(`/audio/digerati-pronunciation.mp3 → suspiciously small canonical audio (${bytes} bytes)`);
+      }
+      if (bytes > 2_000_000) {
+        fails.push(`/audio/digerati-pronunciation.mp3 → canonical audio too large (${bytes} bytes)`);
+      }
+    }
+  } catch (err) {
+    fails.push(`/audio/digerati-pronunciation.mp3 → ${err.message}`);
+  }
+}
+
 // API: Google reviews (soft trust — unconfigured is OK)
 {
   try {
@@ -253,5 +279,5 @@ if (fails.length) {
   process.exit(1);
 }
 console.log(
-  `Public route smoke OK (${routes.length} routes + google-reviews + bbp_search 410 + internal-tool noindex + rendered homepage/Ask DE/resources 390/768/1440) against ${BASE}`,
+  `Public route smoke OK (${routes.length} routes + canonical pronunciation audio + google-reviews + bbp_search 410 + internal-tool noindex + rendered homepage/Ask DE/resources 390/768/1440) against ${BASE}`,
 );
