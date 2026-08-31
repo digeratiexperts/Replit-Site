@@ -253,6 +253,7 @@ export const ZohoASAPWidget = ({
   const [ticketSubmitError, setTicketSubmitError] = useState<string | null>(null);
 
   const [canDrag, setCanDrag] = useState(false);
+  const [isDeskFullscreen, setIsDeskFullscreen] = useState(false);
   const ignoreDismissUntilRef = useRef(0);
 
   const deskDrag = useDraggableWindow({
@@ -266,8 +267,29 @@ export const ZohoASAPWidget = ({
 
   useEscapeKey(() => {
     if (Date.now() < ignoreDismissUntilRef.current) return;
+    if (isDeskFullscreen) {
+      setIsDeskFullscreen(false);
+      return;
+    }
     setIsOpen(false);
   }, isOpen);
+
+  // Full-screen desk: leave it whenever the desk closes or the viewport drops
+  // below the draggable breakpoint, and lock body scroll while it covers the page.
+  useEffect(() => {
+    if (!isOpen) setIsDeskFullscreen(false);
+  }, [isOpen]);
+  useEffect(() => {
+    if (!canDrag) setIsDeskFullscreen(false);
+  }, [canDrag]);
+  useEffect(() => {
+    if (!isDeskFullscreen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isDeskFullscreen]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -922,8 +944,24 @@ export const ZohoASAPWidget = ({
 
   const canvasRight = "calc(var(--de-canvas-gutter) + var(--de-chrome-inset))";
 
+  // Near-full-screen takeover: a 12px margin all around, overriding both the
+  // docked classes and any dragged/resized inline geometry. Prior pos/size
+  // stay in deskDrag state, so collapsing restores the previous layout.
+  const deskFullscreenStyle = {
+    left: 12,
+    top: 12,
+    right: 12,
+    bottom: 12,
+    width: "auto" as const,
+    height: "auto" as const,
+    maxWidth: "none" as const,
+    maxHeight: "none" as const,
+  };
+
   const deskWindowStyle = canDrag
-    ? {
+    ? isDeskFullscreen
+      ? deskFullscreenStyle
+      : {
         ...(deskDrag.pos
           ? {
               left: deskDrag.pos.x,
@@ -966,17 +1004,17 @@ export const ZohoASAPWidget = ({
             <header className="de-desk-head">
               <div
                 className={`de-desk-id ${
-                  canDrag
+                  canDrag && !isDeskFullscreen
                     ? deskDrag.dragging
                       ? "cursor-grabbing select-none"
                       : "cursor-grab select-none"
                     : ""
                 }`}
-                onPointerDown={canDrag ? deskDrag.onHandlePointerDown : undefined}
-                onDoubleClick={canDrag ? deskDrag.reset : undefined}
-                style={canDrag ? { touchAction: "none" } : undefined}
+                onPointerDown={canDrag && !isDeskFullscreen ? deskDrag.onHandlePointerDown : undefined}
+                onDoubleClick={canDrag && !isDeskFullscreen ? deskDrag.reset : undefined}
+                style={canDrag && !isDeskFullscreen ? { touchAction: "none" } : undefined}
                 data-testid="desk-drag-handle"
-                aria-label={canDrag ? "Move DE Desk window. Double-click to reset size and position." : undefined}
+                aria-label={canDrag && !isDeskFullscreen ? "Move DE Desk window. Double-click to reset size and position." : undefined}
               >
                 <div className="de-desk-avatar">
                   DE
@@ -996,12 +1034,12 @@ export const ZohoASAPWidget = ({
                   type="button"
                   className="de-desk-close"
                   data-testid="button-expand-desk"
-                  aria-label={deskDrag.expanded ? "Reset DE Desk size" : "Expand DE Desk"}
-                  title={deskDrag.expanded ? "Reset size" : "Expand"}
+                  aria-label={isDeskFullscreen ? "Exit full screen" : "Expand DE Desk to full screen"}
+                  title={isDeskFullscreen ? "Exit full screen" : "Full screen"}
                   onPointerDown={(event) => event.stopPropagation()}
-                  onClick={deskDrag.toggleExpanded}
+                  onClick={() => setIsDeskFullscreen((current) => !current)}
                 >
-                  {deskDrag.expanded ? (
+                  {isDeskFullscreen ? (
                     <Minimize2 size={13} aria-hidden="true" />
                   ) : (
                     <Maximize2 size={13} aria-hidden="true" />
@@ -1694,7 +1732,7 @@ export const ZohoASAPWidget = ({
                 </p>
               </>
             ) : null}
-            {canDrag ? (
+            {canDrag && !isDeskFullscreen ? (
               <>
                 {(["n", "s", "e", "w", "ne", "nw", "sw"] as const).map((edge) => (
                   <button
@@ -1909,7 +1947,7 @@ export const ZohoASAPWidget = ({
               display: flex;
               flex-direction: column;
             }
-            .de-desk-scroll { overflow-y: auto; padding: 14px 16px 16px; }
+            .de-desk-scroll { overflow-y: auto; overflow-x: hidden; padding: 14px 16px 16px; }
             .de-desk-scroll > * { flex-shrink: 0; }
             .de-desk-shell[data-tab="chat"] .de-desk-scroll { padding-bottom: 8px; }
             .de-desk-hero {
@@ -2469,9 +2507,12 @@ export const ZohoASAPWidget = ({
             }
             .de-desk-bubble {
               max-width: 100%;
+              min-width: 0;
               padding: 10px 13px;
               font-size: 15px; line-height: 1.5;
               border-radius: 12px;
+              overflow-wrap: anywhere;
+              word-break: break-word;
             }
             .de-desk-bubble.is-user {
               background: #D3126A; color: #fff;
@@ -2481,6 +2522,7 @@ export const ZohoASAPWidget = ({
               background: var(--de-raised, #151217); color: #fff;
               border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
               border-bottom-left-radius: 5px;
+              max-width: 640px; /* keeps chat readable in the full-screen desk */
             }
             .de-desk-msg-time {
               display: block;
