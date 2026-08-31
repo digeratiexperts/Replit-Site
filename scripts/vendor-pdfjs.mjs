@@ -4,10 +4,10 @@ import path from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
-const PACKAGE_SPEC = "pdfjs-dist-viewer-min@3.11.174";
-const EXPECTED_INTEGRITY = "sha512-kqbAoDchc87zyTe/XLoKyLHh3Aa3KSbiRd0eHyRoJFgUIYSB3uaMZ1Hvqqf4/y6hbV8K5f7slnmLVauVLzF/iw==";
-const MIN_PDFJS_BYTES = 250_000;
-const MIN_WORKER_BYTES = 900_000;
+const PACKAGE_SPEC = "pdfjs-dist@3.11.174";
+const EXPECTED_INTEGRITY = "sha512-TdTZPf1trZ8/UFu5Cx/GXB7GZM30LT+wWUNfsi6Bq8ePLnb+woNKtDymI2mxZYBpMbonNFqKmiz684DIfnd8dA==";
+const MIN_PDFJS_BYTES = 450_000;
+const MIN_WORKER_BYTES = 1_200_000;
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const destination = path.join(root, "client", "public", "vendor", "pdfjs");
@@ -45,14 +45,14 @@ try {
     archive,
     "-C",
     temp,
-    "package/build/minified/build/pdf.js",
-    "package/build/minified/build/pdf.worker.js",
+    "package/build/pdf.js",
+    "package/build/pdf.worker.js",
     "package/LICENSE",
   ]);
 
   const sourceRoot = path.join(temp, "package");
-  const pdfJs = path.join(sourceRoot, "build", "minified", "build", "pdf.js");
-  const worker = path.join(sourceRoot, "build", "minified", "build", "pdf.worker.js");
+  const pdfJs = path.join(sourceRoot, "build", "pdf.js");
+  const worker = path.join(sourceRoot, "build", "pdf.worker.js");
   const license = path.join(sourceRoot, "LICENSE");
   const [pdfJsStat, workerStat] = await Promise.all([stat(pdfJs), stat(worker)]);
   if (pdfJsStat.size < MIN_PDFJS_BYTES || workerStat.size < MIN_WORKER_BYTES) {
@@ -69,7 +69,7 @@ try {
   const readme = [
     "# PDF.js runtime assets",
     "",
-    `Generated at build/dev time from npm package \`${PACKAGE_SPEC}\`.`,
+    `Generated at build/dev time from the official Mozilla npm package \`${PACKAGE_SPEC}\`.`,
     `Expected npm integrity: \`${EXPECTED_INTEGRITY}\`.`,
     "",
     "The browser loads these files from the site's own origin so the production CSP does not need a third-party script or worker exception.",
@@ -78,7 +78,6 @@ try {
   ].join("\n");
   await import("node:fs/promises").then(({ writeFile }) => writeFile(path.join(destination, "README.md"), readme, "utf8"));
 
-  // Read a byte from the copied license so a partial/corrupt copy fails before Vite starts.
   const copiedLicense = await readFile(path.join(destination, "LICENSE"));
   if (copiedLicense.length < 1_000) throw new Error("PDF.js license copy is unexpectedly short.");
 
