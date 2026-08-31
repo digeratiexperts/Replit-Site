@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useParams, Link, Redirect } from "wouter";
+import { useSEO } from "@/hooks/useSEO";
 import { Helmet } from "react-helmet-async";
 import { MegaMenu } from "@/components/MegaMenu";
 import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhancedFooterSection";
@@ -84,6 +85,16 @@ function slugifyHeading(text: string): string {
 
 export default function BlogPost() {
   const { slug } = useParams<{ slug: string }>();
+  const seoPost = slug ? blogBySlug(slug) : undefined;
+  // House SEO mechanism: updates the existing canonical link (no duplicate
+  // tags) and sets og:url/twitter/robots — per-post instead of the homepage
+  // default (error-sweep, 2026-08-31). Hook runs unconditionally.
+  useSEO({
+    title: seoPost?.seoTitle ?? "Digerati Journal",
+    description: seoPost?.seoDescription,
+    canonical: slug ? `/resources/blog/${slug}` : undefined,
+    ogImage: seoPost?.coverImage,
+  });
   const articleRef = useRef<HTMLElement>(null);
   const [copied, setCopied] = useState(false);
 
