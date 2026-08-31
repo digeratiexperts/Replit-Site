@@ -179,9 +179,12 @@ type DeskPortalSession = {
 
 async function peekDeskPortalSession(): Promise<DeskPortalSession | null> {
   try {
-    const headers: Record<string, string> = {};
     const token = typeof window !== "undefined" ? window.localStorage.getItem("portalToken") : null;
-    if (token) headers.Authorization = `Bearer ${token}`;
+    // Anonymous visitors have no portal token — skip the probe entirely so
+    // every Desk launch doesn't log a guaranteed-401 to the console
+    // (error-sweep, 2026-08-31). Signed-in sessions carry the Bearer token.
+    if (!token) return null;
+    const headers: Record<string, string> = { Authorization: `Bearer ${token}` };
     const response = await fetch("/api/portal/me", { credentials: "include", headers });
     if (!response.ok) return null;
     const data = (await response.json()) as { user?: DeskPortalSession };

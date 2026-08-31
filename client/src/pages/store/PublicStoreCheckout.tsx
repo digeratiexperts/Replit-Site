@@ -188,7 +188,11 @@ export default function PublicStoreCheckout() {
             </p>
           </header>
 
-          <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_21rem]">
+          {/* minmax(0,1fr) at the BASE breakpoint too: an auto track sizes to
+              min-content, and StatusLine's nowrap detail line inflated it to
+              ~482px at 390px viewports, clipping the whole workspace column
+              (error-sweep finding, 2026-08-31). */}
+          <div className="grid grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-[minmax(0,1fr)_21rem]">
             <div className="space-y-8">
               <SolutionProfileForm environment={draft.environment} onChange={setEnv} heading="Business profile" description="These counts size package quantities throughout the Store. Change them here at any time." />
 

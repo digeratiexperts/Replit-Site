@@ -132,11 +132,21 @@ export function PortalLayout({ children, title }: PortalLayoutProps) {
           setUser(me.user);
         }
         setSessionReady(true);
-      } catch {
-        if (!cancelled) {
+      } catch (err) {
+        if (cancelled) return;
+        // Only a genuine auth rejection ends the session. A 500 or a network
+        // blip must NOT log the user out mid-work (error-sweep finding,
+        // 2026-08-31) — portalGet throws Error("<status>: <body>").
+        const message = err instanceof Error ? err.message : "";
+        const status = Number.parseInt(message.split(":")[0] ?? "", 10);
+        if (status === 401 || status === 403) {
           redirectToPortalLogin(
             `${window.location.pathname}${window.location.search || ""}`,
           );
+        } else {
+          // Keep whatever session state we have; the page's own data calls
+          // will surface real errors.
+          setSessionReady(true);
         }
       }
     })();

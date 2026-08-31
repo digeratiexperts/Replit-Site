@@ -14,8 +14,15 @@ type ProfileManager = { id: string; email: string; fullName: string };
 export default function PortalSettings() {
   const { toast } = useToast();
   const [user, setUser] = useState(() => {
-    const stored = localStorage.getItem("portalUser");
-    return stored ? JSON.parse(stored) : {};
+    // Corrupt/legacy localStorage must never white-screen Settings
+    // (error-sweep finding, 2026-08-31).
+    try {
+      const stored = localStorage.getItem("portalUser");
+      return stored ? JSON.parse(stored) : {};
+    } catch {
+      localStorage.removeItem("portalUser");
+      return {};
+    }
   });
   const [savingProfile, setSavingProfile] = useState(false);
   const [savingPassword, setSavingPassword] = useState(false);
