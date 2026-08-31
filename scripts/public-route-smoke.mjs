@@ -167,6 +167,33 @@ for (const path of routes) {
           await page.locator(`[data-testid="${testId}"]`).waitFor({ state: "visible", timeout: 10_000 });
         }
 
+        const pronunciationButton = page.locator('[data-testid="button-play-digerati-pronunciation"]');
+        const pronunciationMetrics = await pronunciationButton.evaluate((element) => {
+          const style = window.getComputedStyle(element);
+          const rect = element.getBoundingClientRect();
+          return {
+            backgroundColor: style.backgroundColor,
+            height: rect.height,
+            whiteSpace: style.whiteSpace,
+          };
+        });
+        if (pronunciationMetrics.backgroundColor !== "rgb(211, 18, 106)") {
+          fails.push(`pronunciation ${width}px → play button color ${pronunciationMetrics.backgroundColor}`);
+        }
+        if (pronunciationMetrics.height < 44) {
+          fails.push(`pronunciation ${width}px → play button height ${pronunciationMetrics.height}px`);
+        }
+        if (pronunciationMetrics.whiteSpace !== "nowrap") {
+          fails.push(`pronunciation ${width}px → play label white-space ${pronunciationMetrics.whiteSpace}`);
+        }
+
+        const meterBar = page.locator('[aria-label="Digerati wordmark level meter"] span').first();
+        await meterBar.waitFor({ state: "visible", timeout: 10_000 });
+        const meterColor = await meterBar.evaluate((element) => window.getComputedStyle(element).backgroundColor);
+        if (meterColor !== "rgb(231, 178, 13)") {
+          fails.push(`pronunciation ${width}px → wordmark meter color ${meterColor}`);
+        }
+
         const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
         if (overflow > 2) fails.push(`homepage ${width}px → horizontal overflow ${overflow}px`);
         await page.screenshot({ path: `${screenshotDir}/homepage-${width}.png`, fullPage: true });
