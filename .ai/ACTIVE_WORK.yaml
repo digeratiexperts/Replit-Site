@@ -29,7 +29,29 @@
 #     started: 2026-08-30
 
 version: 2
-claims: []
+claims:
+  - id: pronunciation-dictionary-card
+    issue: 152
+    owner: claude
+    subsystem: homepage-hero
+    branch: claude/pronunciation-dictionary-card-2026-08-31
+    base_sha: ecea1d9314f859bd5a17343c277e739f3bedb492
+    files:
+      - client/src/components/PronunciationCard.tsx
+      - client/src/pages/sections/ReferenceHeroSection.tsx
+      - client/src/index.css
+    status: active
+    started: 2026-08-31
+    note: >-
+      Reassigned by Joe on 2026-08-31 from owner `chatgpt` (claim
+      pronunciation-flipbook-recovery, branch
+      chatgpt/pronunciation-flipbook-recovery-20260831, commit f72d647).
+      ONLY the two pronunciation files move to this claim. The flipbook half of
+      that branch — DocumentFlipbook.tsx, ResourcesIndex.tsx, scripts/vendor-pdfjs.mjs,
+      package.json, scripts/public-route-smoke.mjs, client/public/audio/README.md —
+      remains owned by `chatgpt` and is untouched here. That branch must drop its
+      PronunciationCard/ReferenceHeroSection changes before merge, or reconcile
+      against this branch.
 # fable-visual-batch (issue 118, branch claude/fable-visual-batch) RETIRED
 # 2026-08-31: merged via PR #148 (main @ 8a20592). Confirmed
 # `git diff origin/main origin/claude/fable-visual-batch` is empty — no
