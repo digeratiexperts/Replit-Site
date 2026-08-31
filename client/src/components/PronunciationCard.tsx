@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Play, Volume2 } from "lucide-react";
 
 const SPOKEN_PRONUNCIATION = "dij-uh-RAH-tee";
@@ -22,6 +22,15 @@ interface PronunciationCardProps {
 export function PronunciationCard({ className = "" }: PronunciationCardProps): JSX.Element {
   const [status, setStatus] = useState("Ready to play pronunciation.");
   const [isPlaying, setIsPlaying] = useState(false);
+  const [wideSyllables, setWideSyllables] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia("(min-width: 640px)");
+    const sync = () => setWideSyllables(media.matches);
+    sync();
+    media.addEventListener("change", sync);
+    return () => media.removeEventListener("change", sync);
+  }, []);
 
   const speak = (text: string, label: string) => {
     if (!("speechSynthesis" in window) || typeof SpeechSynthesisUtterance === "undefined") {
@@ -146,7 +155,10 @@ export function PronunciationCard({ className = "" }: PronunciationCardProps): J
           <p className="text-xs font-semibold uppercase text-de-muted-soft" style={{ letterSpacing: "0.12em" }}>
             Sound it out
           </p>
-          <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+          <div
+            className="mt-3 grid gap-2"
+            style={{ gridTemplateColumns: wideSyllables ? "repeat(4,minmax(0,1fr))" : "repeat(2,minmax(0,1fr))" }}
+          >
             {syllables.map((syllable) => (
               <button
                 key={syllable.label}
