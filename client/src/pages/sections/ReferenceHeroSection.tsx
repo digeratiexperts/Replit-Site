@@ -7,6 +7,7 @@ import { useBooking } from "@/contexts/BookingContext";
 import { analytics } from "@/lib/analytics";
 import { CTA } from "@/lib/ctaCopy";
 import { PRIMARY_PHONE } from "@/data/companyContact";
+import heroCityLights from "@assets/de-hero-arizona-dusk.png";
 
 const trustItems = [
   {
@@ -58,6 +59,34 @@ export function ReferenceHeroSection(): JSX.Element {
             "radial-gradient(circle at 78% 36%, rgba(87,68,255,0.22), transparent 30%), radial-gradient(circle at 92% 68%, rgba(211,18,106,0.10), transparent 25%), linear-gradient(110deg, #050312 0%, #060617 52%, #090924 100%)",
         }}
       />
+      {/* Phoenix city-lights landscape (aerial overview), returned per Joe
+          2026-08 — kept faint under the dark precision field so the approved
+          reference's premium black still dominates. Masked so the left text
+          column stays high-contrast. */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+        <img
+          src={heroCityLights}
+          alt=""
+          loading="eager"
+          decoding="async"
+          className="absolute inset-0 h-full w-full object-cover"
+          style={{
+            opacity: 0.3,
+            objectPosition: "center 58%",
+            maskImage:
+              "linear-gradient(to right, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.45) 40%, rgba(0,0,0,0.95) 68%, black 100%)",
+            WebkitMaskImage:
+              "linear-gradient(to right, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.45) 40%, rgba(0,0,0,0.95) 68%, black 100%)",
+          }}
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(5,3,18,0.55) 0%, rgba(5,3,18,0.12) 34%, rgba(5,3,18,0.1) 66%, rgba(5,3,18,0.72) 100%)",
+          }}
+        />
+      </div>
       <div
         className="pointer-events-none absolute inset-y-0 right-0 opacity-30"
         aria-hidden="true"
