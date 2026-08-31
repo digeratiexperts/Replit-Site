@@ -65,12 +65,10 @@ export const DiagramNode: React.FC<DiagramNodeProps> = ({
   className = "",
 }) => {
   const isPaper = tone === "paper";
-  // Entry CSS is at its byte budget: paper borders must reuse utilities the
-  // stylesheet already emits — a novel shade/opacity combo adds a new rule.
   const statusStyles = {
-    healthy: isPaper ? "border-emerald-500/40" : "border-emerald-500/30",
+    healthy: "border-emerald-500/30",
     monitored: isPaper ? "border-[var(--de-paper-hairline)]" : "border-de-hairline",
-    alert: isPaper ? "border-amber-500/40" : "border-amber-500/35",
+    alert: "border-amber-500/35",
     isolated: "border-[#D3126A]/45",
   }[status];
 
@@ -80,7 +78,7 @@ export const DiagramNode: React.FC<DiagramNodeProps> = ({
         {Icon && (
           <div
             className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-md border ${
-              isPaper ? "border-[var(--de-paper-hairline)] bg-[var(--de-paper)]" : "border-de-hairline bg-de-raised"
+              isPaper ? "border-[var(--de-paper-hairline)] bg-de-paper" : "border-de-hairline bg-de-raised"
             }`}
           >
             <Icon className={`h-4 w-4 ${isPaper ? "text-[#A30E52]" : "text-[#F04C97]"}`} aria-hidden="true" />
