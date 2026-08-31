@@ -85,3 +85,8 @@ try {
 } finally {
   await rm(temp, { recursive: true, force: true });
 }
+
+// package.json already routes both predev and prebuild through this pinned vendor
+// entrypoint. Keep the manifest stable and run the independent pronunciation
+// vendor as the companion public-asset step.
+await import("./vendor-pronunciation-audio.mjs");
