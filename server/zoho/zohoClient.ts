@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
+import { isStagingReview } from '../stagingReviewGuard';
 
 interface ZohoTokenResponse {
   access_token: string;
@@ -161,11 +162,17 @@ class ZohoClient {
     });
   }
 
+  // Staging review mode reports "not configured" so every existing caller
+  // takes its established fail-closed path (skip CRM sync, friendly Desk
+  // unavailable message) instead of writing to real Zoho records.
+  // See server/stagingReviewGuard.ts.
   isConfigured(): boolean {
+    if (isStagingReview()) return false;
     return !!(this.clientId && this.clientSecret && this.refreshToken);
   }
 
   isDeskConfigured(): boolean {
+    if (isStagingReview()) return false;
     return !!(this.clientId && this.clientSecret && this.getDeskRefreshToken());
   }
 }
