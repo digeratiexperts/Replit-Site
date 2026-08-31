@@ -334,8 +334,9 @@ export function DocumentFlipbook(): JSX.Element {
           </div>
 
           <div
-            className="flex min-h-52 flex-col items-center justify-center rounded-2xl border border-dashed px-6 py-8 text-center transition"
+            className="flex flex-col items-center justify-center rounded-2xl border border-dashed px-6 py-8 text-center transition"
             style={{
+              minHeight: 208,
               borderColor: dragActive ? "rgba(154,139,255,0.9)" : "rgba(255,255,255,0.2)",
               background: dragActive ? "rgba(123,108,255,0.12)" : "rgba(255,255,255,0.035)",
             }}
@@ -430,8 +431,8 @@ export function DocumentFlipbook(): JSX.Element {
                   animate={{ opacity: 1, rotateY: 0, x: 0 }}
                   exit={prefersReducedMotion ? undefined : { opacity: 0.72, rotateY: -4, x: -8 }}
                   transition={{ duration: prefersReducedMotion ? 0 : 0.2, ease: "easeOut" }}
-                  className="mx-auto flex min-h-72 w-full items-start justify-center gap-4"
-                  style={{ perspective: 1400 }}
+                  className="mx-auto flex w-full items-start justify-center gap-4"
+                  style={{ perspective: 1400, minHeight: 288 }}
                 >
                   <canvas
                     ref={leftCanvasRef}
@@ -455,7 +456,10 @@ export function DocumentFlipbook(): JSX.Element {
             </div>
           </div>
         ) : (
-          <div className="flex min-h-40 items-center justify-center px-5 py-10 text-center text-sm text-de-muted-soft">
+          <div
+            className="flex items-center justify-center px-5 py-10 text-center text-sm text-de-muted-soft"
+            style={{ minHeight: 160 }}
+          >
             Choose a PDF above to start the flipbook.
           </div>
         )}
