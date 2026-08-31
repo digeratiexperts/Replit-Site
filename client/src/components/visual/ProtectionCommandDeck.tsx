@@ -198,7 +198,7 @@ export const ProtectionCommandDeck: React.FC = () => {
               className={`flex min-h-11 items-center gap-2 rounded-lg border px-3.5 py-2 font-mono text-xs font-semibold transition-colors ${
                 isSelected
                   ? "border-[#D3126A] bg-[#D3126A] text-white"
-                  : "border-de-hairline bg-de-bg text-white/70 hover:border-white/20 hover:text-white"
+                  : "border-[var(--de-paper-hairline)] bg-white text-[#3A3448] hover:border-[#D3126A]/45 hover:text-[#1A1228]"
               }`}
               data-testid={`domain-tab-${domain.id}`}
             >
@@ -220,16 +220,16 @@ export const ProtectionCommandDeck: React.FC = () => {
         >
           <div className="space-y-4 lg:col-span-4">
             <div className="flex items-center gap-2.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-de-hairline bg-de-bg text-[#F04C97]">
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--de-paper-hairline)] bg-white text-[#A30E52]">
                 <DomainIcon className="h-5 w-5" aria-hidden="true" />
               </div>
               <h3 className="font-heading text-lg font-bold text-white">{activeDomain.name}</h3>
             </div>
             <p className="text-sm leading-relaxed text-white/70">{activeDomain.purpose}</p>
 
-            <div className="rounded-lg border border-de-hairline bg-de-bg p-3.5">
-              <p className="mb-2 font-mono text-[10px] font-semibold uppercase tracking-wider text-[#F04C97]">Questions the assessment should answer</p>
-              <ul className="space-y-2 text-xs leading-relaxed text-white/80">
+            <div className="rounded-lg border border-[var(--de-paper-hairline)] bg-white p-3.5">
+              <p className="mb-2 font-mono text-[10px] font-semibold uppercase tracking-wider text-[#A30E52]">Questions the assessment should answer</p>
+              <ul className="space-y-2 text-xs leading-relaxed text-[#3A3448]">
                 {activeDomain.commonQuestions.map((question) => (
                   <li key={question} className="flex items-start gap-2">
                     <span className="mt-1 text-[#D3126A]" aria-hidden="true">•</span>
@@ -251,10 +251,11 @@ export const ProtectionCommandDeck: React.FC = () => {
                     metrics={node.detail}
                     icon={DomainIcon}
                     status="monitored"
+                    tone="paper"
                   />
                 ))}
               </div>
-              <ControlGate label={activeDomain.architecture.gate.label} policy={activeDomain.architecture.gate.policy} enforced={false} />
+              <ControlGate label={activeDomain.architecture.gate.label} policy={activeDomain.architecture.gate.policy} enforced={false} tone="paper" />
             </SecurityBoundary>
           </div>
 
@@ -266,7 +267,7 @@ export const ProtectionCommandDeck: React.FC = () => {
               </p>
               <div className="flex flex-wrap gap-1.5">
                 {activeDomain.operatingModel.scopeExamples.map((item) => (
-                  <span key={item} className="rounded border border-de-hairline bg-de-bg px-2 py-0.5 font-mono text-[10px] text-white/80">{item}</span>
+                  <span key={item} className="rounded border border-[var(--de-paper-hairline)] bg-white px-2 py-0.5 font-mono text-[10px] text-[#3A3448]">{item}</span>
                 ))}
               </div>
             </div>
