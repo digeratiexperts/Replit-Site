@@ -4,18 +4,19 @@ import { Play } from "lucide-react";
 /**
  * Dictionary-style pronunciation entry for "Digerati".
  *
- * AUDIO_SRC — point this at a recorded file (e.g. "/audio/digerati-pronunciation.mp3")
- * and it takes priority over speech synthesis for full-word playback. A real
- * recording is strongly preferred: synthesis voices differ per browser and OS and
- * mangle invented phonetic spellings. Synthesis stays as the offline fallback and
- * always drives the per-syllable chips.
+ * AUDIO_SRC is the fixed pronunciation asset and takes priority over browser
+ * speech synthesis for full-word playback, so the company name sounds identical
+ * on every device instead of varying by browser and OS. Synthesis remains the
+ * fallback if the file fails to load, and always drives the per-syllable chips.
+ * See client/public/audio/README.md for how the file was produced and how to
+ * replace it with a human recording.
  *
  * Colour note: gold #e7b20d appears only as the wordmark bars, per
  * design/UI-STYLE-RULES.md ("gold is the wordmark bars only, never a CTA,
  * numeral, or fill"). Every accent that is a fill, numeral, or rule uses the
  * page accent token, which is magenta on the homepage.
  */
-const AUDIO_SRC = "";
+const AUDIO_SRC = "/audio/digerati-pronunciation.wav";
 const SPOKEN_PRONUNCIATION = "dij-uh-RAH-tee";
 const SPEECH_RATE = 0.78;
 

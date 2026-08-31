@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync, statSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
@@ -74,6 +74,25 @@ describe("pronunciation content", () => {
   it("keeps an audio-file override ahead of speech synthesis", () => {
     expect(src).toMatch(/const AUDIO_SRC = /);
     expect(src).toContain("if (!AUDIO_SRC)");
+  });
+
+  /**
+   * AUDIO_SRC failing over to synthesis is deliberate runtime behaviour, which
+   * means a renamed or deleted asset degrades silently — the button still makes
+   * a sound, just a different one on every device. Fail the build instead.
+   */
+  it("points AUDIO_SRC at an asset that actually ships", () => {
+    const declared = code.match(/const AUDIO_SRC = "([^"]*)"/)?.[1];
+    expect(declared, "AUDIO_SRC should name a file").toBeTruthy();
+    expect(declared!.startsWith("/"), "AUDIO_SRC should be a site-absolute path").toBe(true);
+
+    const asset = resolve(
+      dirname(fileURLToPath(import.meta.url)),
+      "../../public",
+      declared!.replace(/^\//, ""),
+    );
+    expect(existsSync(asset), `missing pronunciation asset: ${asset}`).toBe(true);
+    expect(statSync(asset).size).toBeGreaterThan(8_000);
   });
 
   it("stays usable when speech synthesis is missing", () => {

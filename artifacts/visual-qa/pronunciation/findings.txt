@@ -90,3 +90,36 @@ CSS BUDGET — the collision this reconciliation existed to catch:
   pronunciation-card problem: the next visual feature on any branch will
   fail this check, and two independently-passing branches can still fail
   after merge. The budget needs raising or the stylesheet needs a prune.
+
+────────────────────────────────────────────────────────────────────────
+AUDIO ASSET — 2026-08-31
+
+client/public/audio/digerati-pronunciation.wav is now committed and AUDIO_SRC
+points at it, so the full-word button plays a fixed file instead of whatever
+voice the visitor's browser happens to ship.
+
+Provenance (it is synthesis, not a human recording): Windows SAPI, Microsoft
+Zira, rate -3, driven by SSML carrying an explicit IPA phoneme string
+"ˌdɪdʒəˈrɑːti" rather than the spelling. Trimmed to speech with 40 ms padding,
+peak normalised to -1.5 dBFS. 16-bit PCM mono, 22.05 kHz, 0.849 s, 37,494 B.
+
+The phoneme tag was verified as honoured rather than ignored: synthesising the
+same word with a deliberately wrong phoneme (kæt) produced 0.439 s against
+0.705 s for the plain spelling and 0.655 s for the correct IPA. A synthesiser
+ignoring the tag would have produced the same length all three times.
+
+Verified in a real browser against the production build:
+  GET /audio/digerati-pronunciation.wav          200, 37,494 bytes
+  decodeAudioData                                 0.849 s, mono, peak 0.841
+  .wav requested when "Hear it" is clicked        yes — the recording plays,
+                                                  synthesis is not reached
+
+WAV rather than MP3 because no MP3 encoder exists on this machine; the only
+ffmpeg present is Playwright's video-only stripped build, which cannot even
+demux WAV. 37 KB of click-loaded media was judged a better trade than adding
+an encoder dependency. Re-encoding to MP3/Opus would reach roughly 10 KB.
+
+A new test, "points AUDIO_SRC at an asset that actually ships", fails the build
+if the file is renamed or deleted. Without it that regression is silent: the
+component falls back to synthesis and the button still makes a sound, just a
+different one on every device.
