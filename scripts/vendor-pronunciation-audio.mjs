@@ -2,6 +2,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 const FILE_TITLE = "File:LL-Q1860 (eng)-Flame, not lame-digerati.wav";
+const EXPECTED_SOURCE_SHA1 = "561153b800e1484dd9f5cf1e83f1510db982b1c6";
 const OUTPUT = path.resolve("client/public/audio/digerati-pronunciation.mp3");
 const API = new URL("https://commons.wikimedia.org/w/api.php");
 API.searchParams.set("action", "query");
@@ -116,6 +117,9 @@ const metadata = await metadataResponse.json();
 const page = metadata?.query?.pages?.[0];
 const info = page?.videoinfo?.[0];
 if (!page || page.missing || !info?.url) fail(`Commons file not found: ${FILE_TITLE}`);
+if (info.sha1 !== EXPECTED_SOURCE_SHA1) {
+  fail(`source digest changed: expected ${EXPECTED_SOURCE_SHA1}, received ${info.sha1 || "none"}`);
+}
 
 const license = decodeEntities(info.extmetadata?.LicenseShortName?.value);
 const usageTerms = decodeEntities(info.extmetadata?.UsageTerms?.value);
@@ -156,7 +160,7 @@ await mkdir(path.dirname(OUTPUT), { recursive: true });
 await writeFile(OUTPUT, mp3);
 
 console.log(`[pronunciation-audio] vendored ${FILE_TITLE}`);
-console.log(`[pronunciation-audio] license=${license || usageTerms || "CC0/public domain"} source-sha1=${info.sha1 || "unknown"} wav-bytes=${sourceAudio.length} mp3-bytes=${mp3.length}`);
+console.log(`[pronunciation-audio] license=${license || usageTerms || "CC0/public domain"} source-sha1=${info.sha1} wav-bytes=${sourceAudio.length} mp3-bytes=${mp3.length}`);
 console.log(
   `[pronunciation-audio] ${metrics.duration.toFixed(3)}s ${metrics.sampleRate}Hz ${metrics.channels}ch ` +
     `peak=${metrics.peak.toFixed(3)} rms=${metrics.rmsDb.toFixed(1)}dBFS dc=${metrics.dc.toFixed(4)} ` +
