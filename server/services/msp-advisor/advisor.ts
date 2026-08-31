@@ -20,7 +20,7 @@ import {
   isDeInternalCompanyAnswer,
 } from "./profile";
 import { buildSystemPrompt, INTERNAL_REFUSAL, BANNED_CANNED_OPENER } from "./prompt";
-import { sanitizeActions, assertNoInternalLeak, defaultActionsForMode } from "./actions";
+import { sanitizeActions, assertNoInternalLeak, defaultActionsForMode, materializeAction } from "./actions";
 import { buildHeuristicReply, ensureFreshReply, isNearDuplicate } from "./fallback";
 import {
   appendMessage,
@@ -95,7 +95,9 @@ async function callModel(system: string, history: Array<{ role: "user" | "assist
     if (!client) return null;
 
     const result = await client.chat.completions.create({
-      model: "gpt-4o-mini",
+      // Stronger default tier (Joe 2026-08-31: "improve the intelligence").
+      // Env-overridable so cost can be tuned without a deploy.
+      model: process.env.MSP_ADVISOR_MODEL || "gpt-4o",
       temperature: 0.4,
       max_tokens: 550,
       response_format: { type: "json_object" },
@@ -436,6 +438,23 @@ export async function handleAdvisorChat(req: AdvisorChatRequest): Promise<Adviso
   updateProfile(session, profile);
 
   const actions = sanitizeActions(modelOut.proposedActions, { mode });
+  // Deterministic emergency escalation: an active incident ALWAYS surfaces the
+  // next-level paths (callback + the Get Support security-incident flow) and
+  // fires support_routed, even if the model forgot. DE is an IT company — an
+  // emergency never stays a chat thread. (Joe, 2026-08-31.)
+  if (mode === "security_incident") {
+    if (!actions.some((a) => a.type === "request_callback")) {
+      const cb = materializeAction("request_callback", "Request an emergency callback");
+      if (cb) actions.unshift(cb);
+    }
+    if (!actions.some((a) => a.type === "existing_client_support")) {
+      const sup = materializeAction("existing_client_support", "Open the security-incident support path");
+      if (sup) actions.push(sup);
+    }
+    if (!(modelOut.analyticsEvents || []).includes("support_routed")) {
+      modelOut.analyticsEvents = [...(modelOut.analyticsEvents || []), "support_routed"];
+    }
+  }
   const analyticsEvents = Array.from(
     new Set(
       (modelOut.analyticsEvents || []).filter((e) =>

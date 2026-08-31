@@ -1,7 +1,10 @@
 import type { AdvisorMode, PageContext } from "./types";
 
+// An IT company treats "emergency" as an emergency: anything that reads as an
+// active event moves the visitor to the next level (call line + Get Support
+// security-incident path), never a casual chat loop. (Joe, 2026-08-31.)
 const INCIDENT =
-  /\b(ransomware|ransom|breached|breach|hacked|compromised|account\s*takeover|data\s*theft|encrypt(ed|ing)?\s*(files|system)|active\s*incident|security\s*incident|locked\s*out\s*by\s*attacker)\b/i;
+  /\b(ransomware|ransom|breached|breach|hacked|being\s+hacked|compromised|account\s*takeover|data\s*theft|encrypt(ed|ing)?\s*(files|system)|active\s*incident|security\s*incident|locked\s*out\s*by\s*attacker|cyber\s*-?\s*(event|attack|incident)|cyberattack|under\s+attack|being\s+attacked|attack\s+(in\s+progress|happening|right\s+now|underway)|(security|cyber)\s+emergency|\bemergency\b|incident\s+(in\s+progress|happening|right\s+now|underway)|(we('|’)?re|we\s+are|i('|’)?m|i\s+am)\s+(currently\s+)?(getting\s+)?(hacked|attacked)|everything('|’)?s?\s+(is\s+)?(down|encrypted|locked)|all\s+(our\s+)?(systems|servers|computers)\s+(are\s+)?(down|encrypted|locked))\b/i;
 
 const EXISTING_CLIENT =
   /\b(i'?m\s+(an?\s+)?(existing\s+)?client|we\s+are\s+(an?\s+)?(existing\s+)?client|already\s+(a\s+)?(customer|client)|already\s+use\s+you|our\s+account\s+manager|portal\s+login|open\s+a\s+ticket|existing\s+customer|current\s+(de\s+)?client)\b/i;

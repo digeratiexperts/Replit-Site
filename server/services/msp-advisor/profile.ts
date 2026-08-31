@@ -137,13 +137,42 @@ const NAME_STOPWORDS = new Set([
   "an",
 ]);
 
+/**
+ * Words that follow "I'm …" without being a name — states, feelings, and
+ * activities. "I'm concerned about cybersecurity" once produced the contact
+ * name "Concerned" (Joe transcript, 2026-08-31); an intro capture whose first
+ * word is one of these, ends in a gerund, or is followed by a linking word is
+ * not a self-introduction.
+ */
+const NON_NAME_AFTER_IM = new Set([
+  "concerned", "worried", "interested", "curious", "afraid", "scared",
+  "sure", "not", "just", "here", "still", "currently", "really", "very",
+  "so", "a", "an", "the", "all", "always", "also", "about", "at", "with",
+  "good", "fine", "ok", "okay", "great", "well", "happy", "glad", "sorry",
+  "ready", "unable", "new", "back", "done", "busy", "confused", "lost",
+  "stuck", "frustrated", "unhappy", "upset", "angry", "annoyed", "unsure",
+  "aware", "unaware", "certain", "positive", "serious", "kidding", "joking",
+]);
+
+const NAME_LINKING_TAIL = /^\s+(about|that|to|with|for|because|since|if|and|but|in|on|of|by|how|why|what|when|where)\b/i;
+
 export function extractContactNameFromText(message: string): string | undefined {
   const text = message.trim();
   const intro = text.match(
-    /^(?:i(?:['’]?m| am)|my name is|this is|name(?:'s| is)|it['’]?s)\s+([A-Za-z][A-Za-z'.\-]+(?:\s+[A-Za-z][A-Za-z'.\-]+){0,2})\b/i,
+    /^(?:(?:hi|hello|hey|howdy|good\s+(?:morning|afternoon|evening))[,!.\s]+)?(?:i(?:['’]?m| am)|my name is|this is|name(?:'s| is)|it['’]?s)\s+([A-Za-z][A-Za-z'.\-]+(?:\s+[A-Za-z][A-Za-z'.\-]+){0,2})\b/i,
   );
   if (intro?.[1] && !/[?]/.test(intro[1])) {
-    return cleanPersonName(intro[1]);
+    const captured = intro[1];
+    const firstWord = captured.split(/\s+/)[0];
+    const afterCapture = text.slice(text.indexOf(captured) + captured.length);
+    const looksLikeState =
+      NON_NAME_AFTER_IM.has(firstWord.toLowerCase()) ||
+      /ing$/i.test(firstWord) ||
+      NAME_LINKING_TAIL.test(afterCapture);
+    if (!looksLikeState) {
+      return cleanPersonName(captured);
+    }
+    return undefined;
   }
 
   if (/[?]/.test(text) || text.length > 42) return undefined;
