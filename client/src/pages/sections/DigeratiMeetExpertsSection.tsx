@@ -51,7 +51,7 @@ export const DigeratiMeetExpertsSection = (): JSX.Element => {
             </p>
           </div>
           <h2 className="mb-3 font-heading text-3xl font-bold tracking-[-0.02em] text-white sm:text-4xl md:text-5xl">
-            The people behind your technology
+            The people behind <span className="de-hero-accent">your technology</span>
           </h2>
           <p className="max-w-3xl text-base leading-relaxed text-white/80 md:text-lg">
             When something happens, you should know who owns it — not wonder which anonymous

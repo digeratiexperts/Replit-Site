@@ -1,4 +1,5 @@
-import { motion, useReducedMotion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, Check, CheckCircle2, ClipboardCheck, MapPin, ShieldCheck } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -45,6 +46,16 @@ const trustItems = [
 export function ReferenceHeroSection(): JSX.Element {
   const { openBooking } = useBooking();
   const prefersReducedMotion = useReducedMotion();
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+  const cityLightsY = useTransform(
+    scrollYProgress,
+    [0, 1],
+    prefersReducedMotion ? ["0%", "0%"] : ["0%", "9%"],
+  );
 
   const openAssessment = () => {
     analytics.bookingOpened("hero-reference");
@@ -52,7 +63,7 @@ export function ReferenceHeroSection(): JSX.Element {
   };
 
   return (
-    <section id="home" className="relative overflow-hidden bg-[#050312] text-white scroll-mt-[var(--de-nav-offset)]">
+    <section ref={sectionRef} id="home" className="relative overflow-hidden bg-[#050312] text-white scroll-mt-[var(--de-nav-offset)]">
       <div
         className="pointer-events-none absolute inset-0"
         aria-hidden="true"
@@ -66,7 +77,10 @@ export function ReferenceHeroSection(): JSX.Element {
           reference's premium black still dominates. Masked so the left text
           column stays high-contrast. */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-        <img
+        {/* Gentle scroll parallax on the city lights (Joe 2026-08-31) —
+            oversized ~12% and translated by scroll so no edge ever shows;
+            reduced motion holds the still. */}
+        <motion.img
           src={heroCityLights}
           alt=""
           width={1600}
@@ -74,8 +88,10 @@ export function ReferenceHeroSection(): JSX.Element {
           loading="eager"
           fetchPriority="low"
           decoding="async"
-          className="absolute inset-0 h-full w-full object-cover"
+          className="absolute h-[112%] w-full object-cover"
           style={{
+            y: cityLightsY,
+            top: "-6%",
             opacity: 0.3,
             objectPosition: "center 58%",
             maskImage:

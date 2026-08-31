@@ -128,7 +128,7 @@ export const DigeratiServicesSection = (): JSX.Element => {
             How to work with us
           </p>
           <h2 className="mb-4 font-heading text-3xl font-semibold tracking-[-0.02em] text-white md:text-4xl">
-            Cybersecurity-First Managed IT
+            Cybersecurity-First <span className="de-hero-accent">Managed IT</span>
           </h2>
           <p className="max-w-2xl text-base font-medium leading-relaxed text-white/80 md:text-lg md:font-normal md:text-white/65">
             Three clear paths. Capability depth stays available here and under Protect — nothing

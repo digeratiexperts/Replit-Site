@@ -20,7 +20,10 @@ import {
   PRIMARY_PHONE,
   formatAddressOneLine,
 } from "@/data/companyContact";
-import contactBgImage from "@assets/de-section-atmosphere-electric.svg";
+// Closing bookend (Joe 2026-08-31): the hero's Phoenix city-lights plate
+// returns behind the contact chapter, fainter still, so the page ends where
+// it began. 50KB WebP.
+import contactBgImage from "@assets/de-hero-arizona-dusk-1600.webp";
 
 const contactFormSchema = z.object({
   name: z.string()
@@ -141,9 +144,27 @@ export const DigeratiContactSection = ({
         <img
           src={contactBgImage}
           alt=""
+          width={1600}
+          height={1067}
           loading="lazy"
+          decoding="async"
           aria-hidden="true"
-          className="absolute inset-0 h-full w-full object-cover object-center opacity-[0.08]"
+          className="absolute inset-0 h-full w-full object-cover"
+          style={{
+            opacity: 0.14,
+            objectPosition: "center 70%",
+            maskImage: "linear-gradient(to top, black 0%, rgba(0,0,0,0.5) 55%, transparent 100%)",
+            WebkitMaskImage: "linear-gradient(to top, black 0%, rgba(0,0,0,0.5) 55%, transparent 100%)",
+          }}
+        />
+        {/* Hero violet drift echo — keeps the closing chapter in the same
+            atmosphere family as the opening field. */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(circle at 15% 20%, rgba(87,68,255,0.10), transparent 34%), radial-gradient(circle at 88% 80%, rgba(211,18,106,0.06), transparent 30%)",
+          }}
         />
       </div>
 
