@@ -230,7 +230,7 @@ export function PronunciationCard({ className = "" }: PronunciationCardProps): J
               type="button"
               onClick={playFullWord}
               disabled={!canPlay}
-              className="inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold text-white transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 disabled:cursor-not-allowed disabled:opacity-45"
+              className="inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-lg px-4 py-2.5 text-sm font-semibold text-white transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 disabled:cursor-not-allowed disabled:opacity-45"
               style={{ background: "rgb(var(--de-accent-rgb))" }}
               aria-label={`Play pronunciation: ${SPOKEN_PRONUNCIATION}`}
               data-testid="button-play-digerati-pronunciation"
@@ -259,7 +259,7 @@ export function PronunciationCard({ className = "" }: PronunciationCardProps): J
               className="m-0 text-xs font-medium uppercase text-de-muted-soft"
               style={{ letterSpacing: "0.14em" }}
             >
-              Tap a syllable to hear it on its own
+              Tap a syllable to hear it
             </h3>
 
             <div className="mt-3 flex flex-wrap gap-2">

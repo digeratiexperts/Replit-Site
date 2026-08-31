@@ -1,0 +1,38 @@
+Pronunciation card — visual QA, 2026-08-31
+Branch: claude/pronunciation-dictionary-card-2026-08-31 (base ecea1d9)
+Method: production build served from dist/public, Playwright chromium,
+        homepage "/" at 390 / 768 / 1440.
+
+RESULT: pass at all three breakpoints.
+
+  viewport  card w  page overflow  card overflow  play btn h  chips  console errors
+  390       350     no             no             44          4      none
+  768       620     no             no             44          4      none
+  1440      620     no             no             44          4      none
+
+Computed colour, measured in the browser rather than read off the source:
+  play button background  rgb(211, 18, 106)   = #D3126A  page accent (magenta)
+  wordmark bar fill       rgb(231, 178, 13)   = #e7b20d  wordmark mark only
+
+Two defects were found by rendering and fixed before commit:
+
+1. Play button collapsed to a ~30px vertical sliver with "Hear it" wrapped
+   onto two lines (measured height 68px). Cause: the button is a flex item in
+   the respelling row and was being shrunk. Fix: shrink-0 + whitespace-nowrap.
+   Height is now 44px, which also clears the touch-target minimum.
+   Source review and typecheck both passed while this was broken — it was only
+   visible in the render.
+
+2. At 390 the section heading "Tap a syllable to hear it on its own" wrapped
+   with "OWN" orphaned on its own line. Shortened to "Tap a syllable to hear
+   it", which fits one line at 390.
+
+Noted, not fixed (pre-existing site chrome, outside this claim):
+  - The Ask DE launcher overlaps the card's lower-right corner at 390. It does
+    not cover any control in the card.
+  - The cookie consent bar sits over the card's lower edge at the initial
+    scroll position on all widths.
+
+Not covered here: audio is speech synthesis, so playback quality varies by
+browser and OS and cannot be asserted in CI. AUDIO_SRC at the top of the
+component takes a recorded file and takes priority once one exists.
