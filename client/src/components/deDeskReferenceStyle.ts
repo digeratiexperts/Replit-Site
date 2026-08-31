@@ -175,6 +175,27 @@ export const DE_DESK_REFERENCE_STYLE = String.raw`
     color: #8a8591 !important;
     -webkit-text-fill-color: #8a8591 !important;
   }
+  /* The dark shell's hover/focus/invalid field states repaint an opaque
+     graphite gradient; in the light treatment that read as a solid black bar.
+     Match those selectors so fields stay white in every state. */
+  .de-desk-shell .de-desk-input:hover:not(:focus):not([aria-invalid="true"]) {
+    background-color: #ffffff !important;
+    background-image: none !important;
+    border-color: rgba(15,15,18,0.30) !important;
+    box-shadow: 0 1px 3px rgba(15,15,18,0.08) !important;
+  }
+  .de-desk-shell .de-desk-input:focus,
+  .de-desk-shell .de-desk-input:focus-visible {
+    background-color: #ffffff !important;
+    background-image: none !important;
+    border-color: #D3126A !important;
+    box-shadow: 0 0 0 3px rgba(211,18,106,0.16) !important;
+  }
+  .de-desk-shell .de-desk-input[aria-invalid="true"] {
+    background-color: #ffffff !important;
+    background-image: none !important;
+    border-color: #f0455b !important;
+  }
   .de-desk-input-wrap > svg { color: #615d68 !important; }
 
   .de-desk-urgency {
@@ -198,16 +219,34 @@ export const DE_DESK_REFERENCE_STYLE = String.raw`
   .de-desk-composer input {
     background: transparent !important;
     border: 0 !important;
-  }
-  .de-desk-send {
-    background: #111116 !important;
-    color: #ffffff !important;
     box-shadow: none !important;
   }
-  .de-desk-send:hover { background: #2a2830 !important; }
+  .de-desk-composer:focus-within {
+    border-color: #D3126A !important;
+    box-shadow: 0 0 0 3px rgba(211,18,106,0.14), 0 8px 24px -20px rgba(15,15,18,0.25) !important;
+  }
+  /* Desk design rule: magenta stays on send + primary CTAs even in the light
+     treatment (white/black/graphite everywhere else). */
+  .de-desk-send {
+    background: #D3126A !important;
+    color: #ffffff !important;
+    box-shadow: 0 8px 18px -10px rgba(211,18,106,0.55) !important;
+  }
+  .de-desk-send:hover { background: #bd105f !important; }
+  .de-desk-send:disabled { box-shadow: none !important; }
   .de-desk-composer-caption { padding: 0 20px 16px !important; }
 
-  .de-desk-btn-grad,
+  .de-desk-btn-grad {
+    background: #D3126A !important;
+    color: #ffffff !important;
+    border-color: #D3126A !important;
+    box-shadow: 0 10px 24px -14px rgba(211,18,106,0.6) !important;
+  }
+  .de-desk-btn-grad:hover {
+    background: #bd105f !important;
+    color: #ffffff !important;
+  }
+
   .de-desk-signin,
   .de-desk-security-action {
     background: #111116 !important;
@@ -215,7 +254,6 @@ export const DE_DESK_REFERENCE_STYLE = String.raw`
     border-color: #111116 !important;
     box-shadow: none !important;
   }
-  .de-desk-btn-grad:hover,
   .de-desk-signin:hover,
   .de-desk-security-action:hover {
     background: #2a2830 !important;

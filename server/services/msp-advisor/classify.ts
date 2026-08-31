@@ -1,7 +1,34 @@
 import type { AdvisorMode, PageContext } from "./types";
 
-const INCIDENT =
-  /\b(ransomware|ransom|breached|breach|hacked|compromised|account\s*takeover|data\s*theft|encrypt(ed|ing)?\s*(files|system)|active\s*incident|security\s*incident|locked\s*out\s*by\s*attacker)\b/i;
+// An IT company treats a real emergency as an emergency: an ACTIVE event moves
+// the visitor to the next level (call line + Get Support security-incident
+// path), never a casual chat loop. (Joe, 2026-08-31.)
+//
+// Two tiers (adversarial-review correction, same day): STRONG terms are
+// unambiguous active-compromise language and always escalate. WEAK terms
+// ("emergency", "cyber attack/event/incident") also appear in ordinary
+// pre-sales questions — "What's your emergency response SLA?", "How do we
+// prevent a cyberattack?" — which must stay in the sales lanes, so WEAK only
+// escalates when the message is NOT shaped like an offering/pricing/planning
+// question and not a non-IT (medical/family) emergency.
+const INCIDENT_STRONG =
+  /\b(ransomware|ransom|breached|breach|hacked|being\s+hacked|compromised|account\s*takeover|data\s*theft|encrypt(ed|ing)?\s*(files|system)|active\s*incident|security\s*incident|locked\s*out\s*by\s*attacker|under\s+attack|being\s+attacked|attack\s+(in\s+progress|happening|right\s+now|underway)|incident\s+(in\s+progress|happening|right\s+now|underway)|(we('|’)?re|we\s+are|i('|’)?m|i\s+am)\s+(currently\s+)?(getting\s+)?(hacked|attacked)|everything('|’)?s?\s+(is\s+)?(down|encrypted|locked)|all\s+(our\s+)?(systems|servers|computers)\s+(are\s+)?(down|encrypted|locked))\b/i;
+
+const INCIDENT_WEAK =
+  /\b(cyber\s*-?\s*(event|attack|incident)|cyberattack|(security|cyber|it)\s+emergency|\bemergency\b)\b/i;
+
+/** Question shapes about DE's offerings/preparedness — sales lane, not an event. */
+const OFFERING_QUESTION =
+  /\b(do\s+you\s+(offer|have|provide|include)|how\s+much|what('|’)?s?\s+(is\s+)?(your|the)|price|pricing|cost|charge|rate|sla|retainer|plan(ning)?|prepare(dness)?|prevent(ion|ing)?|avoid|in\s+case\s+of|contact\s+(list|number)|response\s+time|coverage|package|tier)\b/i;
+
+const NON_IT_EMERGENCY = /\b(medical|family|personal|health|pet)\s+emergency\b/i;
+
+function isIncidentMessage(text: string): boolean {
+  if (INCIDENT_STRONG.test(text)) return true;
+  if (!INCIDENT_WEAK.test(text)) return false;
+  if (NON_IT_EMERGENCY.test(text)) return false;
+  return !OFFERING_QUESTION.test(text);
+}
 
 const EXISTING_CLIENT =
   /\b(i'?m\s+(an?\s+)?(existing\s+)?client|we\s+are\s+(an?\s+)?(existing\s+)?client|already\s+(a\s+)?(customer|client)|already\s+use\s+you|our\s+account\s+manager|portal\s+login|open\s+a\s+ticket|existing\s+customer|current\s+(de\s+)?client)\b/i;
@@ -37,7 +64,7 @@ export function classifyMode(message: string, page?: PageContext): AdvisorMode {
   const text = message.trim();
   if (!text) return page?.pageType === "cybersecurity" ? "cybersecurity" : "msp_discovery";
 
-  if (INCIDENT.test(text)) return "security_incident";
+  if (isIncidentMessage(text)) return "security_incident";
   if (EXISTING_CLIENT.test(text)) return "existing_client";
 
   // Off-topic only when clearly unrelated AND not mixed with IT/security language

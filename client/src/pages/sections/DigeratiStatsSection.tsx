@@ -80,7 +80,18 @@ export const DigeratiStatsSection = (): JSX.Element => {
 
   return (
     <section className="de-dark-well de-field-grain relative py-6 lg:py-8">
-      <div className="de-style-box relative mx-3 px-4 py-8 sm:mx-4 sm:px-8 md:py-16 lg:mx-6 lg:px-10 lg:py-20">
+      {/* Hero violet drift echo (Joe 2026-08-31): the opening field's
+          atmosphere carries into the first chapter as a background-image
+          layer ON the style box itself — no overlay element, so it can never
+          paint above content regardless of stacking contexts
+          (adversarial-review correction). */}
+      <div
+        className="de-style-box relative mx-3 px-4 py-8 sm:mx-4 sm:px-8 md:py-16 lg:mx-6 lg:px-10 lg:py-20"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle at 12% 18%, rgba(87,68,255,0.12), transparent 32%), radial-gradient(circle at 95% 90%, rgba(211,18,106,0.05), transparent 26%)",
+        }}
+      >
         <motion.div
           initial={prefersReducedMotion ? false : revealInitial}
           whileInView={revealInView}
@@ -92,7 +103,7 @@ export const DigeratiStatsSection = (): JSX.Element => {
             Why Digerati Experts
           </p>
           <h2 className="mb-4 font-heading text-3xl font-semibold tracking-[-0.02em] text-white md:text-4xl">
-            The Threats Are Real
+            The Threats Are <span className="de-hero-accent">Real</span>
           </h2>
           <p className="max-w-2xl text-base font-medium leading-relaxed text-white/80 md:text-lg md:font-normal md:text-white/65">
             Don&apos;t become a statistic. These numbers show why proactive security matters —

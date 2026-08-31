@@ -153,7 +153,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
             Client proof
           </p>
           <h2 className="mb-4 text-3xl font-bold text-white sm:text-4xl md:text-5xl">
-            Outcomes Arizona businesses hire us for
+            <span className="de-hero-accent">Outcomes</span> Arizona businesses hire us for
           </h2>
           <p className="mx-auto max-w-2xl text-lg leading-relaxed text-white/60 md:text-xl">
             Fewer vendors, clearer security visibility, and accountable support when something

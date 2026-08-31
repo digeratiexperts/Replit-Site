@@ -507,6 +507,17 @@ html[data-dock-hidden="true"] .de-bottom-bar {
   padding-top: var(--de-nav-offset);
 }
 
+/* Hero gradient thread (Joe 2026-08-31): the hero's violet→magenta text
+ * gradient, reusable on ONE key word/phrase in selected homepage section
+ * headings so the flagship treatment weaves through the page. Sparingly —
+ * one accent per heading, a handful of sections, never body copy. */
+.de-hero-accent {
+  background-image: linear-gradient(90deg, #9a8bff, #7b6cff 45%, #d3126a);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
 /* Dark chapters: well (#050312) vs surface (#0a0a0a) vs raised (#151217).
  * Adjacent siblings in the SAME chapter share a field + hairline.
  * Different chapters step the ladder so the page does not read as one slab.

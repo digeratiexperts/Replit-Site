@@ -287,18 +287,49 @@ export function SiteBottomBar() {
     const track = trackRef.current;
     const actions = actionsRef.current;
     if (!track) return;
+    const measure = () => ({
+      track: Math.round(track.getBoundingClientRect().width),
+      // Compact capsule = action cluster + even 6px padding + 2px border each side.
+      compact: actions ? Math.round(actions.getBoundingClientRect().width + 16) : 0,
+    });
     const publish = () => {
-      setTrackW(Math.round(track.getBoundingClientRect().width));
-      if (actions) {
-        // Compact capsule = action cluster + even 6px padding + 2px border each side.
-        setCompactW(Math.round(actions.getBoundingClientRect().width + 16));
-      }
+      const m = measure();
+      setTrackW(m.track);
+      if (actions) setCompactW(m.compact);
     };
+    // Initial publish must be synchronous (pre-paint) so the first expand
+    // animates from a real width.
     publish();
-    const ro = new ResizeObserver(publish);
+    // While the scroll-top button width-tweens (~0.4s), the actions cluster
+    // resizes every frame. Publishing each intermediate width retargets the
+    // capsule tween per frame (an easeOut chase that keeps settling after the
+    // button finishes). Debounce observer publishes until the size holds
+    // still for two frames, so the capsule retargets once, to the final width.
+    let raf = 0;
+    let last: { track: number; compact: number } | null = null;
+    const settle = () => {
+      const m = measure();
+      if (last && m.track === last.track && m.compact === last.compact) {
+        raf = 0;
+        last = null;
+        setTrackW(m.track);
+        if (actions) setCompactW(m.compact);
+        return;
+      }
+      last = m;
+      raf = requestAnimationFrame(settle);
+    };
+    const ro = new ResizeObserver(() => {
+      if (raf) cancelAnimationFrame(raf);
+      last = null;
+      raf = requestAnimationFrame(settle);
+    });
     ro.observe(track);
     if (actions) ro.observe(actions);
-    return () => ro.disconnect();
+    return () => {
+      ro.disconnect();
+      if (raf) cancelAnimationFrame(raf);
+    };
   }, [showAskDE, showScrollTop, location]);
 
   useEffect(() => {
@@ -360,16 +391,27 @@ export function SiteBottomBar() {
             ? { duration: 0 }
             : { duration: EXPAND_S, ease: EXPAND_EASE }
         }
+        style={{
+          // The px-padding/gap classes swap between states; tween them in step
+          // with the width so the content doesn't hop at animation start.
+          transition: prefersReducedMotion
+            ? undefined
+            : "gap 0.4s ease-out, padding 0.4s ease-out",
+        }}
       >
         <span className="de-unified-bar-glass" aria-hidden="true" />
 
+        {/* Keep the wrapper's flex participation constant and animate only the
+            interpolable pair 0fr <-> 1fr (minmax(0,1fr) <-> 0fr cannot
+            interpolate, and the old w-0/flex-none toggle snapped the content
+            box closed before the capsule width tween caught up). */}
         <div
-          className={`relative z-[1] grid min-w-0 ${
+          className={`relative z-[1] grid min-w-0 flex-1 ${
             prefersReducedMotion ? "" : "transition-[grid-template-columns,opacity] duration-[400ms] ease-out"
           } ${
             expanded
-              ? "w-full min-w-0 flex-1 grid-cols-[minmax(0,1fr)] opacity-100"
-              : "pointer-events-none w-0 flex-none grid-cols-[0fr] overflow-hidden opacity-0"
+              ? "grid-cols-[1fr] opacity-100"
+              : "pointer-events-none grid-cols-[0fr] opacity-0"
           }`}
           aria-hidden={!expanded}
         >
@@ -379,12 +421,27 @@ export function SiteBottomBar() {
         </div>
 
         <div className="relative z-[1] flex shrink-0 items-center gap-1.5">
-          {expanded && (
-            <>
-              <div className="h-6 w-px shrink-0 bg-white/20" aria-hidden="true" />
-              <HomepageDockActions />
-            </>
-          )}
+          <AnimatePresence initial={false}>
+            {expanded && (
+              <motion.div
+                key="dock-actions"
+                className="flex items-center overflow-hidden"
+                initial={{ width: 0, opacity: 0 }}
+                animate={{ width: "auto", opacity: 1 }}
+                exit={{ width: 0, opacity: 0 }}
+                transition={
+                  prefersReducedMotion
+                    ? { duration: 0 }
+                    : { duration: EXPAND_S, ease: EXPAND_EASE }
+                }
+              >
+                <div className="flex w-max shrink-0 items-center gap-1.5">
+                  <div className="h-6 w-px shrink-0 bg-white/20" aria-hidden="true" />
+                  <HomepageDockActions />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
           <div ref={actionsRef} className="flex shrink-0 items-center gap-1.5">
             {/* Decorative status dot removed per reference direction — no dot
                 unless it reflects a real state. */}
@@ -393,12 +450,12 @@ export function SiteBottomBar() {
                 <motion.button
                   key="scroll-top"
                   type="button"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration }}
+                  initial={{ opacity: 0, width: "0rem" }}
+                  animate={{ opacity: 1, width: "2.5rem" }}
+                  exit={{ opacity: 0, width: "0rem" }}
+                  transition={{ duration, ease: EXPAND_EASE }}
                   onClick={scrollToTop}
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-white/[0.06] text-white/85 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-de-magenta-ink"
+                  className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-white/[0.06] text-white/85 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-de-magenta-ink"
                   aria-label="Scroll to top"
                   data-testid="button-scroll-to-top"
                 >

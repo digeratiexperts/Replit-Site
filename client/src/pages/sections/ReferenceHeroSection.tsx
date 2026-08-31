@@ -1,4 +1,5 @@
-import { motion, useReducedMotion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, Check, CheckCircle2, ClipboardCheck, MapPin, ShieldCheck } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -7,6 +8,9 @@ import { useBooking } from "@/contexts/BookingContext";
 import { analytics } from "@/lib/analytics";
 import { CTA } from "@/lib/ctaCopy";
 import { PRIMARY_PHONE } from "@/data/companyContact";
+// 50KB WebP (was a 2.0MB PNG): at 30% opacity under the dark field, the
+// aggressive compression is invisible — review finding F1.
+import heroCityLights from "@assets/de-hero-arizona-dusk-1600.webp";
 
 const trustItems = [
   {
@@ -42,6 +46,16 @@ const trustItems = [
 export function ReferenceHeroSection(): JSX.Element {
   const { openBooking } = useBooking();
   const prefersReducedMotion = useReducedMotion();
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+  const cityLightsY = useTransform(
+    scrollYProgress,
+    [0, 1],
+    prefersReducedMotion ? ["0%", "0%"] : ["0%", "9%"],
+  );
 
   const openAssessment = () => {
     analytics.bookingOpened("hero-reference");
@@ -49,7 +63,7 @@ export function ReferenceHeroSection(): JSX.Element {
   };
 
   return (
-    <section id="home" className="relative overflow-hidden bg-[#050312] text-white scroll-mt-[var(--de-nav-offset)]">
+    <section ref={sectionRef} id="home" className="relative overflow-hidden bg-[#050312] text-white scroll-mt-[var(--de-nav-offset)]">
       <div
         className="pointer-events-none absolute inset-0"
         aria-hidden="true"
@@ -58,6 +72,44 @@ export function ReferenceHeroSection(): JSX.Element {
             "radial-gradient(circle at 78% 36%, rgba(87,68,255,0.22), transparent 30%), radial-gradient(circle at 92% 68%, rgba(211,18,106,0.10), transparent 25%), linear-gradient(110deg, #050312 0%, #060617 52%, #090924 100%)",
         }}
       />
+      {/* Phoenix city-lights landscape (aerial overview), returned per Joe
+          2026-08 — kept faint under the dark precision field so the approved
+          reference's premium black still dominates. Masked so the left text
+          column stays high-contrast. */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+        {/* Gentle scroll parallax on the city lights (Joe 2026-08-31) —
+            oversized ~12% and translated by scroll so no edge ever shows;
+            reduced motion holds the still. */}
+        <motion.img
+          src={heroCityLights}
+          alt=""
+          width={1600}
+          height={1067}
+          loading="eager"
+          decoding="async"
+          // react-dom 18 doesn't know camelCase fetchPriority (unknown-prop
+          // warning); pass the lowercase DOM attribute directly.
+          {...({ fetchpriority: "low" } as Record<string, string>)}
+          className="absolute h-[112%] w-full object-cover"
+          style={{
+            y: cityLightsY,
+            top: "-6%",
+            opacity: 0.3,
+            objectPosition: "center 58%",
+            maskImage:
+              "linear-gradient(to right, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.45) 40%, rgba(0,0,0,0.95) 68%, black 100%)",
+            WebkitMaskImage:
+              "linear-gradient(to right, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.45) 40%, rgba(0,0,0,0.95) 68%, black 100%)",
+          }}
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(5,3,18,0.55) 0%, rgba(5,3,18,0.12) 34%, rgba(5,3,18,0.1) 66%, rgba(5,3,18,0.72) 100%)",
+          }}
+        />
+      </div>
       <div
         className="pointer-events-none absolute inset-y-0 right-0 opacity-30"
         aria-hidden="true"

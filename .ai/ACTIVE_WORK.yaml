@@ -30,20 +30,21 @@
 
 version: 2
 claims:
-  - id: homepage-ask-de-reference-redesign
+  # homepage-ask-de-reference-redesign (issue 118, branch
+  # claude/homepage-ask-de-visual-19b3aa) RETIRED 2026-08-31: integrated via
+  # PR #147 (main @ 9c5e7f9, production-verified). PR #146 closed unmerged.
+  # That branch is no longer a release lane.
+  - id: fable-visual-batch
     issue: 118
     owner: claude
     subsystem: homepage-support-chrome
-    branch: claude/homepage-ask-de-visual-19b3aa
-    base_sha: 0b8b93fb0b4b973e90d830600a068c167b5eabda
+    branch: claude/fable-visual-batch
+    base_sha: 9c5e7f95fa7effde99698cd4c40d8c2c6d335df3
     files:
-      - client/src/pages/DigeratiHomepage.tsx
       - client/src/pages/sections/ReferenceHeroSection.tsx
-      - client/src/components/SiteBottomBar.tsx
-      - client/src/components/MarketingChrome.tsx
-      - client/src/components/MegaMenu.tsx
-      - client/src/components/icons/AskDeGlyph.tsx
-      - client/src/assets/ask-de.svg
+      - client/src/components/ZohoASAPWidget.tsx
       - client/src/components/deDeskReferenceStyle.ts
+      - client/src/components/SiteBottomBar.tsx
+      - client/src/pages/about/MissionValues.tsx
     status: active
-    started: 2026-08-30
+    started: 2026-08-31
