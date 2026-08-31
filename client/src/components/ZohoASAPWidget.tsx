@@ -39,7 +39,8 @@ import {
   PORTAL_TICKETS,
   REMOTE_SUPPORT_HREF,
 } from "@/lib/portalUrls";
-import { readPortalUser } from "@/lib/portalRoles";
+import { readPortalUser, type PortalUserSession } from "@/lib/portalRoles";
+import DeskLoginCard from "@/components/DeskLoginCard";
 import { acquireBodyScrollLock } from "@/lib/bodyScrollLock";
 import type { OpenMspAdvisorDetail } from "@/lib/openMspAdvisor";
 import { STORE_ADVISOR_SEED } from "@/lib/openMspAdvisor";
@@ -221,6 +222,7 @@ export const ZohoASAPWidget = ({
   const [location] = useLocation();
   const [advisorSessionId, setAdvisorSessionId] = useState<string | null>(null);
   const [pendingSeed, setPendingSeed] = useState<string | null>(null);
+  const [showInlineLogin, setShowInlineLogin] = useState(false);
 
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>(() => [
     { ...CHAT_WELCOME, createdAt: new Date().toISOString() },
@@ -281,8 +283,26 @@ export const ZohoASAPWidget = ({
   // Full-screen desk: leave it whenever the desk closes or the viewport drops
   // below the draggable breakpoint, and lock body scroll while it covers the page.
   useEffect(() => {
-    if (!isOpen) setIsDeskFullscreen(false);
+    if (!isOpen) {
+      setIsDeskFullscreen(false);
+      setShowInlineLogin(false);
+    }
   }, [isOpen]);
+
+  // Inline Client Tools sign-in (issue #153): the card already stored the
+  // canonical portal session keys; adopt it into the open Desk.
+  const handleDeskSignIn = (user: PortalUserSession) => {
+    setPortalSession({ fullName: user.fullName, email: user.email });
+    if (user.email) setEmail((current) => current || user.email || "");
+    if (user.fullName) setFullName((current) => current || user.fullName || "");
+    setShowInlineLogin(false);
+    toast({
+      title: "Signed in",
+      description: user.fullName
+        ? `Welcome back, ${user.fullName.split(" ")[0]}. Client Tools are unlocked.`
+        : "Client Tools are unlocked.",
+    });
+  };
   useEffect(() => {
     if (!canDrag) setIsDeskFullscreen(false);
   }, [canDrag]);
@@ -1645,13 +1665,33 @@ export const ZohoASAPWidget = ({
                             Access support, service resources, and your secure client portal.
                           </p>
                         </div>
+                        {showInlineLogin ? (
+                          <div
+                            className="de-desk-login-slot"
+                            onPointerMove={trackDeskSupportFieldSpotlight}
+                          >
+                            <DeskLoginCard onSignedIn={handleDeskSignIn} />
+                          </div>
+                        ) : (
+                          <button
+                            type="button"
+                            className="de-desk-signin"
+                            aria-expanded={showInlineLogin}
+                            onClick={() => setShowInlineLogin(true)}
+                            data-testid="resource-link-sign-in-to-client-tools"
+                          >
+                            <LogIn aria-hidden="true" />
+                            Sign in to Client Tools
+                          </button>
+                        )}
                         <a
                           href={PORTAL_LOGIN}
-                          className="de-desk-signin"
-                          data-testid="resource-link-sign-in-to-client-tools"
+                          className="de-desk-signin-alt"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          data-testid="resource-link-full-portal-login"
                         >
-                          <LogIn aria-hidden="true" />
-                          Sign in to Client Tools
+                          Prefer the full portal sign-in page?
                         </a>
                         <div className="de-desk-tools-now">
                           <p className="de-desk-launch-heading">Need help right now?</p>
@@ -2857,12 +2897,14 @@ export const ZohoASAPWidget = ({
               display: inline-flex;
               align-items: center; justify-content: center; gap: 8px;
               min-height: 44px;
-              margin: 16px 0 18px;
+              margin: 16px 0 8px;
               padding: 11px 16px;
               border: 0; border-radius: 10px;
               background: #D3126A; color: #fff;
+              font-family: inherit;
               font-size: 14.5px; font-weight: 700;
               text-decoration: none;
+              cursor: pointer;
               box-shadow: 0 8px 18px -10px rgba(211,18,106,0.8);
             }
             .de-desk-signin:hover { background: #bd105f; }
@@ -2872,6 +2914,53 @@ export const ZohoASAPWidget = ({
               outline: 2px solid #D3126A;
               outline-offset: 2px;
             }
+            .de-desk-signin-alt {
+              align-self: flex-start;
+              display: inline-flex; align-items: center;
+              min-height: 40px;
+              margin: 0 0 14px;
+              color: rgba(255,255,255,0.62);
+              font-size: 13px;
+              text-decoration: underline;
+              text-underline-offset: 3px;
+            }
+            .de-desk-signin-alt:hover { color: #fff; }
+            .de-desk-login-slot { margin-top: 16px; }
+            .de-desk-login-slot .de-desk-form { margin: 0 0 4px; }
+            .de-desk-login .de-desk-btn-grad {
+              display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            }
+            .de-desk-login .de-desk-btn-grad svg { width: 16px; height: 16px; }
+            .de-desk-login .de-desk-form-error {
+              display: flex; align-items: flex-start; gap: 8px;
+            }
+            .de-desk-login .de-desk-form-error svg {
+              width: 15px; height: 15px; flex-shrink: 0; margin-top: 2px;
+            }
+            .de-desk-login-hint {
+              display: flex; align-items: flex-start; gap: 8px;
+              margin: 0;
+              color: rgba(255,255,255,0.68);
+              font-size: 13px; line-height: 1.45;
+            }
+            .de-desk-login-hint svg {
+              width: 15px; height: 15px; flex-shrink: 0; margin-top: 2px; color: #D3126A;
+            }
+            .de-desk-login-links {
+              display: flex; justify-content: space-between; gap: 10px;
+            }
+            .de-desk-login-links a {
+              display: inline-flex; align-items: center;
+              min-height: 40px;
+              color: #D3126A;
+              font-size: 13px; font-weight: 600;
+              text-decoration: none;
+            }
+            .de-desk-login-links a:hover { text-decoration: underline; }
+            .de-desk-login .de-desk-more-toggle {
+              display: inline-flex; align-items: center; gap: 6px;
+            }
+            .de-desk-login .de-desk-more-toggle svg { width: 14px; height: 14px; }
             .de-desk-tools-now {
               padding-top: 16px;
               border-top: 1px solid var(--de-hairline, rgba(255,255,255,0.10));

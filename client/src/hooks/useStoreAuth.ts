@@ -128,9 +128,16 @@ export function useStoreAuth(): StoreAuthState {
         initAuth();
       }
     };
+    // storage events only fire in other tabs; in-page sign-in (DE Desk login
+    // card) announces itself with this custom event instead.
+    const handleAuthChange = () => initAuth();
 
     window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
+    window.addEventListener("de-portal-auth-changed", handleAuthChange);
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("de-portal-auth-changed", handleAuthChange);
+    };
   }, [fetchClientInfo, fetchClientPricing]);
 
   const loginRedirect = useCallback(() => {
