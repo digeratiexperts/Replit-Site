@@ -8,6 +8,7 @@ Design OS (tokens, brand, UX, imagery): `DESIGN_SYSTEM.md`, `BRAND.md`, `UX_PRIN
 
 | Path | Purpose |
 |------|---------|
+| `design/UI-STYLE-RULES.md` | Canonical execution layer — one theme / five surfaces, accent doctrine, section archetypes, page-layout doctrine, hard rules (consolidates the corpus; start here for any UI task) |
 | `design/DESIGN_SYSTEM.md` | Live tokens (color, type, radius, motion) extracted from the codebase |
 | `design/BRAND.md` | Visual identity constraints |
 | `design/UX_PRINCIPLES.md` | Design-first / visual QA / definition of done |

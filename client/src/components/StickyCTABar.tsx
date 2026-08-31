@@ -230,7 +230,7 @@ export function StickyCTABar() {
             <button
               onClick={handleDismiss}
               className={cn(
-                "absolute right-2 top-2 z-10 flex min-h-11 min-w-11 items-center justify-center rounded-full p-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2",
+                "absolute right-1 top-1/2 z-10 flex min-h-11 min-w-11 -translate-y-1/2 items-center justify-center rounded-full p-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 sm:right-2 sm:top-2 sm:translate-y-0",
                 light
                   ? "hover:bg-black/5 focus-visible:ring-offset-white"
                   : "hover:bg-white/10 focus-visible:ring-offset-de-raised",
@@ -241,8 +241,10 @@ export function StickyCTABar() {
               <X className={cn("h-4 w-4", light ? "text-slate-600" : "text-white/70")} />
             </button>
 
-            <div className="px-4 py-3 pr-11">
-              <div className="flex flex-col items-center justify-between gap-3 sm:flex-row lg:gap-5">
+            {/* Mobile: single compact row so the bar never buries page content.
+                sm+: the original roomier layout. */}
+            <div className="px-3 py-2 pr-11 sm:px-4 sm:py-3">
+              <div className="flex items-center justify-between gap-2 sm:gap-3 lg:gap-5">
                 <div className="flex min-w-0 items-center gap-3">
                   <div
                     className={cn(
@@ -252,10 +254,10 @@ export function StickyCTABar() {
                   >
                     <Shield className="h-5 w-5 text-de-accent-ink" />
                   </div>
-                  <div className="min-w-0 text-center lg:text-left">
+                  <div className="min-w-0 text-left">
                     <p
                       className={cn(
-                        "text-base font-semibold md:text-lg",
+                        "text-xs font-semibold leading-snug sm:text-base md:text-lg",
                         light ? "text-slate-900" : "text-white",
                       )}
                     >
@@ -307,7 +309,7 @@ export function StickyCTABar() {
 
                   <Button
                     size="sm"
-                    className="h-11 px-5 text-base font-semibold"
+                    className="h-9 px-3 text-sm font-semibold sm:h-11 sm:px-5 sm:text-base"
                     variant="brand"
                     data-testid="button-sticky-cta-assessment"
                     onClick={() => openBooking("sticky_cta")}

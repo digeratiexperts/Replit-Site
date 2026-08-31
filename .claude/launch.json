@@ -4,8 +4,12 @@
     {
       "name": "de-site-dev",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
-      "port": 8080
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
+      "port": 3400,
+      "autoPort": false
     }
   ]
 }

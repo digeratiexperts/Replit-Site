@@ -4,6 +4,7 @@
  */
 import { logger } from "../logger";
 import { getClient, setClient } from "../portalAuthStore";
+import { assertMutationAllowed } from "../stagingReviewGuard";
 import { buildSignedHeaders, resolveScopedSecret } from "./deSyncAuth";
 import type { DeSyncEnvelope, DeSyncEventType } from "./deSyncContract";
 
@@ -305,6 +306,9 @@ export async function deliverEnvelopeToHub(
   envelope: DeSyncEnvelope,
   destination: "hub" | "website" | "portal",
 ): Promise<void> {
+  // Review instances never emit Hub events. Throwing keeps the envelope in the
+  // outbox (retryable) rather than marking it delivered.
+  assertMutationAllowed(`Hub event delivery: ${envelope.eventType}`);
   if (destination !== "hub") {
     throw new Error(`Site worker does not deliver destination=${destination}`);
   }

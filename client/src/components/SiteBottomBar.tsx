@@ -1,6 +1,14 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowUp, X } from "lucide-react";
+import {
+  ArrowUp,
+  BookOpen,
+  ChevronRight,
+  Headphones,
+  MessageSquareText,
+  Wrench,
+  X,
+} from "lucide-react";
 import { useLocation } from "wouter";
 import {
   HomepageDockActions,
@@ -11,102 +19,203 @@ import { openMspAdvisor } from "@/lib/openMspAdvisor";
 import { isDoor2Path } from "@/lib/isDoor2Path";
 import { PRIMARY_PHONE } from "@shared/companyContact";
 import { AskDeGlyph } from "@/components/icons/AskDeGlyph";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 /** Original used 0.28s easeOut layout + 300ms grid. Keep that pacing without transform. */
 const EXPAND_S = 0.4;
 const EXPAND_EASE = "easeOut" as const;
 
-/** Shown once per tab session so the compact Store launcher doesn't nag on every render. */
-const STORE_CALLOUT_SEEN_KEY = "de-store-ask-callout-seen";
+type QuickMenuItem = {
+  title: string;
+  description: string;
+  icon: typeof Headphones;
+  testId: string;
+  onSelect: () => void;
+};
 
 /**
- * On Store/Door 2 pages the storefront has its own floating "Your Solution"
- * button in the same bottom-right corner. Full Ask DE (icon + two lines of
- * text) crowded that button, so here it balls up to the round icon only and
- * surfaces a small dismissible callout pointing at Get Support / a live call
- * instead of relying on the wide label to explain itself.
+ * One Ask DE entry point. The launcher opens a single white chooser inspired by
+ * the approved reference: visitors choose what they need first, then the
+ * existing Desk opens directly on that function. This avoids presenting three
+ * competing tabs as the first decision.
  */
 function AskDELauncherButton({ compact = false }: { compact?: boolean }) {
-  const [showCallout, setShowCallout] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
+  const isMobile = useIsMobile();
+  // Focus trap keeps Tab inside the chooser and restores focus to the
+  // launcher when it closes (Escape, outside tap, X, or a selection).
+  const popoverRef = useFocusTrap<HTMLDivElement>({ enabled: showMenu });
+  const launcherRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    if (!compact) {
-      setShowCallout(false);
-      return;
-    }
-    if (typeof window === "undefined") return;
-    if (window.sessionStorage.getItem(STORE_CALLOUT_SEEN_KEY)) return;
-    const timer = window.setTimeout(() => setShowCallout(true), 900);
-    return () => window.clearTimeout(timer);
-  }, [compact]);
+    if (!showMenu) return;
+    const onPointerDown = (event: PointerEvent) => {
+      const target = event.target as Node | null;
+      if (!target) return;
+      if (popoverRef.current?.contains(target) || launcherRef.current?.contains(target)) return;
+      setShowMenu(false);
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setShowMenu(false);
+      }
+    };
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [showMenu, popoverRef]);
 
-  const dismissCallout = () => {
-    setShowCallout(false);
-    window.sessionStorage?.setItem(STORE_CALLOUT_SEEN_KEY, "1");
+  const openDesk = (detail: Parameters<typeof openMspAdvisor>[0]) => {
+    setShowMenu(false);
+    openMspAdvisor(detail);
   };
+
+  const menuItems: QuickMenuItem[] = [
+    {
+      title: "Get Support",
+      description: "Open a ticket or report an issue",
+      icon: Headphones,
+      testId: "ask-de-choice-support",
+      onSelect: () => openDesk({ tab: "ticket" }),
+    },
+    {
+      title: "Get Help",
+      description: "Ask DE a question and get guidance",
+      icon: BookOpen,
+      testId: "ask-de-choice-help",
+      onSelect: () => openDesk({ tab: "chat" }),
+    },
+    {
+      title: "Client Tools",
+      description: "Access tools and resources for your business",
+      icon: Wrench,
+      testId: "ask-de-choice-tools",
+      onSelect: () => openDesk({ tab: "resources" }),
+    },
+    {
+      title: "Give Feedback",
+      description: "Share feedback or suggestions",
+      icon: MessageSquareText,
+      testId: "ask-de-choice-feedback",
+      onSelect: () =>
+        openDesk({
+          tab: "chat",
+          seedMessage: "I'd like to share feedback about my experience with Digerati Experts.",
+        }),
+    },
+  ];
 
   return (
     <div className="relative flex shrink-0 items-center">
       <AnimatePresence>
-        {showCallout && (
+        {showMenu && isMobile && (
           <motion.div
-            initial={{ opacity: 0, y: 6, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 6, scale: 0.96 }}
-            transition={{ duration: 0.18 }}
-            className="absolute right-0 z-10 w-60 rounded-2xl border border-[#D3126A]/50 bg-[#141014] p-3 text-left shadow-[0_10px_32px_rgba(211,18,106,0.4)]"
-            style={{
-              bottom: "calc(100% + var(--de-store-cart-h, 0px) + 1.25rem)",
-            }}
-            role="status"
-            data-testid="store-ask-de-callout"
+            key="ask-de-scrim"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            className="fixed inset-0 z-40 bg-black/70"
+            aria-hidden="true"
+            data-testid="ask-de-sheet-scrim"
+          />
+        )}
+        {showMenu && (
+          <motion.div
+            key="ask-de-panel"
+            ref={popoverRef}
+            initial={isMobile ? { opacity: 0, y: 32 } : { opacity: 0, y: 10, scale: 0.98 }}
+            animate={isMobile ? { opacity: 1, y: 0 } : { opacity: 1, y: 0, scale: 1 }}
+            exit={isMobile ? { opacity: 0, y: 24 } : { opacity: 0, y: 8, scale: 0.98 }}
+            transition={{ duration: 0.18, ease: "easeOut" }}
+            className={
+              isMobile
+                ? "fixed inset-x-0 bottom-0 z-50 max-h-[85vh] overflow-y-auto rounded-t-2xl border-t border-black/10 bg-[#fbfbfa] p-5 text-left text-[#151219] shadow-2xl"
+                : "absolute right-0 z-20 w-[min(380px,calc(100vw-1.5rem))] overflow-visible rounded-[24px] border border-black/10 bg-[#fbfbfa] p-5 text-left text-[#151219] shadow-[0_28px_80px_rgba(5,3,18,0.28),0_8px_24px_rgba(5,3,18,0.12)]"
+            }
+            style={
+              isMobile
+                ? { paddingBottom: "max(1.25rem, env(safe-area-inset-bottom))" }
+                : { bottom: "calc(100% + var(--de-store-cart-h, 0px) + 1rem)" }
+            }
+            role="dialog"
+            aria-modal={isMobile || undefined}
+            aria-label="Ask DE support options"
+            data-testid="ask-de-quick-menu"
           >
+            {!isMobile && (
+              <div className="pointer-events-none absolute -bottom-2 right-7 h-4 w-4 rotate-45 border-b border-r border-black/10 bg-[#fbfbfa]" aria-hidden="true" />
+            )}
             <button
               type="button"
-              onClick={dismissCallout}
-              className="absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full text-white/50 hover:bg-white/10 hover:text-white"
-              aria-label="Dismiss"
-              data-testid="button-dismiss-store-ask-callout"
+              onClick={() => setShowMenu(false)}
+              className="absolute right-3.5 top-3.5 flex h-8 w-8 items-center justify-center rounded-full text-[#65616c] transition-colors hover:bg-black/[0.06] hover:text-[#111116] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111116]"
+              aria-label="Close Ask DE"
+              data-testid="ask-de-close"
             >
-              <X className="h-3.5 w-3.5" />
+              <X className="h-4.5 w-4.5" style={{ width: 18, height: 18 }} aria-hidden="true" />
             </button>
-            <p className="pr-5 text-sm font-semibold text-white">Need a hand with this?</p>
-            <div className="mt-2 flex flex-col gap-1.5">
-              <button
-                type="button"
-                onClick={() => {
-                  dismissCallout();
-                  openMspAdvisor({ tab: "ticket" });
-                }}
-                className="text-left text-sm font-medium text-[#F04C97] hover:underline"
-                data-testid="button-store-callout-support"
-              >
-                Get support &rarr;
-              </button>
+
+            <div className="mb-5 flex items-start justify-between gap-4 pr-8">
+              <div>
+                <p className="text-[24px] font-semibold leading-tight tracking-[-0.035em] text-[#111116]">Ask DE</p>
+                <p className="mt-1 text-[15px] leading-6 text-[#65616c]">How can we help you today?</p>
+              </div>
+              <div className="mt-3 flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-black/10 bg-white shadow-[0_8px_24px_rgba(15,15,18,0.08)]">
+                <AskDeGlyph className="h-10 w-10 text-[#111116]" />
+              </div>
+            </div>
+
+            <div className="space-y-2.5">
+              {menuItems.map(({ title, description, icon: Icon, testId, onSelect }) => (
+                <button
+                  key={title}
+                  type="button"
+                  onClick={onSelect}
+                  className="group flex min-h-[88px] w-full items-center gap-4 rounded-2xl border border-black/10 bg-white px-4 py-3 text-left transition-[background-color,border-color,transform,box-shadow] duration-150 hover:-translate-y-px hover:border-black/20 hover:bg-[#f8f7f5] hover:shadow-[0_10px_24px_-18px_rgba(15,15,18,0.35)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111116] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fbfbfa]"
+                  data-testid={testId}
+                >
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#f2f1ef] text-[#111116]">
+                    <Icon className="h-6 w-6" strokeWidth={1.9} aria-hidden="true" />
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-[16px] font-semibold leading-5 text-[#111116]">{title}</span>
+                    <span className="mt-1 block text-[13.5px] leading-5 text-[#65616c]">{description}</span>
+                  </span>
+                  <ChevronRight className="h-5 w-5 shrink-0 text-[#2c2931] transition-transform duration-150 group-hover:translate-x-0.5" aria-hidden="true" />
+                </button>
+              ))}
+            </div>
+
+            <div className="mt-5 border-t border-black/10 pt-4 text-sm text-[#65616c]">
+              <p className="font-medium text-[#2b2830]">We&apos;re here to help!</p>
               <a
                 href={PRIMARY_PHONE.telHref}
-                onClick={dismissCallout}
-                className="text-left text-sm font-medium text-white/75 hover:text-white hover:underline"
-                data-testid="link-store-callout-call"
+                className="mt-1 inline-flex font-medium text-[#111116] underline decoration-black/20 underline-offset-4 hover:decoration-black/60"
+                data-testid="ask-de-choice-phone"
               >
-                Talk to a live person &rarr;
+                Call {PRIMARY_PHONE.display}
               </a>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
+
       <button
+        ref={launcherRef}
         type="button"
-        onClick={() => {
-          dismissCallout();
-          openMspAdvisor();
-        }}
+        onClick={() => setShowMenu((open) => !open)}
         className="group flex h-10 shrink-0 items-center gap-2 rounded-full px-1 pr-1.5 text-white transition-colors duration-200 hover:bg-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
         data-testid="button-open-asap-widget"
-        aria-label={compact ? "Open DE Desk for support" : "Open DE Desk"}
-        aria-expanded={false}
+        aria-label={compact ? "Open Ask DE support options" : "Open Ask DE"}
+        aria-expanded={showMenu}
+        aria-haspopup="dialog"
       >
-        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#D3126A] text-white transition-transform duration-150 group-hover:scale-[1.04]">
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/20 bg-white text-[#111116] shadow-[0_4px_14px_rgba(0,0,0,0.18)] transition-transform duration-150 group-hover:scale-[1.04]">
           <AskDeGlyph className="h-[26px] w-[26px]" />
         </span>
         {!compact && (
@@ -235,7 +344,7 @@ export function SiteBottomBar() {
     >
       <motion.div
         ref={barRef}
-        className={`de-unified-bar-shell pointer-events-auto relative flex items-center rounded-full border-2 border-[#D3126A]/60 py-1.5 shadow-[0_0_24px_rgba(211,18,106,0.35),0_4px_24px_rgba(0,0,0,0.5)] ${
+        className={`de-unified-bar-shell pointer-events-auto relative flex items-center rounded-full border border-white/20 py-1.5 shadow-2xl ${
           expanded
             ? "w-full min-w-0 justify-between gap-6 pl-3 pr-2.5"
             : "shrink-0 justify-end gap-0 pl-1.5 pr-1.5"
@@ -277,12 +386,8 @@ export function SiteBottomBar() {
             </>
           )}
           <div ref={actionsRef} className="flex shrink-0 items-center gap-1.5">
-            {!expanded && location === "/" && !showScrollTop && (
-              <span
-                className="ml-0.5 hidden h-2 w-2 shrink-0 rounded-full bg-[#D3126A] shadow-[0_0_8px_rgba(211,18,106,0.8)] sm:block"
-                aria-hidden="true"
-              />
-            )}
+            {/* Decorative status dot removed per reference direction — no dot
+                unless it reflects a real state. */}
             <AnimatePresence initial={false}>
               {showScrollTop && (
                 <motion.button

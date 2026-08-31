@@ -1,4 +1,5 @@
 import crypto from "crypto";
+import { isStagingReview } from "./stagingReviewGuard";
 
 const ZOHO_PAYMENTS_BASE_URL = "https://payments.zoho.com/api/v1";
 const ZOHO_ACCOUNTS_TOKEN_URL = "https://accounts.zoho.com/oauth/v2/token";
@@ -77,6 +78,8 @@ export class ZohoPaymentsService {
   }
 
   isConfigured(): boolean {
+    // Review instances never move money, regardless of credentials.
+    if (isStagingReview()) return false;
     return [
       this.accountId,
       this.clientId,

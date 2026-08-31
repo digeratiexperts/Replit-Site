@@ -12,7 +12,7 @@ For visual work, rendered quality is an acceptance gate separate from code corre
 
 Authoritative policy: **`.cursorrules`** (sections 1-42, including section 9A Visual System v2). Always-applied pointers: `.cursor/rules/00-follow-cursorrules.mdc`, `.cursor/rules/de-ecosystem.mdc`, `.cursor/rules/agent-governance.mdc`.
 
-Design OS (execution layer, does not replace `.cursorrules`): `.cursor/rules/ui-ux.mdc`, `brand.mdc`, `frontend.mdc`, `visual-system-v2.mdc` + `design/DESIGN_SYSTEM.md` + `design/VISUAL_SYSTEM_V2.md`. Never judge UI from source code alone. Blog/Journal and Store colors are locked: `.cursor/rules/blog-store-color-lock.mdc`.
+Design OS (execution layer, does not replace `.cursorrules`): start with **`design/UI-STYLE-RULES.md`** (consolidated theme/surface/archetype/layout rules), then `.cursor/rules/ui-ux.mdc`, `brand.mdc`, `frontend.mdc`, `visual-system-v2.mdc` + `design/DESIGN_SYSTEM.md` + `design/VISUAL_SYSTEM_V2.md`. Never judge UI from source code alone. Blog/Journal and Store colors are locked: `.cursor/rules/blog-store-color-lock.mdc`.
 
 Task ledger: `docs/SITE-VISUAL-TASKS.md`. Do not start a visual task marked IN PROGRESS by another owner. Do not invent HUD/evidence primitives ad hoc.
 

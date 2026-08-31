@@ -5,6 +5,7 @@ import express, { type Request, Response, NextFunction } from "express";
 import { createServer } from "http";
 import { registerRoutes, authMiddleware, requireRole } from "./routes";
 import { registerSecureZohoStoreCheckout } from "./secureStoreCheckout";
+import { isStagingReview, stagingReviewStatus } from "./stagingReviewGuard";
 import { registerStoreSolutionRoutes } from "./storeSolutionRoutes";
 import { registerPublicSolutionRoutes } from "./publicSolutionRoutes";
 import { registerWarehouseGates } from "./warehouseRoutes";
@@ -97,6 +98,8 @@ app.all("/api/health", async (_req, res) => {
       zohoPayments: zohoPayments.isConfigured() ? "configured" : "not_configured",
       openai: openaiConfigured ? "configured" : "not_configured",
     },
+    // Lets a reviewer confirm outbound mutations are locked down.
+    stagingReview: stagingReviewStatus(),
     uptime: process.uptime(),
   };
   
@@ -485,6 +488,40 @@ function listEndpoints(): Array<{ method: string; path: string }> {
     10,
   );
   const host = "0.0.0.0";
+
+  // Staging review pre-flight: record the database identity and refuse to boot
+  // if a locked-down review instance is pointed at the production database.
+  // Identity is derived from the DSN host/name only — never the credentials.
+  if (isStagingReview()) {
+    const dsn = process.env.DATABASE_URL || "";
+    let dbHost = "unset";
+    let dbName = "unset";
+    if (dsn) {
+      try {
+        const parsed = new URL(dsn);
+        dbHost = parsed.host;
+        dbName = parsed.pathname.replace(/^\//, "") || "unset";
+      } catch {
+        dbHost = "unparseable";
+      }
+    }
+    log(`🔒 STAGING REVIEW MODE — outbound mutations disabled`);
+    log(`🔒 Database identity: host=${dbHost} name=${dbName}`);
+
+    const productionMarkers = (process.env.DE_PRODUCTION_DB_MARKERS || "")
+      .split(",")
+      .map((m) => m.trim().toLowerCase())
+      .filter(Boolean);
+    const identity = `${dbHost}/${dbName}`.toLowerCase();
+    const collision = productionMarkers.find((marker) => identity.includes(marker));
+    if (collision) {
+      console.error(
+        `[STAGING REVIEW] ABORT — DATABASE_URL resolves to a production marker ('${collision}'). ` +
+          "A review instance must never share the production database.",
+      );
+      process.exit(1);
+    }
+  }
 
   log(
     `🌐 Using port: ${port} (PORT=${process.env.PORT || "unset"}, REPLIT_SERVER_PORT=${process.env.REPLIT_SERVER_PORT || "unset"})`,

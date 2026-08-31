@@ -4,6 +4,7 @@
  */
 
 import { logger } from "../logger";
+import { shouldBlockMutation } from "../stagingReviewGuard";
 
 const ZEPTOMAIL_API_URL = "https://api.zeptomail.com/v1.1/email";
 const FROM_EMAIL = "noreply@digeratiexperts.com";
@@ -26,8 +27,13 @@ interface ZeptoMailResponse {
 }
 
 async function sendEmail(options: EmailOptions): Promise<boolean> {
+  // Review instances must never mail real leads/clients.
+  if (shouldBlockMutation(`outbound email: ${options.subject}`)) {
+    return false;
+  }
+
   const apiToken = process.env.ZEPTOMAIL_API_TOKEN;
-  
+
   if (!apiToken) {
     logger.warn("ZEPTOMAIL_API_TOKEN not configured - email not sent", {
       subject: options.subject,

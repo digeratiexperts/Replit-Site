@@ -20,6 +20,7 @@ import { useStoreChromeGestures } from "@/hooks/useStoreChromeGestures";
 import { BookingProvider } from "@/contexts/BookingContext";
 import { BookingModal } from "@/components/BookingModal";
 import { CookieConsentBanner } from "@/components/CookieConsentBanner";
+import { StagingReviewBadge } from "@/components/StagingReviewBadge";
 import { isDoor2Path } from "@/lib/isDoor2Path";
 import { isWarehousePath } from "@/lib/warehousePaths";
 
@@ -946,6 +947,7 @@ function AppContent() {
       <StickyCTABar />
       <ExitIntentPopup delay={5000} />
       <CookieConsentBanner />
+      <StagingReviewBadge />
     </AnnouncerProvider>
   );
 }
