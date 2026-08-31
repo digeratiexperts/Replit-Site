@@ -2,13 +2,13 @@ import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 const FILE_TITLE = "File:LL-Q1860 (eng)-Flame, not lame-digerati.wav";
-const OUTPUT = path.resolve("client/public/audio/digerati-pronunciation.wav");
+const OUTPUT = path.resolve("client/public/audio/digerati-pronunciation.mp3");
 const API = new URL("https://commons.wikimedia.org/w/api.php");
 API.searchParams.set("action", "query");
 API.searchParams.set("format", "json");
 API.searchParams.set("formatversion", "2");
 API.searchParams.set("prop", "imageinfo");
-API.searchParams.set("iiprop", "url|mime|size|sha1|extmetadata");
+API.searchParams.set("iiprop", "url|mime|size|sha1|extmetadata|derivatives");
 API.searchParams.set("titles", FILE_TITLE);
 API.searchParams.set("origin", "*");
 
@@ -104,6 +104,12 @@ function inspectPcmWav(buffer) {
   };
 }
 
+function looksLikeMp3(buffer) {
+  if (buffer.length < 4) return false;
+  if (buffer.toString("ascii", 0, 3) === "ID3") return true;
+  return buffer[0] === 0xff && (buffer[1] & 0xe0) === 0xe0;
+}
+
 const metadataResponse = await fetch(API, { headers });
 if (!metadataResponse.ok) fail(`Commons metadata request returned HTTP ${metadataResponse.status}`);
 const metadata = await metadataResponse.json();
@@ -119,17 +125,38 @@ if (!/CC0|public domain/i.test(`${license} ${usageTerms}`)) {
 if (!/^audio\//i.test(info.mime || "")) fail(`Commons metadata is not audio (${info.mime || "unknown"})`);
 if (info.size < 12_000 || info.size > 2_000_000) fail(`Commons source size ${info.size} is outside the acceptance window`);
 
-const audioResponse = await fetch(info.url, { headers });
-if (!audioResponse.ok) fail(`Commons audio request returned HTTP ${audioResponse.status}`);
-const audio = Buffer.from(await audioResponse.arrayBuffer());
-if (audio.length !== info.size) fail(`downloaded ${audio.length} bytes; Commons metadata says ${info.size}`);
-const metrics = inspectPcmWav(audio);
+const sourceResponse = await fetch(info.url, { headers });
+if (!sourceResponse.ok) fail(`Commons WAV request returned HTTP ${sourceResponse.status}`);
+const sourceAudio = Buffer.from(await sourceResponse.arrayBuffer());
+if (sourceAudio.length !== info.size) fail(`downloaded ${sourceAudio.length} WAV bytes; Commons metadata says ${info.size}`);
+const metrics = inspectPcmWav(sourceAudio);
+
+const derivatives = Array.isArray(info.derivatives) ? info.derivatives : [];
+const mp3Derivative = derivatives.find((candidate) => {
+  const haystack = `${candidate.type || ""} ${candidate.shorttitle || ""} ${candidate.transcodekey || ""} ${candidate.src || ""}`;
+  return /audio\/mpeg|mp3/i.test(haystack);
+});
+const mp3Url = mp3Derivative?.src || mp3Derivative?.url;
+if (!mp3Url) {
+  const available = derivatives.map((candidate) => ({
+    type: candidate.type,
+    shorttitle: candidate.shorttitle,
+    transcodekey: candidate.transcodekey,
+  }));
+  fail(`Commons did not expose an MP3 derivative; available=${JSON.stringify(available)}`);
+}
+
+const mp3Response = await fetch(mp3Url, { headers });
+if (!mp3Response.ok) fail(`Commons MP3 request returned HTTP ${mp3Response.status}`);
+const mp3 = Buffer.from(await mp3Response.arrayBuffer());
+if (mp3.length < 12_000 || mp3.length > 2_000_000) fail(`MP3 size ${mp3.length} is outside the acceptance window`);
+if (!looksLikeMp3(mp3)) fail("Commons derivative does not look like an MP3 stream");
 
 await mkdir(path.dirname(OUTPUT), { recursive: true });
-await writeFile(OUTPUT, audio);
+await writeFile(OUTPUT, mp3);
 
 console.log(`[pronunciation-audio] vendored ${FILE_TITLE}`);
-console.log(`[pronunciation-audio] license=${license || usageTerms || "CC0/public domain"} sha1=${info.sha1 || "unknown"} bytes=${audio.length}`);
+console.log(`[pronunciation-audio] license=${license || usageTerms || "CC0/public domain"} source-sha1=${info.sha1 || "unknown"} wav-bytes=${sourceAudio.length} mp3-bytes=${mp3.length}`);
 console.log(
   `[pronunciation-audio] ${metrics.duration.toFixed(3)}s ${metrics.sampleRate}Hz ${metrics.channels}ch ` +
     `peak=${metrics.peak.toFixed(3)} rms=${metrics.rmsDb.toFixed(1)}dBFS dc=${metrics.dc.toFixed(4)} ` +
