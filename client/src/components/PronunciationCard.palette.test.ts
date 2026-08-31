@@ -20,7 +20,8 @@ describe("PronunciationCard homepage palette contract", () => {
   });
 
   it("locks the play-button render fix", () => {
-    expect(codeOnly).toContain("min-h-11 shrink-0");
+    expect(codeOnly).toContain("flex shrink-0");
     expect(codeOnly).toContain("whitespace-nowrap");
+    expect(codeOnly).toContain("minHeight: 44");
   });
 });
