@@ -29,7 +29,23 @@
 #     started: 2026-08-30
 
 version: 2
-claims: []
+claims:
+  - id: pronunciation-flipbook-recovery
+    issue: 152
+    owner: chatgpt
+    subsystem: homepage-resources
+    branch: chatgpt/pronunciation-flipbook-recovery-20260831
+    base_sha: ecea1d9314f859bd5a17343c277e739f3bedb492
+    files:
+      - client/src/components/PronunciationCard.tsx
+      - client/src/pages/sections/ReferenceHeroSection.tsx
+      - client/src/pages/resources/DocumentFlipbook.tsx
+      - client/src/pages/resources/ResourcesIndex.tsx
+      - client/public/audio/README.md
+      - scripts/vendor-pdfjs.mjs
+      - package.json
+    status: active
+    started: 2026-08-31
 # fable-visual-batch (issue 118, branch claude/fable-visual-batch) RETIRED
 # 2026-08-31: merged via PR #148 (main @ 8a20592). Confirmed
 # `git diff origin/main origin/claude/fable-visual-batch` is empty — no
