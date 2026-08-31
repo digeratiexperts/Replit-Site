@@ -2,10 +2,8 @@ import { useEffect, useState } from "react";
 import { Play, Volume2 } from "lucide-react";
 
 const SPOKEN_PRONUNCIATION = "dij-uh-RAH-tee";
-// Point this at the canonical human recording once it exists in client/public/audio/.
-// When empty, the card falls back to browser speech synthesis.
-const AUDIO_SRC = "";
-const MAGENTA = "#D3126A";
+const AUDIO_SRC = "/audio/digerati-pronunciation.mp3";
+// Gold is intentionally fixed to the DE wordmark bars; page accents must not recolor the logo mark.
 const WORDMARK_GOLD = "#E7B20D";
 
 const syllables = [
@@ -60,32 +58,31 @@ export function PronunciationCard({ className = "" }: PronunciationCardProps): J
   };
 
   const playPronunciation = () => {
-    if (AUDIO_SRC) {
-      window.speechSynthesis?.cancel();
-      const audio = new Audio(AUDIO_SRC);
-      audio.onplay = () => {
-        setIsPlaying(true);
-        setStatus("Playing pronunciation: dij-uh-RAH-tee.");
-      };
-      audio.onended = () => {
-        setIsPlaying(false);
-        setStatus("Pronunciation finished.");
-      };
-      audio.onerror = () => {
-        setIsPlaying(false);
-        speak(SPOKEN_PRONUNCIATION, "pronunciation: dij-uh-RAH-tee");
-      };
-      void audio.play().catch(() => speak(SPOKEN_PRONUNCIATION, "pronunciation: dij-uh-RAH-tee"));
-      return;
-    }
-
-    speak(SPOKEN_PRONUNCIATION, "pronunciation: dij-uh-RAH-tee");
+    window.speechSynthesis?.cancel();
+    const audio = new Audio(AUDIO_SRC);
+    audio.preload = "auto";
+    audio.onplay = () => {
+      setIsPlaying(true);
+      setStatus("Playing canonical pronunciation: dij-uh-RAH-tee.");
+    };
+    audio.onended = () => {
+      setIsPlaying(false);
+      setStatus("Pronunciation finished.");
+    };
+    audio.onerror = () => {
+      setIsPlaying(false);
+      setStatus("Canonical pronunciation audio is unavailable.");
+    };
+    void audio.play().catch(() => {
+      setIsPlaying(false);
+      setStatus("Canonical pronunciation audio could not play.");
+    });
   };
 
   return (
     <aside
       className={`overflow-hidden rounded-2xl border border-de-hairline bg-de-raised ${className}`}
-      style={{ boxShadow: "0 24px 70px -42px rgba(123,108,255,0.8)" }}
+      style={{ boxShadow: "0 24px 70px -42px rgb(var(--de-accent-rgb) / 0.55)" }}
       aria-label="How to pronounce Digerati"
       data-testid="digerati-pronunciation-card"
     >
@@ -97,7 +94,7 @@ export function PronunciationCard({ className = "" }: PronunciationCardProps): J
                 className="font-heading font-semibold text-white"
                 style={{ fontSize: "1.65rem", letterSpacing: "-0.035em" }}
               >
-                di·ger·<span style={{ color: MAGENTA }}>a</span>·ti
+                di·ger·<span className="text-de-accent-ink">a</span>·ti
               </span>
               <span className="text-xs font-semibold uppercase text-de-muted-soft" style={{ letterSpacing: "0.14em" }}>
                 noun
@@ -128,20 +125,20 @@ export function PronunciationCard({ className = "" }: PronunciationCardProps): J
 
         <div className="mt-5 grid gap-2" aria-label="Pronunciation guide">
           <div className="flex items-baseline gap-3">
-            <span className="font-mono text-sm font-bold" style={{ color: MAGENTA }} aria-hidden="true">1</span>
+            <span className="font-mono text-sm font-bold text-de-accent-ink" aria-hidden="true">1</span>
             <span className="font-mono text-sm text-white/80">/ˌdɪdʒəˈrɑːti/</span>
             <span className="text-xs text-de-muted-soft">IPA</span>
           </div>
           <div className="flex flex-wrap items-center gap-3">
-            <span className="font-mono text-sm font-bold" style={{ color: MAGENTA }} aria-hidden="true">2</span>
+            <span className="font-mono text-sm font-bold text-de-accent-ink" aria-hidden="true">2</span>
             <span className="font-mono font-semibold text-white" style={{ fontSize: 15, letterSpacing: "0.04em" }}>
               dij-uh-RAH-tee
             </span>
             <button
               type="button"
               onClick={playPronunciation}
-              className="flex shrink-0 items-center gap-2 whitespace-nowrap rounded-lg px-4 text-sm font-semibold text-white transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              style={{ backgroundColor: MAGENTA, minHeight: 44, boxShadow: "0 10px 28px -16px rgba(211,18,106,0.95)" }}
+              className="flex shrink-0 items-center gap-2 whitespace-nowrap rounded-lg bg-de-magenta px-4 text-sm font-semibold text-white transition hover:bg-de-magenta-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              style={{ minHeight: 44 }}
               aria-label="Hear Digerati pronounced dij-uh-RAH-tee"
               data-testid="button-play-digerati-pronunciation"
             >
