@@ -36,3 +36,57 @@ Noted, not fixed (pre-existing site chrome, outside this claim):
 Not covered here: audio is speech synthesis, so playback quality varies by
 browser and OS and cannot be asserted in CI. AUDIO_SRC at the top of the
 component takes a recorded file and takes priority once one exists.
+
+────────────────────────────────────────────────────────────────────────
+RECONCILIATION PASS — 2026-08-31, after merging
+chatgpt/pronunciation-flipbook-recovery-20260831 into this branch
+
+Re-verified after the merge, production build served from dist/public:
+
+  surface           status  page overflow  play btn h  chips  console errors
+  homepage 390      ok      no             44          4      none
+  homepage 768      ok      no             44          4      none
+  homepage 1440     ok      no             44          4      none
+  /resources 1440   200     no             —           —      none
+
+  /vendor/pdfjs/pdf.js → HTTP 200 (vendored asset actually reachable, not
+  just written to disk)
+
+  play button background  rgb(211, 18, 106)   page accent
+  wordmark bar fill       rgb(231, 178, 13)   wordmark only
+
+Three defects in the merged-in work, found and fixed here:
+
+1. scripts/vendor-pdfjs.mjs could not run on Windows at all. It calls
+   spawnSync("npm.cmd") without a shell, which Node 20.12+/22+/24 refuse
+   (the CVE-2024-27980 fix) with EINVAL. Since the script is wired to
+   `prebuild`, `npm run build` was dead on Windows. Fixed by routing the
+   .cmd shim through the shell; tar still spawns directly.
+
+2. The same script then failed extracting: it passed tar an absolute
+   Windows path, and GNU tar (the tar on PATH under Git Bash) reads the
+   drive-letter colon as a remote host:path spec. Fixed by extracting from
+   inside the temp directory with a relative archive name, which is
+   unambiguous to both GNU tar and bsdtar.
+
+3. client/public/vendor/pdfjs/ was not gitignored, so a build left 2.5 MB
+   of generated vendor JS staged as source. Added to .gitignore.
+
+CSS BUDGET — the collision this reconciliation existed to catch:
+
+  main                                289.58 kB
+  flipbook branch alone               (trimmed to fit; 3 commits spent on it)
+  pronunciation card alone            289.68 kB
+  both together, first build          290.04 kB  ← FAILED, cap is 290.00
+  both together, after trimming       289.95 kB  ← passes
+
+  Each branch passed the budget on its own and the pair did not. The 40-byte
+  overrun was cleared by removing utilities unique to the pronunciation card
+  (bespoke text-white/NN shades, text-de-muted, disabled:opacity-45, h-3.5,
+  w-3.5, m-0) in favour of inline styles and utilities the codebase already
+  emits. Nothing was trimmed from the flipbook work.
+
+  Headroom is now ~50 bytes. This is a systemic ceiling, not a
+  pronunciation-card problem: the next visual feature on any branch will
+  fail this check, and two independently-passing branches can still fail
+  after merge. The budget needs raising or the stylesheet needs a prune.

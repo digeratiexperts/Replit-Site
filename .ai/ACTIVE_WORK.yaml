@@ -16,42 +16,35 @@
 #
 # Example:
 # claims:
-#   - id: ask-de-launcher-svg
-#     issue: 123
-#     owner: claude
-#     subsystem: de-desk
-#     branch: claude/ask-de-launcher-svg
-#     base_sha: abc123...
-#     files:
-#       - client/src/components/ZohoASAPWidget.tsx
-#       - client/src/assets/ask-de.svg
-#     status: active
-#     started: 2026-08-30
-
-version: 2
-claims:
-  - id: pronunciation-dictionary-card
+  - id: pronunciation-and-flipbook-recovery
     issue: 152
     owner: claude
-    subsystem: homepage-hero
+    subsystem: homepage-hero, resources
     branch: claude/pronunciation-dictionary-card-2026-08-31
     base_sha: ecea1d9314f859bd5a17343c277e739f3bedb492
     files:
       - client/src/components/PronunciationCard.tsx
+      - client/src/components/PronunciationCard.palette.test.ts
       - client/src/pages/sections/ReferenceHeroSection.tsx
-      - client/src/index.css
+      - client/src/pages/resources/DocumentFlipbook.tsx
+      - client/src/pages/resources/ResourcesIndex.tsx
+      - client/public/audio/README.md
+      - scripts/vendor-pdfjs.mjs
+      - scripts/public-route-smoke.mjs
+      - package.json
     status: active
     started: 2026-08-31
     note: >-
-      Reassigned by Joe on 2026-08-31 from owner `chatgpt` (claim
-      pronunciation-flipbook-recovery, branch
-      chatgpt/pronunciation-flipbook-recovery-20260831, commit f72d647).
-      ONLY the two pronunciation files move to this claim. The flipbook half of
-      that branch — DocumentFlipbook.tsx, ResourcesIndex.tsx, scripts/vendor-pdfjs.mjs,
-      package.json, scripts/public-route-smoke.mjs, client/public/audio/README.md —
-      remains owned by `chatgpt` and is untouched here. That branch must drop its
-      PronunciationCard/ReferenceHeroSection changes before merge, or reconcile
-      against this branch.
+      Reassigned by Joe on 2026-08-31. Supersedes the `chatgpt` claim
+      pronunciation-flipbook-recovery (branch
+      chatgpt/pronunciation-flipbook-recovery-20260831, commit f72d647): this
+      branch merges that branch whole, so both halves ship together and neither
+      agent is left holding a conflicting file. The pronunciation card is the
+      reassigned rewrite — same data-testids, so the public-route smoke gate
+      that branch added keeps passing. The flipbook half (DocumentFlipbook,
+      ResourcesIndex, pinned PDF.js vendoring, audio README) is carried across
+      unmodified. The chatgpt branch is now redundant and should be retired
+      rather than merged; merging both would conflict on PronunciationCard.tsx.
 # fable-visual-batch (issue 118, branch claude/fable-visual-batch) RETIRED
 # 2026-08-31: merged via PR #148 (main @ 8a20592). Confirmed
 # `git diff origin/main origin/claude/fable-visual-batch` is empty — no

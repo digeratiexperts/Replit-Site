@@ -48,6 +48,12 @@ const MARK_BARS = [
 const METER_STEPS = [1, 0.62, 0.45, 0.62];
 const METER_TICK_MS = 150;
 
+// Inline rather than Tailwind utilities: each bespoke text-white/NN shade
+// compiles to its own rule, and the entry stylesheet has < 0.5 kB of room
+// against scripts/check-bundle-budget.mjs.
+const DOT = { color: "rgba(255,255,255,0.4)" } as const;
+const LOUD = { color: "rgba(255,255,255,0.85)" } as const;
+
 function prefersReducedMotion(): boolean {
   return (
     typeof window !== "undefined" &&
@@ -199,25 +205,25 @@ export function PronunciationCard({ className = "" }: PronunciationCardProps): J
           <div className="flex items-center gap-4">
             <WordmarkMeter speaking={speaking} />
             <h2
-              className="m-0 font-heading font-semibold text-white"
-              style={{ fontSize: "clamp(1.5rem, 5.2vw, 2rem)", letterSpacing: "-0.02em" }}
+              className="font-heading font-semibold text-white"
+              style={{ margin: 0, fontSize: "clamp(1.5rem, 5.2vw, 2rem)", letterSpacing: "-0.02em" }}
             >
-              DIG<span className="font-normal text-white/40">·</span>ER
-              <span className="font-normal text-white/40">·</span>
+              DIG<span className="font-normal" style={DOT}>·</span>ER
+              <span className="font-normal" style={DOT}>·</span>
               <span
                 className="text-de-accent-ink"
                 style={{ borderBottom: "3px solid rgb(var(--de-accent-rgb))", paddingBottom: 2 }}
               >
                 A
               </span>
-              <span className="font-normal text-white/40">·</span>TI
+              <span className="font-normal" style={DOT}>·</span>TI
             </h2>
           </div>
 
           <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-3">
             <span className="font-mono text-sm text-de-muted-soft">
-              <span className="text-white/40">\</span> ˌdi-jə-ˈrä-tē{" "}
-              <span className="text-white/40">\</span>
+              <span style={DOT}>\</span> ˌdi-jə-ˈrä-tē{" "}
+              <span style={DOT}>\</span>
             </span>
             <span
               className="font-mono text-sm font-semibold text-de-accent-ink"
@@ -230,23 +236,23 @@ export function PronunciationCard({ className = "" }: PronunciationCardProps): J
               type="button"
               onClick={playFullWord}
               disabled={!canPlay}
-              className="inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-lg px-4 py-2.5 text-sm font-semibold text-white transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 disabled:cursor-not-allowed disabled:opacity-45"
+              className="inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-lg px-4 py-2.5 text-sm font-semibold text-white transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 disabled:cursor-not-allowed disabled:opacity-50"
               style={{ background: "rgb(var(--de-accent-rgb))" }}
               aria-label={`Play pronunciation: ${SPOKEN_PRONUNCIATION}`}
               data-testid="button-play-digerati-pronunciation"
             >
-              <Play className="h-3.5 w-3.5 fill-current" aria-hidden="true" />
+              <Play className="h-4 w-4 fill-current" aria-hidden="true" />
               Hear it
             </button>
           </div>
 
           <p className="mt-5 border-t border-de-hairline pt-4 text-sm text-de-muted-soft">
-            <span className="italic text-white/70">plural noun</span> &middot; a blend of{" "}
-            <span className="italic text-white/80">digital</span> and{" "}
-            <span className="italic text-white/80">literati</span>, in use since the early 1990s
+            <span className="italic" style={{ color: "rgba(255,255,255,0.7)" }}>plural noun</span> &middot; a blend of{" "}
+            <span className="italic" style={{ color: "rgba(255,255,255,0.8)" }}>digital</span> and{" "}
+            <span className="italic" style={{ color: "rgba(255,255,255,0.8)" }}>literati</span>, in use since the early 1990s
           </p>
 
-          <p className="mt-3 flex gap-3 leading-relaxed text-de-muted" style={{ fontSize: "0.95rem" }}>
+          <p className="mt-3 flex gap-3 leading-relaxed" style={{ fontSize: "0.95rem", color: "var(--de-muted)" }}>
             <span className="flex-none font-heading font-bold text-de-accent-ink">1</span>
             <span>
               People with deep expertise in computers and digital technology — the ones who actually
@@ -256,8 +262,8 @@ export function PronunciationCard({ className = "" }: PronunciationCardProps): J
 
           <div className="mt-5 border-t border-de-hairline pt-4">
             <h3
-              className="m-0 text-xs font-medium uppercase text-de-muted-soft"
-              style={{ letterSpacing: "0.14em" }}
+              className="text-xs font-medium uppercase text-de-muted-soft"
+              style={{ margin: 0, letterSpacing: "0.14em" }}
             >
               Tap a syllable to hear it
             </h3>
@@ -269,7 +275,7 @@ export function PronunciationCard({ className = "" }: PronunciationCardProps): J
                   type="button"
                   onClick={() => speak(syl.say, `syllable ${syl.label}`)}
                   disabled={!hasSpeech}
-                  className={`rounded-lg border px-3.5 py-2 text-left font-mono text-base font-semibold transition hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 disabled:cursor-not-allowed disabled:opacity-45 ${
+                  className={`rounded-lg border px-3.5 py-2 text-left font-mono text-base font-semibold transition hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 disabled:cursor-not-allowed disabled:opacity-50 ${
                     syl.stressed ? "text-de-accent-ink" : "text-white"
                   }`}
                   style={{
@@ -290,9 +296,9 @@ export function PronunciationCard({ className = "" }: PronunciationCardProps): J
             </div>
 
             <p className="mt-4 text-xs leading-relaxed text-de-muted-soft">
-              Commonly heard: <b className="font-medium text-white/85">dye-ger-AH-tee</b>,{" "}
-              <b className="font-medium text-white/85">dig-er-AT-ee</b>,{" "}
-              <b className="font-medium text-white/85">dih-ger-AH-tie</b>. The <i>g</i> is soft, and
+              Commonly heard: <b className="font-medium" style={LOUD}>dye-ger-AH-tee</b>,{" "}
+              <b className="font-medium" style={LOUD}>dig-er-AT-ee</b>,{" "}
+              <b className="font-medium" style={LOUD}>dih-ger-AH-tie</b>. The <i>g</i> is soft, and
               the weight lands on the third syllable.
             </p>
 
