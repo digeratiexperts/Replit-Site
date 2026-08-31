@@ -437,20 +437,22 @@ export async function handleAdvisorChat(req: AdvisorChatRequest): Promise<Adviso
   profile = mergeProfile(profile, extractProfileFromText(userTurn));
   updateProfile(session, profile);
 
-  const actions = sanitizeActions(modelOut.proposedActions, { mode });
-  // Deterministic emergency escalation: an active incident ALWAYS surfaces the
-  // next-level paths (callback + the Get Support security-incident flow) and
-  // fires support_routed, even if the model forgot. DE is an IT company — an
-  // emergency never stays a chat thread. (Joe, 2026-08-31.)
+  let actions = sanitizeActions(modelOut.proposedActions, { mode });
+  // Deterministic emergency escalation: an active incident ALWAYS leads with
+  // the emergency-callback path and fires support_routed, even if the model
+  // forgot. DE is an IT company — an emergency never stays a chat thread.
+  // (Joe, 2026-08-31.) Adversarial-review corrections, same day: keep the
+  // module's 3-action cap after injection, and do NOT inject
+  // existing_client_support here — it routes through the Client Portal login
+  // wall, which an anonymous incident visitor can't pass. The in-desk
+  // security-incident path is already surfaced via suggestSupportChips and
+  // the reply itself.
   if (mode === "security_incident") {
     if (!actions.some((a) => a.type === "request_callback")) {
       const cb = materializeAction("request_callback", "Request an emergency callback");
       if (cb) actions.unshift(cb);
     }
-    if (!actions.some((a) => a.type === "existing_client_support")) {
-      const sup = materializeAction("existing_client_support", "Open the security-incident support path");
-      if (sup) actions.push(sup);
-    }
+    actions = actions.slice(0, 3);
     if (!(modelOut.analyticsEvents || []).includes("support_routed")) {
       modelOut.analyticsEvents = [...(modelOut.analyticsEvents || []), "support_routed"];
     }

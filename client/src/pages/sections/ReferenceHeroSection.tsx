@@ -86,8 +86,10 @@ export function ReferenceHeroSection(): JSX.Element {
           width={1600}
           height={1067}
           loading="eager"
-          fetchPriority="low"
           decoding="async"
+          // react-dom 18 doesn't know camelCase fetchPriority (unknown-prop
+          // warning); pass the lowercase DOM attribute directly.
+          {...({ fetchpriority: "low" } as Record<string, string>)}
           className="absolute h-[112%] w-full object-cover"
           style={{
             y: cityLightsY,

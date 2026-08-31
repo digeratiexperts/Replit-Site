@@ -80,18 +80,18 @@ export const DigeratiStatsSection = (): JSX.Element => {
 
   return (
     <section className="de-dark-well de-field-grain relative py-6 lg:py-8">
-      <div className="de-style-box relative mx-3 overflow-hidden px-4 py-8 sm:mx-4 sm:px-8 md:py-16 lg:mx-6 lg:px-10 lg:py-20">
-        {/* Hero violet drift echo (Joe 2026-08-31): the opening field's
-            atmosphere carries into the first chapter, shifted left so the
-            background reads as changing while staying one family. */}
-        <div
-          className="pointer-events-none absolute inset-0"
-          aria-hidden="true"
-          style={{
-            background:
-              "radial-gradient(circle at 12% 18%, rgba(87,68,255,0.12), transparent 32%), radial-gradient(circle at 95% 90%, rgba(211,18,106,0.05), transparent 26%)",
-          }}
-        />
+      {/* Hero violet drift echo (Joe 2026-08-31): the opening field's
+          atmosphere carries into the first chapter as a background-image
+          layer ON the style box itself — no overlay element, so it can never
+          paint above content regardless of stacking contexts
+          (adversarial-review correction). */}
+      <div
+        className="de-style-box relative mx-3 px-4 py-8 sm:mx-4 sm:px-8 md:py-16 lg:mx-6 lg:px-10 lg:py-20"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle at 12% 18%, rgba(87,68,255,0.12), transparent 32%), radial-gradient(circle at 95% 90%, rgba(211,18,106,0.05), transparent 26%)",
+        }}
+      >
         <motion.div
           initial={prefersReducedMotion ? false : revealInitial}
           whileInView={revealInView}

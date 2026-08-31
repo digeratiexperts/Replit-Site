@@ -156,19 +156,43 @@ const NON_NAME_AFTER_IM = new Set([
 
 const NAME_LINKING_TAIL = /^\s+(about|that|to|with|for|because|since|if|and|but|in|on|of|by|how|why|what|when|where)\b/i;
 
+/** Common "I'm <gerund>" activities — explicit list, NOT a blanket /ing$/
+ * test, so real names ending in -ing (Ming, Sterling, Irving, King,
+ * Blessing, Fleming…) still extract (adversarial-review correction). */
+const GERUND_AFTER_IM = new Set([
+  "looking", "hoping", "going", "trying", "getting", "having", "checking",
+  "wondering", "calling", "reaching", "writing", "emailing", "dealing",
+  "experiencing", "seeing", "working", "running", "testing", "shopping",
+  "browsing", "being", "asking", "thinking", "planning", "considering",
+  "evaluating", "comparing", "researching", "starting", "setting", "moving",
+  "switching", "needing", "wanting", "willing",
+]);
+
 export function extractContactNameFromText(message: string): string | undefined {
   const text = message.trim();
   const intro = text.match(
-    /^(?:(?:hi|hello|hey|howdy|good\s+(?:morning|afternoon|evening))[,!.\s]+)?(?:i(?:['’]?m| am)|my name is|this is|name(?:'s| is)|it['’]?s)\s+([A-Za-z][A-Za-z'.\-]+(?:\s+[A-Za-z][A-Za-z'.\-]+){0,2})\b/i,
+    /^(?:(?:hi|hello|hey|howdy|good\s+(?:morning|afternoon|evening))[,!.\s]+)?(?:(i(?:['’]?m| am))|my name is|this is|name(?:'s| is)|it['’]?s)\s+([A-Za-z][A-Za-z'.\-]+(?:\s+[A-Za-z][A-Za-z'.\-]+){0,2})\b/i,
   );
-  if (intro?.[1] && !/[?]/.test(intro[1])) {
-    const captured = intro[1];
-    const firstWord = captured.split(/\s+/)[0];
-    const afterCapture = text.slice(text.indexOf(captured) + captured.length);
+  if (intro?.[2] && !/[?]/.test(intro[2])) {
+    // Trim greedy multi-word captures at the first function word so
+    // "I'm Sam and we got hacked" yields "Sam", not "Sam And We".
+    const CAPTURE_STOP = /^(and|but|from|at|with|here|so|the|a|an|of|in|on|for|to|we|our|my|us)$/i;
+    const words = intro[2].split(/\s+/);
+    const stopIdx = words.findIndex((w) => CAPTURE_STOP.test(w));
+    const captured = (stopIdx > 0 ? words.slice(0, stopIdx) : words).join(" ");
+    // Only "I'm …" is ambiguous between a name and a state/activity;
+    // "my name is / this is / name's" are explicit self-identification.
+    const ambiguousIntro = Boolean(intro[1]);
+    const firstWord = captured.split(/\s+/)[0].toLowerCase();
+    // Linking-tail only applies to the UNtrimmed capture: if we already cut
+    // at a function word ("Sam | and we got hacked"), that boundary was the
+    // decision — don't re-read it as a state phrase.
+    const afterCapture = stopIdx > 0 ? "" : text.slice(text.indexOf(intro[2]) + intro[2].length);
     const looksLikeState =
-      NON_NAME_AFTER_IM.has(firstWord.toLowerCase()) ||
-      /ing$/i.test(firstWord) ||
-      NAME_LINKING_TAIL.test(afterCapture);
+      ambiguousIntro &&
+      (NON_NAME_AFTER_IM.has(firstWord) ||
+        GERUND_AFTER_IM.has(firstWord) ||
+        NAME_LINKING_TAIL.test(afterCapture));
     if (!looksLikeState) {
       return cleanPersonName(captured);
     }
