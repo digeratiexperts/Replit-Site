@@ -7,7 +7,8 @@ import { Heart, MapPin, Target, Users, Shield, Zap, Clock, Award, Star, ArrowRig
 import { useSEO } from "@/hooks/useSEO";
 import { CTA } from "@/lib/ctaCopy";
 import { PRIMARY_PHONE } from "@/data/companyContact";
-import officeEveningImg from "@assets/de-arizona-office-evening.png";
+// 37KB WebP sized for the ~448px frame (was a 2.1MB PNG) — review finding F2.
+import officeEveningImg from "@assets/de-arizona-office-evening-960.webp";
 
 const cardClass = "rounded-2xl border border-de-hairline bg-de-raised";
 const insetClass = "rounded-xl border border-de-hairline bg-de-bg";

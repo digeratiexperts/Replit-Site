@@ -40,6 +40,7 @@ import {
   REMOTE_SUPPORT_HREF,
 } from "@/lib/portalUrls";
 import { readPortalUser } from "@/lib/portalRoles";
+import { acquireBodyScrollLock } from "@/lib/bodyScrollLock";
 import type { OpenMspAdvisorDetail } from "@/lib/openMspAdvisor";
 import { STORE_ADVISOR_SEED } from "@/lib/openMspAdvisor";
 import { analytics } from "@/lib/analytics";
@@ -284,11 +285,11 @@ export const ZohoASAPWidget = ({
   }, [canDrag]);
   useEffect(() => {
     if (!isDeskFullscreen) return;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = previousOverflow;
-    };
+    // Ref-counted lock instead of capture/restore: when the MegaMenu mobile
+    // menu and desk fullscreen both close on one Escape (640–1023px), the
+    // capture/restore pattern could restore a stale "hidden" and permanently
+    // deadlock page scroll (review finding F5). See lib/bodyScrollLock.ts.
+    return acquireBodyScrollLock();
   }, [isDeskFullscreen]);
 
   useEffect(() => {

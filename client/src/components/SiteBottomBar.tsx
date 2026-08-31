@@ -287,18 +287,49 @@ export function SiteBottomBar() {
     const track = trackRef.current;
     const actions = actionsRef.current;
     if (!track) return;
+    const measure = () => ({
+      track: Math.round(track.getBoundingClientRect().width),
+      // Compact capsule = action cluster + even 6px padding + 2px border each side.
+      compact: actions ? Math.round(actions.getBoundingClientRect().width + 16) : 0,
+    });
     const publish = () => {
-      setTrackW(Math.round(track.getBoundingClientRect().width));
-      if (actions) {
-        // Compact capsule = action cluster + even 6px padding + 2px border each side.
-        setCompactW(Math.round(actions.getBoundingClientRect().width + 16));
-      }
+      const m = measure();
+      setTrackW(m.track);
+      if (actions) setCompactW(m.compact);
     };
+    // Initial publish must be synchronous (pre-paint) so the first expand
+    // animates from a real width.
     publish();
-    const ro = new ResizeObserver(publish);
+    // While the scroll-top button width-tweens (~0.4s), the actions cluster
+    // resizes every frame. Publishing each intermediate width retargets the
+    // capsule tween per frame (an easeOut chase that keeps settling after the
+    // button finishes). Debounce observer publishes until the size holds
+    // still for two frames, so the capsule retargets once, to the final width.
+    let raf = 0;
+    let last: { track: number; compact: number } | null = null;
+    const settle = () => {
+      const m = measure();
+      if (last && m.track === last.track && m.compact === last.compact) {
+        raf = 0;
+        last = null;
+        setTrackW(m.track);
+        if (actions) setCompactW(m.compact);
+        return;
+      }
+      last = m;
+      raf = requestAnimationFrame(settle);
+    };
+    const ro = new ResizeObserver(() => {
+      if (raf) cancelAnimationFrame(raf);
+      last = null;
+      raf = requestAnimationFrame(settle);
+    });
     ro.observe(track);
     if (actions) ro.observe(actions);
-    return () => ro.disconnect();
+    return () => {
+      ro.disconnect();
+      if (raf) cancelAnimationFrame(raf);
+    };
   }, [showAskDE, showScrollTop, location]);
 
   useEffect(() => {
@@ -419,9 +450,9 @@ export function SiteBottomBar() {
                 <motion.button
                   key="scroll-top"
                   type="button"
-                  initial={{ opacity: 0, width: 0 }}
-                  animate={{ opacity: 1, width: 40 }}
-                  exit={{ opacity: 0, width: 0 }}
+                  initial={{ opacity: 0, width: "0rem" }}
+                  animate={{ opacity: 1, width: "2.5rem" }}
+                  exit={{ opacity: 0, width: "0rem" }}
                   transition={{ duration, ease: EXPAND_EASE }}
                   onClick={scrollToTop}
                   className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-white/[0.06] text-white/85 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-de-magenta-ink"

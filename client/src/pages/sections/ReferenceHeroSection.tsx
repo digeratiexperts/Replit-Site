@@ -7,7 +7,9 @@ import { useBooking } from "@/contexts/BookingContext";
 import { analytics } from "@/lib/analytics";
 import { CTA } from "@/lib/ctaCopy";
 import { PRIMARY_PHONE } from "@/data/companyContact";
-import heroCityLights from "@assets/de-hero-arizona-dusk.png";
+// 50KB WebP (was a 2.0MB PNG): at 30% opacity under the dark field, the
+// aggressive compression is invisible — review finding F1.
+import heroCityLights from "@assets/de-hero-arizona-dusk-1600.webp";
 
 const trustItems = [
   {
@@ -67,7 +69,10 @@ export function ReferenceHeroSection(): JSX.Element {
         <img
           src={heroCityLights}
           alt=""
+          width={1600}
+          height={1067}
           loading="eager"
+          fetchPriority="low"
           decoding="async"
           className="absolute inset-0 h-full w-full object-cover"
           style={{
