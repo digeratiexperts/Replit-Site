@@ -7,8 +7,8 @@ const API = new URL("https://commons.wikimedia.org/w/api.php");
 API.searchParams.set("action", "query");
 API.searchParams.set("format", "json");
 API.searchParams.set("formatversion", "2");
-API.searchParams.set("prop", "imageinfo");
-API.searchParams.set("iiprop", "url|mime|size|sha1|extmetadata|derivatives");
+API.searchParams.set("prop", "videoinfo");
+API.searchParams.set("viprop", "url|mime|size|sha1|extmetadata|derivatives");
 API.searchParams.set("titles", FILE_TITLE);
 API.searchParams.set("origin", "*");
 
@@ -114,7 +114,7 @@ const metadataResponse = await fetch(API, { headers });
 if (!metadataResponse.ok) fail(`Commons metadata request returned HTTP ${metadataResponse.status}`);
 const metadata = await metadataResponse.json();
 const page = metadata?.query?.pages?.[0];
-const info = page?.imageinfo?.[0];
+const info = page?.videoinfo?.[0];
 if (!page || page.missing || !info?.url) fail(`Commons file not found: ${FILE_TITLE}`);
 
 const license = decodeEntities(info.extmetadata?.LicenseShortName?.value);
