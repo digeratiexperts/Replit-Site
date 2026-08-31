@@ -255,3 +255,43 @@ If GitHub reports `main` as unprotected, treat that as a P0 governance gap. The 
 Joe may explicitly override any coordination rule for a specific task or emergency. The override should be narrow, stated clearly, and recorded in the PR/issue when practical.
 
 No agent may create a permanent exception by precedent.
+
+## 18. DE Product Preservation Law
+
+Existing production DE identity, content, imagery, functionality, information architecture, business rules, integrations, customer workflows, and branded elements are canonical product assets.
+
+Visual references, competitor sites, generated mockups, Figma/Fable concepts, screenshots, and AI design proposals establish **design intent and quality targets, not replacement authority**.
+
+Unless Joe explicitly approves a material replacement, agents must improve the existing DE implementation through **preservation, refinement, composition, and addition**.
+
+The default decision hierarchy is:
+
+**KEEP -> UPGRADE -> ADD -> REPLACE**
+
+- **KEEP** — preserve an existing DE element that already serves its purpose well.
+- **UPGRADE** — retain the element, function, identity, or content while improving presentation, usability, accessibility, responsiveness, implementation quality, or coherence.
+- **ADD** — introduce a genuinely missing layer, capability, supporting component, visual depth, or interaction without displacing useful DE product assets.
+- **REPLACE** — last resort. A material replacement requires a documented reason and Joe's explicit approval when it removes or substantially changes an existing DE-specific asset, behavior, workflow, or identity element.
+
+Before replacing or removing an existing production element, the agent must determine and document, where material:
+
+1. what purpose the existing element serves;
+2. whether it is DE-specific or generic;
+3. what functionality, data, brand meaning, customer context, or business rule would be lost;
+4. whether the target can be achieved by restyling, recomposition, augmentation, or refactoring instead;
+5. whether Joe explicitly approved replacement.
+
+A reference screenshot or mockup must never cause silent loss of DE-specific assets, content, capabilities, integrations, business logic, customer workflows, or identity.
+
+Rendered visual QA must compare against **two baselines** when applicable:
+
+- **Baseline A — pre-change DE:** what existed before, what purpose it served, and whether anything valuable disappeared or regressed;
+- **Baseline B — approved visual target/reference:** which qualities, hierarchy, polish, layering, or interaction patterns should be adopted.
+
+A result that looks closer to a reference but loses useful DE identity, functionality, information, or business behavior **fails acceptance**.
+
+The governing question is:
+
+> Does this feel like a materially upgraded Digerati Experts product, or like a different product wearing the DE name?
+
+If the answer is the latter, preserve more and replace less.
