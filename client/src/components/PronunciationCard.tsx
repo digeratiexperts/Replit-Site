@@ -120,7 +120,7 @@ export function PronunciationCard({ className = "" }: PronunciationCardProps): J
         <div className="mt-5 grid gap-2" aria-label="Pronunciation guide">
           <div className="flex items-baseline gap-3">
             <span className="font-mono text-sm font-bold" style={{ color: MAGENTA }} aria-hidden="true">1</span>
-            <span className="font-mono text-sm text-white/88">/ˌdɪdʒəˈrɑːti/</span>
+            <span className="font-mono text-sm text-white/80">/ˌdɪdʒəˈrɑːti/</span>
             <span className="text-xs text-de-muted-soft">IPA</span>
           </div>
           <div className="flex flex-wrap items-center gap-3">
@@ -131,8 +131,8 @@ export function PronunciationCard({ className = "" }: PronunciationCardProps): J
             <button
               type="button"
               onClick={playPronunciation}
-              className="flex min-h-11 shrink-0 items-center gap-2 whitespace-nowrap rounded-lg px-4 text-sm font-semibold text-white transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80"
-              style={{ backgroundColor: MAGENTA, boxShadow: "0 10px 28px -16px rgba(211,18,106,0.95)" }}
+              className="flex shrink-0 items-center gap-2 whitespace-nowrap rounded-lg px-4 text-sm font-semibold text-white transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              style={{ backgroundColor: MAGENTA, minHeight: 44, boxShadow: "0 10px 28px -16px rgba(211,18,106,0.95)" }}
               aria-label="Hear Digerati pronounced dij-uh-RAH-tee"
               data-testid="button-play-digerati-pronunciation"
             >
@@ -152,7 +152,8 @@ export function PronunciationCard({ className = "" }: PronunciationCardProps): J
                 key={syllable.label}
                 type="button"
                 onClick={() => speak(syllable.speech, `syllable ${syllable.label}`)}
-                className="min-h-11 rounded-lg border border-de-hairline bg-de-bg px-3 py-2 text-left transition hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+                className="rounded-lg border border-de-hairline bg-de-bg px-3 py-2 text-left transition hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                style={{ minHeight: 44 }}
                 aria-label={`Hear syllable ${syllable.label}. ${syllable.hint}`}
               >
                 <span className="block font-mono text-sm font-bold text-white">{syllable.label}</span>
@@ -166,8 +167,8 @@ export function PronunciationCard({ className = "" }: PronunciationCardProps): J
         <div className="mt-4 flex items-start gap-2 rounded-lg border border-de-hairline bg-de-bg px-3 py-2.5">
           <Volume2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-de-muted-soft" aria-hidden="true" />
           <p className="text-xs leading-5 text-de-muted-soft">
-            <span className="font-semibold text-white/82">Commonly heard wrong:</span>{" "}
-            stress drifting to <span className="font-mono text-white/82">GER</span> or <span className="font-mono text-white/82">TEE</span> instead of the third syllable.
+            <span className="font-semibold text-white/80">Commonly heard wrong:</span>{" "}
+            stress drifting to <span className="font-mono text-white/80">GER</span> or <span className="font-mono text-white/80">TEE</span> instead of the third syllable.
           </p>
         </div>
       </div>
