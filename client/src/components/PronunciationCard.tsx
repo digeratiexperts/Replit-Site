@@ -30,7 +30,7 @@ export function PronunciationCard({ className = "" }: PronunciationCardProps): J
 
   return (
     <aside
-      className={`overflow-hidden rounded-2xl border border-de-hairline bg-de-raised backdrop-blur-md ${className}`}
+      className={`overflow-hidden rounded-2xl border border-de-hairline bg-de-raised ${className}`}
       style={{ boxShadow: "0 24px 70px -42px rgba(123,108,255,0.8)" }}
       aria-label="How to pronounce Digerati"
       data-testid="digerati-pronunciation-card"
@@ -65,13 +65,13 @@ export function PronunciationCard({ className = "" }: PronunciationCardProps): J
         <button
           type="button"
           onClick={playPronunciation}
-          className="group flex min-h-14 items-center justify-center gap-2 border-t border-de-hairline bg-de-bg px-5 text-sm font-semibold text-white transition hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset sm:border-l sm:border-t-0"
+          className="flex min-h-14 items-center justify-center gap-2 border-t border-de-hairline bg-de-bg px-5 text-sm font-semibold text-white transition hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset sm:border-l sm:border-t-0"
           style={{ minWidth: 112 }}
           aria-label="Play pronunciation: dij-uh-RAH-tee"
           data-testid="button-play-digerati-pronunciation"
         >
           <span
-            className="flex h-8 w-8 items-center justify-center rounded-full border border-de-hairline transition group-hover:bg-white/10"
+            className="flex h-8 w-8 items-center justify-center rounded-full border border-de-hairline"
             style={{ background: "rgba(123,108,255,0.15)" }}
           >
             <Play className="ml-0.5 h-3.5 w-3.5 fill-current" aria-hidden="true" />
