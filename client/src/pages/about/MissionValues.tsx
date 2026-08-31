@@ -1,11 +1,13 @@
 import { PageTemplate } from "@/components/PageTemplate";
 import { ConversionPathBar } from "@/components/ConversionPathBar";
 import { IconWell } from "@/components/visual/IconWell";
+import { ParallaxStill } from "@/components/visual/ParallaxStill";
 import { Button } from "@/components/ui/button";
-import { Heart, Target, Users, Shield, Zap, Clock, Award, Star, ArrowRight } from "lucide-react";
+import { Heart, MapPin, Target, Users, Shield, Zap, Clock, Award, Star, ArrowRight } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
 import { CTA } from "@/lib/ctaCopy";
 import { PRIMARY_PHONE } from "@/data/companyContact";
+import officeEveningImg from "@assets/de-arizona-office-evening.png";
 
 const cardClass = "rounded-2xl border border-de-hairline bg-de-raised";
 const insetClass = "rounded-xl border border-de-hairline bg-de-bg";
@@ -94,15 +96,37 @@ export default function MissionValues() {
       }
     >
       <div className="space-y-16">
-        <div className="mx-auto max-w-4xl text-center">
-          <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl border border-de-hairline bg-de-raised">
-            <Zap className="h-8 w-8 text-de-accent-ink" aria-hidden="true" />
+        {/* Mission statement paired with the same Arizona environmental plate
+            family the homepage uses (ParallaxStill + framed still) so the
+            page reads principal-led and local, not just a bare heading. */}
+        <div className="grid items-center gap-10 lg:grid-cols-2">
+          <div>
+            <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl border border-de-hairline bg-de-raised">
+              <Zap className="h-8 w-8 text-de-accent-ink" aria-hidden="true" />
+            </div>
+            <h2 className="mb-6 text-3xl font-bold text-white">Our Mission</h2>
+            <p className="text-xl leading-relaxed text-white/80">
+              To empower small and medium-sized businesses in Arizona with enterprise-grade IT security and support,
+              making advanced cybersecurity accessible and affordable for organizations of all sizes.
+            </p>
           </div>
-          <h2 className="mb-6 text-3xl font-bold text-white">Our Mission</h2>
-          <p className="text-xl leading-relaxed text-white/80">
-            To empower small and medium-sized businesses in Arizona with enterprise-grade IT security and support,
-            making advanced cybersecurity accessible and affordable for organizations of all sizes.
-          </p>
+          <div className="relative flex aspect-[4/3] min-h-[16rem] overflow-hidden rounded-2xl border border-white/15 bg-gradient-to-b from-[#1a1522] to-[#0e0c13] shadow-2xl">
+            <ParallaxStill
+              src={officeEveningImg}
+              alt="Evening office environment representing Digerati Experts' Arizona operations"
+              travel={6}
+              width={448}
+              height={300}
+              className="absolute inset-0 opacity-90"
+            />
+            <div className="relative mt-auto w-full bg-gradient-to-t from-black/95 via-black/60 to-transparent p-6 pt-16">
+              <p className="flex items-center gap-2 text-lg font-bold text-white">
+                <MapPin className="h-4 w-4 text-de-accent-ink" aria-hidden="true" />
+                Chandler, Arizona
+              </p>
+              <p className="mt-1 text-xs text-white/75">Principal-led · Serving Greater Phoenix</p>
+            </div>
+          </div>
         </div>
 
         <div>
