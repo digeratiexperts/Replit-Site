@@ -297,56 +297,77 @@ export function DocumentFlipbook(): JSX.Element {
   return (
     <section
       id="document-flipbook"
-      className="scroll-mt-[calc(var(--de-nav-offset)+1rem)] pt-16"
+      className="pt-16"
+      style={{ scrollMarginTop: "calc(var(--de-nav-offset) + 1rem)" }}
       aria-labelledby="document-flipbook-title"
       onKeyDown={onViewerKeyDown}
     >
-      <div className="overflow-hidden rounded-3xl border border-de-hairline bg-[#070513] shadow-[0_35px_90px_-60px_rgba(123,108,255,0.75)]">
-        <div className="grid gap-8 border-b border-white/10 px-5 py-8 sm:px-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:px-10 lg:py-10">
+      <div
+        className="overflow-hidden rounded-3xl border border-de-hairline bg-de-raised"
+        style={{ boxShadow: "0 35px 90px -60px rgba(123,108,255,0.75)" }}
+      >
+        <div className="grid gap-8 border-b border-de-hairline px-5 py-8 sm:px-8 lg:grid-cols-2 lg:px-10 lg:py-10">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#7b6cff]/30 bg-[#7b6cff]/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-[#b9afff]">
+            <div
+              className="inline-flex items-center gap-2 rounded-full border border-de-hairline bg-de-bg px-3 py-1.5 text-xs font-semibold uppercase text-de-accent-ink"
+              style={{ letterSpacing: "0.14em" }}
+            >
               <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />
               Browser-local viewer
             </div>
-            <h2 id="document-flipbook-title" className="mt-4 font-heading text-3xl font-semibold tracking-[-0.035em] text-white sm:text-4xl">
+            <h2
+              id="document-flipbook-title"
+              className="mt-4 font-heading text-3xl font-semibold text-white sm:text-4xl"
+              style={{ letterSpacing: "-0.035em" }}
+            >
               Digital Document Flipbook
             </h2>
-            <p className="mt-4 max-w-2xl text-base leading-7 text-white/65">
+            <p className="mt-4 max-w-2xl text-base leading-7 text-de-muted-soft">
               Open a PDF and read it like a responsive book. On larger screens you get a two-page spread; phones use one page at a time.
             </p>
-            <div className="mt-5 flex items-start gap-3 rounded-xl border border-emerald-400/15 bg-emerald-400/[0.06] p-4 text-sm leading-6 text-white/68">
-              <LockKeyhole className="mt-0.5 h-4 w-4 shrink-0 text-emerald-300" aria-hidden="true" />
+            <div className="mt-5 flex items-start gap-3 rounded-xl border border-de-hairline bg-de-bg p-4 text-sm leading-6 text-de-muted-soft">
+              <LockKeyhole className="mt-0.5 h-4 w-4 shrink-0 text-de-accent-ink" aria-hidden="true" />
               <p>
-                <strong className="font-semibold text-white/90">Private by design:</strong> the selected PDF is read and rendered in your browser. It is not uploaded to Digerati Experts.
+                <strong className="font-semibold text-white">Private by design:</strong> the selected PDF is read and rendered in your browser. It is not uploaded to Digerati Experts.
               </p>
             </div>
           </div>
 
           <div
-            className={`flex min-h-52 flex-col items-center justify-center rounded-2xl border border-dashed px-6 py-8 text-center transition ${dragActive ? "border-[#9a8bff] bg-[#7b6cff]/12" : "border-white/20 bg-white/[0.035]"}`}
+            className="flex min-h-52 flex-col items-center justify-center rounded-2xl border border-dashed px-6 py-8 text-center transition"
+            style={{
+              borderColor: dragActive ? "rgba(154,139,255,0.9)" : "rgba(255,255,255,0.2)",
+              background: dragActive ? "rgba(123,108,255,0.12)" : "rgba(255,255,255,0.035)",
+            }}
             onDragEnter={(event) => { event.preventDefault(); setDragActive(true); }}
             onDragOver={(event) => event.preventDefault()}
             onDragLeave={() => setDragActive(false)}
             onDrop={onDrop}
           >
             <input ref={inputRef} type="file" accept="application/pdf,.pdf,.doc,.docx,.ppt,.pptx" className="sr-only" onChange={onInputChange} />
-            <span className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.055] text-[#b9afff]">
+            <span className="flex h-12 w-12 items-center justify-center rounded-2xl border border-de-hairline bg-de-bg text-de-accent-ink">
               <Upload className="h-5 w-5" aria-hidden="true" />
             </span>
             <p className="mt-4 text-base font-semibold text-white">Drop a PDF here</p>
-            <p className="mt-1 text-sm text-white/48">or choose one from this device · up to 75 MB</p>
-            <Button type="button" variant="outline" className="mt-5 border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white" onClick={() => inputRef.current?.click()} disabled={isLoading}>
+            <p className="mt-1 text-sm text-de-muted-soft">or choose one from this device · up to 75 MB</p>
+            <Button
+              type="button"
+              variant="outline"
+              className="mt-5 border-de-hairline bg-de-bg text-white hover:bg-white/10 hover:text-white"
+              onClick={() => inputRef.current?.click()}
+              disabled={isLoading}
+            >
               <FileText className="mr-2 h-4 w-4" aria-hidden="true" />
               {isLoading ? "Opening PDF…" : "Choose document"}
             </Button>
-            <p className="mt-4 max-w-md text-xs leading-5 text-white/40">
+            <p className="mt-4 max-w-md text-xs leading-5 text-de-muted-soft">
               Word or PowerPoint? Export it to PDF first. We deliberately do not send Office files to a third-party converter.
             </p>
           </div>
         </div>
 
         {error && (
-          <div className="border-b border-red-300/15 bg-red-300/[0.06] px-5 py-3 text-sm text-red-100 sm:px-8 lg:px-10" role="alert">
+          <div className="border-b border-de-hairline bg-de-bg px-5 py-3 text-sm text-red-200 sm:px-8 lg:px-10" role="alert">
             {error}
           </div>
         )}
@@ -356,25 +377,52 @@ export function DocumentFlipbook(): JSX.Element {
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
               <div className="min-w-0">
                 <p className="truncate text-sm font-semibold text-white" title={fileName}>{fileName}</p>
-                <p className="mt-0.5 text-xs text-white/45">{pageLabel(pageStart, pageCount, isWide)}{isRendering ? " · rendering" : ""}</p>
+                <p className="mt-0.5 text-xs text-de-muted-soft">
+                  {pageLabel(pageStart, pageCount, isWide)}{isRendering ? " · rendering" : ""}
+                </p>
               </div>
               <div className="flex items-center gap-2">
                 {originalUrl && (
-                  <a href={originalUrl} target="_blank" rel="noreferrer" className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-white/15 px-3 text-xs font-semibold text-white/70 transition hover:bg-white/[0.06] hover:text-white">
+                  <a
+                    href={originalUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-de-hairline px-3 text-xs font-semibold text-de-muted-soft transition hover:bg-white/10 hover:text-white"
+                  >
                     Original
                     <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
                   </a>
                 )}
-                <Button type="button" variant="outline" size="icon" className="h-9 w-9 border-white/15 bg-white/[0.035] text-white hover:bg-white/[0.08] hover:text-white" onClick={goPrevious} disabled={!canGoPrevious} aria-label="Previous page">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  className="h-9 w-9 border-de-hairline bg-de-bg text-white hover:bg-white/10 hover:text-white"
+                  onClick={goPrevious}
+                  disabled={!canGoPrevious}
+                  aria-label="Previous page"
+                >
                   <ArrowLeft className="h-4 w-4" aria-hidden="true" />
                 </Button>
-                <Button type="button" variant="outline" size="icon" className="h-9 w-9 border-white/15 bg-white/[0.035] text-white hover:bg-white/[0.08] hover:text-white" onClick={goNext} disabled={!canGoNext} aria-label="Next page">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  className="h-9 w-9 border-de-hairline bg-de-bg text-white hover:bg-white/10 hover:text-white"
+                  onClick={goNext}
+                  disabled={!canGoNext}
+                  aria-label="Next page"
+                >
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </Button>
               </div>
             </div>
 
-            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#0b0915] p-3 shadow-inner sm:p-5" tabIndex={0} aria-label="PDF flipbook. Use left and right arrow keys to change pages.">
+            <div
+              className="relative overflow-hidden rounded-2xl border border-de-hairline bg-de-bg p-3 shadow-inner sm:p-5"
+              tabIndex={0}
+              aria-label="PDF flipbook. Use left and right arrow keys to change pages."
+            >
               <AnimatePresence mode="wait" initial={false}>
                 <motion.div
                   key={`${pageStart}-${isWide ? "spread" : "single"}`}
@@ -382,22 +430,32 @@ export function DocumentFlipbook(): JSX.Element {
                   animate={{ opacity: 1, rotateY: 0, x: 0 }}
                   exit={prefersReducedMotion ? undefined : { opacity: 0.72, rotateY: -4, x: -8 }}
                   transition={{ duration: prefersReducedMotion ? 0 : 0.2, ease: "easeOut" }}
-                  className="mx-auto flex min-h-72 w-full items-start justify-center gap-[18px] [perspective:1400px]"
+                  className="mx-auto flex min-h-72 w-full items-start justify-center gap-4"
+                  style={{ perspective: 1400 }}
                 >
-                  <canvas ref={leftCanvasRef} className="max-w-full rounded-md bg-white shadow-[0_18px_45px_-24px_rgba(0,0,0,0.9)]" aria-label={`PDF page ${pageStart}`} />
-                  <canvas ref={rightCanvasRef} className="hidden max-w-[calc(50%-9px)] rounded-md bg-white shadow-[0_18px_45px_-24px_rgba(0,0,0,0.9)] md:block" aria-label={isWide && pageStart + 1 <= pageCount ? `PDF page ${pageStart + 1}` : undefined} />
+                  <canvas
+                    ref={leftCanvasRef}
+                    className="max-w-full rounded-md bg-white shadow-xl"
+                    aria-label={`PDF page ${pageStart}`}
+                  />
+                  <canvas
+                    ref={rightCanvasRef}
+                    className="hidden rounded-md bg-white shadow-xl md:block"
+                    style={{ maxWidth: isWide ? "calc(50% - 9px)" : "100%" }}
+                    aria-label={isWide && pageStart + 1 <= pageCount ? `PDF page ${pageStart + 1}` : undefined}
+                  />
                 </motion.div>
               </AnimatePresence>
             </div>
 
-            <div className="mt-4 flex items-center justify-center gap-3 text-xs text-white/45">
+            <div className="mt-4 flex items-center justify-center gap-3 text-xs text-de-muted-soft">
               <span>← / → pages</span>
               <span aria-hidden="true">·</span>
               <span>Home / End jump</span>
             </div>
           </div>
         ) : (
-          <div className="flex min-h-40 items-center justify-center px-5 py-10 text-center text-sm text-white/42">
+          <div className="flex min-h-40 items-center justify-center px-5 py-10 text-center text-sm text-de-muted-soft">
             Choose a PDF above to start the flipbook.
           </div>
         )}
