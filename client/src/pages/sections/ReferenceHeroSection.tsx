@@ -4,6 +4,7 @@ import { ArrowRight, Check, CheckCircle2, ClipboardCheck, MapPin, ShieldCheck } 
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { DashboardMockup } from "@/components/graphics";
+import { PronunciationCard } from "@/components/PronunciationCard";
 import { useBooking } from "@/contexts/BookingContext";
 import { analytics } from "@/lib/analytics";
 import { CTA } from "@/lib/ctaCopy";
@@ -195,6 +196,8 @@ export function ReferenceHeroSection(): JSX.Element {
             <span aria-hidden="true">·</span>
             <span>Fully managed or co-managed</span>
           </div>
+
+          <PronunciationCard className="mt-7 max-w-[620px]" />
         </motion.div>
 
         {/* DE Cyber Risk Assessment preview — the existing product artwork,
