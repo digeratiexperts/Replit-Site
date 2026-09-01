@@ -54,6 +54,17 @@ claims:
     files:
       - .claude/skills/scrollcraft/**
       - scrollcraft/**
+      - client/src/diagrams/**
+      - client/src/pages/sections/ReferenceHeroSection.tsx
+      - client/src/pages/sections/DigeratiServicesSection.tsx
+      - client/src/pages/sections/DigeratiHowWeProtectSection.tsx
+      - client/src/pages/sections/DigeratiTestimonialsSection.tsx
+      - client/src/pages/sections/DigeratiMeetExpertsSection.tsx
+      - client/src/pages/sections/DigeratiNewsletterSection.tsx
+      - client/src/pages/sections/DigeratiCTASection.tsx
+      - client/src/components/EcosystemProgression.tsx
+      - client/src/components/visual/ProtectionCommandDeck.tsx
+      - client/public/images/evidence/**
     status: active
     started: 2026-09-01
     note: >-
@@ -61,6 +72,9 @@ claims:
       interpretation of the DE site under scrollcraft/builds/de-v2 (PR #164,
       merged). The #173 homepage takeover was reverted by #177 at Joe's
       decision; Version B stays a noindex preview at /v2 (PR #172).
+      PR #178 now also carries the homepage service sections Joe listed,
+      rebuilt on the diagram system (client/src/diagrams) with the H1 and
+      hero CTA locators the smoke gate asserts left untouched.
       FREEZE (2026-09-01, Joe): Scrollcraft implementation on ANY route is
       gated by the approved DE Scrollcraft Experience Plan at
       scrollcraft/EXPERIENCE-PLAN.md. No page code, no material production,

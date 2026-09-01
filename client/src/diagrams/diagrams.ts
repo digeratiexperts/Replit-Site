@@ -31,7 +31,15 @@ export interface RenderOptions {
   id?: string;
   /** Show the title/caption row (default true). */
   caption?: boolean;
+  /**
+   * Diagram-specific overrides. protection: `{ layers: {code,label,answers}[] }`
+   * lets a page name its own six layers (e.g. the six-domain deck) while the
+   * grammar and classification stay the diagram's.
+   */
+  data?: Record<string, unknown>;
 }
+
+export interface ProtectionLayer { code: string; label: string; answers: string }
 
 export interface DiagramMeta {
   id: DiagramId;
@@ -205,7 +213,7 @@ function renderEnvironment(o: Required<RenderOptions>): string {
 }
 
 /* ======================================================= 2 · protection */
-const LAYERS: { code: string; label: string; answers: string }[] = [
+const DEFAULT_LAYERS: ProtectionLayer[] = [
   { code: "01", label: "Identity", answers: "credential theft" },
   { code: "02", label: "Endpoint", answers: "malware" },
   { code: "03", label: "Network", answers: "lateral movement" },
@@ -218,11 +226,15 @@ const PROTECTION_META: DiagramMeta = {
   title: "Layered protection",
   classification: "ILLUSTRATIVE",
   label: "explanatory boundaries",
-  nodes: LAYERS.length + 1,
+  nodes: DEFAULT_LAYERS.length + 1,
   stages: ["the business, exposed", "identity", "endpoint", "network", "email", "backup", "security operations"],
   source: "Six control layers DE operates, each named for the threat class it answers. Illustrative, not a customer's posture.",
 };
 function renderProtection(o: Required<RenderOptions>): string {
+  const custom = (o.data && Array.isArray((o.data as { layers?: unknown }).layers))
+    ? ((o.data as { layers: ProtectionLayer[] }).layers).slice(0, 6)
+    : null;
+  const LAYERS = custom && custom.length === 6 ? custom : DEFAULT_LAYERS;
   if (o.layout === "wide") {
     const cx = 300;
     const cy = 218;
@@ -275,7 +287,7 @@ const ASSESSMENT_META: DiagramMeta = {
   label: "not a client report",
   nodes: AREAS.length + ROADMAP.length,
   stages: ["unknown", "observed", "findings", "prioritized", "roadmap"],
-  source: "The five areas a DE Cyber Risk Assessment reviews and the Validate → Remediate → Verify roadmap structure. Example format: no findings, scores, or client data.",
+  source: "The five areas a DE Cyber Risk Assessment reviews and the Validate → Remediate → Verify roadmap structure. Example format only: the marks show how priorities are flagged, not a real result. No client data.",
 };
 function renderAssessment(o: Required<RenderOptions>): string {
   const wide = o.layout === "wide";
@@ -359,7 +371,7 @@ function renderCoverage(o: Required<RenderOptions>): string {
 /* ======================================================== 5 · lifecycle */
 const STAGES: Node[] = [
   { id: "assess", code: "01", label: "Discovery & assessment", sub: "risk & gap" },
-  { id: "model", code: "02", label: "Fit-based operating model", sub: "IT · Office · Business · Enterprise" },
+  { id: "model", code: "02", label: "Fit-based operating model", sub: "four models" },
   { id: "harden", code: "03", label: "Hardening & integration", sub: "baseline & runbooks" },
   { id: "manage", code: "04", label: "Continuous management", sub: "24/7 · vCIO", emphasis: true },
 ];
@@ -430,6 +442,7 @@ export function renderDiagram(id: DiagramId, opts: RenderOptions = {}): string {
     state: opts.state ?? 1,
     id: opts.id ?? `dg-${id}-${++counter}`,
     caption: opts.caption ?? true,
+    data: opts.data ?? {},
   };
   return REGISTRY[id].render(o);
 }

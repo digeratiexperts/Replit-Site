@@ -120,6 +120,24 @@
 .dg[data-diagram="environment"][data-dg-stage="1"] .dg-node--emph rect,
 .dg[data-diagram="environment"][data-dg-stage="2"] .dg-node--emph rect { stroke: var(--dg-accent); }
 
+/* focus: a page can emphasise one node (hovered capability, selected tier) */
+.dg[data-focus] .dg-node rect { transition: stroke 200ms var(--dg-ease); }
+.dg[data-focus="people"] [data-node="people"] rect, .dg[data-focus="identity"] [data-node="identity"] rect,
+.dg[data-focus="devices"] [data-node="devices"] rect, .dg[data-focus="email"] [data-node="email"] rect,
+.dg[data-focus="systems"] [data-node="systems"] rect, .dg[data-focus="network"] [data-node="network"] rect,
+.dg[data-focus="backup"] [data-node="backup"] rect { stroke: var(--dg-accent); stroke-width: 1.5; }
+.dg[data-focus="operations"] .dg-boundary rect { stroke: var(--dg-accent); }
+.dg[data-focus="operations"] .dg-boundary .dg-code { fill: var(--dg-accent-ink); }
+/* layer focus: all layers drawn (state 1), one emphasised */
+/* a selected layer replaces the stage accent: one magenta layer at a time */
+.dg[data-focus^="layer-"][data-dg-stage] .dg-layer rect { stroke: var(--dg-hairline); stroke-width: 1; }
+.dg[data-focus^="layer-"][data-dg-stage] .dg-layer .dg-code { fill: var(--dg-soft); }
+.dg[data-focus="layer-1"] .dg-layer[data-dg-at="1"] rect, .dg[data-focus="layer-2"] .dg-layer[data-dg-at="2"] rect, .dg[data-focus="layer-3"] .dg-layer[data-dg-at="3"] rect,
+.dg[data-focus="layer-4"] .dg-layer[data-dg-at="4"] rect, .dg[data-focus="layer-5"] .dg-layer[data-dg-at="5"] rect, .dg[data-focus="layer-6"] .dg-layer[data-dg-at="6"] rect { stroke: var(--dg-accent); stroke-width: 1.5; }
+.dg[data-focus="layer-1"] .dg-layer[data-dg-at="1"] .dg-code, .dg[data-focus="layer-2"] .dg-layer[data-dg-at="2"] .dg-code, .dg[data-focus="layer-3"] .dg-layer[data-dg-at="3"] .dg-code,
+.dg[data-focus="layer-4"] .dg-layer[data-dg-at="4"] .dg-code, .dg[data-focus="layer-5"] .dg-layer[data-dg-at="5"] .dg-code, .dg[data-focus="layer-6"] .dg-layer[data-dg-at="6"] .dg-code { fill: var(--dg-accent-ink); }
+.dg[data-focus^="layer-"][data-dg-stage="6"] .dg-layer rect { transition: stroke 200ms var(--dg-ease), stroke-width 200ms var(--dg-ease); }
+
 @media (prefers-reduced-motion: reduce) {
   .dg [data-dg-at], .dg [data-dg-at] [pathLength], .dg [data-dg-at][pathLength] { transition: none; }
 }
