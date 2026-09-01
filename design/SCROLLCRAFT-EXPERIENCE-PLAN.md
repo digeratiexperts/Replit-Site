@@ -3,7 +3,7 @@
 **Status:** owner-approved planning basis; **not** authorization for further implementation or release work  
 **Planning owner:** ChatGPT (issue #174)  
 **Planning began:** `main @ 7c78dae14dfac7675c7a760f29eaaa652967cc3f`  
-**Reconciled with:** `main @ 1edee66466fb7f2ab75166e76b15afd38cda3fb3` (PR #173 merged concurrently during this planning task)  
+**Current release-state correction:** PR #173 briefly promoted Version B to `/`; PR #177 reverted that change. Current `main` keeps the existing SPA homepage at `/` and Version B at `/v2`.  
 **Applies to:** public DE website experience strategy, Scrollcraft use, material production, and the boundary between cinematic storytelling and ordinary/utility UX.
 
 > **Core rule:** Scrollcraft is a storytelling capability, not a visual theme. DE must look like DE whether a page uses Scrollcraft or not.
@@ -22,16 +22,13 @@ The next phase is therefore **not** “apply Scrollcraft everywhere.” It is:
 4. decide which materials are real, captured, created, generated, diagrammed, or licensed;
 5. design each flagship with a different interaction grammar so the site does not repeat one trick;
 6. preserve the existing DE brand foundation and utility UX;
-7. build/refine one flagship to a very high standard before propagating anything.
+7. build one flagship to a very high standard before propagating anything.
 
-### Current production-state note
+### Non-negotiable pause
 
-While this document was being produced, PR #173 merged and changed `main` so Version B is the homepage release lane, with the previous SPA homepage preserved at `/classic`. That concurrent merge changes the **current state**, not the design conclusion:
-
-- the Version B experience now on the homepage is a **valuable production/reference implementation**, not automatic final design authority;
-- `/classic`, `/v2`, the Version B source/brief, and the ProActive amplification should all be treated as comparative evidence during the material/design review;
-- this plan does not authorize additional Scrollcraft propagation, consolidation, or new production redesign work;
-- before the next design/build step, the material board and creative brief for that route must be approved.
+- `/v2` on current `main` is a **review/reference surface**, not the automatic final homepage design authority.
+- The existing SPA homepage remains the current production homepage after PR #177 reverted the attempted #173 swap.
+- No additional Scrollcraft propagation should begin until the material board and flagship brief for that route are approved.
 
 ---
 
@@ -43,772 +40,668 @@ A **Digerati Experts digital experience system** with four experience levels:
 
 | Level | Name | Purpose | Scrollcraft policy |
 |---|---|---|---|
-| **A** | Flagship narrative | Change how the visitor understands DE or a major DE operating model | Bespoke/full Scrollcraft allowed |
-| **B** | Guided explanation | Explain a complex system, process, risk, or business transformation | Selective Scrollcraft: usually 1–3 meaningful sequences |
-| **C** | Editorial / normal marketing | Read, compare, evaluate, browse | Normal DE design; restrained motion only |
-| **D** | Utility / transactional | Complete a task quickly and correctly | No Scrollcraft; functional feedback only |
+| A | Flagship narrative | Reframe how the visitor understands DE | Full bespoke Scrollcraft |
+| B | Guided explanation | Explain a complex service or transformation | Selective Scrollcraft, 1–3 meaningful moments |
+| C | Normal/editorial | Read, compare, understand | Normal DE design + restrained motion |
+| D | Utility/transactional | Complete a task quickly | No Scrollcraft beyond functional feedback |
 
-The correct target is **one design intelligence, multiple experience grammars**.
+The entire site must not share one motion trick. It must share one **design intelligence**.
 
-### 2.2 Existing DE identity remains the foundation
+### 2.2 Brand foundation stays locked
 
-Do not redesign the locked Layer 0 foundation:
+The final experience continues to use the existing DE foundation:
 
-- Midnight Obsidian / graphite `#050312`
-- Warm Paper `#F7F5F2`
-- Electric Magenta `#D3126A`
-- violet as restrained illumination, not panel paint
-- Space Grotesk for presentation
-- Inter for reading/UI
-- Oxanium for tactical metadata
-- Store electric blue remains Store-specific
-- Journal amber remains Journal-specific
+- Midnight Obsidian / graphite;
+- Warm Paper;
+- Electric Magenta;
+- restrained violet illumination;
+- Space Grotesk / Inter / Oxanium;
+- Store electric blue only on Store surfaces;
+- Journal amber only on Journal/Resources surfaces.
 
-Scrollcraft consumes these rules. It does not replace them.
+Scrollcraft consumes this system. It does not replace it.
 
 ### 2.3 Evidence before decoration
 
-Use the existing Visual System v2 evidence order:
+For substantial visuals, use this priority:
 
 **real artifact → real data → real person → explanatory diagram → sanitized interface → illustrative scenario → editorial photography → atmospheric environment → icon**
 
-A beautiful abstract plate is not stronger evidence than a real DE product, real report, real human, or precise explanatory diagram.
-
-### 2.4 The “too much” rule
-
-More motion is not automatically more premium.
-
-A page should earn Scrollcraft by needing one or more of these:
-
-- sequence matters to comprehension;
-- a before/after state is difficult to explain statically;
-- a system relationship becomes clearer through progressive assembly;
-- the emotional journey materially affects conversion/trust;
-- the page has a genuine signature behavior worth remembering.
-
-If none apply, use normal DE design.
+That hierarchy controls both normal DE pages and Scrollcraft pages.
 
 ---
 
-## 3. Site route / archetype inventory
+## 3. Route experience map
 
-The current router mixes public marketing, publishing, commerce, support, legal, location, pricing tools, portal, and admin surfaces. Classification is by **experience requirement**, not by whether Scrollcraft is technically possible.
+### A — Flagship narrative
 
-### 3.1 Flagship / Level A
+Use full bespoke Scrollcraft only where the visitor must undergo a meaningful conceptual shift.
 
-| Route / family | Level | Direction |
+| Route / concept | Level | Why |
 |---|---:|---|
-| `/` | **A** | Current Version B production homepage is a reference baseline, not a locked final. Final flagship should be curated/redesigned from the strongest production + Version B ideas after the material-board process. |
-| `/solutions/proactive-ecosystem` | **A** | Major operating-model story. Keep its strategic value but give it a grammar distinct from the homepage. |
-| future “How We Protect” flagship destination / strongest security story | **A** | Layered protection as a system, not a SOC-wall aesthetic. May reuse content from current protection/security pages but should have its own experience. |
-| Cyber Risk Assessment experience (commercial journey around `/book`, assessment content, and proof) | **A/B** | The assessment itself deserves a guided transformation story; the booking form does not. Build narrative before the utility handoff. |
+| Homepage `/` | A | Must explain who DE is, why the environment is fragmented, and what “one technology company” actually means |
+| ProActive Ecosystem `/solutions/proactive-ecosystem` | A | Core operating-model story; must explain continuous operation rather than a service list |
+| How DE Protects / security flagship | A | Layered protection and security-as-property need a visual model, not generic feature cards |
+| Cyber Risk Assessment / assessment journey | A | Strong conversion story: unknown → observed → prioritized → roadmap |
+| Automation + AI flagship | A | Manual work → orchestration → automation → human oversight is naturally sequential |
 
-### 3.2 Selective / Level B
+### B — Guided explanation
 
-| Route / family | Level | Direction |
+| Surface | Level | Guidance |
 |---|---:|---|
-| `/solutions` | **B** | Orientation first. One strong systems-landscape moment; browsing must remain fast. |
-| `/solutions/managed-it-support` | **B/C** | One meaningful “support becomes an operated system” explanatory moment; otherwise readable marketing. |
-| `/solutions/managed-workplace` | **B** | Employee lifecycle can benefit from a single orchestration sequence. |
-| `/solutions/backup-disaster-recovery` | **B** | Backup → verification → recovery is inherently sequential. One strong continuity/recovery sequence. |
-| `/solutions/co-managed-it` | **B** | Shared responsibility / two operating teams on one spine; one explanatory sequence. |
-| `/solutions/proactive-{it,office,business,enterprise}-ecosystem` | **B/C** | Do **not** create four mini cinematic sites. Use a shared normal archetype plus selective differentiation where it explains fit. |
-| dynamic `/solutions/:service` (`servicePageData`) | **B/C** | Default C. Upgrade to B only when the subject has a real process/system transformation worth explaining. |
-| `/services/ucaas` | **B/C** | Communication flow can justify one sequence; avoid spectacle. |
-| `/industries` | **B** | Industry landscape / pressures can have one strong orienting interaction. |
-| each `/industries/*` page | **B/C** | One industry-specific visual explanation, then normal editorial content. No 14-viewport cinematic clone per vertical. |
-| `/resources/cyber-facts` | **B** | Data storytelling can use restrained sequencing and source visibility. |
-| `/resources/security-updates` | **B/C** | Editorial motion only if it clarifies chronology/severity. |
-| `/resources/ebook/defending-digital-realm` | **B/C** | Publication-like experience; selective narrative transitions allowed. |
-| `/about/mission-values` | **B/C** | One editorial movement around independence, competence, accountability; mostly type + proof. |
-| `/about/team` | **B/C** | Human-first; photography and evidence outrank motion. |
-| `/about/21-questions` | **B/C** | Could use progressive editorial pacing, not a heavy experience. |
-| `/trust/trust-center` | **B/C** | Trust is documentary. One explanatory overview is acceptable; evidence remains static/inspectable. |
-| `/proactive-ecosystem-pricing`, `/pricing` | **B/C** | A brief operating-model orientation can precede the calculator/matrix. The pricing tool itself stays utility-like. |
-| `/ecosystem-pricing`, `/de-ecosystem-matrix-offical`, `/official-network-planner` | **B/D** | Explanatory shell may use selective motion; interactive tool itself is utility and must remain precise. |
-
-### 3.3 Normal editorial / Level C
-
-Default Level C unless a future brief proves Level B is needed:
-
-- `/resources`
-- `/resources/case-studies`
-- `/resources/case-studies/:slug`
-- `/resources/blog`
-- `/resources/blog/:slug`
-- `/resources/videos`
-- `/resources/security-checklist`
-- `/resources/datasheets`
-- `/about/compliance`
-- `/about/insurance`
-- `/about/compliance-certifications`
-- `/about/client-bill-of-rights`
-- `/about/guarantee`
-- `/about/press`
-- location pages `/locations/{chandler,phoenix,mesa,gilbert,tempe,scottsdale}-az`
-- ordinary generic industry/service pages where sequence adds no real comprehension
-
-These pages can use polished DE entrances, section transitions, diagram micro-animation, and state feedback without mounting a full Scrollcraft runtime.
-
-### 3.4 Utility / Level D — no Scrollcraft
-
-These routes optimize for task completion, clarity, security, speed, and accessibility:
-
-**Commerce / conversion utilities**
-
-- `/store/solution`
-- `/store/checkout`
-- `/solutions/request`
-- `/quote-wizard`
-- `/quote-confirmation`
-- `/thank-you-success-page`
-- `/book` (the form/booking utility itself)
-- `/contact` (ordinary contact utility; can be beautiful, should be quiet)
-
-**Support**
-
-- `/support/submit-ticket`
-- `/support/ticket-confirmation`
-- `/support/knowledge-base`
-- `/support/remote-support`
-- `/support/pay-invoice`
-- dynamic `/support/:service`
-
-**Legal / trust utility**
-
-- `/legal/privacy-policy`
-- `/legal/terms-of-use`
-- `/legal/msa`
-- `/legal/sla`
-- `/legal/aup`
-- `/legal/dpa`
-- `/legal/sample-sow`
-- `/trust/vulnerability-disclosure`
-- `/trust/accessibility`
-
-**Portal / authenticated product**
-
-- all `/portal/*` routes including login/signup/reset, dashboard, tickets, services, files, invoices, orders, KB, status, learning, chat/agent, settings, billing, company, ship-center, procurement/marketplace, forms/surveys/approvals/people/infrastructure/VPN/Cytracom/questionnaires, contracts, order form, sales process, roadmap, QBR, and admin routes.
-
-**Internal**
-
-- `/internal/warehouse/*`
-
-These surfaces may use motion for functional state feedback only. No pinned storytelling, no cinematic takeover, no scroll-jacking.
-
----
-
-## 4. Current Scrollcraft audit — keep / redesign / reject
-
-### 4.1 Keep and evolve
-
-These are strategically strong and should survive in concept:
-
-1. **Story-first planning** — interview, feeling curve, peak, authored silence, and tell-someone sentence before implementation.
-2. **“The Environment Wakes Up”** — the core idea that disconnected business technology becomes one operated environment remains powerful.
-3. **Outcome-driven exploration** — “protect / productivity / automate / compliance” is stronger than exposing technology categories first.
-4. **Authored silence** — deliberate quiet before/after a major moment increases perceived quality.
-5. **One dominant peak** — a page should have hierarchy, not constant intensity.
-6. **Reduced-motion equivalence** — same meaning, less travel.
-7. **Real DE proof** — DE Desk, actual product surfaces, real founder/place photography, real assessment/report artifacts.
-8. **Scrollcraft verification discipline** — contact sheets, mobile/tablet/desktop, contrast, dead-scroll detection, cue validation.
-9. **Quiet-tier philosophy** — FAQ/contact/legal/workhorse pages should remain calm and direct.
-
-### 4.2 Redesign before broader use
-
-1. **Graphite Illumination as a primary visual language**  
-   Keep selected plates only if they materially support a scene. Do not let abstract graphite/violet textures become the answer to every visual need.
-
-2. **The technology-map drawing language**  
-   The concept is strong; the execution should become a more sophisticated DE diagram language usable both statically and in motion.
-
-3. **Margin folio / live map**  
-   It is already used by both recorded builds. Do not treat it as the default Scrollcraft navigation/signature.
-
-4. **Chaptered editorial as default grammar**  
-   The fingerprint registry records a collision between `de-v2` and `proactive-ecosystem-amplify`. Future flagship builds must deliberately choose different grammars/signature behavior.
-
-5. **Material hierarchy**  
-   A major scene should not be carried by decorative texture when real evidence, a real person, or a bespoke explanatory graphic is available.
-
-6. **Mobile composition**  
-   Mobile must be art-directed as its own composition, not just compressed desktop chapters/ribbons.
-
-7. **Transition into/out of ordinary DE site chrome**  
-   Scrollcraft moments should feel native to the DE site. The visitor should not feel they entered a separate microsite and then fell back into a template.
-
-### 4.3 Reject as site-wide patterns
-
-- copying the exact Version B page grammar across the site;
-- repeating “scattered map → assembled map” as every flagship’s signature;
-- using abstract generated textures as proof;
-- fake telemetry / fake incident data / simulated customer dashboards that read as live;
-- generated faces presented as DE employees/customers;
-- Scrollcraft on forms, checkout, portal, legal, FAQ, support workflows;
-- gratuitous full-screen pinning because the engine supports it;
-- decorative HUD/technical chrome on every card/section;
-- literal AI clichés: robots, glowing brains, generic circuitry, cyberpunk neon.
-
----
-
-## 5. Material system
-
-Every Level A/B build gets an **asset requirement board before code**.
-
-### 5.1 Material classes
-
-| Class | What it is | Default source | Rule |
-|---|---|---|---|
-| **A. Real DE evidence** | product UI, assessment pages, roadmaps, diagrams, reports, real operational artifacts | capture from DE systems / existing repository | Highest-value material. Sanitize/classify where required. |
-| **B. Real people & place** | founder, team, Chandler/Phoenix, actual work environments | DE photography / licensed documentary photography | No generated humans impersonating DE people/customers. |
-| **C. Bespoke explanatory graphics** | architecture, workflows, protection boundaries, continuity, lifecycle, orchestration | create in code/vector/canvas | Major opportunity for a proprietary DE visual language. |
-| **D. Art-directed atmospheric imagery** | fragmentation, connection, boundary, continuity, intelligence, orchestration | create as a planned set; generation/compositing allowed with provenance | Concept-not-noun. Supports meaning; never substitutes for evidence. |
-| **E. Sourced/licensed editorial imagery** | Arizona environment, business context, architectural details | find/license selectively | Use only when reality is stronger than generation; keep one coherent art direction. |
-
-### 5.2 Create vs. find rule
-
-**Create** when the asset communicates a DE-specific concept or system:
-
-- DE technology architecture
-- outcome-to-domain relationships
-- assessment process
-- protection boundaries
-- operating cadence
-- business workflow orchestration
-- continuity / recovery state changes
-- ProActive model relationships
-
-**Capture** when the evidence already exists:
-
-- DE Desk
-- portal/product surfaces that are safe for public use
-- assessment deliverables
-- roadmap/report samples
-- marketplace/solution-builder surfaces where appropriate
-
-**Photograph** when human accountability or place matters:
-
-- founder/team
-- Chandler / Phoenix
-- real office/workbench/environment
-- real deployment/engineering context where client/privacy rules allow
-
-**Find/license** when a real environmental/documentary image is stronger and consistent with the art direction.
-
-**Generate** only for illustrative/atmospheric material that cannot be better represented by real evidence. Generate as a coherent set, not ad hoc one-offs.
-
-### 5.3 Proposed DE material family
-
-A future planned still/visual set should explore these concepts as one coherent art direction:
-
-- **Fragmentation** — isolated systems, broken continuity, competing boundaries
-- **Connection** — controlled relationships forming
-- **Boundary** — protected zones / trust transitions
-- **Continuity** — resilient layers / recoverable state
-- **Orchestration** — multiple systems moving as one workflow
-- **Intelligence** — observation → interpretation → action, without “AI brain” clichés
-- **Recovery** — damaged state returning to known-good operation
-- **Human oversight** — the accountable human layer over automation
-
-Shared direction: graphite/gunmetal/smoked materials, physical depth, controlled violet illumination, precise negative space, cinematic but not cyberpunk.
-
----
-
-## 6. Required asset board template
-
-No Level A/B route begins coding until this table exists and is approved.
-
-| Scene | Visitor must understand/believe | Primary material | Source | Motion purpose | Mobile form | Status |
-|---|---|---|---|---|---|---|
-| Example | “My environment is fragmented.” | explanatory diagram + atmospheric ground | create | expose relationships over time | simplified stacked relationship view | planned |
-
-For each asset also record:
-
-- evidence classification: LIVE / SANITIZED REAL / EXAMPLE / ILLUSTRATIVE;
-- owner/licensing/provenance;
-- final aspect ratios/crops (desktop/tablet/mobile);
-- whether typography must occupy negative space;
-- static/reduced-motion fallback;
-- performance budget;
-- whether it belongs to a reusable DE visual family or only one page.
-
----
-
-## 7. First four flagship creative briefs
-
-These are planning briefs, not implementation specs. Each still requires a full Scrollcraft interview/score/material board before build.
-
-### 7.1 Flagship 1 — Homepage
-
-**Job:** explain DE’s identity and operating philosophy while making the visitor see their own fragmented environment differently.
-
-**Before:** “This is another MSP/security company.”  
-**After:** “DE makes all the technology my business depends on operate as one system; I want them to look at mine.”
-
-**Current baseline:** Version B now serves the homepage through the #173 release path; the prior SPA homepage remains `/classic`. Both are inputs to the redesign/material review.
-
-**Story spine:**
-
-1. quiet arrival / conviction;
-2. recognize the fragmented reality;
-3. stakes, sourced and honest;
-4. one major transformation peak;
-5. outcomes the buyer actually wants;
-6. who this is for / client pressures;
-7. breadth beyond conventional MSP work;
-8. real proof;
-9. human/local accountability;
-10. quiet assessment close.
-
-**Signature move target:** retain the strategic idea of the environment becoming coherent, but redesign its visual language and behavior. It must not simply replay the existing `de-v2` map.
-
-**Material requirements:**
-
-- new bespoke DE environment architecture graphic;
-- real DE product/assessment evidence;
-- founder/team + Arizona photography;
-- sourced industry facts with citations;
-- one coherent atmospheric art set where real evidence is not the right material;
-- industry/client-profile editorial material;
-- final CTA tied to the Cyber Risk Assessment.
-
-**Existing site integration:** the best prior SPA homepage content and the strongest Version B story material should be preserved/elevated, not discarded merely because one version is currently mounted at `/`. Navigation, conversion paths, SEO, accessibility, site footer/chrome, and product links remain canonical DE systems.
-
-**Avoid:** constant animation, multiple competing peaks, generic “AI/cyber” imagery, dashboard cosplay, turning every section into a full viewport.
-
----
-
-### 7.2 Flagship 2 — ProActive Ecosystem
-
-**Job:** make “ProActive” understandable as an operating model, not a package list.
-
-**Before:** “This is a bundle of managed IT/security services.”  
-**After:** “DE continuously observes, decides, protects, maintains, and improves the environment on a cadence.”
-
-**Different grammar from homepage:** no chaptered-editorial + margin-map repeat.
-
-**Proposed experience concept:** **Operating Cadence**.
-
-A business environment persists while time/cadence and operational responsibility change around it:
-
-- assess baseline;
-- standardize;
-- observe;
-- protect;
-- maintain;
-- improve;
-- review / roadmap.
-
-The visitor sees not just *what* DE covers, but **when and why the operating motions occur**.
-
-**Material requirements:**
-
-- cadence timeline/state model;
-- static + motion-ready diagram primitives;
-- real assessment/roadmap/QBR artifacts;
-- canonical IT/Office/Business/Enterprise fit model;
-- security/identity/endpoint/network/backup/workplace relationships;
-- selective real interface/product evidence.
-
-**Interaction target:** visitor can change business context/priority and see how the operating cadence and responsibilities adapt, without presenting fake telemetry.
-
-**Avoid:** another accumulating margin map; another scattered-to-assembled peak; turning pricing figures into animated “truth claims.”
-
----
-
-### 7.3 Flagship 3 — How DE Protects
-
-**Job:** explain that security is a property of the operating environment, not a pile of products.
-
-**Before:** “They sell security tools.”  
-**After:** “Protection exists across identity, endpoints, email, network, backup, and operations, and those controls reinforce each other.”
-
-**Proposed experience concept:** **Layered Boundary / Attack Path**.
-
-Start with an ordinary business action (sign in, open email, use SaaS, work remotely, access data). Progressively expose the protection boundaries and decisions around that action.
-
-The peak is not a threat explosion. The peak is **the moment the visitor sees that an attack path crosses multiple domains and DE closes the path as a system**.
-
-**Material requirements:**
-
-- bespoke security-boundary diagram grammar;
-- real/sanitized security evidence where available;
-- sourced threat facts where context is useful;
-- EXAMPLE attack-path sequence clearly labeled as illustrative;
-- no invented mean-time-to-contain or fake live SOC metrics;
-- real DE human-response/accountability material.
-
-**Motion purpose:** reveal dependencies and decision points that are hard to see in a static feature grid.
-
-**Avoid:** green/red SOC wall, Matrix code, fake terminals, endless alert particles, generic shields/padlocks.
-
----
-
-### 7.4 Flagship 4 — Cyber Risk Assessment
-
-**Job:** make the assessment feel like a concrete, valuable diagnostic process rather than a lead form.
-
-**Before:** “They want me to book a sales call.”  
-**After:** “They will inspect my environment, show me what matters, prioritize it, and give me a useful roadmap.”
-
-**Proposed experience concept:** **Unknown → Observed → Prioritized → Roadmapped**.
-
-Narrative sequence:
-
-1. unknown environment / blind spots;
-2. what DE inspects;
-3. evidence becomes findings;
-4. findings receive business-impact context;
-5. priorities become an ordered roadmap;
-6. handoff to booking.
-
-**Material requirements:**
-
-- real/sanitized assessment sample;
-- real report/scorecard/roadmap structure;
-- bespoke diagnostic overlay/annotation system;
-- examples of finding prioritization without using fabricated customer data;
-- real explanation of what DE does/does not inspect;
-- a quiet booking handoff.
-
-**Important boundary:** Scrollcraft ends before the actual booking form. `/book` remains a utility surface.
-
----
-
-## 8. Next-wave candidates after the first four
-
-### Automation + AI
-
-Likely **A/B** and worthy of a distinct grammar after the first flagship proves the process.
-
-Potential signature concept: **manual handoffs collapse into an orchestrated business workflow with human oversight**.
-
-Use process/state choreography, not robot/brain art.
-
-### Industries
-
-Use one reusable editorial archetype with one bespoke industry pressure visualization per vertical. Do not build a completely unique cinematic site for each industry.
-
-### Trust / proof
-
-Mostly documentary. Strong material curation, evidence frames, reports, people, certifications, policies, and real proof. Minimal motion.
-
----
-
-## 9. What needs redesign in the existing site
-
-### 9.1 Keep
-
-- Layer 0 brand palette/type;
-- global navigation hierarchy unless a specific flagship brief proves a better temporary chapter navigator;
-- Store and Journal scoped color identities;
-- forms and transactional flows;
-- evidence truthfulness/classification;
-- accessibility foundations;
-- real product/portal/support surfaces;
-- canonical conversion routes.
-
-### 9.2 Add / improve
-
-#### A. Page archetypes
-
-Formalize reusable site archetypes:
-
-1. **Flagship Story**
-2. **Guided Solution**
-3. **Industry Editorial**
-4. **Evidence / Trust**
-5. **Utility**
-6. **Commerce**
-7. **Publication**
-
-A route chooses an archetype before visual treatment begins.
-
-#### B. DE diagram language
-
-This should become one of the strongest brand signatures.
-
-Needed primitives/grammar:
-
-- system/domain node;
-- relationship/flow edge;
-- trust/security boundary;
-- control gate;
-- risk/finding marker;
-- status/proof marker;
-- lifecycle/cadence marker;
-- human accountability node;
-- evidence annotation;
-- responsive simplification rules.
-
-The same language should work:
-
-- statically on ordinary pages;
-- interactively in guided pages;
-- choreographed inside Scrollcraft.
-
-#### C. Large visual stages
-
-Add better reusable large-scale layouts so important material can breathe without being trapped in rounded cards.
+| `/solutions` | B | One orientation system or capability relationship moment; otherwise fast navigation |
+| Managed Workplace | B | Lifecycle / identity / apps / devices can use one strong explanatory sequence |
+| BCDR / Backup | B | Failure → recovery path can use one sequence; avoid disaster-movie theatrics |
+| Threat Detection / Security Operations | B | One incident/control-chain explanation; never fake live telemetry |
+| Co-Managed IT | B | Shared-responsibility model benefits from a single visual handoff/ownership sequence |
+| Industry index | B | One shared client-profile visual mechanism, then normal navigation |
+| Individual industries | B/C | At most one industry-specific pressure/workflow visual; most content stays editorial |
+| About / Mission / Why DE | B/C | One strong identity/human moment; mostly typography, photography, proof |
+| Pricing overview | B/C | Explain operating-model fit; calculator itself remains utility UI |
+| Trust Center | C with selected B modules | Evidence dominates; isolated explanatory diagrams only |
+
+### C — Normal/editorial
 
 Examples:
 
-- full-bleed technical figure + editorial copy;
-- paper/graphite split spread;
-- evidence-stage with real artifact;
-- diagram stage with metadata rail;
-- photography stage with restrained caption/proof;
-- comparison stage that does not look like a SaaS pricing grid.
+- resources index;
+- blog/journal;
+- case studies;
+- team;
+- compliance descriptions;
+- press;
+- location pages;
+- datasheets;
+- security updates;
+- FAQ-heavy pages;
+- most generic subject/service pages.
 
-#### D. Material registry / provenance
+Motion should be entrances, state changes, and restrained continuity—not Scrollcraft theatre.
 
-Every flagship material needs a documented source/classification and intended placements. Assets should be produced as families, not isolated one-offs.
+### D — Utility / transactional
 
-#### E. Motion language boundaries
+No full Scrollcraft:
 
-Motion must encode:
+- Contact forms;
+- `/book` mechanics;
+- support ticket submission;
+- remote support;
+- pay invoice;
+- quote wizard;
+- quote confirmation;
+- Store checkout;
+- cart/payment steps;
+- portal login/signup/reset;
+- portal dashboard/task screens;
+- DE Desk operational UI;
+- legal documents;
+- vulnerability disclosure;
+- account settings;
+- client marketplace workflows.
 
-- state change;
-- hierarchy;
+Utility surfaces should be beautifully boring: fast, clear, trustworthy.
+
+---
+
+## 4. Current Scrollcraft audit
+
+### 4.1 What is genuinely strong
+
+Keep and generalize these principles:
+
+- story first, devices second;
+- intentional emotional/energy curve;
+- authored silence;
+- one dominant peak rather than constant intensity;
+- meaningful reduced-motion parity;
+- real proof instead of fabricated success;
+- outcome-driven interactivity;
+- editorial typography as a compositional tool;
+- deliberate dark/paper chapter contrast;
+- a signature interaction that communicates the business idea without requiring a paragraph.
+
+### 4.2 What should not propagate unchanged
+
+#### Current Graphite Illumination plates
+
+Useful as exploration, not the finished answer for the whole brand.
+
+Keep selectively as texture/reference, but do not let every DE story resolve into:
+
+- graphite;
+- violet energy;
+- abstract lines;
+- generative technical geometry.
+
+That becomes visual sameness and starts reading as style-for-style’s-sake.
+
+#### Persistent environment map / fixed folio
+
+Retire as the default pattern for new work.
+
+The fingerprint registry already records a collision between `de-v2` and `proactive-ecosystem-amplify`: both converged on chaptered editorial, a fixed folio/live environment map, type-led hero, and an accumulating-map signature.
+
+Future flagships must clear both existing fingerprints and should not combine that grammar and nav treatment again.
+
+#### Generic technical abstraction
+
+A diagram must explain something specific. HUD and technical chrome must communicate metadata, state, boundary, or evidence. Decorative complexity is not technical credibility.
+
+#### Desktop-first compression
+
+Mobile must be designed as its own composition. The goal is conceptual parity, not preserving desktop geometry at tiny scale.
+
+---
+
+## 5. Material strategy
+
+Every substantial scene gets one primary material class.
+
+### A. Real DE evidence
+
+Highest-value material.
+
+Use:
+
+- DE Desk / Ask DE;
+- assessment outputs;
+- roadmaps;
+- solution builder;
+- real client portal/interface evidence where safe;
+- reports / documentation;
+- real operational artifacts.
+
+**Source:** capture/reuse real DE product and process assets.
+
+### B. Real people and place
+
+Use:
+
+- founder/principal;
+- actual working sessions;
+- Chandler/Phoenix context;
+- real office/process details;
+- real engineering/assessment activity.
+
+**Source:** existing approved photography plus new capture where needed.
+
+**Never:** generated DE staff/client likenesses presented as real.
+
+### C. Bespoke explanatory graphics
+
+This should become one of DE’s strongest proprietary visual signatures.
+
+Create:
+
+- technology architecture;
+- business-system relationships;
+- identity/control boundaries;
+- workflow orchestration;
+- recovery paths;
+- assessment findings/roadmaps;
+- coverage/cadence diagrams.
+
+**Source:** SVG/vector/canvas/HTML using the canonical DE diagram vocabulary.
+
+The same visual language should work statically on ordinary pages and animate inside Scrollcraft experiences.
+
+### D. High-end art-directed illustrative/environment imagery
+
+Purpose: atmosphere, transitions, emotional scale.
+
+Create as coherent sets around concepts such as:
+
+- fragmentation;
+- connection;
+- boundary;
 - continuity;
-- causality;
-- feedback.
+- orchestration;
+- intelligence;
+- recovery;
+- human oversight.
 
-Motion must not exist solely to prove that something can animate.
+**Source:** generation + compositing + vector/diagram overlays where useful.
+
+No generated human “DE employees.” No generic AI art collage.
+
+### E. Sourced/licensed imagery
+
+Use only when reality gives a stronger result than generation/capture.
+
+Potential use:
+
+- Arizona environment;
+- architectural details;
+- business environments;
+- rare editorial images that fit the complete set.
+
+Do not combine random stock photography from incompatible sources.
+
+---
+
+## 6. Asset-board gate
+
+Before a Level A or substantial Level B page is coded, create this table for every scene:
+
+| Field | Required answer |
+|---|---|
+| Visitor must understand/believe | Exact point of the scene |
+| Primary material | What carries the idea visually |
+| Source | REUSE / CAPTURE / CREATE / GENERATE / FIND-LICENSE |
+| Evidence class | LIVE / SANITIZED REAL / EXAMPLE / ILLUSTRATIVE / decorative |
+| Static keyframe | What the scene looks like without motion |
+| Motion job | What movement explains that static material cannot |
+| Mobile composition | How it is redesigned at 390 |
+| Reduced motion | What state changes remain |
+| Provenance | Source/license/capture/generation record |
+
+**No Level A/B coding begins without this board.**
+
+---
+
+## 7. Flagship creative briefs
+
+### 7.1 Homepage
+
+#### Job
+
+Who DE is → what is broken → what DE changes → outcomes → who DE serves → how it is operated → proof → human/local trust → assessment.
+
+#### Visitor before
+
+“DE is probably another MSP/security company.”
+
+#### Visitor after
+
+“They operate the entire technology environment as one system, and I want them to look at mine.”
+
+#### Signature direction
+
+**The Operating Blueprint** — layered technical vellum/film representing people, identity, devices, network, cloud/data, security, business systems, automation, recovery, and operating cadence. The layers begin misregistered and resolve into one coherent operating system under DE.
+
+This preserves the strategic power of “the environment wakes up” without repeating the old fixed node-map treatment.
+
+#### Peak
+
+One precise alignment event. Independent operating layers register around shared anchors, boundaries close, dependencies and ownership become legible, and restrained violet transmission appears only after coherence.
+
+#### Materials
+
+Primary:
+
+- bespoke Operating Blueprint diagram;
+- generated/created vellum/graphite transmission materials;
+- real assessment / DE Desk / roadmap proof;
+- real founder and Arizona photography.
+
+Secondary:
+
+- sourced industry facts;
+- editorial dossier graphics.
+
+#### Motion budget
+
+- 1 signature behavior;
+- 1 major peak;
+- up to 3 supporting transitions;
+- explicit quiet sections.
+
+#### Current final-homepage material authority
+
+`design/SCROLLCRAFT-HOMEPAGE-MATERIAL-BOARD.md`.
+
+---
+
+### 7.2 ProActive Ecosystem
+
+#### Job
+
+Explain that ProActive is an operating model, not a bundle of products.
+
+#### Visitor before
+
+“Managed services = a list of tools and support.”
+
+#### Visitor after
+
+“This environment is observed, decided on, protected, improved, documented, and reviewed continuously.”
+
+#### Distinct signature direction
+
+**Operating Cadence / Service Blueprint**
+
+The page should not use the homepage’s alignment peak or a second accumulating margin map.
+
+Show a business environment across time/cadence:
+
+**Observe → Decide → Protect → Improve**
+
+with real activities, ownership, evidence, strategy, and change feeding the next cycle.
+
+#### Materials
+
+- cadence/service-blueprint diagram;
+- real roadmap/QBR/assessment artifacts;
+- package/tier facts;
+- selective operational evidence.
+
+#### Motion budget
+
+One meaningful continuous cadence sequence + one supporting evidence reveal.
+
+---
+
+### 7.3 How DE Protects
+
+#### Job
+
+Explain security as a property of the environment, not a bolted-on SKU.
+
+#### Visitor before
+
+“Security = antivirus, firewall, monitoring.”
+
+#### Visitor after
+
+“Protection crosses identity, devices, network, email/cloud, data/recovery, and response, with controls and ownership across the environment.”
+
+#### Signature direction
+
+**Protection Boundaries**
+
+Begin with the business system itself. Different boundaries progressively become legible:
+
+- identity/control;
+- endpoint/device;
+- network/access;
+- data/application;
+- monitoring/response;
+- recovery/continuity.
+
+The boundaries interlock; they do not become six floating product cards.
+
+#### Materials
+
+- DE diagram primitives;
+- real assessment/control evidence;
+- real threat/public facts where useful;
+- EXAMPLE incident flow only if clearly classified.
+
+#### Motion budget
+
+One protection-boundary sequence. No fake live SOC wall.
+
+---
+
+### 7.4 Cyber Risk Assessment
+
+#### Job
+
+Make the assessment concrete and valuable before asking for conversion.
+
+#### Visitor before
+
+“Assessment = sales discovery / generic scan.”
+
+#### Visitor after
+
+“They will examine the environment, show me what matters, prioritize it, and give me a path forward.”
+
+#### Signature direction
+
+**Unknown → Observed → Prioritized → Roadmapped**
+
+A deliberately incomplete environment gains:
+
+1. observations;
+2. evidence;
+3. findings;
+4. severity/priority;
+5. dependencies;
+6. remediation sequencing;
+7. roadmap ownership.
+
+#### Materials
+
+- real/sanitized assessment evidence;
+- findings matrix;
+- roadmap;
+- explanatory diagrams;
+- real process photography.
+
+#### Motion budget
+
+One assessment transformation sequence; the form itself remains normal utility UI.
+
+---
+
+## 8. Meshing with the existing DE site
+
+### Existing DE system owns
+
+- navigation;
+- brand tokens;
+- typography;
+- buttons/links;
+- forms;
+- cards where cards are appropriate;
+- evidence classifications;
+- Store/Journal special palettes;
+- portal/transactional UX;
+- accessibility conventions;
+- content truthfulness.
+
+### Scrollcraft owns
+
+- narrative timing;
+- scroll state;
+- scene sequencing;
+- one-off signature interactions;
+- staged transformations;
+- visual continuity across explanatory chapters.
+
+### Shared primitives to strengthen
+
+#### Large visual stages
+
+Create/reuse large editorial/evidence stages so flagship pages are not composed from endless rounded cards.
+
+#### Diagram language
+
+DE diagrams should become a brand asset across both static and animated surfaces.
+
+One vocabulary; multiple stories.
+
+#### Evidence frames
+
+Real artifacts should use the same evidence/truth system whether they appear on a normal Trust page or inside a Scrollcraft sequence.
+
+---
+
+## 9. Existing-site redesign implications
+
+### Keep
+
+- foundational palette;
+- typography;
+- global navigation logic;
+- Store electric system;
+- Journal amber system;
+- transactional forms/flows;
+- portal UX;
+- truth/evidence rules;
+- accessibility foundation.
+
+### Improve
+
+#### Page archetypes
+
+Every page should first be identified as:
+
+1. Flagship Story
+2. Guided Solution
+3. Industry Editorial
+4. Evidence / Trust
+5. Normal Marketing / Subject
+6. Utility
+7. Commerce
+8. Publication
+
+#### Visual stages
+
+Use fewer giant card containers and more intentional large media/evidence stages.
+
+#### Diagram system
+
+Review and elevate the existing diagram primitives before propagation. The goal is not more diagrams; it is a coherent, premium explanatory vocabulary.
+
+#### Content compression
+
+Flagship pages should edit and sequence existing content rather than stacking every current component into a longer page.
 
 ---
 
 ## 10. Motion budget policy
 
-### Level A — Full flagship
+### Level A — Flagship
 
-Maximum by default:
+Maximum target:
 
-- **1 signature behavior**;
-- **1 dominant peak**;
-- **2–4 supporting motion families**;
-- deliberate static/quiet chapters;
-- no repeated lead device in adjacent major scenes;
-- reduced-motion version carries identical meaning.
+- 1 signature interaction;
+- 1 major peak;
+- 2–4 supporting motion devices;
+- clear authored silence/quiet areas.
 
 ### Level B — Guided
 
-Maximum by default:
+Maximum target:
 
-- **1 meaningful scroll sequence**;
-- **1 secondary reveal/state system**;
-- rest is normal document flow.
+- 1 meaningful scroll sequence;
+- 1 secondary reveal/state system.
 
 ### Level C — Normal
 
 Only:
 
-- entrances where useful;
-- small section transitions;
-- diagram/state micro-animation;
-- interaction feedback.
+- small entrances;
+- state feedback;
+- continuity/hierarchy motion.
 
 ### Level D — Utility
 
-Only functional UI feedback.
+Functional feedback only.
 
-No scroll-jacking, no pinned narrative, no decorative parallax.
-
----
-
-## 11. Technical integration principles
-
-This plan is design-led, but implementation must preserve the site as an application.
-
-1. **Progressive enhancement** — core content remains understandable without Scrollcraft.
-2. **Route-level loading** — Scrollcraft code/assets load only on opted-in A/B routes.
-3. **No global side effects** — scoped CSS, scoped event handlers, clean teardown.
-4. **Existing DE components remain canonical** for navigation, CTA, forms, evidence classifications, Store/Journal scopes, and utility UI.
-5. **Reduced motion is first-class**, not an afterthought.
-6. **Mobile gets a designed composition**, not a desktop simulation squeezed into 390px.
-7. **Truth claims stay static/accurate** — prices, SLAs, metrics, dates, and evidence cannot animate through false intermediate values.
-8. **SEO/document semantics survive** — headings/content remain accessible and crawlable.
-9. **Performance budget is part of art direction** — do not ship huge video/3D payloads simply because they look impressive in a lab.
-10. **No new generic Scrollcraft wrapper across every page.** Each A/B page earns and owns its choreography.
+This is a budget, not a quota. Use less whenever less is stronger.
 
 ---
 
-## 12. Production process / gates
+## 11. Implementation order
 
-### Phase 0 — Inventory / showroom
+### Phase 0 — inventory / gallery
 
-Compare the rendered surfaces now available:
+Maintain a review surface for existing Scrollcraft work and evidence. Do not recreate the work in a third-party app.
 
-- current `/` Version B release;
-- `/classic` prior SPA homepage;
-- `/v2` reference path where retained;
-- ProActive Scrollcraft amplification;
-- Scrollcraft QA/contact sheets, briefs, fingerprint registry, generated plates, and quiet-tier pages.
+### Phase 1 — route experience map
 
-The goal is to decide from rendered evidence, not memory.
+This document establishes the initial map. Before implementation, reconcile it against the actual current route set and future route consolidation.
 
-### Phase 1 — Experience map
+### Phase 2 — flagship creative/material boards
 
-- finish route classification (`A/B/C/D`);
-- verify dynamic service/industry routes against their actual content;
-- identify any route whose classification needs promotion/demotion.
+Start with homepage.
 
-**Deliverable:** approved route matrix.
+Deliver:
 
-### Phase 2 — Creative direction
+- scene-by-scene asset table;
+- keep/redesign/reject audit;
+- material creation/capture/license plan;
+- static keyframes;
+- responsive storyboards.
 
-For each Level A route:
+### Phase 3 — material production
 
-- visitor before/after belief;
-- story spine;
-- energy curve;
-- signature move;
-- peak;
-- authored silence;
-- material board;
-- mobile interpretation;
-- reduced-motion interpretation.
+Create/capture/generate/find the P0 material set **before coding the final homepage**.
 
-**No code.**
+### Phase 4 — static storyboard
 
-### Phase 3 — Material production
+Ten-scene 1440 and mobile keyframes. If the still story is weak, return to material production.
 
-Create/capture/find essential assets before implementation.
+### Phase 5 — first flagship implementation
 
-Gate question:
+Homepage only.
 
-> If all motion were removed, would this material board already look like a premium, coherent DE campaign and explain the story?
+### Phase 6 — extract reusable primitives
 
-If no, do not code yet.
+Extract only genuinely reusable primitives:
 
-### Phase 4 — Motion storyboard
+- stages;
+- diagram vocabulary;
+- evidence treatments;
+- selected motion helpers.
 
-Storyboard key states and transitions:
+Do not extract a reusable “homepage template.”
 
-- what is visible at entry;
-- what changes and why;
-- what is held;
-- what exits;
-- how the next section receives the state;
-- mobile/reduced variants.
+### Phase 7 — selective rollout
 
-### Phase 5 — Build/refine one flagship
+ProActive → Protect → Assessment → Automation + AI.
 
-**Homepage first**, after its material board is approved.
-
-Do not build four flagships concurrently.
-
-Because Version B is already serving as the homepage release lane after #173, “build homepage first” now means **evaluate and refine/replace deliberately from that baseline**, not blindly start a third unrelated homepage.
-
-### Phase 6 — Extract primitives
-
-Extract only genuinely reusable **DE primitives**:
-
-- diagram primitives;
-- evidence stages;
-- media stages;
-- motion/state utilities.
-
-Do **not** extract a reusable homepage choreography and spray it across other pages.
-
-### Phase 7 — Selective propagation
-
-Recommended order:
-
-1. Homepage
-2. ProActive Ecosystem
-3. How DE Protects
-4. Cyber Risk Assessment
-5. Automation + AI
-6. Industries selective layer
-7. Trust/proof refinement
-8. other solution pages only when a specific brief proves Scrollcraft is useful
+Every build must pass the Scrollcraft fingerprint gate and use a distinct signature behavior.
 
 ---
 
-## 13. Acceptance criteria
+## 12. Required review gates
 
-A flagship is not accepted because it “looks cool.”
+### Before material production
 
-It must pass all of these:
+- creative brief approved;
+- current asset audit complete;
+- source/provenance rules set.
 
-### Story
+### Before implementation
 
-- the visitor can state what changed in their understanding;
-- one moment is clearly the peak;
-- signature behavior is memorable and tied to the argument;
-- quiet sections exist;
-- content and customer journey remain primary.
+- material board approved;
+- still storyboard approved;
+- 390 composition approved;
+- reduced-motion states approved;
+- fingerprint gate passes;
+- no active concurrency collision.
 
-### Material quality
+### Before PR
 
-- every major visual has a reason to exist;
-- evidence outranks decoration;
-- generated/illustrative work is coherent, provenance-aware, and not generic AI art;
-- typography and imagery have intentional negative-space relationships;
-- materials still look excellent as static frames.
-
-### Integration
-
-- unmistakably DE, not a Scrollcraft demo;
-- Store/Journal/portal boundaries remain intact;
-- ordinary site components feel deliberately connected to the experience;
-- no duplicated design system.
-
-### UX / accessibility
-
-- 390 / 768 / 1440 authored and reviewed;
-- reduced motion retains meaning;
-- keyboard/focus/content order remains correct;
+- rendered 390 / 768 / 1440;
+- reduced motion;
+- accessibility;
 - no dead scroll;
-- no accidental scroll traps;
-- no reading-obstructive motion.
+- performance/bundle review;
+- real content/evidence review;
+- concurrency audit.
 
-### Engineering
+### Before LIVE
 
-- typecheck/tests/build clean;
-- route-level/lazy load where applicable;
-- no global CSS/JS leakage;
-- performance budgets defined and met;
-- latest-main concurrency audit complete;
-- `MERGED` and `LIVE` tracked separately.
-
----
-
-## 14. Immediate next decision package
-
-Before any next flagship implementation, produce the **Homepage Material Board** containing at minimum:
-
-1. **Existing assets worth keeping** — exact files/captures with keep/redesign/reject verdict;
-2. **New real evidence needed** — screenshots/reports/assessment/roadmap/product captures;
-3. **Photography shot list** — people/place/work details;
-4. **Bespoke diagram list** — exact explanatory graphics to author;
-5. **Atmospheric art set brief** — only the concepts that actually need illustrative material;
-6. **Sourced/licensed imagery search list** — only where external reality is stronger;
-7. **Desktop/tablet/mobile crops/compositions**;
-8. **static/reduced-motion keyframes**;
-9. **provenance/classification for every item**;
-10. **one storyboard showing the page before any production code is written**.
-
-Only after the material board is approved should the next implementation/refinement begin.
+- merge approved;
+- exact merged SHA deployed;
+- public route verified;
+- rollback path known;
+- production visual check.
 
 ---
 
-## 15. Final design position
+## 13. Current homepage material gate
 
-The desired finished site is **not** one giant Scrollcraft experience.
+The approved next deliverable is `design/SCROLLCRAFT-HOMEPAGE-MATERIAL-BOARD.md`.
 
-It should feel like a sophisticated publication/product system in which intensity is intentional:
+That board defines:
 
-- Homepage — cinematic/editorial flagship
-- ProActive — operating cadence/system
-- Protection — layered boundaries / attack-path understanding
-- Assessment — diagnostic transformation
-- Automation + AI — workflow orchestration
-- Industries — concise editorial dossiers
-- Trust — documentary evidence
-- Resources — publication
-- Contact/FAQ/legal — beautifully quiet
-- Store/checkout/portal/support — precise, fast, functional
+- **The Operating Blueprint** signature concept;
+- `/v2` keep/redesign/reject decisions;
+- the existing SPA requirements that must survive;
+- the new REGISTER / OPERATE physical material family;
+- 24 explicit material assets with REUSE/CAPTURE/CREATE/GENERATE/FIND-LICENSE decisions;
+- the ten-scene homepage storyboard;
+- real artifact capture plan;
+- photography shot plan;
+- generated illustrative material briefs;
+- responsive/reduced-motion composition requirements;
+- the still-image review wall;
+- the P0 material gate required before code.
 
-**The entire site should share one design intelligence without sharing one visual trick.**
+No homepage implementation is authorized by this plan alone.
