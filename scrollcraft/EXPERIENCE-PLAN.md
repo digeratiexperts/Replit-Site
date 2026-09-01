@@ -17,11 +17,13 @@ Companion documents (session artifacts, review-only):
 
 **What DE is.** A Managed Security Service Provider and an IT Managed
 Services company. Managed security and managed IT are the offering every
-page sells and every flagship is built around. DE also does AI and the rest
-of the fourteen domains, and each has its scope; AI is one contained domain,
-never the lead and never a flagship of its own. (Corrected 2026-09-01 at
-Joe's direction: an earlier draft carried an Automation + AI flagship, which
-overstated AI against the real offering.)
+page sells, the flagships are built around them, and they are developed
+first and to the highest finish. DE also does AI and the rest of the
+fourteen domains, each within its scope. AI material is wanted (Joe,
+2026-09-01), but AI is one contained domain and never the lead: Automation +
+AI stays in the plan as the last flagship, built only after the four service
+flagships, and never given more prominence in the information architecture
+than managed security and managed IT.
 
 ## Where things stand
 
@@ -49,7 +51,7 @@ never receive Scrollcraft treatment.
 
 142 routed pages plus the static `/v2` preview tree.
 
-### Level A — flagship narratives (4)
+### Level A — flagship narratives (4 services + 1 last)
 
 | Route | Note |
 |---|---|
@@ -57,6 +59,7 @@ never receive Scrollcraft treatment.
 | `/solutions/proactive-ecosystem` | New grammar: a living operating cadence, not another map assembly. Brief 2. |
 | How We Protect — **route TBD** | Default proposal: elevate `/solutions/unified-security`. Brief 3. |
 | `/assessment` | The conversion flagship: unknown → observed → findings → prioritized → roadmap. Brief 4. |
+| Automation + AI — **last**, route TBD | Built only after the four service flagships; default `/solutions/automation-ai`; subordinate in the IA. Brief 5. |
 
 ### Level B — selective moments (10)
 
@@ -65,10 +68,7 @@ never receive Scrollcraft treatment.
 nonprofits: one industry-specific moment each) · `/about/mission-values` (one
 editorial movement: independent + technical + local + principal-led) ·
 `/store` (one controlled branded introduction; motion gets out of the way once
-shopping starts) · the AI and automation domain, wherever it is presented
-(inside the ProActive story or on a future solutions page): at most one
-contained Level B moment, framed as one of fourteen domains DE operates,
-never a flagship.
+shopping starts).
 
 ### Level C — editorial / normal marketing (~45)
 
@@ -209,12 +209,12 @@ here:
 4. **Cyber Risk Assessment — unknown to roadmap.** An incomplete environment
    inspected, annotated, classified and prioritized under scroll; findings
    resolve into a roadmap; the real promises typeset plainly at the close.
-Automation + AI is not a flagship. It is one contained domain; if it gets
-any scroll treatment at all it is a single Level B moment (manual handoffs
-collapsing into one path with a human approval gate still lit), framed as
-one of the fourteen domains a managed security and managed IT company
-operates. No robots, no AI blobs, and never more prominence than the
-security and managed IT pages.
+5. **Automation + AI — manual work to orchestrated systems (last).** Built
+   only after the four service flagships. Handoffs collapse into one
+   automated path while a human approval gate stays lit, framed as one of
+   the fourteen domains a managed security and managed IT company operates.
+   No robots, no AI blobs, and never more prominence in the IA than the
+   security and managed IT pages.
 
 ## 07 · Rollout order and gates
 
@@ -227,7 +227,7 @@ security and managed IT pages.
 | P4 Motion storyboards | Chapter by chapter for the homepage | Storyboard + asset table approved |
 | P5 Build one flagship | Homepage only; fingerprint gate; harness at all widths; smoke expectations updated with the release; staged rollout with instant revert | Joe's verdict on the live candidate |
 | P6 Integrate | Reusable DE primitives, not reusable page designs | Primitives documented |
-| P7 Selective propagation | ProActive → How We Protect → Assessment, each with a distinct fingerprint; then Level B moments (industries, solutions index, about, store introduction, and the contained AI moment last) | Per page, same rigor |
+| P7 Selective propagation | ProActive → How We Protect → Assessment, each with a distinct fingerprint; then Automation + AI, last; then Level B moments (industries, solutions index, about, store introduction) | Per page, same rigor |
 
 ## 08 · Standing rules the program inherits
 
