@@ -114,10 +114,14 @@ import {
   resolvePortalHubAccountId,
 } from "./integrations/techSalesClient";
 import { registerDeSyncRoutes } from "./integrations/deSyncRoutes";
+import { resolveJwtSecret } from "./config/authSecrets";
+import { loginRateLimiter, formSubmissionRateLimiter, apiGeneralRateLimiter } from "./middleware/rateLimiter";
 import { enqueueOutbox } from "./integrations/deSyncStore";
 import { PRIMARY_PHONE } from "@shared/companyContact";
 
-const JWT_SECRET = process.env.JWT_SECRET || randomBytes(32).toString('hex');
+// Canonical JWT secret — resolved per call so dotenv/env load order cannot
+// split signing and verification across different secrets (see config/authSecrets).
+const jwtSecret = () => resolveJwtSecret();
 const SALT_ROUNDS = 12;
 
 /** HttpOnly JWT cookie — survives localStorage loss; shared across digeratexperts.com hosts. */
@@ -202,7 +206,7 @@ export function authMiddleware(req: AuthenticatedRequest, res: Response, next: N
   }
   
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as JWTPayload;
+    const decoded = jwt.verify(token, jwtSecret()) as JWTPayload;
     const live = portalAuthGetUser(decoded.email) || (decoded.userId ? findUserById(decoded.userId) : null);
     // Fail closed: a validly-signed JWT for a user with no live record (deleted, never
     // indexed, or a store that has not finished loading) must be denied, not fall back to
@@ -382,7 +386,7 @@ function publicPortalUser(user: any, storeRole: StoreRole) {
 
 // Generate JWT token
 function generateToken(userId: string, email: string, role: string = "user"): string {
-  return jwt.sign({ userId, email, role }, JWT_SECRET, { expiresIn: '24h' });
+  return jwt.sign({ userId, email, role }, jwtSecret(), { expiresIn: '24h' });
 }
 
 // Hash password securely
@@ -644,7 +648,7 @@ export async function registerRoutes(app: Express) {
   // ===== AUTHENTICATION ROUTES =====
   
   // Register new user with hashed password
-  app.post("/api/auth/register", async (req: AuthenticatedRequest, res: Response) => {
+  app.post("/api/auth/register", formSubmissionRateLimiter, async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { username, email, password, fullName } = req.body;
       
@@ -692,7 +696,7 @@ export async function registerRoutes(app: Express) {
   });
 
   // Login with password verification
-  app.post("/api/auth/login", async (req: AuthenticatedRequest, res: Response) => {
+  app.post("/api/auth/login", loginRateLimiter, async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { email, password } = req.body;
       
@@ -2165,7 +2169,7 @@ export async function registerRoutes(app: Express) {
   }>();
 
   // Portal Register Endpoint — creates prospect client + durable user
-  app.post("/api/portal/register", [verifyTurnstile, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+  app.post("/api/portal/register", [formSubmissionRateLimiter, verifyTurnstile, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { email, username, password, companyName, fullName } = req.body;
 
@@ -2371,7 +2375,7 @@ export async function registerRoutes(app: Express) {
   });
 
   // Forgot Password — request reset link
-  app.post("/api/portal/forgot-password", [verifyTurnstile, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+  app.post("/api/portal/forgot-password", [formSubmissionRateLimiter, verifyTurnstile, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { email } = req.body;
       if (!email) return res.status(400).json({ message: "Email is required" });
@@ -2405,7 +2409,7 @@ export async function registerRoutes(app: Express) {
   });
 
   // Reset Password — submit new password using token
-  app.post("/api/portal/reset-password", [validateInput], async (req: AuthenticatedRequest, res: Response) => {
+  app.post("/api/portal/reset-password", [formSubmissionRateLimiter, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { token, password } = req.body;
       if (!token || !password) return res.status(400).json({ message: "Token and new password are required" });
@@ -2453,7 +2457,7 @@ export async function registerRoutes(app: Express) {
       else if (client?.serviceType === 'comanaged') storeRole = 'comanaged';
     }
 
-    const token = jwt.sign(buildPortalJwtClaims(user, storeRole), JWT_SECRET, { expiresIn: "24h" });
+    const token = jwt.sign(buildPortalJwtClaims(user, storeRole), jwtSecret(), { expiresIn: "24h" });
 
     res.cookie("sessionId", sessionId, portalCookieOptions());
     setPortalAuthCookie(res, token);
@@ -2484,7 +2488,7 @@ export async function registerRoutes(app: Express) {
       else if (client?.serviceType === "comanaged") storeRole = "comanaged";
     }
 
-    const token = jwt.sign(buildPortalJwtClaims(user, storeRole), JWT_SECRET, { expiresIn: "24h" });
+    const token = jwt.sign(buildPortalJwtClaims(user, storeRole), jwtSecret(), { expiresIn: "24h" });
 
     res.cookie("sessionId", sessionId, portalCookieOptions());
     setPortalAuthCookie(res, token);
@@ -2649,7 +2653,7 @@ export async function registerRoutes(app: Express) {
   });
 
   /** Public beacon: login page loaded (door knock). Rate-limited lightly via no auth. */
-  app.post("/api/portal/login-knocks/ping", async (req: AuthenticatedRequest, res: Response) => {
+  app.post("/api/portal/login-knocks/ping", apiGeneralRateLimiter, async (req: AuthenticatedRequest, res: Response) => {
     try {
       await recordLoginKnock({
         kind: "page_hit",
@@ -2734,7 +2738,7 @@ export async function registerRoutes(app: Express) {
   // Alias for VPS ZOHO_PORTAL_OIDC_REDIRECT_URI / Zoho console registration
   app.get("/api/zoho/oauth/callback", handlePortalZohoCallback);
 
-  app.post("/api/portal/login", [verifyTurnstile, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+  app.post("/api/portal/login", [loginRateLimiter, verifyTurnstile, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { email, password } = req.body;
 
@@ -2820,7 +2824,7 @@ export async function registerRoutes(app: Express) {
   });
 
   // MFA Verify — complete login after providing MFA code
-  app.post("/api/portal/mfa/verify-login", [validateInput], async (req: AuthenticatedRequest, res: Response) => {
+  app.post("/api/portal/mfa/verify-login", [loginRateLimiter, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { mfaToken, code } = req.body;
       if (!mfaToken || !code) {
@@ -4273,7 +4277,7 @@ export async function registerRoutes(app: Express) {
       const authHeader = req.headers.authorization || "";
       const token = authHeader.split(" ")[1];
       if (token) {
-        const decoded = jwt.verify(token, JWT_SECRET) as any;
+        const decoded = jwt.verify(token, jwtSecret()) as any;
         jwtImpersonation = decoded.impersonatingCompanyId || null;
         if (decoded.impersonatingCompanyName && !req.user?.clientId) {
           /* keep */
@@ -4591,7 +4595,7 @@ export async function registerRoutes(app: Express) {
           impersonatingCompanyId: companyId,
           impersonatingCompanyName: company.companyName,
         }, 
-        JWT_SECRET, 
+        jwtSecret(), 
         { expiresIn: '4h' }
       );
 
@@ -4621,7 +4625,7 @@ export async function registerRoutes(app: Express) {
           email: req.user?.email, 
           role: "admin",
         }, 
-        JWT_SECRET, 
+        jwtSecret(), 
         { expiresIn: '24h' }
       );
 
@@ -5497,44 +5501,28 @@ export async function registerRoutes(app: Express) {
         return res.status(404).json({ error: "Order not found" });
       }
 
-      const matchedPaymentSession =
-        order.zohoPaymentSessionId === id || order.stripeSessionId === id;
-
-      const confirmationPayload = {
-        id: order.id,
-        orderNumber: order.orderNumber,
-        status: order.status,
-        paymentMethod: order.paymentMethod,
-        lineItems: order.lineItems,
-        subtotal: order.subtotal,
-        tax: order.tax,
-        total: order.total,
-        billingEmail: order.billingEmail,
-        billingName: order.billingName,
-        billingCompany: order.billingCompany,
-        paidAt: order.paidAt,
-        createdAt: order.createdAt,
-      };
-
-      // Payment-provider return URLs may look up by session id (redacted payload).
-      if (matchedPaymentSession) {
-        return res.json(confirmationPayload);
-      }
-
-      // Recent checkout confirmation by order id (Zoho success_url) — redacted only,
-      // within 24h, and only when a payment session was attached (not arbitrary UUID probe).
-      const createdMs = order.createdAt ? new Date(order.createdAt).getTime() : 0;
-      const isFreshCheckout =
-        !!order.zohoPaymentSessionId &&
-        createdMs > 0 &&
-        Date.now() - createdMs < 24 * 60 * 60 * 1000 &&
-        (order.status === "awaiting_payment" ||
-          order.status === "paid" ||
-          order.status === "processing" ||
-          order.status === "completed" ||
-          order.status === "pending");
-      if (isFreshCheckout && order.id === id) {
-        return res.json(confirmationPayload);
+      // Post-checkout confirmation requires proof of possession: the HMAC
+      // confirmation token issued with the checkout session (`ct` query param).
+      // Knowing an order id or payment session id alone (browser history,
+      // Referer, logs) no longer returns customer billing details.
+      const { isValidOrderConfirmationToken } = await import("./orderConfirmationToken");
+      if (isValidOrderConfirmationToken(order.id, req.query.ct)) {
+        // Redacted payload: exactly what the confirmation page renders.
+        return res.json({
+          id: order.id,
+          orderNumber: order.orderNumber,
+          status: order.status,
+          paymentMethod: order.paymentMethod,
+          lineItems: order.lineItems,
+          subtotal: order.subtotal,
+          tax: order.tax,
+          total: order.total,
+          billingEmail: order.billingEmail,
+          billingName: order.billingName,
+          billingCompany: order.billingCompany,
+          paidAt: order.paidAt,
+          createdAt: order.createdAt,
+        });
       }
 
       // Full order record requires ownership
@@ -5545,7 +5533,7 @@ export async function registerRoutes(app: Express) {
       }
       let decoded: JWTPayload;
       try {
-        decoded = jwt.verify(token, JWT_SECRET) as JWTPayload;
+        decoded = jwt.verify(token, jwtSecret()) as JWTPayload;
       } catch {
         return res.status(401).json({ error: "Invalid token" });
       }

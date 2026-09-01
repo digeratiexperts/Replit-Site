@@ -57,25 +57,16 @@ claims:
     status: active
     started: 2026-09-01
     note: >-
-      Version B experiment: an isolated, independently runnable Scrollcraft
-      interpretation of the DE site under scrollcraft/builds/de-v2. Touches no
-      production file; never merges over production without Joe's explicit
-      instruction.
-  - id: de-desk-inline-login-card
-    issue: 153
-    owner: claude
-    subsystem: de-desk-auth
-    branch: claude/dynamic-login-card-chat-ve39il
-    base_sha: 529a7da90362fab81b6226907ac37d0212ab096c
-    files:
-      - client/src/components/DeskLoginCard.tsx
-      - client/src/components/DeskLoginCard.test.ts
-      - client/src/components/ZohoASAPWidget.tsx
-      - client/src/components/deDeskReferenceStyle.ts
-      - client/src/lib/portalUrls.ts
-      - client/src/hooks/useStoreAuth.ts
-    status: active
-    started: 2026-08-31
+      Version B: an isolated, independently runnable Scrollcraft
+      interpretation of the DE site under scrollcraft/builds/de-v2. Built
+      touching no production file. 2026-09-01: Joe explicitly authorized
+      merge and go-live in the build session; PR #164 merges the build,
+      and a follow-up integration PR routes it as the public homepage.
+# de-desk-inline-login-card (issue 153, branch claude/dynamic-login-card-chat-ve39il)
+# RETIRED 2026-09-01: merged via PR #160 (main @ 3fc5709). Deploy job
+# "Deploy and verify production VPS" on run 33469181603 succeeded, including
+# the production runtime verification step. Issue 153 stays open for the
+# passkey rebuild; the in-chat login slice is done.
 # fable-visual-batch (issue 118, branch claude/fable-visual-batch) RETIRED
 # 2026-08-31: merged via PR #148 (main @ 8a20592). Confirmed
 # `git diff origin/main origin/claude/fable-visual-batch` is empty — no

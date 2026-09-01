@@ -83,7 +83,9 @@ const QuoteRequest = () => {
           description: "Please sign in to the Client Portal to submit a quote request.",
           variant: "destructive",
         });
-        navigate("/portal/login?redirect=/store/quote-request");
+        navigate(
+          `/portal/login?returnTo=${encodeURIComponent("/internal/warehouse/quote-request")}`,
+        );
         return;
       }
       const response = await fetch("/api/store/quote-requests", {
