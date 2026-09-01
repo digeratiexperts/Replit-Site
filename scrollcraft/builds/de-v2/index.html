@@ -1,8 +1,13 @@
 <!doctype html>
 <!--
-  Digerati Experts · Version B ("de-v2")
+  Digerati Experts · Version B ("de-v2") · merged edition
   A Scrollcraft chaptered-editorial interpretation, built beside the production
   site for comparison. This page never replaces digeratiexperts.com.
+
+  This edition folds the production homepage's substance into the story:
+  its pain register and sourced industry stats, its client profiles, its
+  trust pillars, and its real commercial wiring. Customer journey first;
+  the DE story carries it.
 
   Engine: scrollcraft.js / scrollcraft.css, untouched. Everything bespoke lives
   in de.css and de.js and drives itself off the engine's published state.
@@ -36,7 +41,7 @@
 </style>
 <link rel="stylesheet" href="scrollcraft.css">
 <link rel="stylesheet" href="de.css">
-<noscript><style>[data-sc-cue]{opacity:1 !important}.frag{opacity:1 !important;transform:none !important}</style></noscript>
+<noscript><style>[data-sc-cue]{opacity:1 !important}.frag,.fact{opacity:1 !important;transform:none !important}</style></noscript>
 </head>
 <body>
 
@@ -45,8 +50,8 @@
 <div class="sc-grain" aria-hidden="true"></div>
 
 <!-- The margin instrument: folio + the technology map, the page's one
-     persistent object. On wide screens it is a right-margin bookmark; under
-     1100px it becomes a slim top ribbon. Bespoke JS in de.js drives it. -->
+     persistent object. On wide screens it is a right-margin machine room;
+     under 1100px it becomes a slim top ribbon. Bespoke JS in de.js drives it. -->
 <aside class="instrument" id="instrument" aria-label="Reading position and technology map">
   <p class="instrument__folio"><span id="folio-no">CH 01</span><span class="instrument__sep" aria-hidden="true"></span><span id="folio-title">Arrival</span></p>
   <div class="instrument__map" id="mini-map" role="img" aria-label="Miniature map of the fourteen Digerati Experts technology domains. It assembles as the chapters progress."></div>
@@ -59,13 +64,13 @@
     <div class="wrap">
       <header class="flag" data-sc-in data-sc-stagger="60">
         <p class="flag__mark">Digerati<span> Experts</span></p>
-        <p class="sc-label flag__place">Chandler, Arizona</p>
+        <p class="sc-label flag__place">Chandler, Arizona · <a href="tel:+13254809870">325-480-9870</a></p>
       </header>
       <div class="arrival__body">
         <h1 class="sc-display arrival__title" data-sc-cue="0 1 0 0" data-sc-kinetic="lines">One technology company. Every&nbsp;layer working together.</h1>
         <div class="arrival__dek" data-sc-in data-sc-stagger="80">
-          <p class="sc-lede">Digerati Experts designs, secures, integrates, and operates the technology a business runs on. Not as twenty products. As one environment.</p>
-          <p class="sc-label arrival__format">A reading in nine chapters</p>
+          <p class="sc-lede">This is the story of the environment your business already runs on, told the way Digerati Experts sees it: cybersecurity first, proactive by default, compliance ready, and local enough to answer the phone.</p>
+          <p class="sc-label arrival__format">Your environment, in ten chapters</p>
         </div>
       </div>
     </div>
@@ -78,9 +83,10 @@
         <h2 class="sc-display sc-display--lg">The environment you actually&nbsp;have</h2>
         <hr class="sc-rule">
         <p class="sc-lede intertitle__lede">A working company accumulates systems the way a desk accumulates paper. Each one arrived for a good reason.</p>
+        <p class="sc-body intertitle__aside">And in the gaps between them wait ransomware, phishing, lost data, insider mistakes, unpatched software, and a 45 day breach-notification clock that starts whether you are ready or not.</p>
       </header>
     </div>
-    <div class="field" aria-label="A scatter of the systems a typical company runs">
+    <div class="field" aria-label="A scatter of the systems a typical company runs, and the sourced facts about what threatens them">
       <span class="frag" style="--fi:0">Microsoft 365</span>
       <span class="frag" style="--fi:1">Google Workspace</span>
       <span class="frag" style="--fi:2">Zoho</span>
@@ -97,6 +103,10 @@
       <span class="frag" style="--fi:13">the compliance spreadsheet</span>
       <span class="frag" style="--fi:14">the wiki</span>
       <span class="frag" style="--fi:15">a dozen vendor logins</span>
+      <span class="fact" style="--fi:16"><b>48%</b> of breaches involve ransomware<i>Verizon DBIR 2026</i></span>
+      <span class="fact" style="--fi:17"><b>62%</b> of breaches involve the human element<i>Verizon DBIR 2026</i></span>
+      <span class="fact" style="--fi:18"><b>$392M</b> lost to internet crime from Arizona in 2024<i>FBI IC3 Annual Report</i></span>
+      <span class="fact" style="--fi:19"><b>~96%</b> of sized ransomware victims were SMBs<i>Verizon DBIR 2026</i></span>
     </div>
     <div class="wrap silence">
       <p class="silence__works" data-sc-in>Each one works.</p>
@@ -105,7 +115,7 @@
   </section>
 
   <!-- ============================== CH 3 · THE ENVIRONMENT WAKES UP · PEAK -->
-  <section class="chapter ch--well ch--peak" id="ch-3" data-sc-act="pin" data-sc-span="2.8" data-chapter="3" data-chapter-title="The environment wakes up">
+  <section class="chapter ch--well ch--peak" id="ch-3" data-sc-act="pin" data-sc-span="2.4" data-chapter="3" data-chapter-title="The environment wakes up">
     <div data-sc-stage class="peak__stage">
       <div class="peak__light" aria-hidden="true"></div>
       <figure class="peak__figure">
@@ -127,9 +137,9 @@
   <section class="chapter ch--surface ch--answers" id="ch-4" data-sc-act="flow" data-chapter="4" data-chapter-title="The map answers">
     <div class="wrap">
       <header class="intertitle" data-sc-in data-sc-stagger="70">
-        <h2 class="sc-display sc-display--lg">Start from what the business&nbsp;needs</h2>
+        <h2 class="sc-display sc-display--lg">Start from what you actually&nbsp;need</h2>
         <hr class="sc-rule">
-        <p class="sc-lede intertitle__lede">Nobody wakes up wanting a firewall. They want the company protected, the team productive, the busywork gone, the auditor satisfied.</p>
+        <p class="sc-lede intertitle__lede">Nobody wakes up wanting a firewall. You want the company protected, the team productive, the busywork gone, the auditor satisfied.</p>
       </header>
       <div class="answers__grid">
         <div class="answers__controls" role="group" aria-label="Choose a business outcome to light up the technology domains that deliver it">
@@ -148,43 +158,47 @@
     </div>
   </section>
 
-  <!-- ======================================= CH 5 · OPERATED, ON CADENCE -->
-  <section class="chapter ch--paper ch--cadence" id="ch-5" data-sc-act="flow" data-chapter="5" data-chapter-title="Operated, not watched">
+  <!-- ========================================= CH 5 · WHO THIS IS FOR -->
+  <section class="chapter ch--paper ch--profiles" id="ch-5" data-sc-act="flow" data-chapter="5" data-chapter-title="Who this is for">
     <div class="wrap">
       <header class="intertitle" data-sc-in data-sc-stagger="70">
-        <h2 class="sc-display sc-display--lg">Operated, not&nbsp;watched</h2>
+        <h2 class="sc-display sc-display--lg">The companies this is&nbsp;built for</h2>
         <hr class="sc-rule">
+        <p class="sc-lede intertitle__lede">Different professions, same shape of problem: regulated data, real deadlines, and no appetite for running an IT department.</p>
       </header>
-      <div class="cadence__grid">
-        <div class="cadence__prose sc-stack" data-sc-in data-sc-stagger="80">
-          <p class="sc-lede">The ProActive Ecosystem is not a bundle of tools. It is the cadence DE runs an environment on: designed before it is defended, monitored before it breaks, measured so the roadmap is a plan and not a guess.</p>
-          <p class="sc-body">Security lives inside that cadence, not beside it. Identity, devices, email, network, cloud, data, and the people using them form one security surface, reviewed as one. Antivirus is a purchase. This is a posture.</p>
-          <ol class="cadence__steps" aria-label="How DE works, in five movements">
-            <li><b>Understand</b><span>the environment, the business, the risk</span></li>
-            <li><b>Design</b><span>architecture, controls, services</span></li>
-            <li><b>Implement</b><span>systems, migration, integration</span></li>
-            <li><b>Operate</b><span>support, security, automation</span></li>
-            <li><b>Improve</b><span>measurement, roadmap, review</span></li>
-          </ol>
-        </div>
-        <figure class="cadence__plate" data-sc-reveal="up" data-sc-reveal-at="0.12 0.42">
-          <div class="plate">
-            <p class="sc-label plate__title">ProActive depths · published starting rates</p>
-            <dl class="plate__rows">
-              <div class="plate__row"><dt>ProActive IT</dt><dd><span class="sc-nums">$125</span><i>/user</i></dd></div>
-              <div class="plate__row"><dt>ProActive Office</dt><dd><span class="sc-nums">$165</span><i>/user</i></dd></div>
-              <div class="plate__row"><dt>ProActive Business</dt><dd><span class="sc-nums">$245</span><i>/user</i></dd></div>
-              <div class="plate__row"><dt>ProActive Enterprise</dt><dd><span class="sc-nums">$345</span><i>/user</i></dd></div>
-            </dl>
-            <p class="plate__note sc-body">Depths are a fit, not a ranking. The fit conversation is the real product: <a href="https://digeratiexperts.com/proactive-ecosystem-pricing">see plans and pricing</a>.</p>
-          </div>
-        </figure>
-      </div>
+      <ul class="dossier" aria-label="Client profiles Digerati Experts serves, with the pressure each one carries">
+        <li class="dossier__row" data-sc-in data-sc-stagger="60">
+          <h3 class="sc-display sc-display--md">Law firms</h3>
+          <p class="sc-body">Client privilege is a security property. Matter files, email, and identity handled to ABA expectations.</p>
+          <p class="sc-label dossier__tags">IDENTITY · EMAIL · COMPLIANCE</p>
+        </li>
+        <li class="dossier__row" data-sc-in data-sc-stagger="60">
+          <h3 class="sc-display sc-display--md">CPA firms</h3>
+          <p class="sc-body">Tax data under IRS and FTC rules, with the busiest season of the year treated as the design constraint, not the excuse.</p>
+          <p class="sc-label dossier__tags">DATA · SECURITY · BUSINESS SYSTEMS</p>
+        </li>
+        <li class="dossier__row" data-sc-in data-sc-stagger="60">
+          <h3 class="sc-display sc-display--md">Medical practices</h3>
+          <p class="sc-body">HIPAA compliance and patient data protection, carried by the environment instead of by one worried office manager.</p>
+          <p class="sc-label dossier__tags">COMPLIANCE · IDENTITY · INFRASTRUCTURE</p>
+        </li>
+        <li class="dossier__row" data-sc-in data-sc-stagger="60">
+          <h3 class="sc-display sc-display--md">Real estate firms</h3>
+          <p class="sc-body">Wire fraud prevention and transaction security, because one spoofed email can move someone's closing money.</p>
+          <p class="sc-label dossier__tags">EMAIL · SECURITY · AUTOMATION</p>
+        </li>
+        <li class="dossier__row" data-sc-in data-sc-stagger="60">
+          <h3 class="sc-display sc-display--md">Animal hospitals</h3>
+          <p class="sc-body">Veterinary practice systems and client data, kept running through days that never pause for maintenance windows.</p>
+          <p class="sc-label dossier__tags">MANAGED IT · CLOUD · COMMUNICATIONS</p>
+        </li>
+      </ul>
+      <p class="dossier__more sc-body" data-sc-in>And across Greater Phoenix, the growing companies that simply want technology to stop being the thing they think about.</p>
     </div>
   </section>
 
   <!-- ============================================ CH 6 · THE RANGE · PAN -->
-  <section class="chapter ch--well ch--range" id="ch-6" data-sc-act="pan" data-sc-span="2" data-chapter="6" data-chapter-title="Wider than an MSP">
+  <section class="chapter ch--well ch--range" id="ch-6" data-sc-act="pan" data-sc-span="1.6" data-chapter="6" data-chapter-title="Wider than an MSP">
     <div data-sc-stage class="range__stage">
       <div class="range__rail" data-sc-pan="0.06">
         <div class="range__lead">
@@ -215,8 +229,49 @@
     </div>
   </section>
 
-  <!-- ========================================== CH 7 · PROOF, HONESTLY -->
-  <section class="chapter ch--paper ch--proof" id="ch-7" data-sc-act="flow" data-chapter="7" data-chapter-title="Built and shipping">
+  <!-- ======================================= CH 7 · OPERATED, ON CADENCE -->
+  <section class="chapter ch--paper ch--cadence" id="ch-7" data-sc-act="flow" data-chapter="7" data-chapter-title="Operated, not watched">
+    <div class="wrap">
+      <header class="intertitle" data-sc-in data-sc-stagger="70">
+        <h2 class="sc-display sc-display--lg">Operated, not&nbsp;watched</h2>
+        <hr class="sc-rule">
+      </header>
+      <div class="cadence__grid">
+        <div class="cadence__prose sc-stack" data-sc-in data-sc-stagger="80">
+          <p class="sc-lede">The ProActive Ecosystem is not a bundle of tools. It is the cadence DE runs your environment on: designed before it is defended, monitored before it breaks, measured so the roadmap is a plan and not a guess.</p>
+          <p class="sc-body">Security lives inside that cadence, not beside it. Identity, devices, email, network, cloud, data, and the people using them form one security surface, reviewed as one. Multifactor authentication alone blocks 99%+ of unauthorized access attempts (Microsoft 2025); the cadence is what keeps it, and everything around it, actually turned on.</p>
+          <ol class="cadence__steps" aria-label="How DE works, in five movements">
+            <li><b>Understand</b><span>the environment, the business, the risk</span></li>
+            <li><b>Design</b><span>architecture, controls, services</span></li>
+            <li><b>Implement</b><span>systems, migration, integration</span></li>
+            <li><b>Operate</b><span>support, security, automation</span></li>
+            <li><b>Improve</b><span>measurement, roadmap, review</span></li>
+          </ol>
+        </div>
+        <div class="cadence__side">
+          <figure class="cadence__art" data-sc-reveal="up" data-sc-reveal-at="0.08 0.3">
+            <img src="assets/art-cyber-risk.webp" width="960" height="640" alt="Digerati Experts brand artwork for the cyber-risk engagement path: a dark violet abstract composition.">
+            <figcaption class="sc-label">From DE's engagement-path art series</figcaption>
+          </figure>
+          <figure class="cadence__plate" data-sc-reveal="up" data-sc-reveal-at="0.24 0.5">
+            <div class="plate">
+              <p class="sc-label plate__title">ProActive depths · published starting rates</p>
+              <dl class="plate__rows">
+                <div class="plate__row"><dt>ProActive IT</dt><dd><span class="sc-nums">$125</span><i>/user</i></dd></div>
+                <div class="plate__row"><dt>ProActive Office</dt><dd><span class="sc-nums">$165</span><i>/user</i></dd></div>
+                <div class="plate__row"><dt>ProActive Business</dt><dd><span class="sc-nums">$245</span><i>/user</i></dd></div>
+                <div class="plate__row"><dt>ProActive Enterprise</dt><dd><span class="sc-nums">$345</span><i>/user</i></dd></div>
+              </dl>
+              <p class="plate__note sc-body">Depths are a fit, not a ranking. The fit conversation is the real product: <a href="https://digeratiexperts.com/proactive-ecosystem-pricing">see plans and pricing</a>.</p>
+            </div>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================== CH 8 · PROOF, HONESTLY -->
+  <section class="chapter ch--surface ch--proof" id="ch-8" data-sc-act="flow" data-chapter="8" data-chapter-title="Built and shipping">
     <div class="wrap">
       <header class="intertitle" data-sc-in data-sc-stagger="70">
         <h2 class="sc-display sc-display--lg">Built, shipping, in&nbsp;use</h2>
@@ -224,8 +279,8 @@
         <p class="sc-lede intertitle__lede">No borrowed Fortune 500 stories. These are DE's own surfaces, running in production today.</p>
       </header>
       <div class="proof__row">
-        <figure class="proof__media" data-sc-reveal="left" data-sc-reveal-at="0.1 0.4">
-          <img src="assets/de-live-front.webp" width="1280" height="800" alt="The production digeratiexperts.com front page, with the Cyber Risk Assessment overview panel beside the headline.">
+        <figure class="proof__media" data-sc-reveal="left" data-sc-reveal-at="0.08 0.3">
+          <div data-sc-tilt="4"><img src="assets/de-live-front.webp" width="1280" height="800" alt="The production digeratiexperts.com front page, with the Cyber Risk Assessment overview panel beside the headline."></div>
           <figcaption class="sc-label">LIVE · The production front door and the Cyber Risk Assessment intake. The posture figures in the panel are labeled illustrative in the product itself.</figcaption>
         </figure>
         <div class="proof__text sc-stack" data-sc-in data-sc-stagger="80">
@@ -234,22 +289,25 @@
         </div>
       </div>
       <div class="proof__row proof__row--flip">
-        <figure class="proof__media proof__media--tall" data-sc-reveal="right" data-sc-reveal-at="0.42 0.72">
-          <img src="assets/de-desk-support.webp" width="390" height="844" alt="DE Desk, the in-page support surface, open on the support-ticket form with Ask DE and Client Tools tabs.">
+        <figure class="proof__media proof__media--tall" data-sc-reveal="right" data-sc-reveal-at="0.3 0.55">
+          <div data-sc-tilt="4"><img src="assets/de-desk-support.webp" width="390" height="844" alt="DE Desk, the in-page support surface, open on the support-ticket form with Ask DE and Client Tools tabs."></div>
           <figcaption class="sc-label">LIVE · DE Desk: Ask DE, ticket intake, and client tools, in the page on digeratiexperts.com.</figcaption>
         </figure>
         <div class="proof__text sc-stack" data-sc-in data-sc-stagger="80">
           <h3 class="sc-display sc-display--md">The support surface DE built for itself</h3>
           <p class="sc-body">DE Desk, the client portal, the store with its solution builder: interfaces DE engineered and operates, not white-labeled panels with a logo swapped in.</p>
           <p class="sc-body">The bench behind the work includes Pax8, Sophos, Huntress, SonicWall, ThreatLocker, Zoho, Lenovo, TD SYNNEX, and more than forty other vendors DE manages so clients never have to.</p>
-          <p class="proof__pending sc-body">Client case studies exist and are waiting on one thing DE will not skip: the client's written permission. Until then, this page makes no borrowed claims.</p>
         </div>
       </div>
+      <figure class="proof__wide" data-sc-reveal="up" data-sc-reveal-at="0.55 0.8">
+        <img src="assets/trust-desk.webp" width="1100" height="733" alt="The Digerati Experts assessment desk: a real work surface with annotated network documentation and equipment.">
+        <figcaption class="sc-label">SANITIZED REAL · The assessment desk. Client case studies exist and are waiting on one thing DE will not skip: the client's written permission. Until then, this page makes no borrowed claims.</figcaption>
+      </figure>
     </div>
   </section>
 
-  <!-- ======================================== CH 8 · CHANDLER, ARIZONA -->
-  <section class="chapter ch--well ch--human" id="ch-8" data-sc-act="flow" data-chapter="8" data-chapter-title="Chandler, Arizona">
+  <!-- ======================================== CH 9 · CHANDLER, ARIZONA -->
+  <section class="chapter ch--well ch--human" id="ch-9" data-sc-act="flow" data-chapter="9" data-chapter-title="Chandler, Arizona">
     <div class="wrap">
       <header class="intertitle" data-sc-in data-sc-stagger="70">
         <h2 class="sc-display sc-display--lg">Real people, on the&nbsp;hook</h2>
@@ -277,13 +335,13 @@
     </div>
   </section>
 
-  <!-- ============================================= CH 9 · CONVICTION -->
-  <section class="chapter ch--paper ch--close" id="ch-9" data-sc-act="pin" data-sc-span="1.15" data-chapter="9" data-chapter-title="Conviction">
+  <!-- ============================================= CH 10 · CONVICTION -->
+  <section class="chapter ch--paper ch--close" id="ch-10" data-sc-act="pin" data-sc-span="1.15" data-chapter="10" data-chapter-title="Conviction">
     <div data-sc-stage class="close__stage">
       <div class="wrap close__inner">
         <h2 class="sc-display close__belief" data-sc-cue="0 1 0 0" data-sc-kinetic="lines">Technology works better when the entire environment is designed to work&nbsp;together.</h2>
         <p class="close__cta sc-lede" data-sc-cue="0.2">Start where DE starts with every client: <a class="close__cta-link" href="https://meet.digerati-experts.com/">Get My Cyber Risk Assessment</a>.</p>
-        <p class="close__alt sc-body" data-sc-cue="0.3">Or take the quieter doors: <a href="https://digeratiexperts.com/solutions">solutions</a>, <a href="https://digeratiexperts.com/store">the store</a>, <a href="https://digeratiexperts.com/support">client support</a>.</p>
+        <p class="close__alt sc-body" data-sc-cue="0.3">Or take the quieter doors: <a href="https://digeratiexperts.com/solutions">solutions</a>, <a href="https://digeratiexperts.com/store">the store</a>, <a href="https://digeratiexperts.com/support">client support</a>, <a href="https://portal.digeratiexperts.com/portal/login">the client portal</a>.</p>
         <footer class="colophon" data-sc-cue="0.4">
           <img class="colophon__logo" src="assets/de-logo.png" width="44" height="44" alt="Digerati Experts mark">
           <div class="colophon__lines">

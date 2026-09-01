@@ -28,7 +28,7 @@ changes only grammar and world will fail it.
 
 | Build | Grammar | Nav treatment | Hero device | Act-sequence shape | Close pattern | Signature move | World | Port |
 |---|---|---|---|---|---|---|---|---|
-| de-v2 | Chaptered editorial | No bar; fixed machine-room rail: folio + live mini technology map (top ribbon under 1100px) | Title page: type on paper, kinetic lines, no media above the fold | 9 chapters ≈ 14.0vh: flow, flow+field/silence, pin 2.8 (peak: figure draws itself), flow+interactive, flow+reveal, pan 2.0, flow+reveal, flow+parallax, pin 1.15 | Colophon plate on paper; CTA as running text; completed map holds | The technology map as persistent margin instrument: scatters, snaps together at the peak, answers outcome choices, stands complete at the close | Technical drawing (ink on graphite + paper) with real documentary photography | 4500 |
+| de-v2 | Chaptered editorial | No bar; fixed machine-room rail: folio + live mini technology map (top ribbon under 1100px) | Title page: type on paper, kinetic lines, no media above the fold | 10 chapters ≈ 14.1vh: flow, flow+field/silence, pin 2.4 (peak: figure draws itself), flow+interactive, flow+in dossier, pan 1.6, flow+reveal, flow+reveal+tilt, flow+parallax, pin 1.15 (merged edition, same build evolved) | Colophon plate on paper; CTA as running text; completed map holds | The technology map as persistent margin instrument: scatters, snaps together at the peak, answers outcome choices, stands complete at the close | Technical drawing (ink on graphite + paper) with real documentary photography | 4500 |
 
 ---
 

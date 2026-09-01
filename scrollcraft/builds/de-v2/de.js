@@ -65,7 +65,7 @@
 
   var OUTCOMES = {
     protect: {
-      lead: 'Identity, devices, network, and recovery close ranks, with risk and compliance reading the whole time.',
+      lead: 'Ransomware and phishing meet closed ranks: identity, devices, network, and recovery, with risk and compliance reading the whole time.',
       domains: ['security', 'identity', 'it', 'infrastructure', 'cloud', 'risk', 'compliance']
     },
     productive: {
@@ -77,7 +77,7 @@
       domains: ['automation', 'ai', 'business', 'data', 'identity', 'security', 'people']
     },
     comply: {
-      lead: 'Controls, evidence, and monitoring line up so the audit is a reading, not an excavation.',
+      lead: 'HIPAA, IRS, FTC, ABA: controls, evidence, and monitoring line up so the audit is a reading, not an excavation.',
       domains: ['risk', 'compliance', 'identity', 'security', 'data', 'infrastructure']
     }
   };
@@ -140,6 +140,7 @@
     /* domain nodes */
     NODES.forEach(function (n, i) {
       var g = svgEl('g', { class: 'm-node', 'data-domain': n.id });
+      g.style.setProperty('--ni', String(i));
       if (opts.draw) {
         var s = scatter(i);
         g.style.setProperty('--nx', String(s.x));
@@ -165,6 +166,7 @@
       if (reduce) v = v > 0.5 ? 1 : 0;
       svg.style.setProperty('--d' + i, v.toFixed(3));
     }
+    svg.classList.toggle('demap--linked', p > 0.62);
     svg.classList.toggle('demap--energized', p > 0.88);
   }
   function setStagesFlat(svg, vals) {
@@ -229,7 +231,13 @@
           if (!e.isIntersecting) return;
           var n = parseInt(e.target.getAttribute('data-chapter'), 10);
           currentChapter = n;
-          folioNo.textContent = 'CH 0' + n;
+          var inst = document.getElementById('instrument');
+          if (inst) {
+            inst.classList.remove('instrument--tick');
+            void inst.offsetWidth;
+            inst.classList.add('instrument--tick');
+          }
+          folioNo.textContent = 'CH ' + String(n).padStart(2, '0');
           folioTitle.textContent = e.target.getAttribute('data-chapter-title');
           lastP = -1; /* force an instrument refresh */
           /* the instrument mirrors chapter four's lighting, then settles */

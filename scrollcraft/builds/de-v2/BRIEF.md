@@ -289,3 +289,48 @@ target total ≈ 12.5 to 13.4 viewport-heights across 9 chapters (outside the
 3. **Final measured length: 13.98 viewport-heights at 1440×900** (budget 8-14,
    outside the 13.6-13.8 band). Harness: no dead scroll, all cues peak, all
    composited contrast ≥ 4.5:1, at 1440, 768, 390, and reduced-motion.
+
+---
+
+## Merged edition (client direction, 2026-09-01)
+
+Client verdict on the first edition: "I like how it's a story... exactly what
+I am after," with new direction: merge with the original homepage, new
+imagery, deeper animation, "Tell the DE story while solving Pain and
+showcasing identity of the client profile and who we are. of course this is
+secondary to the customer journey."
+
+Changes shipped:
+
+1. **Journey-first voice**: second-person dek and outcome copy; trust pillars
+   woven into the arrival dek.
+2. **Pain, sourced**: chapter two now carries the production site's threat
+   register (ransomware, phishing, insider mistakes, the AZ 45-day
+   breach-notification clock) and four cited industry facts as evidence tags
+   in the fragment field (Verizon DBIR 2026, FBI IC3 2024). Industry context,
+   never DE performance claims, per the repo's own rules.
+3. **New chapter five, "Who this is for"**: the production Industries content
+   as an editorial dossier: law, CPA, medical, real estate, veterinary, each
+   with its named pressure and its DE domain tags.
+4. **New imagery, all real/approved**: the assessment-desk photograph
+   (SANITIZED REAL) closes proof; DE's engagement-path brand art plates the
+   cadence chapter. kie.ai generation remains blocked by the environment's
+   network egress policy; no imagery was generated.
+5. **Animation deepening**: staggered flow arrivals and a one-shot node pulse
+   in the wake-up, cascaded outcome lighting, dossier hairlines that draw on
+   entry, rail items that rise as they settle, an instrument tick at each
+   chapter turn, pointer response on the fragment field. All transform,
+   opacity, or clip; all preserved-in-meaning under reduced motion.
+6. **Commercial wiring**: masthead carries the real phone; the close adds the
+   client portal door.
+
+Measured: ten chapters at 14.14 viewport-heights (1440×900), 0.14 over the
+budget ceiling, accepted for a ten-chapter merged scope and stated plainly.
+Peak span 2.4 remains the largest by a wide margin (next: pan 1.6).
+Harness at 1440 / 768 / 390 / reduced-motion: zero errors, zero failures, no
+dead scroll, all cues peak, composited contrast clear.
+
+Feel check, cold: calm / dread / awe / agency / seen / breadth / confidence /
+candor / warmth / resolve. Ten distinct feelings, none adjacent-repeated;
+"dread" (deepened from unease by the sourced stakes) and "seen" (the client
+dossier) are the merged edition's additions to the curve.

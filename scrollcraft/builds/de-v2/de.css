@@ -68,7 +68,7 @@
   main  { padding-right: 132px; }
 }
 
-.chapter { position: relative; padding-block: clamp(4rem, 7vw, 7.5rem); }
+.chapter { position: relative; padding-block: clamp(3.2rem, 5vw, 5.5rem); }
 
 /* Intertitles: the printed chapter openers. */
 .intertitle { max-width: 60rem; }
@@ -122,7 +122,7 @@
 }
 
 /* ---------------------------------------------------- CH1 · arrival ----- */
-.ch--arrival { min-height: 84svh; display: grid; align-items: stretch; padding-block: var(--sc-6) var(--sc-7); }
+.ch--arrival { min-height: 74svh; display: grid; align-items: stretch; padding-block: var(--sc-6) var(--sc-7); }
 .flag {
   display: flex; justify-content: space-between; align-items: baseline; gap: var(--sc-4);
   border-bottom: 1px solid var(--de-line);
@@ -153,7 +153,7 @@
 .ch--problem { padding-bottom: 0; }
 .field {
   position: relative;
-  height: 56svh;
+  height: 40svh;
   margin-top: var(--sc-7);
   overflow: clip;
 }
@@ -197,7 +197,7 @@
 }
 
 /* the authored silence */
-.silence { min-height: 56svh; display: grid; align-content: center; gap: var(--sc-7); padding-bottom: var(--sc-7); }
+.silence { min-height: 38svh; display: grid; align-content: center; gap: var(--sc-7); padding-bottom: var(--sc-7); }
 .silence__works {
   margin: 0;
   font-family: var(--sc-font-display);
@@ -287,7 +287,7 @@
 
 /* --------------------------------------------- CH4 · the map answers ---- */
 .answers__grid {
-  margin-top: var(--sc-6);
+  margin-top: var(--sc-5);
   display: grid; gap: var(--sc-7);
   grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
   align-items: center;
@@ -326,7 +326,7 @@
 .answers__readout { margin-top: var(--sc-4); min-height: 3.2em; }
 .answers__readout b { color: var(--sc-ink); font-weight: 600; }
 .answers__map svg { width: 100%; height: auto; display: block; }
-.answers__close { margin-top: var(--sc-6); max-width: 34ch; margin-inline: auto; text-align: center; }
+.answers__close { margin-top: var(--sc-5); max-width: 34ch; margin-inline: auto; text-align: center; }
 @media (max-width: 940px) {
   .answers__grid { grid-template-columns: 1fr; gap: var(--sc-6); }
   .answers__map { order: -1; }
@@ -367,10 +367,19 @@
   .cadence__steps span { grid-column: 2; }
 }
 
+.cadence__side { display: grid; gap: var(--sc-5); align-content: start; }
+.cadence__art { margin: 0; }
+.cadence__art img {
+  width: 100%; height: auto;
+  aspect-ratio: 5 / 2; object-fit: cover;
+  border-radius: var(--sc-r-sm);
+  border: 1px solid var(--de-line-soft);
+}
+.cadence__art figcaption { margin-top: var(--sc-2); }
 .cadence__plate { margin: 0; }
 @media (max-width: 860px) {
   .cadence__grid { grid-template-columns: 1fr; gap: var(--sc-6); }
-  .cadence__plate { max-width: 28rem; }
+  .cadence__side { max-width: 28rem; }
 }
 .plate {
   background: #FFFFFF;
@@ -409,7 +418,9 @@
   border-left: 1px solid rgba(255,255,255,0.14);
   padding-left: clamp(1.2rem, 2vw, 2rem);
   /* staggered settle off the act's progress; first items exempt via floor */
-  opacity: calc(0.55 + clamp(0, (var(--sc-p, 1) * 4.4) - var(--ri, 0), 1) * 0.45);
+  --rs: clamp(0, (var(--sc-p, 1) * 4.4) - var(--ri, 0), 1);
+  opacity: calc(0.55 + var(--rs) * 0.45);
+  translate: 0 calc((1 - var(--rs)) * 16px);
 }
 .range__item:nth-of-type(2) { --ri: 0; }
 .range__item:nth-of-type(3) { --ri: 0.55; }
@@ -426,7 +437,7 @@
 
 /* ---------------------------------------------------- CH7 · proof ------- */
 .proof__row {
-  margin-top: var(--sc-7);
+  margin-top: var(--sc-4);
   display: grid; gap: var(--sc-7);
   grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
   align-items: center;
@@ -439,7 +450,7 @@
   border-radius: var(--sc-r-sm);
   box-shadow: 0 3px 8px rgba(22,18,31,0.08), 0 22px 48px -18px rgba(22,18,31,0.22);
 }
-.proof__media--tall { max-width: 21rem; }
+.proof__media--tall { max-width: 14rem; }
 .proof__media figcaption { margin-top: var(--sc-3); max-width: 46ch; }
 .proof__pending {
   border-top: 1px solid var(--de-line-soft);
@@ -569,4 +580,145 @@
 @media (prefers-reduced-motion: reduce) {
   .frag { opacity: 1; translate: none; }
   .human__photo-frame img { scale: 1; }
+}
+
+/* ---------------------------------------------- merged edition additions -- */
+
+/* CH2 · sourced evidence tags scattered among the fragments */
+.fact {
+  position: absolute;
+  left: var(--fx); top: var(--fy);
+  rotate: var(--fr);
+  max-width: 15rem;
+  padding: 0.7em 0.9em 0.7em 1.1em;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-left: 3px solid var(--sc-accent);
+  background: color-mix(in oklab, #0A0A14 88%, transparent);
+  font-family: var(--sc-font-text);
+  font-size: clamp(0.72rem, 0.66rem + 0.4vw, 0.9rem);
+  line-height: 1.35;
+  color: #CFC9DD;
+  opacity: calc((var(--sc-p, 1) - (0.06 + var(--fi) * 0.021)) * 9);
+  translate: 0 calc((1 - clamp(0, (var(--sc-p, 1) - (0.06 + var(--fi) * 0.021)) * 9, 1)) * 14px);
+}
+.fact b {
+  display: block;
+  font-family: var(--sc-font-mono); font-weight: 600;
+  font-size: 1.45em; letter-spacing: 0.02em;
+  color: #FFFFFF;
+}
+.fact i {
+  display: block; margin-top: 0.35em;
+  font-style: normal;
+  font-family: var(--sc-font-mono);
+  font-size: 0.72em; letter-spacing: 0.08em; text-transform: uppercase;
+  color: #8F88A6;
+}
+.fact:nth-of-type(17) { --fx: 58%; --fy: 8%;  --fr: 1.2deg; }
+.fact:nth-of-type(18) { --fx: 16%; --fy: 28%; --fr: -1.6deg; }
+.fact:nth-of-type(19) { --fx: 62%; --fy: 52%; --fr: 1deg; }
+.fact:nth-of-type(20) { --fx: 26%; --fy: 72%; --fr: -1deg; }
+.intertitle__aside { margin-top: var(--sc-4); max-width: 52ch; }
+@media (max-width: 700px) {
+  .fact { position: relative; left: auto; top: auto; display: inline-block; margin: 0.45rem 0.3rem; max-width: none; }
+  .field { height: auto; min-height: 0; padding-bottom: var(--sc-6); }
+}
+
+/* CH5 · the client dossier */
+.dossier {
+  list-style: none; margin: var(--sc-6) 0 0; padding: 0;
+}
+.dossier__row {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(11rem, 16rem) minmax(0, 1fr) minmax(10rem, 14rem);
+  gap: var(--sc-5);
+  align-items: baseline;
+  padding: var(--sc-3) 0;
+}
+.dossier__row::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: var(--de-line-soft);
+  transform: scaleX(0); transform-origin: 0 50%;
+  transition: transform 760ms var(--sc-ease-out);
+}
+.dossier__row.sc-in::before { transform: scaleX(1); }
+.dossier__row .sc-body { margin: 0; }
+.dossier__tags { margin: 0; justify-self: end; text-align: right; color: var(--sc-accent); }
+.dossier__more {
+  margin-top: var(--sc-5);
+  padding-top: var(--sc-5);
+  border-top: 1px solid var(--de-line);
+  max-width: 52ch;
+}
+@media (max-width: 860px) {
+  .dossier__row { grid-template-columns: 1fr; gap: var(--sc-2); }
+  .dossier__tags { justify-self: start; text-align: left; }
+}
+
+/* CH8 · proof on the dark surface */
+.ch--proof .proof__media img { border-color: rgba(255,255,255,0.14); box-shadow: 0 4px 10px rgba(0,0,0,0.35), 0 26px 54px -20px rgba(0,0,0,0.6); }
+.proof__wide {
+  margin: var(--sc-6) 0 0;
+  display: grid; gap: var(--sc-5);
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  align-items: end;
+}
+.proof__wide img {
+  width: 100%; height: auto;
+  aspect-ratio: 16 / 8; object-fit: cover;
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: var(--sc-r-sm);
+}
+.proof__wide figcaption { margin: 0; max-width: 46ch; }
+@media (max-width: 860px) {
+  .proof__wide { grid-template-columns: 1fr; align-items: start; }
+  .proof__wide figcaption { margin-top: var(--sc-2); }
+}
+.ch--proof .proof__pending { border-top-color: rgba(255,255,255,0.14); }
+
+/* ------------------------------------------- animation deepening pass ---- */
+
+/* the wake-up: flows arrive in sequence, nodes pulse once when linked */
+.demap[data-draw] .m-flow { opacity: calc(var(--d3, 1) * 1.7 - var(--fo, 0)); }
+.demap[data-draw] .m-flow:nth-of-type(1) { --fo: 0; }
+.demap[data-draw] .m-flow:nth-of-type(2) { --fo: 0.14; }
+.demap[data-draw] .m-flow:nth-of-type(3) { --fo: 0.28; }
+.demap[data-draw] .m-flow:nth-of-type(4) { --fo: 0.42; }
+.demap[data-draw] .m-flow:nth-of-type(5) { --fo: 0.56; }
+.demap[data-draw] .m-flow:nth-of-type(6) { --fo: 0.2; }
+.demap .m-node { transform-box: fill-box; transform-origin: center; }
+.demap--linked .m-node {
+  animation: de-nodelink 520ms var(--sc-ease-out) both;
+  animation-delay: calc(var(--ni, 0) * 45ms);
+}
+@keyframes de-nodelink {
+  0% { scale: 1; }
+  45% { scale: 1.04; }
+  100% { scale: 1; }
+}
+
+/* the answers: domains light in a small cascade */
+.demap[data-lit] .m-node { transition-delay: calc(var(--ni, 0) * 26ms); }
+
+/* the instrument acknowledges each chapter turn */
+.instrument--tick .instrument__folio { animation: de-foliotick 430ms var(--sc-ease-out); }
+@keyframes de-foliotick {
+  0% { opacity: 0.35; translate: 0 3px; }
+  100% { opacity: 1; translate: 0 0; }
+}
+
+/* fragments answer a fine pointer */
+@media (hover: hover) and (pointer: fine) {
+  .frag, .fact { transition: border-color 140ms var(--sc-ease-out), translate 140ms var(--sc-ease-out); }
+  .frag:hover { border-color: rgba(255,255,255,0.4); }
+  .fact:hover { border-color: rgba(255,255,255,0.45); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fact { opacity: 1; translate: none; }
+  .range__item { translate: none; }
+  .demap--linked .m-node { animation: none; }
+  .instrument--tick .instrument__folio { animation: none; }
+  .dossier__row::before { transform: scaleX(1); transition: none; }
 }

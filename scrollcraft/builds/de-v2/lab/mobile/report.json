@@ -1,6 +1,6 @@
 {
   "doc": {
-    "height": 13747,
+    "height": 14620,
     "vh": 844,
     "acts": [
       "flow",
@@ -9,6 +9,7 @@
       "flow",
       "flow",
       "pan",
+      "flow",
       "flow",
       "flow",
       "pin"
@@ -42,13 +43,15 @@
       "wipes": [
         "none",
         "none",
+        "none",
+        "none",
         "none"
       ],
       "act": "flow",
       "stages": [
-        2593,
-        7854,
-        12777
+        2383,
+        7006,
+        13649
       ],
       "segs": [],
       "custom": [],
@@ -59,7 +62,7 @@
     },
     {
       "i": 1,
-      "y": 136,
+      "y": 86,
       "pct": 1,
       "settled": true,
       "contrast": [
@@ -83,13 +86,15 @@
       "wipes": [
         "none",
         "none",
+        "none",
+        "none",
         "none"
       ],
       "act": "flow",
       "stages": [
-        2457,
-        7718,
-        12641
+        2297,
+        6920,
+        13563
       ],
       "segs": [],
       "custom": [],
@@ -100,7 +105,7 @@
     },
     {
       "i": 2,
-      "y": 434,
+      "y": 364,
       "pct": 3,
       "settled": true,
       "contrast": [],
@@ -112,13 +117,15 @@
       "wipes": [
         "none",
         "none",
+        "none",
+        "none",
         "none"
       ],
       "act": "flow",
       "stages": [
-        2159,
-        7420,
-        12343
+        2019,
+        6642,
+        13285
       ],
       "segs": [],
       "custom": [],
@@ -129,8 +136,8 @@
     },
     {
       "i": 3,
-      "y": 473,
-      "pct": 4,
+      "y": 368,
+      "pct": 3,
       "settled": true,
       "contrast": [],
       "cues": [],
@@ -141,13 +148,15 @@
       "wipes": [
         "none",
         "none",
+        "none",
+        "none",
         "none"
       ],
       "act": "flow",
       "stages": [
-        2120,
-        7381,
-        12304
+        2015,
+        6638,
+        13281
       ],
       "segs": [],
       "custom": [],
@@ -158,7 +167,38 @@
     },
     {
       "i": 4,
-      "y": 732,
+      "y": 650,
+      "pct": 5,
+      "settled": true,
+      "contrast": [],
+      "cues": [],
+      "clips": [],
+      "rails": [
+        0
+      ],
+      "wipes": [
+        "none",
+        "none",
+        "none",
+        "none",
+        "none"
+      ],
+      "act": "flow",
+      "stages": [
+        1733,
+        6356,
+        12999
+      ],
+      "segs": [],
+      "custom": [],
+      "customHold": false,
+      "seg": null,
+      "segp": null,
+      "bg": "#050312"
+    },
+    {
+      "i": 5,
+      "y": 844,
       "pct": 6,
       "settled": true,
       "contrast": [],
@@ -170,42 +210,15 @@
       "wipes": [
         "none",
         "none",
-        "none"
-      ],
-      "act": "flow",
-      "stages": [
-        1861,
-        7122,
-        12045
-      ],
-      "segs": [],
-      "custom": [],
-      "customHold": false,
-      "seg": null,
-      "segp": null,
-      "bg": "#050312"
-    },
-    {
-      "i": 5,
-      "y": 974,
-      "pct": 8,
-      "settled": true,
-      "contrast": [],
-      "cues": [],
-      "clips": [],
-      "rails": [
-        0
-      ],
-      "wipes": [
         "none",
         "none",
         "none"
       ],
       "act": "flow",
       "stages": [
-        1619,
-        6880,
-        11803
+        1539,
+        6162,
+        12805
       ],
       "segs": [],
       "custom": [],
@@ -216,8 +229,8 @@
     },
     {
       "i": 6,
-      "y": 1475,
-      "pct": 11,
+      "y": 1323,
+      "pct": 10,
       "settled": true,
       "contrast": [],
       "cues": [],
@@ -228,13 +241,15 @@
       "wipes": [
         "none",
         "none",
+        "none",
+        "none",
         "none"
       ],
       "act": "flow",
       "stages": [
-        1118,
-        6379,
-        11302
+        1060,
+        5683,
+        12326
       ],
       "segs": [],
       "custom": [],
@@ -245,8 +260,8 @@
     },
     {
       "i": 7,
-      "y": 1976,
-      "pct": 15,
+      "y": 1803,
+      "pct": 13,
       "settled": true,
       "contrast": [],
       "cues": [],
@@ -257,13 +272,15 @@
       "wipes": [
         "none",
         "none",
+        "none",
+        "none",
         "none"
       ],
       "act": "flow",
       "stages": [
-        617,
-        5878,
-        10801
+        580,
+        5203,
+        11846
       ],
       "segs": [],
       "custom": [],
@@ -274,14 +291,14 @@
     },
     {
       "i": 8,
-      "y": 2477,
-      "pct": 19,
+      "y": 2282,
+      "pct": 17,
       "settled": true,
       "contrast": [
         {
           "t": "Then the environment wakes up",
           "dir": "light-on-dark",
-          "worst": 9.2,
+          "worst": 9.18,
           "mean": 9.41
         }
       ],
@@ -298,13 +315,15 @@
       "wipes": [
         "none",
         "none",
+        "none",
+        "none",
         "none"
       ],
       "act": "pin",
       "stages": [
-        116,
-        5377,
-        10300
+        101,
+        4724,
+        11367
       ],
       "segs": [],
       "custom": [],
@@ -315,8 +334,8 @@
     },
     {
       "i": 9,
-      "y": 2560,
-      "pct": 20,
+      "y": 2356,
+      "pct": 17,
       "settled": true,
       "contrast": [
         {
@@ -339,13 +358,15 @@
       "wipes": [
         "none",
         "none",
+        "none",
+        "none",
         "none"
       ],
       "act": "pin",
       "stages": [
-        33,
-        5294,
-        10217
+        27,
+        4650,
+        11293
       ],
       "segs": [],
       "custom": [],
@@ -356,8 +377,8 @@
     },
     {
       "i": 10,
-      "y": 2851,
-      "pct": 22,
+      "y": 2583,
+      "pct": 19,
       "settled": true,
       "contrast": [
         {
@@ -365,12 +386,6 @@
           "dir": "light-on-dark",
           "worst": 9.19,
           "mean": 9.41
-        },
-        {
-          "t": "DE enters. Not as a giant logo. As an ar",
-          "dir": "light-on-dark",
-          "worst": 17.66,
-          "mean": 18.25
         }
       ],
       "cues": [
@@ -380,7 +395,7 @@
         },
         {
           "t": "DE enters. Not as a giant logo. As an architec",
-          "o": 0.97
+          "o": 0.82
         }
       ],
       "clips": [],
@@ -390,13 +405,15 @@
       "wipes": [
         "none",
         "none",
+        "none",
+        "none",
         "none"
       ],
       "act": "pin",
       "stages": [
         0,
-        5003,
-        9926
+        4423,
+        11066
       ],
       "segs": [],
       "custom": [],
@@ -407,8 +424,8 @@
     },
     {
       "i": 11,
-      "y": 3143,
-      "pct": 24,
+      "y": 2810,
+      "pct": 20,
       "settled": true,
       "contrast": [
         {
@@ -441,7 +458,7 @@
         },
         {
           "t": "Identity becomes one spine, and access follows",
-          "o": 1
+          "o": 0.95
         }
       ],
       "clips": [],
@@ -451,13 +468,15 @@
       "wipes": [
         "none",
         "none",
+        "none",
+        "none",
         "none"
       ],
       "act": "pin",
       "stages": [
         0,
-        4711,
-        9634
+        4196,
+        10839
       ],
       "segs": [],
       "custom": [],
@@ -468,8 +487,8 @@
     },
     {
       "i": 12,
-      "y": 3435,
-      "pct": 27,
+      "y": 3037,
+      "pct": 22,
       "settled": true,
       "contrast": [
         {
@@ -522,13 +541,15 @@
       "wipes": [
         "none",
         "none",
+        "none",
+        "none",
         "none"
       ],
       "act": "pin",
       "stages": [
         0,
-        4419,
-        9342
+        3969,
+        10612
       ],
       "segs": [],
       "custom": [],
@@ -539,8 +560,8 @@
     },
     {
       "i": 13,
-      "y": 3726,
-      "pct": 29,
+      "y": 3264,
+      "pct": 24,
       "settled": true,
       "contrast": [
         {
@@ -577,7 +598,7 @@
       "cues": [
         {
           "t": "FIG. 1 · One environment, drawn as one system",
-          "o": 1
+          "o": 0.96
         },
         {
           "t": "Then the environment wakes up",
@@ -598,10 +619,6 @@
         {
           "t": "Data starts moving. Automation starts working.",
           "o": 1
-        },
-        {
-          "t": "Fourteen disciplines. One operating environmen",
-          "o": 0.08
         }
       ],
       "clips": [],
@@ -611,13 +628,15 @@
       "wipes": [
         "none",
         "none",
+        "none",
+        "none",
         "none"
       ],
       "act": "pin",
       "stages": [
         0,
-        4128,
-        9051
+        3742,
+        10385
       ],
       "segs": [],
       "custom": [],
@@ -628,15 +647,21 @@
     },
     {
       "i": 14,
-      "y": 4018,
-      "pct": 31,
+      "y": 3491,
+      "pct": 25,
       "settled": true,
       "contrast": [
         {
           "t": "Then the environment wakes up",
           "dir": "light-on-dark",
-          "worst": 9.19,
+          "worst": 9.2,
           "mean": 9.41
+        },
+        {
+          "t": "DE enters. Not as a giant logo. As an ar",
+          "dir": "light-on-dark",
+          "worst": 17.71,
+          "mean": 18.25
         },
         {
           "t": "Identity becomes one spine, and access f",
@@ -647,7 +672,7 @@
         {
           "t": "Security stops being a product you bough",
           "dir": "light-on-dark",
-          "worst": 17.67,
+          "worst": 17.71,
           "mean": 18.25
         },
         {
@@ -674,11 +699,11 @@
         },
         {
           "t": "DE enters. Not as a giant logo. As an architec",
-          "o": 0.82
+          "o": 1
         },
         {
           "t": "Identity becomes one spine, and access follows",
-          "o": 0.99
+          "o": 1
         },
         {
           "t": "Security stops being a product you bought. It ",
@@ -700,13 +725,15 @@
       "wipes": [
         "none",
         "none",
+        "none",
+        "none",
         "none"
       ],
       "act": "pin",
       "stages": [
-        -33,
-        3836,
-        8759
+        -28,
+        3515,
+        10158
       ],
       "segs": [],
       "custom": [],
@@ -717,7 +744,69 @@
     },
     {
       "i": 15,
-      "y": 4090,
+      "y": 3555,
+      "pct": 26,
+      "settled": true,
+      "contrast": [],
+      "cues": [],
+      "clips": [],
+      "rails": [
+        0
+      ],
+      "wipes": [
+        "none",
+        "none",
+        "none",
+        "none",
+        "none"
+      ],
+      "act": "pin",
+      "stages": [
+        -92,
+        3451,
+        10094
+      ],
+      "segs": [],
+      "custom": [],
+      "customHold": false,
+      "seg": null,
+      "segp": null,
+      "bg": "#050312"
+    },
+    {
+      "i": 16,
+      "y": 3953,
+      "pct": 29,
+      "settled": true,
+      "contrast": [],
+      "cues": [],
+      "clips": [],
+      "rails": [
+        0
+      ],
+      "wipes": [
+        "none",
+        "none",
+        "none",
+        "none",
+        "none"
+      ],
+      "act": "flow",
+      "stages": [
+        -490,
+        3053,
+        9696
+      ],
+      "segs": [],
+      "custom": [],
+      "customHold": false,
+      "seg": null,
+      "segp": null,
+      "bg": "#050312"
+    },
+    {
+      "i": 17,
+      "y": 4351,
       "pct": 32,
       "settled": true,
       "contrast": [],
@@ -729,13 +818,15 @@
       "wipes": [
         "none",
         "none",
+        "none",
+        "none",
         "none"
       ],
-      "act": "pin",
+      "act": "flow",
       "stages": [
-        -105,
-        3764,
-        8687
+        -888,
+        2655,
+        9298
       ],
       "segs": [],
       "custom": [],
@@ -745,8 +836,39 @@
       "bg": "#050312"
     },
     {
-      "i": 16,
-      "y": 4491,
+      "i": 18,
+      "y": 4749,
+      "pct": 34,
+      "settled": true,
+      "contrast": [],
+      "cues": [],
+      "clips": [],
+      "rails": [
+        0
+      ],
+      "wipes": [
+        "none",
+        "none",
+        "none",
+        "none",
+        "none"
+      ],
+      "act": "flow",
+      "stages": [
+        -1286,
+        2257,
+        8900
+      ],
+      "segs": [],
+      "custom": [],
+      "customHold": false,
+      "seg": null,
+      "segp": null,
+      "bg": "#050312"
+    },
+    {
+      "i": 19,
+      "y": 4787,
       "pct": 35,
       "settled": true,
       "contrast": [],
@@ -758,13 +880,15 @@
       "wipes": [
         "none",
         "none",
+        "none",
+        "none",
         "none"
       ],
       "act": "flow",
       "stages": [
-        -506,
-        3363,
-        8286
+        -1324,
+        2219,
+        8862
       ],
       "segs": [],
       "custom": [],
@@ -774,8 +898,39 @@
       "bg": "#050312"
     },
     {
-      "i": 17,
-      "y": 4893,
+      "i": 20,
+      "y": 5147,
+      "pct": 37,
+      "settled": true,
+      "contrast": [],
+      "cues": [],
+      "clips": [],
+      "rails": [
+        0
+      ],
+      "wipes": [
+        "none",
+        "none",
+        "none",
+        "none",
+        "none"
+      ],
+      "act": "flow",
+      "stages": [
+        -1684,
+        1859,
+        8502
+      ],
+      "segs": [],
+      "custom": [],
+      "customHold": false,
+      "seg": null,
+      "segp": null,
+      "bg": "#050312"
+    },
+    {
+      "i": 21,
+      "y": 5212,
       "pct": 38,
       "settled": true,
       "contrast": [],
@@ -787,129 +942,15 @@
       "wipes": [
         "none",
         "none",
-        "none"
-      ],
-      "act": "flow",
-      "stages": [
-        -908,
-        2961,
-        7884
-      ],
-      "segs": [],
-      "custom": [],
-      "customHold": false,
-      "seg": null,
-      "segp": null,
-      "bg": "#050312"
-    },
-    {
-      "i": 18,
-      "y": 5294,
-      "pct": 41,
-      "settled": true,
-      "contrast": [],
-      "cues": [],
-      "clips": [],
-      "rails": [
-        0
-      ],
-      "wipes": [
-        "inset(0px 0px 100%)",
+        "none",
         "none",
         "none"
       ],
       "act": "flow",
       "stages": [
-        -1309,
-        2560,
-        7483
-      ],
-      "segs": [],
-      "custom": [],
-      "customHold": false,
-      "seg": null,
-      "segp": null,
-      "bg": "#050312"
-    },
-    {
-      "i": 19,
-      "y": 5343,
-      "pct": 41,
-      "settled": true,
-      "contrast": [],
-      "cues": [],
-      "clips": [],
-      "rails": [
-        0
-      ],
-      "wipes": [
-        "inset(0px 0px 100%)",
-        "none",
-        "none"
-      ],
-      "act": "flow",
-      "stages": [
-        -1358,
-        2511,
-        7434
-      ],
-      "segs": [],
-      "custom": [],
-      "customHold": false,
-      "seg": null,
-      "segp": null,
-      "bg": "#050312"
-    },
-    {
-      "i": 20,
-      "y": 5695,
-      "pct": 44,
-      "settled": true,
-      "contrast": [],
-      "cues": [],
-      "clips": [],
-      "rails": [
-        0
-      ],
-      "wipes": [
-        "inset(0px 0px 94.93%)",
-        "none",
-        "none"
-      ],
-      "act": "flow",
-      "stages": [
-        -1710,
-        2159,
-        7082
-      ],
-      "segs": [],
-      "custom": [],
-      "customHold": false,
-      "seg": null,
-      "segp": null,
-      "bg": "#050312"
-    },
-    {
-      "i": 21,
-      "y": 5823,
-      "pct": 45,
-      "settled": true,
-      "contrast": [],
-      "cues": [],
-      "clips": [],
-      "rails": [
-        0
-      ],
-      "wipes": [
-        "inset(0px 0px 77.49%)",
-        "none",
-        "none"
-      ],
-      "act": "flow",
-      "stages": [
-        -1838,
-        2031,
-        6954
+        -1749,
+        1794,
+        8437
       ],
       "segs": [],
       "custom": [],
@@ -920,8 +961,8 @@
     },
     {
       "i": 22,
-      "y": 6096,
-      "pct": 47,
+      "y": 5545,
+      "pct": 40,
       "settled": true,
       "contrast": [],
       "cues": [],
@@ -930,15 +971,17 @@
         0
       ],
       "wipes": [
-        "inset(0px 0px 25.27%)",
+        "none",
+        "none",
+        "none",
         "none",
         "none"
       ],
       "act": "flow",
       "stages": [
-        -2111,
-        1758,
-        6681
+        -2082,
+        1461,
+        8104
       ],
       "segs": [],
       "custom": [],
@@ -949,8 +992,8 @@
     },
     {
       "i": 23,
-      "y": 6302,
-      "pct": 49,
+      "y": 5637,
+      "pct": 41,
       "settled": true,
       "contrast": [],
       "cues": [],
@@ -959,15 +1002,17 @@
         0
       ],
       "wipes": [
-        "inset(0px 0px 0.83%)",
+        "none",
+        "none",
+        "none",
         "none",
         "none"
       ],
       "act": "flow",
       "stages": [
-        -2317,
-        1552,
-        6475
+        -2174,
+        1369,
+        8012
       ],
       "segs": [],
       "custom": [],
@@ -978,8 +1023,8 @@
     },
     {
       "i": 24,
-      "y": 6781,
-      "pct": 53,
+      "y": 6061,
+      "pct": 44,
       "settled": true,
       "contrast": [],
       "cues": [],
@@ -988,15 +1033,17 @@
         0
       ],
       "wipes": [
-        "inset(0px 0px 0%)",
+        "none",
+        "none",
+        "none",
         "none",
         "none"
       ],
       "act": "flow",
       "stages": [
-        -2796,
-        1073,
-        5996
+        -2598,
+        945,
+        7588
       ],
       "segs": [],
       "custom": [],
@@ -1007,8 +1054,8 @@
     },
     {
       "i": 25,
-      "y": 7261,
-      "pct": 56,
+      "y": 6486,
+      "pct": 47,
       "settled": true,
       "contrast": [],
       "cues": [],
@@ -1017,15 +1064,17 @@
         0
       ],
       "wipes": [
-        "inset(0px 0px 0%)",
+        "none",
+        "none",
+        "none",
         "none",
         "none"
       ],
       "act": "flow",
       "stages": [
-        -3276,
-        593,
-        5516
+        -3023,
+        520,
+        7163
       ],
       "segs": [],
       "custom": [],
@@ -1036,8 +1085,8 @@
     },
     {
       "i": 26,
-      "y": 7740,
-      "pct": 60,
+      "y": 6911,
+      "pct": 50,
       "settled": true,
       "contrast": [],
       "cues": [],
@@ -1046,15 +1095,17 @@
         0
       ],
       "wipes": [
-        "inset(0px 0px 0%)",
+        "none",
+        "none",
+        "none",
         "none",
         "none"
       ],
       "act": "pan",
       "stages": [
-        -3755,
-        114,
-        5037
+        -3448,
+        95,
+        6738
       ],
       "segs": [],
       "custom": [],
@@ -1065,25 +1116,27 @@
     },
     {
       "i": 27,
-      "y": 7807,
-      "pct": 61,
+      "y": 6965,
+      "pct": 51,
       "settled": true,
       "contrast": [],
       "cues": [],
       "clips": [],
       "rails": [
-        -31
+        0
       ],
       "wipes": [
-        "inset(0px 0px 0%)",
+        "none",
+        "none",
+        "none",
         "none",
         "none"
       ],
       "act": "pan",
       "stages": [
-        -3822,
-        47,
-        4970
+        -3502,
+        41,
+        6684
       ],
       "segs": [],
       "custom": [],
@@ -1094,25 +1147,27 @@
     },
     {
       "i": 28,
-      "y": 7969,
-      "pct": 62,
+      "y": 7062,
+      "pct": 51,
       "settled": true,
       "contrast": [],
       "cues": [],
       "clips": [],
       "rails": [
-        -334
+        -244
       ],
       "wipes": [
-        "inset(0px 0px 0%)",
+        "none",
+        "none",
+        "none",
         "none",
         "none"
       ],
       "act": "pan",
       "stages": [
-        -3984,
+        -3599,
         0,
-        4808
+        6587
       ],
       "segs": [],
       "custom": [],
@@ -1123,25 +1178,27 @@
     },
     {
       "i": 29,
-      "y": 8131,
-      "pct": 63,
+      "y": 7159,
+      "pct": 52,
       "settled": true,
       "contrast": [],
       "cues": [],
       "clips": [],
       "rails": [
-        -637
+        -546
       ],
       "wipes": [
-        "inset(0px 0px 0%)",
+        "none",
+        "none",
+        "none",
         "none",
         "none"
       ],
       "act": "pan",
       "stages": [
-        -4146,
+        -3696,
         0,
-        4646
+        6490
       ],
       "segs": [],
       "custom": [],
@@ -1152,25 +1209,27 @@
     },
     {
       "i": 30,
-      "y": 8293,
-      "pct": 64,
+      "y": 7256,
+      "pct": 53,
       "settled": true,
       "contrast": [],
       "cues": [],
       "clips": [],
       "rails": [
-        -940
+        -849
       ],
       "wipes": [
-        "inset(0px 0px 0%)",
+        "none",
+        "none",
+        "none",
         "none",
         "none"
       ],
       "act": "pan",
       "stages": [
-        -4308,
+        -3793,
         0,
-        4484
+        6393
       ],
       "segs": [],
       "custom": [],
@@ -1181,25 +1240,27 @@
     },
     {
       "i": 31,
-      "y": 8456,
-      "pct": 66,
+      "y": 7354,
+      "pct": 53,
       "settled": true,
       "contrast": [],
       "cues": [],
       "clips": [],
       "rails": [
-        -1245
+        -1155
       ],
       "wipes": [
-        "inset(0px 0px 0%)",
-        "inset(0px 100% 0px 0px)",
-        "inset(0px 0px 0px 100%)"
+        "inset(0px 0px 100%)",
+        "inset(0px 0px 100%)",
+        "none",
+        "none",
+        "none"
       ],
       "act": "pan",
       "stages": [
-        -4471,
+        -3891,
         0,
-        4321
+        6295
       ],
       "segs": [],
       "custom": [],
@@ -1210,25 +1271,27 @@
     },
     {
       "i": 32,
-      "y": 8618,
-      "pct": 67,
+      "y": 7451,
+      "pct": 54,
       "settled": true,
       "contrast": [],
       "cues": [],
       "clips": [],
       "rails": [
-        -1549
+        -1457
       ],
       "wipes": [
-        "inset(0px 0px 0%)",
-        "inset(0px 100% 0px 0px)",
-        "inset(0px 0px 0px 100%)"
+        "inset(0px 0px 100%)",
+        "inset(0px 0px 100%)",
+        "none",
+        "none",
+        "none"
       ],
       "act": "pan",
       "stages": [
-        -4633,
-        -48,
-        4159
+        -3988,
+        -41,
+        6198
       ],
       "segs": [],
       "custom": [],
@@ -1239,8 +1302,8 @@
     },
     {
       "i": 33,
-      "y": 8695,
-      "pct": 67,
+      "y": 7516,
+      "pct": 55,
       "settled": true,
       "contrast": [],
       "cues": [],
@@ -1249,15 +1312,17 @@
         -1579
       ],
       "wipes": [
-        "inset(0px 0px 0%)",
-        "inset(0px 100% 0px 0px)",
-        "inset(0px 0px 0px 100%)"
+        "inset(0px 0px 100%)",
+        "inset(0px 0px 100%)",
+        "none",
+        "none",
+        "none"
       ],
       "act": "pan",
       "stages": [
-        -4710,
-        -125,
-        4082
+        -4053,
+        -106,
+        6133
       ],
       "segs": [],
       "custom": [],
@@ -1268,8 +1333,8 @@
     },
     {
       "i": 34,
-      "y": 9275,
-      "pct": 72,
+      "y": 8043,
+      "pct": 58,
       "settled": true,
       "contrast": [],
       "cues": [],
@@ -1278,15 +1343,17 @@
         -1579
       ],
       "wipes": [
-        "inset(0px 0px 0%)",
-        "inset(0px 68.6% 0px 0px)",
-        "inset(0px 0px 0px 100%)"
+        "inset(0px 0px 42.12%)",
+        "inset(0px 0px 100%)",
+        "none",
+        "none",
+        "none"
       ],
       "act": "flow",
       "stages": [
-        -5290,
-        -705,
-        3502
+        -4580,
+        -633,
+        5606
       ],
       "segs": [],
       "custom": [],
@@ -1297,8 +1364,8 @@
     },
     {
       "i": 35,
-      "y": 9855,
-      "pct": 76,
+      "y": 8569,
+      "pct": 62,
       "settled": true,
       "contrast": [],
       "cues": [],
@@ -1308,14 +1375,16 @@
       ],
       "wipes": [
         "inset(0px 0px 0%)",
-        "inset(0px 0% 0px 0px)",
-        "inset(0px 0px 0px 100%)"
+        "inset(0px 0px 36.63%)",
+        "none",
+        "none",
+        "none"
       ],
       "act": "flow",
       "stages": [
-        -5870,
-        -1285,
-        2922
+        -5106,
+        -1159,
+        5080
       ],
       "segs": [],
       "custom": [],
@@ -1326,8 +1395,8 @@
     },
     {
       "i": 36,
-      "y": 10436,
-      "pct": 81,
+      "y": 9096,
+      "pct": 66,
       "settled": true,
       "contrast": [],
       "cues": [],
@@ -1337,14 +1406,16 @@
       ],
       "wipes": [
         "inset(0px 0px 0%)",
-        "inset(0px 0% 0px 0px)",
-        "inset(0px 0px 0px 37.02%)"
+        "inset(0px 0px 0%)",
+        "none",
+        "none",
+        "none"
       ],
       "act": "flow",
       "stages": [
-        -6451,
-        -1866,
-        2341
+        -5633,
+        -1686,
+        4553
       ],
       "segs": [],
       "custom": [],
@@ -1355,8 +1426,8 @@
     },
     {
       "i": 37,
-      "y": 10851,
-      "pct": 84,
+      "y": 9423,
+      "pct": 68,
       "settled": true,
       "contrast": [],
       "cues": [],
@@ -1366,14 +1437,16 @@
       ],
       "wipes": [
         "inset(0px 0px 0%)",
-        "inset(0px 0% 0px 0px)",
-        "inset(0px 0px 0px 0%)"
+        "inset(0px 0px 0%)",
+        "inset(0px 100% 0px 0px)",
+        "inset(0px 0px 0px 100%)",
+        "inset(0px 0px 100%)"
       ],
       "act": "flow",
       "stages": [
-        -6866,
-        -2281,
-        1926
+        -5960,
+        -2013,
+        4226
       ],
       "segs": [],
       "custom": [],
@@ -1384,8 +1457,8 @@
     },
     {
       "i": 38,
-      "y": 11016,
-      "pct": 85,
+      "y": 9622,
+      "pct": 70,
       "settled": true,
       "contrast": [],
       "cues": [],
@@ -1395,14 +1468,16 @@
       ],
       "wipes": [
         "inset(0px 0px 0%)",
-        "inset(0px 0% 0px 0px)",
-        "inset(0px 0px 0px 0%)"
+        "inset(0px 0px 0%)",
+        "inset(0px 100% 0px 0px)",
+        "inset(0px 0px 0px 100%)",
+        "inset(0px 0px 100%)"
       ],
       "act": "flow",
       "stages": [
-        -7031,
-        -2446,
-        1761
+        -6159,
+        -2212,
+        4027
       ],
       "segs": [],
       "custom": [],
@@ -1413,8 +1488,8 @@
     },
     {
       "i": 39,
-      "y": 11229,
-      "pct": 87,
+      "y": 10037,
+      "pct": 73,
       "settled": true,
       "contrast": [],
       "cues": [],
@@ -1424,14 +1499,16 @@
       ],
       "wipes": [
         "inset(0px 0px 0%)",
-        "inset(0px 0% 0px 0px)",
-        "inset(0px 0px 0px 0%)"
+        "inset(0px 0px 0%)",
+        "inset(0px 41.14% 0px 0px)",
+        "inset(0px 0px 0px 100%)",
+        "inset(0px 0px 100%)"
       ],
       "act": "flow",
       "stages": [
-        -7244,
-        -2659,
-        1548
+        -6574,
+        -2627,
+        3612
       ],
       "segs": [],
       "custom": [],
@@ -1442,8 +1519,8 @@
     },
     {
       "i": 40,
-      "y": 11596,
-      "pct": 90,
+      "y": 10148,
+      "pct": 74,
       "settled": true,
       "contrast": [],
       "cues": [],
@@ -1453,14 +1530,16 @@
       ],
       "wipes": [
         "inset(0px 0px 0%)",
-        "inset(0px 0% 0px 0px)",
-        "inset(0px 0px 0px 0%)"
+        "inset(0px 0px 0%)",
+        "inset(0px 19.46% 0px 0px)",
+        "inset(0px 0px 0px 100%)",
+        "inset(0px 0px 100%)"
       ],
       "act": "flow",
       "stages": [
-        -7611,
-        -3026,
-        1181
+        -6685,
+        -2738,
+        3501
       ],
       "segs": [],
       "custom": [],
@@ -1471,8 +1550,8 @@
     },
     {
       "i": 41,
-      "y": 11606,
-      "pct": 90,
+      "y": 10650,
+      "pct": 77,
       "settled": true,
       "contrast": [],
       "cues": [],
@@ -1482,14 +1561,16 @@
       ],
       "wipes": [
         "inset(0px 0px 0%)",
+        "inset(0px 0px 0%)",
         "inset(0px 0% 0px 0px)",
-        "inset(0px 0px 0px 0%)"
+        "inset(0px 0px 0px 67.7%)",
+        "inset(0px 0px 100%)"
       ],
       "act": "flow",
       "stages": [
-        -7621,
-        -3036,
-        1171
+        -7187,
+        -3240,
+        2999
       ],
       "segs": [],
       "custom": [],
@@ -1500,8 +1581,8 @@
     },
     {
       "i": 42,
-      "y": 11983,
-      "pct": 93,
+      "y": 11264,
+      "pct": 82,
       "settled": true,
       "contrast": [],
       "cues": [],
@@ -1511,14 +1592,16 @@
       ],
       "wipes": [
         "inset(0px 0px 0%)",
+        "inset(0px 0px 0%)",
         "inset(0px 0% 0px 0px)",
-        "inset(0px 0px 0px 0%)"
+        "inset(0px 0px 0px 0%)",
+        "inset(0px 0px 94.05%)"
       ],
       "act": "flow",
       "stages": [
-        -7998,
-        -3413,
-        794
+        -7801,
+        -3854,
+        2385
       ],
       "segs": [],
       "custom": [],
@@ -1529,7 +1612,193 @@
     },
     {
       "i": 43,
-      "y": 12360,
+      "y": 11749,
+      "pct": 85,
+      "settled": true,
+      "contrast": [],
+      "cues": [],
+      "clips": [],
+      "rails": [
+        -1579
+      ],
+      "wipes": [
+        "inset(0px 0px 0%)",
+        "inset(0px 0px 0%)",
+        "inset(0px 0% 0px 0px)",
+        "inset(0px 0px 0px 0%)",
+        "inset(0px 0px 15%)"
+      ],
+      "act": "flow",
+      "stages": [
+        -8286,
+        -4339,
+        1900
+      ],
+      "segs": [],
+      "custom": [],
+      "customHold": false,
+      "seg": null,
+      "segp": null,
+      "bg": "#050312"
+    },
+    {
+      "i": 44,
+      "y": 11877,
+      "pct": 86,
+      "settled": true,
+      "contrast": [],
+      "cues": [],
+      "clips": [],
+      "rails": [
+        -1579
+      ],
+      "wipes": [
+        "inset(0px 0px 0%)",
+        "inset(0px 0px 0%)",
+        "inset(0px 0% 0px 0px)",
+        "inset(0px 0px 0px 0%)",
+        "inset(0px 0px 2.01%)"
+      ],
+      "act": "flow",
+      "stages": [
+        -8414,
+        -4467,
+        1772
+      ],
+      "segs": [],
+      "custom": [],
+      "customHold": false,
+      "seg": null,
+      "segp": null,
+      "bg": "#050312"
+    },
+    {
+      "i": 45,
+      "y": 12121,
+      "pct": 88,
+      "settled": true,
+      "contrast": [],
+      "cues": [],
+      "clips": [],
+      "rails": [
+        -1579
+      ],
+      "wipes": [
+        "inset(0px 0px 0%)",
+        "inset(0px 0px 0%)",
+        "inset(0px 0% 0px 0px)",
+        "inset(0px 0px 0px 0%)",
+        "inset(0px 0px 0%)"
+      ],
+      "act": "flow",
+      "stages": [
+        -8658,
+        -4711,
+        1528
+      ],
+      "segs": [],
+      "custom": [],
+      "customHold": false,
+      "seg": null,
+      "segp": null,
+      "bg": "#050312"
+    },
+    {
+      "i": 46,
+      "y": 12490,
+      "pct": 91,
+      "settled": true,
+      "contrast": [],
+      "cues": [],
+      "clips": [],
+      "rails": [
+        -1579
+      ],
+      "wipes": [
+        "inset(0px 0px 0%)",
+        "inset(0px 0px 0%)",
+        "inset(0px 0% 0px 0px)",
+        "inset(0px 0px 0px 0%)",
+        "inset(0px 0px 0%)"
+      ],
+      "act": "flow",
+      "stages": [
+        -9027,
+        -5080,
+        1159
+      ],
+      "segs": [],
+      "custom": [],
+      "customHold": false,
+      "seg": null,
+      "segp": null,
+      "bg": "#050312"
+    },
+    {
+      "i": 47,
+      "y": 12494,
+      "pct": 91,
+      "settled": true,
+      "contrast": [],
+      "cues": [],
+      "clips": [],
+      "rails": [
+        -1579
+      ],
+      "wipes": [
+        "inset(0px 0px 0%)",
+        "inset(0px 0px 0%)",
+        "inset(0px 0% 0px 0px)",
+        "inset(0px 0px 0px 0%)",
+        "inset(0px 0px 0%)"
+      ],
+      "act": "flow",
+      "stages": [
+        -9031,
+        -5084,
+        1155
+      ],
+      "segs": [],
+      "custom": [],
+      "customHold": false,
+      "seg": null,
+      "segp": null,
+      "bg": "#050312"
+    },
+    {
+      "i": 48,
+      "y": 12866,
+      "pct": 93,
+      "settled": true,
+      "contrast": [],
+      "cues": [],
+      "clips": [],
+      "rails": [
+        -1579
+      ],
+      "wipes": [
+        "inset(0px 0px 0%)",
+        "inset(0px 0px 0%)",
+        "inset(0px 0% 0px 0px)",
+        "inset(0px 0px 0px 0%)",
+        "inset(0px 0px 0%)"
+      ],
+      "act": "flow",
+      "stages": [
+        -9403,
+        -5456,
+        783
+      ],
+      "segs": [],
+      "custom": [],
+      "customHold": false,
+      "seg": null,
+      "segp": null,
+      "bg": "#050312"
+    },
+    {
+      "i": 49,
+      "y": 13238,
       "pct": 96,
       "settled": true,
       "contrast": [
@@ -1552,334 +1821,16 @@
       ],
       "wipes": [
         "inset(0px 0px 0%)",
-        "inset(0px 0% 0px 0px)",
-        "inset(0px 0px 0px 0%)"
-      ],
-      "act": "pin",
-      "stages": [
-        -8375,
-        -3790,
-        417
-      ],
-      "segs": [],
-      "custom": [],
-      "customHold": false,
-      "seg": null,
-      "segp": null,
-      "bg": "#050312"
-    },
-    {
-      "i": 44,
-      "y": 12738,
-      "pct": 99,
-      "settled": true,
-      "contrast": [
-        {
-          "t": "Technology works better when the entire ",
-          "dir": "dark-on-light",
-          "worst": 16.88,
-          "mean": 16.88
-        }
-      ],
-      "cues": [
-        {
-          "t": "Technology works better when the entire enviro",
-          "o": 1
-        }
-      ],
-      "clips": [],
-      "rails": [
-        -1579
-      ],
-      "wipes": [
         "inset(0px 0px 0%)",
         "inset(0px 0% 0px 0px)",
-        "inset(0px 0px 0px 0%)"
+        "inset(0px 0px 0px 0%)",
+        "inset(0px 0px 0%)"
       ],
       "act": "pin",
       "stages": [
-        -8753,
-        -4168,
-        39
-      ],
-      "segs": [],
-      "custom": [],
-      "customHold": false,
-      "seg": null,
-      "segp": null,
-      "bg": "#050312"
-    },
-    {
-      "i": 45,
-      "y": 12779,
-      "pct": 99,
-      "settled": true,
-      "contrast": [
-        {
-          "t": "Technology works better when the entire ",
-          "dir": "dark-on-light",
-          "worst": 16.88,
-          "mean": 16.88
-        }
-      ],
-      "cues": [
-        {
-          "t": "Technology works better when the entire enviro",
-          "o": 1
-        }
-      ],
-      "clips": [],
-      "rails": [
-        -1579
-      ],
-      "wipes": [
-        "inset(0px 0px 0%)",
-        "inset(0px 0% 0px 0px)",
-        "inset(0px 0px 0px 0%)"
-      ],
-      "act": "pin",
-      "stages": [
-        -8794,
-        -4209,
-        0
-      ],
-      "segs": [],
-      "custom": [],
-      "customHold": false,
-      "seg": null,
-      "segp": null,
-      "bg": "#050312"
-    },
-    {
-      "i": 46,
-      "y": 12804,
-      "pct": 99,
-      "settled": true,
-      "contrast": [
-        {
-          "t": "Technology works better when the entire ",
-          "dir": "dark-on-light",
-          "worst": 16.88,
-          "mean": 16.88
-        }
-      ],
-      "cues": [
-        {
-          "t": "Technology works better when the entire enviro",
-          "o": 1
-        }
-      ],
-      "clips": [],
-      "rails": [
-        -1579
-      ],
-      "wipes": [
-        "inset(0px 0px 0%)",
-        "inset(0px 0% 0px 0px)",
-        "inset(0px 0px 0px 0%)"
-      ],
-      "act": "pin",
-      "stages": [
-        -8819,
-        -4234,
-        0
-      ],
-      "segs": [],
-      "custom": [],
-      "customHold": false,
-      "seg": null,
-      "segp": null,
-      "bg": "#050312"
-    },
-    {
-      "i": 47,
-      "y": 12828,
-      "pct": 99,
-      "settled": true,
-      "contrast": [
-        {
-          "t": "Technology works better when the entire ",
-          "dir": "dark-on-light",
-          "worst": 16.88,
-          "mean": 16.88
-        },
-        {
-          "t": "Start where DE starts with every client:",
-          "dir": "dark-on-light",
-          "worst": 16.88,
-          "mean": 16.88
-        }
-      ],
-      "cues": [
-        {
-          "t": "Technology works better when the entire enviro",
-          "o": 1
-        },
-        {
-          "t": "Start where DE starts with every client: Get M",
-          "o": 1
-        },
-        {
-          "t": "Or take the quieter doors: solutions, the stor",
-          "o": 0.62
-        }
-      ],
-      "clips": [],
-      "rails": [
-        -1579
-      ],
-      "wipes": [
-        "inset(0px 0px 0%)",
-        "inset(0px 0% 0px 0px)",
-        "inset(0px 0px 0px 0%)"
-      ],
-      "act": "pin",
-      "stages": [
-        -8843,
-        -4258,
-        0
-      ],
-      "segs": [],
-      "custom": [],
-      "customHold": false,
-      "seg": null,
-      "segp": null,
-      "bg": "#050312"
-    },
-    {
-      "i": 48,
-      "y": 12852,
-      "pct": 100,
-      "settled": true,
-      "contrast": [
-        {
-          "t": "Technology works better when the entire ",
-          "dir": "dark-on-light",
-          "worst": 16.88,
-          "mean": 16.88
-        },
-        {
-          "t": "Start where DE starts with every client:",
-          "dir": "dark-on-light",
-          "worst": 16.88,
-          "mean": 16.88
-        },
-        {
-          "t": "Or take the quieter doors: solutions, th",
-          "dir": "dark-on-light",
-          "worst": 6.63,
-          "mean": 6.63
-        },
-        {
-          "t": "Digerati Experts · Chandler, Arizona · 3",
-          "dir": "dark-on-light",
-          "worst": 16.88,
-          "mean": 16.88
-        }
-      ],
-      "cues": [
-        {
-          "t": "Technology works better when the entire enviro",
-          "o": 1
-        },
-        {
-          "t": "Start where DE starts with every client: Get M",
-          "o": 1
-        },
-        {
-          "t": "Or take the quieter doors: solutions, the stor",
-          "o": 1
-        },
-        {
-          "t": "Digerati Experts · Chandler, Arizona · 325-480",
-          "o": 1
-        }
-      ],
-      "clips": [],
-      "rails": [
-        -1579
-      ],
-      "wipes": [
-        "inset(0px 0px 0%)",
-        "inset(0px 0% 0px 0px)",
-        "inset(0px 0px 0px 0%)"
-      ],
-      "act": "pin",
-      "stages": [
-        -8867,
-        -4282,
-        0
-      ],
-      "segs": [],
-      "custom": [],
-      "customHold": false,
-      "seg": null,
-      "segp": null,
-      "bg": "#050312"
-    },
-    {
-      "i": 49,
-      "y": 12877,
-      "pct": 100,
-      "settled": true,
-      "contrast": [
-        {
-          "t": "Technology works better when the entire ",
-          "dir": "dark-on-light",
-          "worst": 16.88,
-          "mean": 16.88
-        },
-        {
-          "t": "Start where DE starts with every client:",
-          "dir": "dark-on-light",
-          "worst": 16.88,
-          "mean": 16.88
-        },
-        {
-          "t": "Or take the quieter doors: solutions, th",
-          "dir": "dark-on-light",
-          "worst": 6.63,
-          "mean": 6.63
-        },
-        {
-          "t": "Digerati Experts · Chandler, Arizona · 3",
-          "dir": "dark-on-light",
-          "worst": 16.88,
-          "mean": 16.88
-        }
-      ],
-      "cues": [
-        {
-          "t": "Technology works better when the entire enviro",
-          "o": 1
-        },
-        {
-          "t": "Start where DE starts with every client: Get M",
-          "o": 1
-        },
-        {
-          "t": "Or take the quieter doors: solutions, the stor",
-          "o": 1
-        },
-        {
-          "t": "Digerati Experts · Chandler, Arizona · 325-480",
-          "o": 1
-        }
-      ],
-      "clips": [],
-      "rails": [
-        -1579
-      ],
-      "wipes": [
-        "inset(0px 0px 0%)",
-        "inset(0px 0% 0px 0px)",
-        "inset(0px 0px 0px 0%)"
-      ],
-      "act": "pin",
-      "stages": [
-        -8892,
-        -4307,
-        0
+        -9775,
+        -5828,
+        411
       ],
       "segs": [],
       "custom": [],
@@ -1890,30 +1841,12 @@
     },
     {
       "i": 50,
-      "y": 12901,
-      "pct": 100,
+      "y": 13611,
+      "pct": 99,
       "settled": true,
       "contrast": [
         {
           "t": "Technology works better when the entire ",
-          "dir": "dark-on-light",
-          "worst": 16.88,
-          "mean": 16.88
-        },
-        {
-          "t": "Start where DE starts with every client:",
-          "dir": "dark-on-light",
-          "worst": 16.88,
-          "mean": 16.88
-        },
-        {
-          "t": "Or take the quieter doors: solutions, th",
-          "dir": "dark-on-light",
-          "worst": 6.63,
-          "mean": 6.63
-        },
-        {
-          "t": "Digerati Experts · Chandler, Arizona · 3",
           "dir": "dark-on-light",
           "worst": 16.88,
           "mean": 16.88
@@ -1923,18 +1856,6 @@
         {
           "t": "Technology works better when the entire enviro",
           "o": 1
-        },
-        {
-          "t": "Start where DE starts with every client: Get M",
-          "o": 1
-        },
-        {
-          "t": "Or take the quieter doors: solutions, the stor",
-          "o": 1
-        },
-        {
-          "t": "Digerati Experts · Chandler, Arizona · 325-480",
-          "o": 1
         }
       ],
       "clips": [],
@@ -1943,14 +1864,16 @@
       ],
       "wipes": [
         "inset(0px 0px 0%)",
+        "inset(0px 0px 0%)",
         "inset(0px 0% 0px 0px)",
-        "inset(0px 0px 0px 0%)"
+        "inset(0px 0px 0px 0%)",
+        "inset(0px 0px 0%)"
       ],
       "act": "pin",
       "stages": [
-        -8916,
-        -4331,
-        0
+        -10148,
+        -6201,
+        38
       ],
       "segs": [],
       "custom": [],
@@ -1961,7 +1884,266 @@
     },
     {
       "i": 51,
-      "y": 12903,
+      "y": 13652,
+      "pct": 99,
+      "settled": true,
+      "contrast": [
+        {
+          "t": "Technology works better when the entire ",
+          "dir": "dark-on-light",
+          "worst": 16.88,
+          "mean": 16.88
+        }
+      ],
+      "cues": [
+        {
+          "t": "Technology works better when the entire enviro",
+          "o": 1
+        }
+      ],
+      "clips": [],
+      "rails": [
+        -1579
+      ],
+      "wipes": [
+        "inset(0px 0px 0%)",
+        "inset(0px 0px 0%)",
+        "inset(0px 0% 0px 0px)",
+        "inset(0px 0px 0px 0%)",
+        "inset(0px 0px 0%)"
+      ],
+      "act": "pin",
+      "stages": [
+        -10189,
+        -6242,
+        0
+      ],
+      "segs": [],
+      "custom": [],
+      "customHold": false,
+      "seg": null,
+      "segp": null,
+      "bg": "#050312"
+    },
+    {
+      "i": 52,
+      "y": 13676,
+      "pct": 99,
+      "settled": true,
+      "contrast": [
+        {
+          "t": "Technology works better when the entire ",
+          "dir": "dark-on-light",
+          "worst": 16.88,
+          "mean": 16.88
+        }
+      ],
+      "cues": [
+        {
+          "t": "Technology works better when the entire enviro",
+          "o": 1
+        }
+      ],
+      "clips": [],
+      "rails": [
+        -1579
+      ],
+      "wipes": [
+        "inset(0px 0px 0%)",
+        "inset(0px 0px 0%)",
+        "inset(0px 0% 0px 0px)",
+        "inset(0px 0px 0px 0%)",
+        "inset(0px 0px 0%)"
+      ],
+      "act": "pin",
+      "stages": [
+        -10213,
+        -6266,
+        0
+      ],
+      "segs": [],
+      "custom": [],
+      "customHold": false,
+      "seg": null,
+      "segp": null,
+      "bg": "#050312"
+    },
+    {
+      "i": 53,
+      "y": 13701,
+      "pct": 99,
+      "settled": true,
+      "contrast": [
+        {
+          "t": "Technology works better when the entire ",
+          "dir": "dark-on-light",
+          "worst": 16.88,
+          "mean": 16.88
+        }
+      ],
+      "cues": [
+        {
+          "t": "Technology works better when the entire enviro",
+          "o": 1
+        }
+      ],
+      "clips": [],
+      "rails": [
+        -1579
+      ],
+      "wipes": [
+        "inset(0px 0px 0%)",
+        "inset(0px 0px 0%)",
+        "inset(0px 0% 0px 0px)",
+        "inset(0px 0px 0px 0%)",
+        "inset(0px 0px 0%)"
+      ],
+      "act": "pin",
+      "stages": [
+        -10238,
+        -6291,
+        0
+      ],
+      "segs": [],
+      "custom": [],
+      "customHold": false,
+      "seg": null,
+      "segp": null,
+      "bg": "#050312"
+    },
+    {
+      "i": 54,
+      "y": 13725,
+      "pct": 100,
+      "settled": true,
+      "contrast": [
+        {
+          "t": "Technology works better when the entire ",
+          "dir": "dark-on-light",
+          "worst": 16.88,
+          "mean": 16.88
+        },
+        {
+          "t": "Start where DE starts with every client:",
+          "dir": "dark-on-light",
+          "worst": 16.88,
+          "mean": 16.88
+        }
+      ],
+      "cues": [
+        {
+          "t": "Technology works better when the entire enviro",
+          "o": 1
+        },
+        {
+          "t": "Start where DE starts with every client: Get M",
+          "o": 0.99
+        },
+        {
+          "t": "Or take the quieter doors: solutions, the stor",
+          "o": 0.33
+        }
+      ],
+      "clips": [],
+      "rails": [
+        -1579
+      ],
+      "wipes": [
+        "inset(0px 0px 0%)",
+        "inset(0px 0px 0%)",
+        "inset(0px 0% 0px 0px)",
+        "inset(0px 0px 0px 0%)",
+        "inset(0px 0px 0%)"
+      ],
+      "act": "pin",
+      "stages": [
+        -10262,
+        -6315,
+        0
+      ],
+      "segs": [],
+      "custom": [],
+      "customHold": false,
+      "seg": null,
+      "segp": null,
+      "bg": "#050312"
+    },
+    {
+      "i": 55,
+      "y": 13749,
+      "pct": 100,
+      "settled": true,
+      "contrast": [
+        {
+          "t": "Technology works better when the entire ",
+          "dir": "dark-on-light",
+          "worst": 16.88,
+          "mean": 16.88
+        },
+        {
+          "t": "Start where DE starts with every client:",
+          "dir": "dark-on-light",
+          "worst": 16.88,
+          "mean": 16.88
+        },
+        {
+          "t": "Or take the quieter doors: solutions, th",
+          "dir": "dark-on-light",
+          "worst": 6.63,
+          "mean": 6.63
+        },
+        {
+          "t": "Digerati Experts · Chandler, Arizona · 3",
+          "dir": "dark-on-light",
+          "worst": 16.88,
+          "mean": 16.88
+        }
+      ],
+      "cues": [
+        {
+          "t": "Technology works better when the entire enviro",
+          "o": 1
+        },
+        {
+          "t": "Start where DE starts with every client: Get M",
+          "o": 1
+        },
+        {
+          "t": "Or take the quieter doors: solutions, the stor",
+          "o": 1
+        },
+        {
+          "t": "Digerati Experts · Chandler, Arizona · 325-480",
+          "o": 0.96
+        }
+      ],
+      "clips": [],
+      "rails": [
+        -1579
+      ],
+      "wipes": [
+        "inset(0px 0px 0%)",
+        "inset(0px 0px 0%)",
+        "inset(0px 0% 0px 0px)",
+        "inset(0px 0px 0px 0%)",
+        "inset(0px 0px 0%)"
+      ],
+      "act": "pin",
+      "stages": [
+        -10286,
+        -6339,
+        0
+      ],
+      "segs": [],
+      "custom": [],
+      "customHold": false,
+      "seg": null,
+      "segp": null,
+      "bg": "#050312"
+    },
+    {
+      "i": 56,
+      "y": 13774,
       "pct": 100,
       "settled": true,
       "contrast": [
@@ -2014,13 +2196,88 @@
       ],
       "wipes": [
         "inset(0px 0px 0%)",
+        "inset(0px 0px 0%)",
         "inset(0px 0% 0px 0px)",
-        "inset(0px 0px 0px 0%)"
+        "inset(0px 0px 0px 0%)",
+        "inset(0px 0px 0%)"
       ],
       "act": "pin",
       "stages": [
-        -8918,
-        -4333,
+        -10311,
+        -6364,
+        0
+      ],
+      "segs": [],
+      "custom": [],
+      "customHold": false,
+      "seg": null,
+      "segp": null,
+      "bg": "#050312"
+    },
+    {
+      "i": 57,
+      "y": 13776,
+      "pct": 100,
+      "settled": true,
+      "contrast": [
+        {
+          "t": "Technology works better when the entire ",
+          "dir": "dark-on-light",
+          "worst": 16.88,
+          "mean": 16.88
+        },
+        {
+          "t": "Start where DE starts with every client:",
+          "dir": "dark-on-light",
+          "worst": 16.88,
+          "mean": 16.88
+        },
+        {
+          "t": "Or take the quieter doors: solutions, th",
+          "dir": "dark-on-light",
+          "worst": 6.63,
+          "mean": 6.63
+        },
+        {
+          "t": "Digerati Experts · Chandler, Arizona · 3",
+          "dir": "dark-on-light",
+          "worst": 16.88,
+          "mean": 16.88
+        }
+      ],
+      "cues": [
+        {
+          "t": "Technology works better when the entire enviro",
+          "o": 1
+        },
+        {
+          "t": "Start where DE starts with every client: Get M",
+          "o": 1
+        },
+        {
+          "t": "Or take the quieter doors: solutions, the stor",
+          "o": 1
+        },
+        {
+          "t": "Digerati Experts · Chandler, Arizona · 325-480",
+          "o": 1
+        }
+      ],
+      "clips": [],
+      "rails": [
+        -1579
+      ],
+      "wipes": [
+        "inset(0px 0px 0%)",
+        "inset(0px 0px 0%)",
+        "inset(0px 0% 0px 0px)",
+        "inset(0px 0px 0px 0%)",
+        "inset(0px 0px 0%)"
+      ],
+      "act": "pin",
+      "stages": [
+        -10313,
+        -6366,
         0
       ],
       "segs": [],
