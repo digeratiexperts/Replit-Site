@@ -365,3 +365,17 @@ provided for it), and recycled server artifacts read as scavenged.
 4. **Re-verified**: 1440 / 768 / 390 / reduced-motion all green (zero errors,
    no dead scroll, cues peak, composited contrast clear); 14.15
    viewport-heights.
+
+---
+
+## The quiet tier (client direction, 2026-09-01)
+
+Client: "I also wanted you to do some pages that look bland." Interpreted as
+the system's plain tier: the workhorse inner pages every real site needs,
+deliberately quiet, in the same design language with the theatrics off. Built
+at `pages/`: the Cyber Risk Assessment explainer, Contact, and Common
+questions (verbatim production FAQ copy). Same tokens, faces, masthead flag,
+and hairline discipline; zero JavaScript, zero plates, native no-JS
+accordions; all facts real. Verified at 1440 and 390 with no horizontal
+overflow. If "bland" meant a deliberately generic comparison strawman
+instead, that remains unbuilt pending the client's word.
