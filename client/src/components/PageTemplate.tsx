@@ -59,9 +59,11 @@ export const PageTemplate = ({
               animate={prefersReducedMotion ? undefined : revealInView}
               transition={revealTransition}
             >
-              <Link href="/" className={`${crumbMuted} rounded-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-de-accent`}>
+              {/* Plain anchor: "/" is server-routed (Version B homepage), so
+                  home navigation must be a full page load, not an SPA route. */}
+              <a href="/" className={`${crumbMuted} rounded-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-de-accent`}>
                 Home
-              </Link>
+              </a>
               {breadcrumbs.map((crumb, index) => (
                 <span key={`${crumb.label}-${index}`} className="flex items-center gap-2">
                   <ChevronRight className="h-4 w-4 shrink-0 opacity-60" aria-hidden="true" />

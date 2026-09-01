@@ -260,9 +260,9 @@ export default function Blog() {
         <div className="container mx-auto px-4 max-w-7xl">
           {/* Breadcrumb + page title */}
           <div className="flex items-center gap-2 text-sm text-white/55 mb-3">
-            <Link href="/" className="hover:text-de-accent-ink transition-colors">
+            <a href="/" className="hover:text-de-accent-ink transition-colors">
               Home
-            </Link>
+            </a>
             <ChevronRight className="h-3.5 w-3.5" />
             <Link
               href="/resources/blog"

@@ -161,8 +161,16 @@ import { servicePageData, industryPageData, supportPageData } from "@/pages/rout
 function Router() {
   return (
     <Switch>
-      {/* Homepage */}
+      {/* Homepage. In production "/" is served by the server as the Version B
+          Scrollcraft page (dist/public/de-v2); this SPA route is the dev and
+          fallback rendering. The original homepage stays reachable at
+          /classic for comparison and rollback. */}
       <Route path="/" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <DigeratiHomepage />
+        </Suspense>
+      )} />
+      <Route path="/classic" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <DigeratiHomepage />
         </Suspense>

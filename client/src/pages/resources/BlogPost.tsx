@@ -390,12 +390,12 @@ export default function BlogPost() {
             className="flex items-center gap-2 text-sm text-white/50 mb-8"
             aria-label="Breadcrumb"
           >
-            <Link
+            <a
               href="/"
               className="hover:text-de-accent-ink transition-colors"
             >
               Home
-            </Link>
+            </a>
             <ChevronRight className="h-4 w-4" />
             <Link
               href="/resources/blog"
