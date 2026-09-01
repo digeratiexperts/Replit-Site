@@ -143,7 +143,10 @@ const Checkout = () => {
           window.location.href = result.url;
         } else if (result.orderId) {
           clearCart();
-          navigate(`/internal/warehouse/order-confirmation?orderId=${result.orderId}`);
+          const ct = result.confirmationToken
+            ? `&ct=${encodeURIComponent(result.confirmationToken)}`
+            : "";
+          navigate(`/internal/warehouse/order-confirmation?orderId=${result.orderId}${ct}`);
         }
       } else if (paymentMethod === "quote_request") {
         navigate("/internal/warehouse/quote-request");
