@@ -46,6 +46,21 @@ claims:
       - package.json
     status: active
     started: 2026-08-31
+  - id: de-site-v2-scrollcraft
+    owner: claude
+    subsystem: site-v2-experiment
+    branch: claude/digerati-experts-v2-scrollcraft-7fkrfd
+    base_sha: ecea1d9314f859bd5a17343c277e739f3bedb492
+    files:
+      - .claude/skills/scrollcraft/**
+      - scrollcraft/**
+    status: active
+    started: 2026-09-01
+    note: >-
+      Version B experiment: an isolated, independently runnable Scrollcraft
+      interpretation of the DE site under scrollcraft/builds/de-v2. Touches no
+      production file; never merges over production without Joe's explicit
+      instruction.
 # fable-visual-batch (issue 118, branch claude/fable-visual-batch) RETIRED
 # 2026-08-31: merged via PR #148 (main @ 8a20592). Confirmed
 # `git diff origin/main origin/claude/fable-visual-batch` is empty — no
