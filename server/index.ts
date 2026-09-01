@@ -1,6 +1,11 @@
 import dotenv from "dotenv";
 dotenv.config();
 
+import { enforceProductionConfig } from "./production.config";
+// Fail closed before serving traffic: missing/unsafe required production
+// config (JWT_SECRET, DATABASE_URL) terminates startup with a clear error.
+enforceProductionConfig();
+
 import express, { type Request, Response, NextFunction } from "express";
 import { createServer } from "http";
 import { registerRoutes, authMiddleware, requireRole } from "./routes";
@@ -18,6 +23,8 @@ import cookieParser from "cookie-parser";
 import compression from "compression";
 import jwt from "jsonwebtoken";
 import { zohoPayments } from "./zohoPayments";
+import { evaluatePaymentSucceeded } from "./zohoPaymentWebhook";
+import { getJwtSecretOrNull } from "./config/authSecrets";
 import { setupCrossServiceHandlers } from "./crossServiceHandler";
 import { eventBus, EventTypes } from "./eventBus";
 
@@ -45,6 +52,10 @@ process.on('uncaughtException', (error) => {
 
 const app = express();
 const server = createServer(app);
+
+// One reverse-proxy hop (OpenLiteSpeed/CyberPanel) in front of the app:
+// required so express-rate-limit and req.ip see the real client address.
+app.set("trust proxy", 1);
 
 app.use(compression({
   level: 6,
@@ -200,9 +211,24 @@ app.post(
 
         if (existingOrder) {
           const oldStatus = existingOrder.status || "unknown";
-          const alreadyPastPaid = ["paid", "processing", "provisioning", "completed"].includes(oldStatus);
+          const decision = evaluatePaymentSucceeded(existingOrder, parsed);
 
-          if (!alreadyPastPaid) {
+          if (decision.action === "reject") {
+            console.error("[SECURITY] PAYMENT_VERIFICATION_FAILED", {
+              orderId: existingOrder.id,
+              orderNumber: existingOrder.orderNumber,
+              reason: decision.reason,
+              expectedTotal: existingOrder.total,
+              eventAmount: parsed.amount,
+              eventCurrency: parsed.currency,
+              paymentId: parsed.paymentId,
+            });
+            // Acknowledge receipt (the signature was valid) but do NOT
+            // transition the order; it stays awaiting reconciliation.
+            return res.json({ received: true });
+          }
+
+          if (decision.action === "mark_paid") {
             await db.update(storeOrders)
               .set({
                 status: "paid",
@@ -339,7 +365,7 @@ app.use((req, res, next) => {
 
   const token =
     typeof req.cookies?.portalAuth === "string" ? req.cookies.portalAuth : "";
-  const secret = process.env.JWT_SECRET;
+  const secret = getJwtSecretOrNull();
   if (!token || !secret) {
     const returnTo = encodeURIComponent(req.path);
     return res.redirect(
