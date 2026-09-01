@@ -29,6 +29,7 @@ changes only grammar and world will fail it.
 | Build | Grammar | Nav treatment | Hero device | Act-sequence shape | Close pattern | Signature move | World | Port |
 |---|---|---|---|---|---|---|---|---|
 | de-v2 | Chaptered editorial | No bar; fixed machine-room rail: folio + live mini technology map (top ribbon under 1100px) | Title page: type on paper, kinetic lines, no media above the fold | 10 chapters ≈ 14.1vh: flow, flow+field/silence, pin 2.4 (peak: figure draws itself), flow+interactive, flow+in dossier, pan 1.6, flow+reveal, flow+reveal+tilt, flow+parallax, pin 1.15 (merged edition, same build evolved) | Colophon plate on paper; CTA as running text; completed map holds | The technology map as persistent margin instrument: scatters, snaps together at the peak, answers outcome choices, stands complete at the close | Technical drawing (ink on graphite + paper) with real documentary photography | 4500 |
+| proactive-ecosystem-amplify | Chaptered editorial (amplification of an existing React page; site chrome retained) | Global site nav + fixed margin environment folio (2xl+), chapter number, title, live map, jump list | Existing title page (PageTemplate text hero, no media) into staggered pillar chapter | flow, pin(2.2), flow(reveal), flow(parallax), flow(stagger), flow(reveal LR), flow(hold); 7 chapters | Compare panel lands and holds inside the page's existing CTA section, folio map complete | Accumulating margin environment map: one domain node lit and linked per chapter passed, complete and clickable by the close | Coded technical drawing on the site's dark ground, no photography, no generation | /solutions/proactive-ecosystem |
 
 ---
 
@@ -40,6 +41,18 @@ act-count-and-length band. The shared columns are what the next build inherits
 as a constraint, so writing them down is the whole point.
 
 - Chaptered editorial grammar, the margin machine-room rail with a live figure, the title-page hero on paper, the accumulating-legend peak, the colophon close with a running-text CTA, and the 9-act ≈ 14vh band are taken by de-v2.
+- Chaptered editorial as an amplification layer over an existing page is taken.
+- **Collision on record:** de-v2 and proactive-ecosystem-amplify were built in
+  parallel, neither seeing the other's row, and converged on chaptered
+  editorial, a fixed margin folio carrying a live environment map, a
+  type-only title-page hero, and an accumulating-map signature move. They
+  differ on act shape, close pattern, and interactivity, but they share more
+  than the gate allows between planned builds. The next build must clear BOTH
+  rows on 4 of 6, which in practice rules out the folio-plus-live-map margin
+  and the chaptered-editorial grammar together.
+- The pinned scatter-to-assembly diagram peak is taken.
+- The accumulating margin environment map (folio + trace) is taken.
+- The hold-on-existing-CTA close is taken.
 
 ---
 

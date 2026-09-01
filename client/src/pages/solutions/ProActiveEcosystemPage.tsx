@@ -11,6 +11,19 @@ import { pricing, formatUserPrice, formatPrice, PRICING_SCOPE_NOTE } from "@/dat
 import { ProofChip } from "@/components/evidence/ProofChip";
 import { ProActiveEcosystemDiagram } from "@/components/visual/ProActiveEcosystemDiagram";
 import { AssessmentReportSample } from "@/components/evidence/AssessmentReportSample";
+import { ScrollStory } from "@/scrollstory/ScrollStory";
+import { EnvironmentAssembly } from "@/scrollstory/EnvironmentAssembly";
+
+/** Folio chapters, labelled with the page's existing heading language. */
+const CHAPTERS = [
+  { id: "ch-model", label: "Cybersecurity-first IT" },
+  { id: "ch-architecture", label: "Operating architecture" },
+  { id: "ch-progression", label: "Ecosystem progression" },
+  { id: "ch-assessment", label: "Assessment report" },
+  { id: "ch-capabilities", label: "Capabilities per tier" },
+  { id: "ch-fit", label: "Standalone and co-managed" },
+  { id: "ch-compare", label: "Compare capabilities" },
+];
 
 const lifecycle = [
   { title: "Assessment", body: "Review identity, endpoints, email, backups, network, and operating reality — not a sales script." },
@@ -59,6 +72,7 @@ export default function ProActiveEcosystemPage() {
         ]}
       />
 
+      <ScrollStory chapters={CHAPTERS}>
       <div className="space-y-16">
           {/* Sourced Contextual Proof Chips */}
           <div className="flex flex-wrap items-center gap-3">
@@ -67,7 +81,14 @@ export default function ProActiveEcosystemPage() {
             <ProofChip metric="ARIZONA" label="Principal-Led Engagement" icon={Users} />
           </div>
 
-          <section className="grid gap-6 md:grid-cols-3">
+          <section
+            id="ch-model"
+            data-de-chapter="0"
+            data-sc-act="flow"
+            data-sc-in
+            data-sc-stagger="60"
+            className="grid gap-6 md:grid-cols-3"
+          >
             {[
               { icon: Shield, title: "Cybersecurity-first IT", body: "Identity, endpoints, email, and recovery are designed in — not bolted on after a help-desk contract." },
               { icon: Layers, title: "One accountable model", body: "Support, workplace, security operations, and strategy sit in one operating relationship instead of a pile of vendors." },
@@ -81,21 +102,61 @@ export default function ProActiveEcosystemPage() {
             ))}
           </section>
 
+          {/* The peak: the fragmented environment assembles under scroll.
+              Coded visual only; resolves into the real diagram below. */}
+          <section
+            id="ch-architecture"
+            data-de-chapter="1"
+            data-sc-act="pin"
+            data-sc-span="2.2"
+            className="de-peak"
+          >
+            <div data-sc-stage>
+              <EnvironmentAssembly />
+              <p className="de-peak__caption" data-sc-cue="0.5 0.95 0.2 0.3">
+                <strong>One accountable model.</strong> Support, workplace, security
+                operations, and strategy in one operating relationship instead of a
+                pile of vendors.
+              </p>
+            </div>
+          </section>
+
           {/* Flagship Ecosystem Operating Architecture Diagram */}
           <section className="mb-16">
             <ProActiveEcosystemDiagram />
           </section>
 
-          <section className="mb-16">
-            <EcosystemProgression />
+          <section
+            id="ch-progression"
+            data-de-chapter="2"
+            data-sc-act="flow"
+            className="mb-16"
+          >
+            <div data-sc-reveal="up" data-sc-reveal-at="0.04 0.4">
+              <EcosystemProgression />
+            </div>
           </section>
 
           {/* Discovery Deliverable Sample Excerpt */}
-          <section className="mb-16">
-            <AssessmentReportSample />
+          <section
+            id="ch-assessment"
+            data-de-chapter="3"
+            data-sc-act="flow"
+            className="mb-16"
+          >
+            <div data-sc-parallax="-0.5">
+              <AssessmentReportSample />
+            </div>
           </section>
 
-          <section className="mb-16 grid gap-10 lg:grid-cols-2">
+          <section
+            id="ch-capabilities"
+            data-de-chapter="4"
+            data-sc-act="flow"
+            data-sc-in
+            data-sc-stagger="70"
+            className="mb-16 grid gap-10 lg:grid-cols-2"
+          >
             <div>
               <h2 className="font-heading text-2xl font-semibold text-white">Capabilities added per tier</h2>
               <ul className="mt-6 space-y-4">
@@ -132,8 +193,17 @@ export default function ProActiveEcosystemPage() {
             </div>
           </section>
 
-          <section className="mb-16 grid gap-6 md:grid-cols-2">
-            <div className="rounded-2xl border border-de-hairline bg-de-raised p-6">
+          <section
+            id="ch-fit"
+            data-de-chapter="5"
+            data-sc-act="flow"
+            className="mb-16 grid gap-6 md:grid-cols-2"
+          >
+            <div
+              data-sc-reveal="left"
+              data-sc-reveal-at="0.05 0.42"
+              className="rounded-2xl border border-de-hairline bg-de-raised p-6"
+            >
               <div className="flex items-center gap-3">
                 <IconWell icon={ClipboardCheck} size="sm" surface="dark" />
                 <h2 className="text-lg font-semibold text-white">Standalone vs ProActive</h2>
@@ -150,7 +220,11 @@ export default function ProActiveEcosystemPage() {
                 </span>
               </Link>
             </div>
-            <div className="rounded-2xl border border-de-hairline bg-de-raised p-6">
+            <div
+              data-sc-reveal="right"
+              data-sc-reveal-at="0.12 0.5"
+              className="rounded-2xl border border-de-hairline bg-de-raised p-6"
+            >
               <div className="flex items-center gap-3">
                 <IconWell icon={Users} size="sm" surface="dark" />
                 <h2 className="text-lg font-semibold text-white">Co-managed vs ProActive</h2>
@@ -169,7 +243,13 @@ export default function ProActiveEcosystemPage() {
             </div>
           </section>
 
-          <section className="rounded-2xl border border-de-hairline bg-de-raised p-6 md:flex md:items-center md:justify-between md:gap-8 md:p-8">
+          <section
+            id="ch-compare"
+            data-de-chapter="6"
+            data-sc-act="flow"
+            data-sc-in
+            className="rounded-2xl border border-de-hairline bg-de-raised p-6 md:flex md:items-center md:justify-between md:gap-8 md:p-8"
+          >
             <div className="max-w-xl">
               <h2 className="text-xl font-semibold text-white">Compare capabilities and operating depth</h2>
               <p className="mt-2 text-sm leading-relaxed text-white/60">
@@ -185,6 +265,7 @@ export default function ProActiveEcosystemPage() {
             </Link>
           </section>
       </div>
+      </ScrollStory>
     </PageTemplate>
   );
 }

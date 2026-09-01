@@ -265,8 +265,16 @@ export const DE_DESK_REFERENCE_STYLE = String.raw`
   .de-desk-route-note,
   .de-desk-more-toggle,
   .de-desk-field-error,
-  .de-desk-form-error {
+  .de-desk-form-error,
+  .de-desk-login-hint,
+  .de-desk-signin-alt {
     color: #68636f !important;
+  }
+  .de-desk-signin-alt:hover { color: #111116 !important; }
+  .de-desk-login .de-desk-form-error {
+    background: #fdf2f5 !important;
+    border-color: rgba(211,18,106,0.28) !important;
+    color: #8f1035 !important;
   }
 
   @media (max-width: 639px) {
