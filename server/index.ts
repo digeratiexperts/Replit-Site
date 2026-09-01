@@ -404,6 +404,20 @@ app.use(
   }),
 );
 
+// Version B preview (PR #164, Joe-authorized go-live): the isolated Scrollcraft
+// interpretation of the site, published additively at /v2. Static, committed
+// under public/v2, X-Robots-Tag noindex so the preview never competes with the
+// canonical pages in search.
+app.use(
+  "/v2",
+  express.static(path.join(publicDir, "v2"), {
+    maxAge: "1h",
+    setHeaders(res) {
+      res.setHeader("X-Robots-Tag", "noindex");
+    },
+  }),
+);
+
 function listEndpoints(): Array<{ method: string; path: string }> {
   const routes: Array<{ method: string; path: string }> = [];
   const stack: any[] = (app as any)?._router?.stack || [];
