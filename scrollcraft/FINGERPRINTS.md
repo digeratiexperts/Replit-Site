@@ -28,9 +28,7 @@ changes only grammar and world will fail it.
 
 | Build | Grammar | Nav treatment | Hero device | Act-sequence shape | Close pattern | Signature move | World | Port |
 |---|---|---|---|---|---|---|---|---|
-
-*(empty: your first build has nothing to clear, so build whatever the interview
-points at. From the second onwards, this table is the constraint.)*
+| proactive-ecosystem-amplify | Chaptered editorial (amplification of an existing React page; site chrome retained) | Global site nav + fixed margin environment folio (2xl+), chapter number, title, live map, jump list | Existing title page (PageTemplate text hero, no media) into staggered pillar chapter | flow, pin(2.2), flow(reveal), flow(parallax), flow(stagger), flow(reveal LR), flow(hold); 7 chapters | Compare panel lands and holds inside the page's existing CTA section, folio map complete | Accumulating margin environment map: one domain node lit and linked per chapter passed, complete and clickable by the close | Coded technical drawing on the site's dark ground, no photography, no generation | /solutions/proactive-ecosystem |
 
 ---
 
@@ -41,7 +39,10 @@ reusing: a grammar, a nav treatment, a close pattern, a signature move, an
 act-count-and-length band. The shared columns are what the next build inherits
 as a constraint, so writing them down is the whole point.
 
-Nothing is taken yet.
+- Chaptered editorial as an amplification layer over an existing page is taken.
+- The pinned scatter-to-assembly diagram peak is taken.
+- The accumulating margin environment map (folio + trace) is taken.
+- The hold-on-existing-CTA close is taken.
 
 ---
 
