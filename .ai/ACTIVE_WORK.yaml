@@ -46,6 +46,21 @@ claims:
       - package.json
     status: active
     started: 2026-08-31
+  - id: de-desk-inline-login-card
+    issue: 153
+    owner: claude
+    subsystem: de-desk-auth
+    branch: claude/dynamic-login-card-chat-ve39il
+    base_sha: 529a7da90362fab81b6226907ac37d0212ab096c
+    files:
+      - client/src/components/DeskLoginCard.tsx
+      - client/src/components/DeskLoginCard.test.ts
+      - client/src/components/ZohoASAPWidget.tsx
+      - client/src/components/deDeskReferenceStyle.ts
+      - client/src/lib/portalUrls.ts
+      - client/src/hooks/useStoreAuth.ts
+    status: active
+    started: 2026-08-31
 # fable-visual-batch (issue 118, branch claude/fable-visual-batch) RETIRED
 # 2026-08-31: merged via PR #148 (main @ 8a20592). Confirmed
 # `git diff origin/main origin/claude/fable-visual-batch` is empty — no
