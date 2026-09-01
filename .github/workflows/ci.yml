@@ -63,7 +63,12 @@ jobs:
         run: |
           set -euo pipefail
           LOG=/tmp/digerati-ci-production.log
-          NODE_ENV=production PORT=3300 node dist/index.js >"$LOG" 2>&1 &
+          # The production build now fails closed without a JWT secret; give
+          # the smoke run an ephemeral one and explicitly allow memory-only DB.
+          NODE_ENV=production PORT=3300 \
+            JWT_SECRET="$(openssl rand -hex 32)" \
+            DE_SMOKE_ALLOW_MEMORY_ONLY=1 \
+            node dist/index.js >"$LOG" 2>&1 &
           SERVER_PID=$!
           cleanup() {
             kill "$SERVER_PID" 2>/dev/null || true

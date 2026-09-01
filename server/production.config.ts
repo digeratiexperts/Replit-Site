@@ -73,7 +73,14 @@ export function validateProductionConfig(): string[] {
   const errors: string[] = [];
 
   if (!process.env.DATABASE_URL) {
-    errors.push('DATABASE_URL is required for production');
+    // CI's local production smoke boots the built server without a database
+    // on purpose (memory-only mode); the opt-out must be explicit so a real
+    // deployment can never silently run without durable storage.
+    if (process.env.DE_SMOKE_ALLOW_MEMORY_ONLY === '1') {
+      console.warn('[config] WARNING: DATABASE_URL not set — memory-only mode explicitly allowed (DE_SMOKE_ALLOW_MEMORY_ONLY=1)');
+    } else {
+      errors.push('DATABASE_URL is required for production');
+    }
   }
 
   if (!process.env.JWT_SECRET || JWT_PLACEHOLDERS.has(process.env.JWT_SECRET)) {
