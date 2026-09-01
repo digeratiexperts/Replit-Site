@@ -293,7 +293,7 @@ const QuoteConfirmation = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="/">
+              <Link href="/">
                 <Button
                   variant="outline"
                   className="border-white/20 text-white hover:bg-white/10"
@@ -302,7 +302,7 @@ const QuoteConfirmation = () => {
                   <Home className="w-4 h-4 mr-2" />
                   Back to Home
                 </Button>
-              </a>
+              </Link>
               <Link href="/internal/warehouse">
                 <Button
                   className="bg-de-accent hover:bg-de-accent text-white"

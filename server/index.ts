@@ -466,43 +466,7 @@ function listEndpoints(): Array<{ method: string; path: string }> {
   } else {
     const distPath = path.resolve(process.cwd(), "dist/public");
     const indexPath = path.join(distPath, "index.html");
-
-    // Version B homepage (Joe-authorized go-live): the Scrollcraft build staged
-    // by scripts/stage-site-v2.mjs owns "/" and its own flat files; every other
-    // route still belongs to the React app below. Guarded so a build without
-    // the staged directory keeps serving the SPA homepage.
-    const siteV2Dir = path.join(distPath, "de-v2");
-    const siteV2Index = path.join(siteV2Dir, "index.html");
-    if (fs.existsSync(siteV2Index)) {
-      app.get("/", (_req, res) => {
-        res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-        res.sendFile(siteV2Index);
-      });
-      app.use(
-        express.static(siteV2Dir, {
-          index: false,
-          etag: true,
-          lastModified: true,
-          setHeaders: (res, filePath) => {
-            // These files are not content-hashed, so code stays short-lived
-            // and revalidated; only stable binaries get long cache.
-            if (filePath.match(/\.woff2?$/)) {
-              res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
-            } else if (filePath.match(/\.(png|jpg|jpeg|gif|svg|webp|ico)$/)) {
-              res.setHeader("Cache-Control", "public, max-age=2592000");
-            } else if (filePath.match(/\.(js|css)$/)) {
-              res.setHeader("Cache-Control", "public, max-age=300, must-revalidate");
-            } else if (filePath.endsWith(".html")) {
-              res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-            }
-          },
-        }),
-      );
-      log("🅱️ Version B homepage mounted at / from dist/public/de-v2");
-    } else {
-      log("⚠️ dist/public/de-v2 not staged; SPA homepage remains at /");
-    }
-
+    
     app.use(express.static(distPath, {
       maxAge: '1y',
       etag: true,
