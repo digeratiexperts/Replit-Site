@@ -1,8 +1,9 @@
 # Digerati Experts Scrollcraft Experience Plan
 
-**Status:** owner-approved planning basis; **not** implementation or go-live authorization  
+**Status:** owner-approved planning basis; **not** authorization for further implementation or release work  
 **Planning owner:** ChatGPT (issue #174)  
-**Base:** `main @ 7c78dae14dfac7675c7a760f29eaaa652967cc3f`  
+**Planning began:** `main @ 7c78dae14dfac7675c7a760f29eaaa652967cc3f`  
+**Reconciled with:** `main @ 1edee66466fb7f2ab75166e76b15afd38cda3fb3` (PR #173 merged concurrently during this planning task)  
 **Applies to:** public DE website experience strategy, Scrollcraft use, material production, and the boundary between cinematic storytelling and ordinary/utility UX.
 
 > **Core rule:** Scrollcraft is a storytelling capability, not a visual theme. DE must look like DE whether a page uses Scrollcraft or not.
@@ -21,13 +22,16 @@ The next phase is therefore **not** “apply Scrollcraft everywhere.” It is:
 4. decide which materials are real, captured, created, generated, diagrammed, or licensed;
 5. design each flagship with a different interaction grammar so the site does not repeat one trick;
 6. preserve the existing DE brand foundation and utility UX;
-7. build one flagship to a very high standard before propagating anything.
+7. build/refine one flagship to a very high standard before propagating anything.
 
-### Non-negotiable pause
+### Current production-state note
 
-- `/v2` on current `main` is a **review/reference surface**, not the automatic final homepage design authority.
-- Open PR #173 (“Version B becomes the homepage”) is a separate release decision. This plan does **not** authorize its merge/deploy.
-- No additional Scrollcraft propagation should begin until the material board and flagship brief for that route are approved.
+While this document was being produced, PR #173 merged and changed `main` so Version B is the homepage release lane, with the previous SPA homepage preserved at `/classic`. That concurrent merge changes the **current state**, not the design conclusion:
+
+- the Version B experience now on the homepage is a **valuable production/reference implementation**, not automatic final design authority;
+- `/classic`, `/v2`, the Version B source/brief, and the ProActive amplification should all be treated as comparative evidence during the material/design review;
+- this plan does not authorize additional Scrollcraft propagation, consolidation, or new production redesign work;
+- before the next design/build step, the material board and creative brief for that route must be approved.
 
 ---
 
@@ -94,7 +98,7 @@ The current router mixes public marketing, publishing, commerce, support, legal,
 
 | Route / family | Level | Direction |
 |---|---:|---|
-| `/` | **A** | Final flagship DE story. Must be redesigned/curated from the best production + Version B ideas, not simply inherit Version B unchanged. |
+| `/` | **A** | Current Version B production homepage is a reference baseline, not a locked final. Final flagship should be curated/redesigned from the strongest production + Version B ideas after the material-board process. |
 | `/solutions/proactive-ecosystem` | **A** | Major operating-model story. Keep its strategic value but give it a grammar distinct from the homepage. |
 | future “How We Protect” flagship destination / strongest security story | **A** | Layered protection as a system, not a SOC-wall aesthetic. May reuse content from current protection/security pages but should have its own experience. |
 | Cyber Risk Assessment experience (commercial journey around `/book`, assessment content, and proof) | **A/B** | The assessment itself deserves a guided transformation story; the booking form does not. Build narrative before the utility handoff. |
@@ -341,6 +345,8 @@ These are planning briefs, not implementation specs. Each still requires a full 
 **Before:** “This is another MSP/security company.”  
 **After:** “DE makes all the technology my business depends on operate as one system; I want them to look at mine.”
 
+**Current baseline:** Version B now serves the homepage through the #173 release path; the prior SPA homepage remains `/classic`. Both are inputs to the redesign/material review.
+
 **Story spine:**
 
 1. quiet arrival / conviction;
@@ -366,7 +372,7 @@ These are planning briefs, not implementation specs. Each still requires a full 
 - industry/client-profile editorial material;
 - final CTA tied to the Cyber Risk Assessment.
 
-**Existing site integration:** the best current homepage content should be preserved/elevated, not discarded merely because a new scroll experience exists. Navigation, conversion paths, SEO, accessibility, site footer/chrome, and product links remain canonical DE systems.
+**Existing site integration:** the best prior SPA homepage content and the strongest Version B story material should be preserved/elevated, not discarded merely because one version is currently mounted at `/`. Navigation, conversion paths, SEO, accessibility, site footer/chrome, and product links remain canonical DE systems.
 
 **Avoid:** constant animation, multiple competing peaks, generic “AI/cyber” imagery, dashboard cosplay, turning every section into a full viewport.
 
@@ -631,9 +637,15 @@ This plan is design-led, but implementation must preserve the site as an applica
 
 ### Phase 0 — Inventory / showroom
 
-- preserve `/v2` as a comparison/reference surface;
-- inventory current Scrollcraft material, QA sheets, briefs, artwork, and the ProActive amplification;
-- show the work together so design decisions are made from rendered evidence, not memory.
+Compare the rendered surfaces now available:
+
+- current `/` Version B release;
+- `/classic` prior SPA homepage;
+- `/v2` reference path where retained;
+- ProActive Scrollcraft amplification;
+- Scrollcraft QA/contact sheets, briefs, fingerprint registry, generated plates, and quiet-tier pages.
+
+The goal is to decide from rendered evidence, not memory.
 
 ### Phase 1 — Experience map
 
@@ -680,11 +692,13 @@ Storyboard key states and transitions:
 - how the next section receives the state;
 - mobile/reduced variants.
 
-### Phase 5 — Build one flagship
+### Phase 5 — Build/refine one flagship
 
 **Homepage first**, after its material board is approved.
 
 Do not build four flagships concurrently.
+
+Because Version B is already serving as the homepage release lane after #173, “build homepage first” now means **evaluate and refine/replace deliberately from that baseline**, not blindly start a third unrelated homepage.
 
 ### Phase 6 — Extract primitives
 
@@ -776,7 +790,7 @@ Before any next flagship implementation, produce the **Homepage Material Board**
 9. **provenance/classification for every item**;
 10. **one storyboard showing the page before any production code is written**.
 
-Only after the material board is approved should implementation begin.
+Only after the material board is approved should the next implementation/refinement begin.
 
 ---
 
