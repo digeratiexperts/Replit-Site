@@ -15,6 +15,14 @@ Companion documents (session artifacts, review-only):
 > **Scrollcraft is a storytelling capability, not a visual theme.** DE looks
 > like DE whether a page scrolls cinematically or sits perfectly still.
 
+**What DE is.** A Managed Security Service Provider and an IT Managed
+Services company. Managed security and managed IT are the offering every
+page sells and every flagship is built around. DE also does AI and the rest
+of the fourteen domains, and each has its scope; AI is one contained domain,
+never the lead and never a flagship of its own. (Corrected 2026-09-01 at
+Joe's direction: an earlier draft carried an Automation + AI flagship, which
+overstated AI against the real offering.)
+
 ## Where things stand
 
 - Production `/` serves the original homepage, unchanged.
@@ -41,7 +49,7 @@ never receive Scrollcraft treatment.
 
 142 routed pages plus the static `/v2` preview tree.
 
-### Level A — flagship narratives (5)
+### Level A — flagship narratives (4)
 
 | Route | Note |
 |---|---|
@@ -49,7 +57,6 @@ never receive Scrollcraft treatment.
 | `/solutions/proactive-ecosystem` | New grammar: a living operating cadence, not another map assembly. Brief 2. |
 | How We Protect — **route TBD** | Default proposal: elevate `/solutions/unified-security`. Brief 3. |
 | `/assessment` | The conversion flagship: unknown → observed → findings → prioritized → roadmap. Brief 4. |
-| Automation + AI — **route TBD** | Default proposal: create `/solutions/automation-ai`. Brief 5. |
 
 ### Level B — selective moments (10)
 
@@ -58,7 +65,10 @@ never receive Scrollcraft treatment.
 nonprofits: one industry-specific moment each) · `/about/mission-values` (one
 editorial movement: independent + technical + local + principal-led) ·
 `/store` (one controlled branded introduction; motion gets out of the way once
-shopping starts).
+shopping starts) · the AI and automation domain, wherever it is presented
+(inside the ProActive story or on a future solutions page): at most one
+contained Level B moment, framed as one of fourteen domains DE operates,
+never a flagship.
 
 ### Level C — editorial / normal marketing (~45)
 
@@ -184,8 +194,9 @@ will be committed under `scrollcraft/briefs/` once approved. Direction fixed
 here:
 
 1. **Homepage — The Environment Wakes Up, rebuilt.** Belief: "IT providers
-   are interchangeable ticket-takers" → "my environment could work as one
-   designed system, and DE is who does that." Curve retained. The
+   are interchangeable ticket-takers" → "my environment could be secured and
+   run as one designed system, and DE, a managed security and managed IT
+   company, is who does that." Curve retained. The
    transformation peak is redesigned from scratch on the diagram system;
    explicitly not the existing environment map, not a margin folio.
 2. **ProActive Ecosystem — a living operating cadence.** Observe → Decide →
@@ -198,9 +209,12 @@ here:
 4. **Cyber Risk Assessment — unknown to roadmap.** An incomplete environment
    inspected, annotated, classified and prioritized under scroll; findings
    resolve into a roadmap; the real promises typeset plainly at the close.
-5. **Automation + AI — manual work to orchestrated systems.** Handoffs
-   collapse into one automated path while a human approval gate stays lit.
-   No robots, no AI blobs; must feel unlike How We Protect.
+Automation + AI is not a flagship. It is one contained domain; if it gets
+any scroll treatment at all it is a single Level B moment (manual handoffs
+collapsing into one path with a human approval gate still lit), framed as
+one of the fourteen domains a managed security and managed IT company
+operates. No robots, no AI blobs, and never more prominence than the
+security and managed IT pages.
 
 ## 07 · Rollout order and gates
 
@@ -213,7 +227,7 @@ here:
 | P4 Motion storyboards | Chapter by chapter for the homepage | Storyboard + asset table approved |
 | P5 Build one flagship | Homepage only; fingerprint gate; harness at all widths; smoke expectations updated with the release; staged rollout with instant revert | Joe's verdict on the live candidate |
 | P6 Integrate | Reusable DE primitives, not reusable page designs | Primitives documented |
-| P7 Selective propagation | ProActive → How We Protect → Assessment → Automation + AI, each with a distinct fingerprint; then Level B moments | Per page, same rigor |
+| P7 Selective propagation | ProActive → How We Protect → Assessment, each with a distinct fingerprint; then Level B moments (industries, solutions index, about, store introduction, and the contained AI moment last) | Per page, same rigor |
 
 ## 08 · Standing rules the program inherits
 
