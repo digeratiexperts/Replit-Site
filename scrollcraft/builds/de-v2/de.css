@@ -722,3 +722,24 @@
   .instrument--tick .instrument__folio { animation: none; }
   .dossier__row::before { transform: scaleX(1); transition: none; }
 }
+
+/* --------------------------------------- Graphite Illumination plates ---- */
+.plate-ground {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+.plate-ground--field { opacity: 0.55; }
+.plate-ground--peak  { opacity: 0.5; }
+.plate-ground--rail  { opacity: 0.45; }
+.range__rail { position: relative; }
+
+.dossier__band { margin: var(--sc-6) 0 0; }
+.dossier__band img {
+  width: 100%; height: auto;
+  aspect-ratio: 3 / 1; object-fit: cover;
+  border: 1px solid var(--de-line-soft);
+  border-radius: var(--sc-r-sm);
+}
+.dossier__band figcaption { margin-top: var(--sc-2); }
