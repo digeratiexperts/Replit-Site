@@ -220,3 +220,88 @@ Four-plus device families, none twice in a row, zero scrub (no video assets).
 
 Total ≈ 10vh. Peak is Act 3 at 2.6vh, more than double any neighbour, with the
 authored silence in front of it and the quietest act (2) immediately before.
+
+---
+
+## Storyboard continuity rule
+
+**Added by Joe, 2026-09-02.** A governing creative rule for the DE flagship, not
+an instruction to redesign the current passage immediately.
+
+> The DE flagship must feel like one evolving visual world, not a sequence of
+> independently generated diagrams, illustrations, or image cards.
+>
+> **Prefer transformation over replacement.** Visual elements introduced in one
+> act should, wherever practical, persist and change state through later acts —
+> connecting, reorganizing, splitting, aligning, expanding, collapsing, or
+> revealing new layers as the reader scrolls.
+>
+> Do not solve every narrative beat by introducing a new finished asset.
+>
+> New diagrams, images, or generated visuals are exceptional. They must justify
+> why the existing visual world cannot transform to carry the next beat.
+>
+> The target experience is a storyboard animated by scroll, not a gallery of
+> AI-generated pieces.
+>
+> For Why DE specifically, explore continuity across:
+> fragmented environment → correction/alignment → connected system →
+> eight-block architecture → assessment entry → three pathways.
+
+**Why this is stronger than what the brief already said.** Section 7 above
+records "transformative transitions instead of page-section cuts," which governs
+the *seams between acts*. This rule governs the *objects inside them*: it is
+possible to satisfy the transition rule and still fail this one, by cross-fading
+smoothly between six unrelated finished pieces. The test is whether a visitor
+could point at something in act 6 and say "that is the same thing I saw in act
+1, changed" — not merely "that transition was smooth."
+
+**Honest status against the current build.** The passage partially satisfies
+this and partially does not:
+
+- **Satisfies it.** The course line and bearing gauge persist across every act
+  and change state continuously. The heading correction transforms the entire
+  world rather than replacing it. Nothing on the page is a generated asset.
+- **Does not satisfy it.** The waypoint list, the eight-block rail and the
+  pathway cards are three separate constructions that happen to share a design
+  language. Under this rule they should be **one object under transformation**:
+  the fragmented environment of act 1 aligning into the ordered sequence of act
+  4, condensing into the architecture of act 5, then resolving into the three
+  destinations of act 6.
+
+That is the direction for the next revision, and it is a real redesign of acts
+4–6, not a tweak. Recorded here so it is not lost.
+
+---
+
+## Unresolved defects in the current build
+
+**1 · The close does not hold. The page ends on empty scroll.**
+
+Measured on the desktop harness run at 1440x900 against `dc9470a`: frames 39 and
+40 of 40 have a mean luminance of **6.69 / 255** and contain nothing but the
+fixed site bar, the course line and the bearing gauge reading `360° UNDERWAY`.
+The closing mark, "PROTECT. EMPOWER. SUCCEED.", has scrolled out of frame above.
+The page therefore ends on roughly one and a half viewports of nothing.
+
+This violates a hard rule of the skill itself:
+
+> *"An ending that trails off, fades out, or just becomes a footer → The close
+> resolves and holds. The last feeling is the one they carry."*
+
+Probable cause: the final act is `pin` at span 1.4, and the pinned stage's
+content finishes before the act's scroll range does, so the remaining travel
+plays out over an empty stage. The same class of failure as the opener
+over-scroll fixed in `11868ce`, at the other end of the page. The harness cannot
+flag it, because there are no cues in that range to measure against — it is only
+visible in the contact sheet or by measuring frame luminance.
+
+Not fixed in this build. It needs the close to hold its last frame rather than
+travel past it.
+
+**2 · The lateral pan act carries more vertical space than it needs.**
+Cosmetic, not a defect.
+
+**3 · No real-phone verification.** Headless Chrome cannot reproduce iOS
+scrolling or Low Power Mode. This page has no video, so the usual clip-lifecycle
+risk is absent, but touch scrolling over a rotated stage is genuinely untested.
