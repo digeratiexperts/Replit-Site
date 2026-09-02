@@ -80,8 +80,32 @@ would not work here:
   `16:9`, `1:1`, `4:5` and exits on anything else, so `SKILL.md` states the
   three and says the wider list does not apply.
 
-No script, key handling, endpoint or binary asset changed in this pass; it is
-documentation only.
+## Download guard added to the script (2026-09-02)
+
+`downloadImage()` followed redirects but never checked the HTTP status, so any
+non-2xx body was written to the output path and reported as `Saved to:` with
+exit 0. In a cloud session whose egress allowlist does not include kie.ai's
+result host (`tempfile.aiquickdraw.com`), this wrote the proxy's 111-byte
+"Host not in allowlist" text to a `.png` and exited successfully -- the
+generation had already cost credits and looked like it had worked.
+
+The script now rejects a non-2xx response and any body that does not begin with
+PNG, JPEG or WebP magic bytes, and on a download failure prints the task id and
+result url so the paid-for image can be fetched without generating again. This
+is a local fix, not upstream text; upstream has the same defect.
+
+Note for cloud environments: `api.kie.ai` and the upload host
+`tempfile.redpandaai.co` are reachable, but the result host
+`tempfile.aiquickdraw.com` must also be on the environment's egress allowlist or
+no generated image can be downloaded.
+
+Also corrected: the Notes line quoted the price as `$0.02-0.09`. Claude Code
+substitutes `$0` with the first skill argument, so invoking the skill with any
+argument corrupted the cost figure. Written as plain USD now. The same defect in
+`nano-banana-images/SKILL.md` is fixed in the same commit.
+
+The documentation back-port above changed no script; the download guard in
+this section is the only code change.
 
 ## External-service boundary
 

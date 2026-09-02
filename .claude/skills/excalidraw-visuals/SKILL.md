@@ -301,7 +301,7 @@ Inside: a wobbly-drawn computer monitor sketch. On the monitor screen, display t
 
 ## Notes
 
-- Uses Nano Banana API via kie.ai (~$0.02-0.09 per image)
+- Uses Nano Banana API via kie.ai (roughly 0.02 to 0.09 USD per image)
 - The style prefixes (light and dark) are locked. Only the diagram description changes per-request.
 - The style reference image is the #1 consistency lever. Always include it.
 - If generation fails, check that `KIE_AI_API_KEY` (or `KIE_API_KEY`) is set in the environment or project-root `.env`
