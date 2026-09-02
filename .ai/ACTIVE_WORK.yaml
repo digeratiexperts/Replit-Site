@@ -65,6 +65,10 @@ claims:
       - client/src/components/EcosystemProgression.tsx
       - client/src/components/visual/ProtectionCommandDeck.tsx
       - client/public/images/evidence/**
+      - client/src/pages/versions/**
+      - client/src/App.tsx (homepage version routes only)
+      - server/index.ts (/version-2 redirect only)
+      - scripts/snapshot-homepage-version.mjs
     status: active
     started: 2026-09-01
     note: >-
