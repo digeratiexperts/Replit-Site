@@ -123,11 +123,13 @@ add("verify", "Chrome", Boolean(chrome), chrome || "not found",
 
 // ------------------------------------------------------------- kie key ----
 function findKey() {
+  // KIE_API_KEY is the name the local Windows setup script (setup-kie.ps1) exports.
   if (process.env.KIE_AI_API_KEY) return "env";
+  if (process.env.KIE_API_KEY) return "env (KIE_API_KEY)";
   let dir = process.cwd();
   for (let i = 0; i < 8; i++) {
     const p = path.join(dir, ".env");
-    if (fs.existsSync(p) && /^\s*KIE_AI_API_KEY\s*=\s*\S+/m.test(fs.readFileSync(p, "utf8"))) return p;
+    if (fs.existsSync(p) && /^\s*(?:KIE_AI_API_KEY|KIE_API_KEY)\s*=\s*\S+/m.test(fs.readFileSync(p, "utf8"))) return p;
     const up = path.dirname(dir);
     if (up === dir) break;
     dir = up;
