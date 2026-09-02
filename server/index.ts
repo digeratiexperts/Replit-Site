@@ -30,9 +30,11 @@ import { eventBus, EventTypes } from "./eventBus";
 
 process.on('unhandledRejection', (reason, promise) => {
   const errorStr = String(reason);
-  if (errorStr.includes('endpoint has been disabled') || 
+  if (errorStr.includes('endpoint has been disabled') ||
       errorStr.includes('Connection terminated') ||
       errorStr.includes('connection to server')) {
+    // Tolerated (transient DB connection drops) but never silent.
+    console.warn('⚠️ Unhandled rejection (database connection, tolerated):', errorStr.slice(0, 200));
     return;
   }
   console.error('Unhandled Rejection:', reason);
