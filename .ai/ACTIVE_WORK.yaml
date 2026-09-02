@@ -54,14 +54,44 @@ claims:
     files:
       - .claude/skills/scrollcraft/**
       - scrollcraft/**
+      - client/src/diagrams/**
+      - client/src/pages/sections/ReferenceHeroSection.tsx
+      - client/src/pages/sections/DigeratiServicesSection.tsx
+      - client/src/pages/sections/DigeratiHowWeProtectSection.tsx
+      - client/src/pages/sections/DigeratiTestimonialsSection.tsx
+      - client/src/pages/sections/DigeratiMeetExpertsSection.tsx
+      - client/src/pages/sections/DigeratiNewsletterSection.tsx
+      - client/src/pages/sections/DigeratiCTASection.tsx
+      - client/src/components/EcosystemProgression.tsx
+      - client/src/components/visual/ProtectionCommandDeck.tsx
+      - client/public/images/evidence/**
+      - client/src/pages/versions/**
+      - client/src/App.tsx (homepage version routes only)
+      - server/index.ts (/version-2 redirect only)
+      - scripts/snapshot-homepage-version.mjs
     status: active
     started: 2026-09-01
     note: >-
       Version B: an isolated, independently runnable Scrollcraft
-      interpretation of the DE site under scrollcraft/builds/de-v2. Built
-      touching no production file. 2026-09-01: Joe explicitly authorized
-      merge and go-live in the build session; PR #164 merges the build,
-      and a follow-up integration PR routes it as the public homepage.
+      interpretation of the DE site under scrollcraft/builds/de-v2 (PR #164,
+      merged). The #173 homepage takeover was reverted by #177 at Joe's
+      decision; Version B stays a noindex preview at /v2 (PR #172).
+      PR #178 now also carries the homepage service sections Joe listed,
+      rebuilt on the diagram system (client/src/diagrams) with the H1 and
+      hero CTA locators the smoke gate asserts left untouched. Joe's
+      2026-09-02 review: keep #178 draft, no merge, no kie.ai spend;
+      corrections applied (see scrollcraft/EXPERIENCE-PLAN.md §09,
+      docs/CLAIMS-REGISTER.md, scrollcraft/ASSET-PLAN.md). Joe (2026-09-02):
+      the version archive goes to production on its own lane,
+      branch claude/homepage-versions-archive-7fkrfd (versions + diagram
+      system + deck prop; the live / untouched). Original text:
+      docs/CLAIMS-REGISTER.md, scrollcraft/ASSET-PLAN.md).
+      FREEZE (2026-09-01, Joe): Scrollcraft implementation on ANY route is
+      gated by the approved DE Scrollcraft Experience Plan at
+      scrollcraft/EXPERIENCE-PLAN.md. No page code, no material production,
+      and no new scroll treatment on any route until the plan's phase gates
+      pass (Phase 2 briefs approved, Phase 3 materials board-tested, Phase 4
+      storyboards approved). Any agent, any session. Planning documents only.
   - id: claude-code-skill-installs
     issue: 179
     owner: claude
