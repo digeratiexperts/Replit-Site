@@ -1,0 +1,5 @@
+{"step":"key","present":true,"length":32}
+{"t":"2026-09-02T04:59:36.586Z","step":"credit-before","http":200,"code":200,"credit":80}
+{"t":"2026-09-02T04:59:36.725Z","step":"createTask","http":200,"code":401,"msg":"The API key is not authorized to use this model."}
+{"t":"2026-09-02T04:59:36.725Z","step":"abort","reason":"no taskId"}
+{"t":"2026-09-02T04:59:45.130Z","step":"credit-after-readonly","body":"{\"code\":200,\"msg\":\"success\",\"data\":80.0}"}
