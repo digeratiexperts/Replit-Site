@@ -181,27 +181,46 @@ block pairs a **claim** with a **boundary**. The house tagline is
 
 ---
 
-## Discrepancies — resolved from the repository
+## The cybersecurity architecture is EIGHT blocks
 
-**The six protection domains (resolved).** `ProtectionCommandDeck.tsx` ships
-exactly six, and they are the authoritative list:
+**Corrected by Joe, 2026-09-02.** An earlier revision of this document asserted
+that the "six protection domains" were authoritative because
+`ProtectionCommandDeck.tsx` ships exactly six. That was wrong: **the shipping
+component is stale, not canonical.**
 
-| # | Domain | Maps to |
-|---|---|---|
-| 1 | Identity & Access | Lane 02 + cyber block "identity + access" |
-| 2 | Endpoint Protection | Cyber block "endpoint" |
-| 3 | Email & Collaboration | Cyber block "email + collab" |
-| 4 | Network & Connectivity | Lane 04 + cyber block "network" |
-| 5 | Data & Recovery | Lane 05 |
-| 6 | Governance & Compliance Support | Lane 09 |
+The current cybersecurity architecture is eight blocks:
 
-Important: the six are **not** a subset of the cybersecurity architecture's
-eight blocks. They are a different cut — a *buying-decision* taxonomy that
-pulls two domains (Data & Recovery, Governance & Compliance) from other lanes
-and folds four cyber blocks (browser + web, detection + response, human risk,
-risk + exposure) underneath the remaining four rather than surfacing them. Use
-the six to structure a decision; use the eight to explain the security
-architecture once the decision is being made.
+| # | Block | | # | Block |
+|---|---|---|---|---|
+| 1 | Identity & Access | | 5 | Network |
+| 2 | Endpoint | | 6 | Detection & Response |
+| 3 | Email & Collaboration | | 7 | Human Risk |
+| 4 | Browser & Web | | 8 | **Risk & Exposure** |
+
+**Risk & Exposure is retained, not dropped to preserve an old six-count.** It is
+distinguishable as the continuous **visibility and intelligence layer** rather
+than a peer control that performs the same function as the other seven — but it
+remains part of the eight-block architecture and must be represented.
+
+> **This is a separate system from the 12 public capability lanes and the 14
+> internal domains. Do not conflate them.** The taxonomy question below stays
+> open on its own terms.
+
+### Consequence: production is showing the stale model
+
+`client/src/components/visual/ProtectionCommandDeck.tsx` defines six domains
+(Identity & Access, Endpoint Protection, Email & Collaboration, Network &
+Connectivity, Data & Recovery, Governance & Compliance Support). It is rendered
+by `client/src/pages/sections/DigeratiHowWeProtectSection.tsx`, which is
+imported and rendered by `client/src/pages/DigeratiHomepage.tsx`.
+
+**The live homepage therefore presents the obsolete six-domain model.** Two of
+its six (Data & Recovery, Governance & Compliance Support) are not cybersecurity
+blocks at all — they map to capability lanes 05 and 09 — and four current blocks
+(Browser & Web, Detection & Response, Human Risk, Risk & Exposure) are absent.
+
+Not fixed here. `client/src/**` is claimed by `de-site-v2-scrollcraft` on
+another branch and is production code. Flagged for Joe to route.
 
 ## Discrepancies — still open
 
