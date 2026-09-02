@@ -123,9 +123,47 @@ html,body{overflow-x:clip}
 .pg-dom .n{font-family:var(--util);font-size:10px;letter-spacing:.15em;color:var(--sc-ink-soft)}
 .pg-dom h3{font-family:var(--sc-font-display);font-weight:500;font-size:17px;margin:8px 0 7px;letter-spacing:-.01em}
 .pg-dom p{margin:0;font-size:14px;color:var(--sc-ink-soft);line-height:1.55}
+/* Block 08, Risk & Exposure, is part of the eight-block architecture but does
+   not do the same job as the other seven: it is the continuous visibility and
+   intelligence layer that runs underneath them. It is drawn as a band spanning
+   the full width of the rail, so it reads as "across all of the above" rather
+   than as an eighth peer. Violet is lighting only, per design/BRAND.md. */
+.pg-layer{display:flex;align-items:center;gap:clamp(14px,2.4vw,28px);
+  padding:16px 20px;border:1px solid rgba(91,69,224,.42);
+  background:linear-gradient(90deg,rgba(91,69,224,.14),rgba(91,69,224,.05) 60%,transparent);
+  min-width:100%}
+.pg-layer .n{font-family:var(--util);font-size:10px;letter-spacing:.15em;color:#b3a6ff;flex:none}
+.pg-layer h3{font-family:var(--sc-font-display);font-weight:500;font-size:17px;margin:0;
+  letter-spacing:-.01em;flex:none}
+.pg-layer p{margin:0;font-size:14px;color:var(--sc-ink-soft);line-height:1.5}
+.pg-layer .runs{font-family:var(--util);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:#b3a6ff;flex:none}
+@media(max-width:720px){.pg-layer{flex-wrap:wrap;gap:8px}.pg-layer .runs{width:100%}}
 
-/* act 6 · the fork */
-.pg-fork{display:grid;grid-template-columns:repeat(auto-fit,minmax(224px,1fr));gap:9px;margin-top:32px}
+/* act 6 · assess first, then the three pathways.
+   Assessment is a universal ENTRY route and a real front door, but not a fourth
+   peer delivery relationship, so it spans above the pathway row and flows down. */
+/* act 6 · the pathway cards */
+#pg-fork{margin-top:30px}
+.pg-fork__row{display:grid;grid-template-columns:repeat(auto-fit,minmax(224px,1fr));gap:9px}
+.pg-entry{width:100%;display:flex;align-items:flex-start;gap:clamp(14px,2.6vw,26px);text-align:left;
+  color:inherit;font:inherit;cursor:pointer;padding:20px clamp(16px,2.4vw,26px) 22px;
+  background:linear-gradient(90deg,rgba(211,18,106,.13),rgba(211,18,106,.04) 55%,transparent);
+  border:1px solid rgba(211,18,106,.45);transition:border-color .18s ease,background .18s ease}
+.pg-entry:hover{border-color:var(--sc-accent)}
+.pg-entry[aria-pressed="true"]{border-color:var(--sc-accent);background:linear-gradient(90deg,rgba(211,18,106,.2),rgba(211,18,106,.06) 55%,transparent)}
+.pg-entry:focus-visible{outline:2px solid var(--de-violet);outline-offset:2px}
+.pg-entry__k{font-family:var(--util);font-size:10px;letter-spacing:.17em;text-transform:uppercase;
+  color:var(--sc-accent);flex:none;padding-top:4px;min-width:74px}
+.pg-entry__body h3{font-family:var(--sc-font-display);font-weight:500;font-size:clamp(17px,2.1vw,21px);
+  margin:0 0 6px;letter-spacing:-.015em}
+.pg-entry__body p{margin:0;font-size:14.5px;color:var(--sc-ink-soft);line-height:1.55;max-width:62ch}
+.pg-entry__cue{margin-left:auto;color:var(--sc-accent);font-size:19px;line-height:1;flex:none;padding-top:2px}
+.pg-flow{display:flex;align-items:center;gap:12px;padding:11px 0}
+.pg-flow span{height:1px;background:var(--hair);flex:1}
+.pg-flow em{font-style:normal;font-family:var(--util);font-size:9.5px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--sc-ink-soft);flex:none}
+@media(max-width:620px){.pg-entry{flex-wrap:wrap;gap:9px}.pg-entry__cue{display:none}}
 .pg-route{background:var(--sc-surface);border:1px solid var(--hair);padding:19px 18px 21px;text-align:left;
   color:inherit;font:inherit;cursor:pointer;transition:border-color .18s ease,transform .18s ease,background .18s ease}
 .pg-route:hover{border-color:rgba(211,18,106,.5);transform:translateY(-2px)}
@@ -144,6 +182,11 @@ html,body{overflow-x:clip}
 .pg-detail .first{color:var(--sc-ink)}
 .pg-detail ul{margin:0;padding-left:16px}
 .pg-detail li{margin-bottom:5px}
+.pg-assess{margin-top:18px;padding-top:16px;border-top:1px solid var(--hair)}
+.pg-assess h4{font-family:var(--util);font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--sc-accent);margin:0 0 8px;font-weight:600}
+.pg-assess p{margin:0;font-size:14.5px;color:var(--sc-ink-soft);line-height:1.6;max-width:78ch}
+.pg-assess b{color:var(--sc-ink);font-weight:500}
 
 /* act 7 · terms */
 .pg-term{padding:17px 0;border-bottom:1px solid var(--hair);display:grid;
@@ -273,21 +316,32 @@ html,body{overflow-x:clip}
       <div class="pg-wrap" style="padding-bottom:26px">
         <p class="pg-eyebrow">What gets held</p>
         <h2 style="font-family:var(--sc-font-display);font-weight:500;font-size:clamp(22px,3.6vw,38px);
-          letter-spacing:-.025em;margin:0;max-width:20ch">Six domains, one standard.</h2>
+          letter-spacing:-.025em;margin:0;max-width:22ch">Eight blocks. One of them never stops.</h2>
       </div>
-      <div class="pg-rail" data-sc-pan>
-        <div class="pg-dom"><div class="n">01</div><h3>Identity and Access</h3>
-          <p>The control plane. SSO, MFA and passwordless, privileged access, joiner, mover, leaver.</p></div>
-        <div class="pg-dom"><div class="n">02</div><h3>Endpoint Protection</h3>
-          <p>EDR and anti-ransomware, hardening, patching, encryption, application control.</p></div>
-        <div class="pg-dom"><div class="n">03</div><h3>Email and Collaboration</h3>
-          <p>Anti-phishing, impersonation and malware protection, encryption, collaboration security.</p></div>
-        <div class="pg-dom"><div class="n">04</div><h3>Network and Connectivity</h3>
-          <p>Firewall with IDS and IPS, segmentation, SASE and zero-trust patterns, secure remote access.</p></div>
-        <div class="pg-dom"><div class="n">05</div><h3>Data and Recovery</h3>
-          <p>Endpoint, SaaS and server backup, retention, restore procedures, continuity design.</p></div>
-        <div class="pg-dom"><div class="n">06</div><h3>Governance and Compliance</h3>
-          <p>Standards mapping, policy guidance, evidence readiness, regulated-environment design.</p></div>
+      <div data-sc-pan style="display:flex;flex-direction:column;gap:1px">
+        <div class="pg-rail">
+          <div class="pg-dom"><div class="n">01</div><h3>Identity and Access</h3>
+            <p>The control plane. SSO, MFA and passwordless, privileged access, conditional controls, joiner, mover, leaver.</p></div>
+          <div class="pg-dom"><div class="n">02</div><h3>Endpoint</h3>
+            <p>EDR and anti-ransomware, hardening, patching, encryption, application control, posture management.</p></div>
+          <div class="pg-dom"><div class="n">03</div><h3>Email and Collaboration</h3>
+            <p>Anti-phishing, malware and impersonation protection, spam controls, encryption, collaboration security.</p></div>
+          <div class="pg-dom"><div class="n">04</div><h3>Browser and Web</h3>
+            <p>Malicious-site blocking, web access controls, browser risk reduction, secure browsing policy, data-loss controls.</p></div>
+          <div class="pg-dom"><div class="n">05</div><h3>Network</h3>
+            <p>Firewall with IDS and IPS, segmentation, secure remote access, SASE and zero-trust patterns, site-to-site security.</p></div>
+          <div class="pg-dom"><div class="n">06</div><h3>Detection and Response</h3>
+            <p>Threat detection, MDR and SOC where included, alert triage, incident coordination, escalation and response.</p></div>
+          <div class="pg-dom"><div class="n">07</div><h3>Human Risk</h3>
+            <p>Security awareness, phishing simulation, targeted training, security communications.</p></div>
+        </div>
+        <div class="pg-layer">
+          <div class="n">08</div>
+          <h3>Risk and Exposure</h3>
+          <p>Cyber risk assessment, exposure and dark-web visibility where included, vulnerability visibility,
+            remediation planning, risk tracking.</p>
+          <div class="runs">Runs continuously beneath all seven</div>
+        </div>
       </div>
       <div class="pg-wrap">
         <p class="pg-note">Storage is not backup. Backup is not recovery until it can be
@@ -302,29 +356,46 @@ html,body{overflow-x:clip}
       <div class="pg-wrap">
         <p class="pg-eyebrow">Plot your course</p>
         <h2 style="font-family:var(--sc-font-display);font-weight:500;font-size:clamp(24px,4vw,44px);
-          letter-spacing:-.028em;margin:0 0 18px;max-width:18ch">Four routes. One of them may not be us.</h2>
-        <p class="pg-lede">Published rates are starting points. Minimums apply when the
-          per-user calculation comes in lower. Sizing is guidance: sites, compliance,
-          workloads and recovery objectives can move an engagement to a different design.</p>
+          letter-spacing:-.028em;margin:0 0 18px;max-width:20ch">Assess first. Then choose the relationship.</h2>
+        <p class="pg-lede">Everyone should be assessed before anything is promised. What changes
+          is the scope, the price and the commercial treatment of that assessment, depending on
+          where you are headed. Published rates are starting points; sites, compliance, workloads
+          and recovery objectives can move an engagement to a different design.</p>
 
-        <div class="pg-fork" id="pg-fork">
-          <button class="pg-route" aria-pressed="true" data-r="proactive">
-            <div class="k">Door 01</div><h3>ProActive Ecosystem</h3>
-            <div class="s">DE runs technology and security operations, end to end.</div>
-            <div class="f">from $125<span>/user · $1,600 floor</span></div></button>
-          <button class="pg-route" aria-pressed="false" data-r="comanaged">
-            <div class="k">Door 01</div><h3>Co-Managed</h3>
-            <div class="s">You keep internal IT. DE owns a defined role beside them.</div>
-            <div class="f">scoped<span> · boundaries in writing</span></div></button>
-          <button class="pg-route" aria-pressed="false" data-r="standalone">
-            <div class="k">Door 02</div><h3>Standalone Service</h3>
-            <div class="s">One outcome: network, backup, workplace, security ops, advisory or voice.</div>
-            <div class="f">by role<span> · no silent inheritance</span></div></button>
-          <button class="pg-route" aria-pressed="false" data-r="assessment">
-            <div class="k">Start here</div><h3>Cyber Risk Assessment</h3>
-            <div class="s">Find out what is actually true about your environment. Yours either way.</div>
-            <div class="f">one-time<span> · no obligation to continue</span></div></button>
+        <div id="pg-fork">
+          <!-- Assessment is a universal ENTRY route: a real front door, and the
+               preferred starting point for everyone. It is deliberately not a
+               fourth peer card in the pathway row, because it is not a fourth
+               delivery relationship. It sits above them and flows down. -->
+          <button class="pg-entry" aria-pressed="false" data-r="assessment">
+            <div class="pg-entry__k">Start here</div>
+            <div class="pg-entry__body">
+              <h3>Cyber Risk Assessment</h3>
+              <p>Understand the environment before choosing anything. The findings are yours
+                either way. What changes is the scope and the commercial terms, depending on the
+                relationship you are considering.</p>
+            </div>
+            <div class="pg-entry__cue" aria-hidden="true">↓</div>
+          </button>
+
+          <div class="pg-flow" aria-hidden="true"><span></span><em>then choose the relationship</em><span></span></div>
+
+          <div class="pg-fork__row">
+            <button class="pg-route" aria-pressed="true" data-r="handle">
+              <div class="k">Pathway 01</div><h3>Handle Our IT</h3>
+              <div class="s">DE runs technology and security operations. ProActive Ecosystem, or Co-Managed beside your internal team.</div>
+              <div class="f">from $125<span>/user · $1,600 floor</span></div></button>
+            <button class="pg-route" aria-pressed="false" data-r="need">
+              <div class="k">Pathway 02</div><h3>Solve a Business Need</h3>
+              <div class="s">A defined outcome rather than a managed-services relationship. Standalone Solutions.</div>
+              <div class="f">by role<span> · no silent inheritance</span></div></button>
+            <button class="pg-route" aria-pressed="false" data-r="marketplace">
+              <div class="k">Pathway 03</div><h3>Client Marketplace</h3>
+              <div class="s">Existing DE clients buying approved additions, renewals and equipment against their entitlement.</div>
+              <div class="f">existing clients<span> · tied to entitlement</span></div></button>
+          </div>
         </div>
+
         <div class="pg-detail" id="pg-detail" aria-live="polite"></div>
       </div>
     </div>
@@ -426,26 +497,29 @@ ScrollCraft.mount(document.body);
 
   /* ── the fork ─────────────────────────────────────────────────────────── */
   var R = {
-    proactive:{
-      first:"A scoped consultation, then the assessment that decides which ecosystem the environment actually needs, rather than the one the headcount suggests.",
-      yes:["Service desk, proactive monitoring, patching and maintenance","Identity, endpoint and device lifecycle management","Layered security across the six protection domains","Backup and continuity appropriate to the tier","Advisory cadence: annual, semi-annual or quarterly by tier"],
-      no:["Hardware, specialty subscriptions and pass-through licensing","Migrations, buildouts, cabling and remediation projects","Anything not named in the executed Order Form"],
-      fit:"Four tiers. IT $125/user, $1,600 floor. Office $165, $2,400. Business $245, $5,400. Enterprise $345, $9,000. Regulated GCC High paths start at $425 and $575."},
-    comanaged:{
-      first:"A boundary conversation. Which role is DE’s, which stays yours, and where the escalation line sits, written down before any work begins.",
-      yes:["A clearly defined network, security or workplace role","Documented scope and escalation boundaries","DE standards applied inside that role","Coordination with your internal team or existing provider"],
-      no:["Responsibility for systems outside the agreed role","Full MSP, SOC or helpdesk coverage by implication","Authority DE has not been formally granted"],
-      fit:"For organizations with internal IT or specialized infrastructure teams who want depth in one area, not replacement."},
-    standalone:{
+    assessment:{
+      first:"Discovery across cyber risk, network, endpoint, SaaS and compliance, producing findings you keep whether or not you ever sign anything else. This is the preferred starting point for every relationship; what changes is the scope and the commercial treatment.",
+      yes:["What is actually running, and who can reach it","Risk, waste, unsupported conditions and hidden dependencies","Findings classified and prioritized, not merely listed","A remediation roadmap you can hand to anyone"],
+      no:["Any obligation to continue with DE","The remediation work itself, which is scoped separately","A compliance certification or audit result"],
+      fit:"Assessment is an entry route, not a fourth service model. It is how a route becomes real: assess, understand the environment, then choose the relationship that fits what was actually found."},
+    handle:{
+      first:"A scoped consultation, then the assessment that decides which design the environment actually needs, rather than the one the headcount suggests. Co-Managed instead starts with a boundary conversation: which role is DE\u2019s, which stays yours, and where the escalation line sits.",
+      yes:["Service desk, proactive monitoring, patching and maintenance","Identity, endpoint and device lifecycle management","Layered security across the eight cybersecurity blocks","Backup and continuity appropriate to the tier","Advisory cadence: annual, semi-annual or quarterly by tier","Co-Managed: one clearly defined role, with documented scope and escalation boundaries"],
+      no:["Hardware, specialty subscriptions and pass-through licensing","Migrations, buildouts, cabling and remediation projects","Anything not named in the executed Order Form","Co-Managed: responsibility for systems outside the agreed role"],
+      assess:"<b>ProActive Ecosystem:</b> a comprehensive baseline assessment is required, and is included, reduced or credited as part of onboarding. You also receive preferred ecosystem pricing.<br><b>Co-Managed:</b> assessment is required for DE\u2019s scope, plus any systems, dependencies, risks or conditions DE determines could materially affect our directives, responsibilities, security obligations or service delivery.",
+      fit:"Four ProActive tiers. IT $125/user, $1,600 floor. Office $165, $2,400. Business $245, $5,400. Enterprise $345, $9,000. Regulated GCC High paths start at $425 and $575. Co-Managed is scoped to the role DE owns."},
+    need:{
       first:"A defined-outcome scoping session. DE designs the approved solution around the need rather than selling a relationship around it.",
       yes:["Managed network and secure access","Managed workplace: Microsoft, Google or Zoho","Cloud backup and BCDR","Threat detection and security operations","Advisory, compliance, vCIO or vCISO","Cloud, licensing and voice"],
       no:["Full managed-services coverage of any kind","Support for systems outside the selected role","Inherited SOC, backup, network or compliance scope"],
+      assess:"<b>Standalone Solutions:</b> assessment is the preferred, default starting point and is strongly recommended, available as a paid entry point. A full assessment is not always a mandatory prerequisite to purchase, unless the solution technically requires discovery to deliver. Standalone pricing remains higher than the equivalent capability inside ProActive.",
       fit:"For organizations that need one outcome solved properly, without a full managed-services relationship."},
-    assessment:{
-      first:"Discovery across cyber risk, network, endpoint, SaaS and compliance, producing findings you keep whether or not you ever sign anything else.",
-      yes:["What is actually running, and who can reach it","Risk, waste, unsupported conditions and hidden dependencies","Findings classified and prioritized, not merely listed","A remediation roadmap you can hand to anyone"],
-      no:["Any obligation to continue with DE","The remediation work itself, which is scoped separately","A compliance certification or audit result"],
-      fit:"Required before deeper management when the service depends on understanding risk, architecture, access or recovery. Waived only by documented exception."}
+    marketplace:{
+      first:"Sign in. What you can buy is already shaped by your environment and your entitlement, so nothing offered is incompatible with what DE already operates for you.",
+      yes:["Approved additions to an existing ecosystem","Renewals and license changes","Equipment and hardware tied to your standards","Expansion of services you already hold"],
+      no:["Access without an existing DE relationship","Purchases that conflict with your documented standards","The internal vendor and SKU catalog, which stays in DE\u2019s delivery system"],
+      assess:"<b>Existing clients:</b> the environment is already assessed and under management. New scope follows the same rule as everything else: DE assesses what it has not seen before agreeing to be responsible for it.",
+      fit:"For existing clients. DE keeps the vendor, compatibility and dependency mechanics internal so you are not shopping the plumbing."}
   };
   var det = document.getElementById("pg-detail");
   function paint(k){
@@ -454,16 +528,18 @@ ScrollCraft.mount(document.body);
       '<div><h4>The honest first step</h4><p class="first">'+r.first+'</p></div>'+
       '<div><h4>What this covers</h4><ul>'+r.yes.map(function(x){return "<li>"+x+"</li>";}).join("")+'</ul></div>'+
       '<div><h4>What it does not</h4><ul>'+r.no.map(function(x){return "<li>"+x+"</li>";}).join("")+'</ul></div>'+
-      '</div><p class="pg-note" style="margin-top:20px">'+r.fit+'</p>';
+      '</div>'+
+      (r.assess ? '<div class="pg-assess"><h4>Assessment terms on this pathway</h4><p>'+r.assess+'</p></div>' : '')+
+      '<p class="pg-note" style="margin-top:18px">'+r.fit+'</p>';
   }
   document.getElementById("pg-fork").addEventListener("click", function(e){
-    var b = e.target.closest(".pg-route"); if(!b) return;
-    document.querySelectorAll(".pg-route").forEach(function(x){
+    var b = e.target.closest(".pg-route, .pg-entry"); if(!b) return;
+    document.querySelectorAll(".pg-route, .pg-entry").forEach(function(x){
       x.setAttribute("aria-pressed", String(x === b));
     });
     paint(b.dataset.r);
   });
-  paint("proactive");
+  paint("handle");
 })();
 </script>
 </body>

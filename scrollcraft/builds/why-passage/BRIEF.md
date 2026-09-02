@@ -135,8 +135,8 @@ Written before the acts. One line per act: the emotion, then what causes it.
 | 2 · The cost | Cold clarity | The bill for that, named plainly and without a threat. Type tightens, the ground darkens. |
 | 3 · **The correction** | **Relief, and control returning** | **PEAK.** The operating principle lands and the entire page rolls level under the reader. The wheel was theirs the whole time; someone just read the chart. |
 | 4 · The passage | Competence, order | Six waypoints light in sequence as the course line runs through them. Order is visible. |
-| 5 · What is held | Solidity | Six protection domains traverse laterally. Coverage reads as breadth, not as a list. |
-| 6 · Your course | Agency | Four routes. The visitor chooses. One of them is explicitly "maybe not us." |
+| 5 · What is held | Solidity | Seven cybersecurity blocks traverse laterally; the eighth, Risk and Exposure, runs beneath them as the continuous visibility layer. Coverage reads as breadth, not as a list. |
+| 6 · Your course | Agency | Assessment as the universal entry door, spanning above three pathways it flows down into. Not four peer products. |
 | 7 · Terms | Trust through candour | The refusals, in the same type size as the promises. Then the close resolves and holds. |
 
 **Authored silence:** the run-in to Act 3. Act 2 ends and roughly half a
@@ -196,7 +196,7 @@ Against **both** registry rows, on all six dimensions:
 | Nav treatment | Fixed machine-room rail: folio + live map | Site nav + margin environment folio | **Course line + bearing gauge; no folio, no map** | ✅ both |
 | Hero device | Title page, type on paper | Existing PageTemplate text hero | **Off-axis drifting type that corrects** | ✅ both |
 | Act-sequence shape | 10 chapters ≈ 14.1vh | 7 chapters, flow/pin/reveal/parallax | **7 acts, spans 1.0–2.6vh, ~10vh total, zero scrub** | ✅ both |
-| Close pattern | Colophon plate, CTA as running text | Compare panel inside existing CTA | **Four-route fork, then published refusals** | ✅ both |
+| Close pattern | Colophon plate, CTA as running text | Compare panel inside existing CTA | **Assess-first entry door into three pathways, then published refusals** | ✅ both |
 | Signature move | Accumulating technology map | Accumulating margin environment map | **The heading correction** | ✅ both |
 
 **6 of 6 against each row individually.** Requirement is 4. The registry's
@@ -214,8 +214,8 @@ Four-plus device families, none twice in a row, zero scrub (no video assets).
 | 2 | Tension | Kinetic type | Copy assembling line by line is a mind arriving at a cost | 1.0vh |
 | 3 | **Turn** | **Pin + the correction** | **The page must stop travelling for the one moment it changes state** | **2.6vh** |
 | 4 | Substance | Staggered reveal | Six waypoints lighting in sequence *is* the sequencing rule | 1.4vh |
-| 5 | Breadth | Lateral pan | Sideways travel reads as coverage; vertical reads as argument | 1.6vh |
-| 6 | Range | Pointer interactive | The page stops moving and starts answering — agency, literally | 1.2vh |
+| 5 | Breadth | Lateral pan | Sideways travel reads as coverage; vertical reads as argument. Block 08 spans beneath rather than panning, because it does a different job | 1.6vh |
+| 6 | Range | Pointer interactive | The page stops moving and starts answering — agency, literally. Entry door above, three pathways below | 1.2vh |
 | 7 | Commitment | Pin + hold | The refusals need stillness; a moving page undercuts candour | 1.0vh |
 
 Total ≈ 10vh. Peak is Act 3 at 2.6vh, more than double any neighbour, with the
