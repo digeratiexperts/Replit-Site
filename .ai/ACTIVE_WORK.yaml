@@ -75,11 +75,12 @@ claims:
       - .claude/skills/excalidraw-visuals/**
       - .claude/skills/excalidraw-diagram/**
       - .claude/skills/skill-builder/**
+      - .claude/skills/web-design-rules/**
       - CLAUDE.md
     status: active
     started: 2026-09-02
     note: >-
-      Vendors six Claude Code project skills requested by Joe. No production
+      Vendors seven Claude Code project skills requested by Joe. No production
       client/ or server/ paths. Disjoint from issue #167 / PR #168
       (scripts/kie-assets.mjs); the kie.ai scripts here accept both
       KIE_AI_API_KEY and KIE_API_KEY and write candidates under

@@ -26,5 +26,6 @@ Each vendored skill carries an `UPSTREAM.md` with provenance, local deviations a
 | `/frontend-design` | build a component, page or site | Distinctive frontend code; DE brand lock wins on `client/` | in place |
 | `/video-to-website` | "turn this video into a scroll-driven site" | FFmpeg frames + GSAP/Lenis canvas page | isolated experiment dir |
 | `/skill-builder` | "help me build a skill" | Discovery interview, build and audit of skills | `.claude/skills/<name>/` |
+| `/web-design-rules` | standalone page / mockup, match a reference image | Craft rules + localhost screenshot loop for pages outside `client/` | isolated experiment dir |
 
 Generated images are ILLUSTRATIVE candidates until they pass `design/IMAGERY.md` review; only optimized derivatives go under `client/public/images/`.
