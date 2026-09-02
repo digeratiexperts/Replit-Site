@@ -194,7 +194,7 @@ crops and conversion roles stand.
 | Explainer diagrams for blog posts, social and OG images, proposals, decks | `excalidraw-visuals` (`google/nano-banana`) | Locked style prefix plus the mandatory style-reference image; under 30 words of text; light or dark prefix (the dark background hex is not honoured, see PR #185) | 4 credits per image |
 | Diagrams on digeratiexperts.com | The DE diagram system in code (`client/src/diagrams`), no kie.ai | State-driven SVG, classified, accessible, on the brand lock | none |
 | Editable working sketches | `excalidraw-diagram` | `.excalidraw` JSON under `artifacts/diagrams/`, no API | none |
-| Version 4 homepage build | `video-to-website` + `frontend-design` + `web-design-rules` (all no-spend) with the DE brand lock | Lenis, fixed canvas spine scrubbed by scroll, side-aligned sections with different entrances, colour zones, one marquee, counters, persistent CTA; the spine is the F-02 set plus code-drawn connections, not a video | none beyond the F-02 images |
+| Version 4 homepage build: **not started, not authorized** (Joe, 2026-09-02 evening) | Reference only: `video-to-website` + `frontend-design` + `web-design-rules` under the DE brand lock, if a scroll-spine grammar is ever chosen | Parked until the Why DE passage (PR #186) is judged; no second homepage grammar opens beside it and no competing design system | none |
 | Photography (F-01, F-04, F-05, F-06) | None; the half-day shoot | Real captures classified per `design/VISUAL_EVIDENCE.md` | none |
 
 Rules that came with the packs and now bind every agent: generate only when
@@ -203,3 +203,33 @@ Joe asks; `--dry-run` first on any new payload; candidates live under
 for the site skips `design/IMAGERY.md` review; both kie.ai result hosts
 (`tempfile.redpandaai.co`, `tempfile.aiquickdraw.com`) must be on a cloud
 environment's allowed domains or a paid image cannot be downloaded there.
+
+## 10 · Reconciliation with the Why DE passage (2026-09-02, evening)
+
+The flagship in PR #186 is the active creative proof, built as one unbroken
+passage of type, motion and code-drawn instruments with **no imagery by
+design**. It carries the current architecture: eight cybersecurity blocks with
+Risk & Exposure as the continuous layer beneath the other seven, and Cyber Risk
+Assessment as the universal entry door above the three relationship pathways
+rather than a fourth peer product.
+
+Consequences for this plan, in Joe's order of things:
+
+- **F-02 is withdrawn**, not merely deferred. Its three jobs (recognition, the
+  belief shift, breadth) are done in the passage by type, the heading
+  correction and the eight-block rail; the one thing a photoreal plate would
+  add, material atmosphere, is the one thing the passage decided against.
+  Full table in `scrollcraft/KIE-FIRST-GENERATION.md`.
+- **F-03's six macros** encode the old six-domain picture and are parked with
+  it. Any later macro set follows the eight blocks.
+- **No paid generation is requested.** The money gate stays closed by this
+  plan's own recommendation. Excalidraw explainers remain the first legitimate
+  paid use, each on Joe's request with a cap, and never on the flagship.
+- **The live homepage carries the stale six-domain model** in
+  `ProtectionCommandDeck` and in the diagram system's "one environment" and
+  "layered protection" figures. Correcting it is content work inside the
+  `de-site-v2-scrollcraft` claim, separate from this plan and from PR #184;
+  it waits for Joe to route it.
+- **Version 4 is parked.** Whatever the homepage becomes is decided after the
+  passage is judged, with its interaction lessons, so there is one design
+  system, not two.

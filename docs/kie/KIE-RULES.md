@@ -57,6 +57,26 @@ enforces the parts a script can enforce; the rest is conduct.
 - **Process:** prepare the workflow, stop before the first paid generation,
   and show Joe exactly what is proposed (`scrollcraft/KIE-FIRST-GENERATION.md`).
 
+## Addendum 2, 2026-09-02 (evening, after PR #186)
+
+- **The money gate is closed.** No paid generation is approved. Before any
+  request is put to Joe again, the asset must be reconciled with the active
+  flagship direction (PR #186, the Why DE passage) and the request must say
+  specifically what the generated asset adds that code, typography, diagrams
+  or the existing Scrollcraft mechanics cannot do better. The first such test
+  withdrew the F-02 request (`scrollcraft/KIE-FIRST-GENERATION.md`).
+- **Excalidraw visuals** are approved conceptually for explainers,
+  documentation, proposals, blog, social and OG material, and are **not** the
+  visual language of the flagship homepage.
+- **Version 4 does not start**; no second homepage grammar opens while the
+  flagship is under review. PR #184 stays a draft scoped to tooling and asset
+  planning, and is not merged because CI is green; its scope is reconciled
+  with PR #185 (the DE 2026 service-model source of truth plus the kie.ai
+  tooling fixes) and PR #186 first.
+- **The `HTTPS_PROXY` limitation** of the Excalidraw script stays parked.
+- **Kept regardless of the homepage outcome:** the Nano Banana 2 workflow,
+  the spend gate, reference chaining, image validation and the free re-fetch.
+
 ## Where the rules apply: three code paths, one gate
 
 The skill packs vendored by PR #180 brought two more kie.ai scripts into the
