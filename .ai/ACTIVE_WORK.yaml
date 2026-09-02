@@ -81,6 +81,7 @@ claims:
       - .claude/skills/trigger-ref/**
       - .mcp.json
       - .agents/skills/**
+      - .claude/install-user-skills.sh
       - .env.example
       - .gitignore
       - AGENTS.md
