@@ -67,8 +67,12 @@ claims:
       - client/public/images/evidence/**
       - client/src/pages/versions/**
       - client/src/App.tsx (homepage version routes only)
-      - server/index.ts (/version-2 redirect only)
+      - server/index.ts (/version-2 redirect and /scrollcraft static only)
       - scripts/snapshot-homepage-version.mjs
+      - scripts/build-scrollcraft-lab.mjs
+      - public/scrollcraft/**
+      - public/robots.txt (Disallow /scrollcraft/ only)
+      - docs/kie/**
     status: active
     started: 2026-09-01
     note: >-

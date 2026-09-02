@@ -418,6 +418,21 @@ app.use(
   }),
 );
 
+// Scrollcraft lab (reference only, Joe's "URLs to see the Scrollcraft stuff"):
+// the review pages, the diagram gallery and the rendered plans, published
+// additively under /scrollcraft. Static, committed under public/scrollcraft
+// (scripts/build-scrollcraft-lab.mjs); X-Robots-Tag noindex like /v2 and
+// Disallow'd in robots.txt so none of it competes with the canonical pages.
+app.use(
+  "/scrollcraft",
+  express.static(path.join(publicDir, "scrollcraft"), {
+    maxAge: "5m",
+    setHeaders(res) {
+      res.setHeader("X-Robots-Tag", "noindex, nofollow");
+    },
+  }),
+);
+
 // Homepage version archive (client/src/pages/versions/README.md): version 2
 // is the static Version B build above, so its numbered URL forwards there.
 app.get("/version-2", (_req, res) => {
