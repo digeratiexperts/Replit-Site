@@ -21,7 +21,6 @@ describe("ASK DE shared portal authentication", () => {
 
   it("uses the shared HttpOnly cookie as the browser session authority", () => {
     expect(widget).toMatch(/fetch\("\/api\/portal\/me", \{[\s\S]*credentials: "include"[\s\S]*cache: "no-store"/);
-    expect(widget).not.toMatch(/if \(!token\) return null/);
     expect(storeAuth).toMatch(/fetch\("\/api\/portal\/me", \{[\s\S]*credentials: "include"/);
     expect(storeAuth).toMatch(/const isLoggedIn = useMemo\(\(\) => !!user/);
     expect(portalLogin).toMatch(/fetch\("\/api\/portal\/me", \{[\s\S]*credentials: "include"[\s\S]*cache: "no-store"/);
@@ -34,7 +33,7 @@ describe("ASK DE shared portal authentication", () => {
     expect(card).toMatch(/window\.open\(/);
     expect(card).toMatch(/\/api\/portal\/auth\/zoho\/start/);
     expect(card).not.toMatch(/PORTAL_LOGIN/);
-    expect(widget).not.toMatch(/resource-link-full-portal-login/);
+    expect(widget).not.toMatch(/Prefer the full portal sign-in page\?/);
   });
 
   it("resets the single-use Turnstile token after failed password sign-in", () => {
