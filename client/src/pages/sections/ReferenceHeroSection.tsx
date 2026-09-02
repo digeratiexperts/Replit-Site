@@ -36,7 +36,7 @@ const trustItems = [
     icon: MapPin,
     code: "04 / LOCAL & RESPONSIVE",
     title: `${COMPANY.addressLocality}, Arizona.`,
-    body: `${COMPANY.streetAddress}. Call ${PRIMARY_PHONE.display}. Response within one business day.`,
+    body: `${COMPANY.streetAddress}. Call ${PRIMARY_PHONE.display}. Response targets are published in our SLA.`,
   },
 ];
 

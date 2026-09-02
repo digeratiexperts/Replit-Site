@@ -46,7 +46,13 @@
 /* head + source: Oxanium telemetry label carries the classification */
 .dg-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; border-bottom: 1px solid var(--dg-hairline); padding-bottom: 0.45rem; }
 .dg-title { font-family: var(--dg-display); font-weight: 700; font-size: 0.95rem; letter-spacing: -0.01em; }
-.dg-telemetry { font-family: var(--dg-mono); font-size: 0.64rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--dg-accent-ink); }
+.dg-telemetry { font-family: var(--dg-text); font-size: 0.76rem; color: var(--dg-soft); }
+
+/* narrow layout: a phone renders the 360-wide viewBox near 1:1, so the type
+   steps up one size and the renderers give nodes the extra width */
+.dg--narrow .dg-label { font-size: 14px; }
+.dg--narrow .dg-code { font-size: 10.5px; }
+.dg--narrow .dg-sub { font-size: 10.5px; }
 .dg-source { margin: 0; font-size: 0.78rem; line-height: 1.45; color: var(--dg-soft); max-width: 62ch; }
 
 /* nodes */

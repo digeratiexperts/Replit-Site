@@ -151,7 +151,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
           transition={revealTransition}
         >
           <p className="mb-3 text-base font-medium uppercase tracking-wide text-de-magenta-ink">
-            Client proof
+            How DE delivers
           </p>
           <h2 className="mb-4 text-3xl font-bold text-white sm:text-4xl md:text-5xl">
             <span className="de-hero-accent">Outcomes</span> Arizona businesses hire us for
@@ -290,10 +290,10 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
           <div className="lg:col-span-5">
             <EvidenceFrame
               classification="SANITIZED_REAL"
-              title="DE Desk, the support surface built into digeratiexperts.com"
-              subtitle="Real capture of DE's own product. Clients reach support, tools, and sign-in from the site itself."
+              title="How DE delivers support: DE Desk, built into digeratiexperts.com"
+              subtitle="A capture of DE's own product, not a client's. Clients reach support, tools, and sign-in from the site itself."
               status="informational"
-              statusLabel="REAL PRODUCT"
+              statusLabel="DE's own product"
               sourceNote="Captured from the live site; no client data shown."
               variant="dark"
               className="h-full"

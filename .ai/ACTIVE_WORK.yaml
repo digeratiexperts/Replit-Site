@@ -74,7 +74,10 @@ claims:
       decision; Version B stays a noindex preview at /v2 (PR #172).
       PR #178 now also carries the homepage service sections Joe listed,
       rebuilt on the diagram system (client/src/diagrams) with the H1 and
-      hero CTA locators the smoke gate asserts left untouched.
+      hero CTA locators the smoke gate asserts left untouched. Joe's
+      2026-09-02 review: keep #178 draft, no merge, no kie.ai spend;
+      corrections applied (see scrollcraft/EXPERIENCE-PLAN.md §09,
+      docs/CLAIMS-REGISTER.md, scrollcraft/ASSET-PLAN.md).
       FREEZE (2026-09-01, Joe): Scrollcraft implementation on ANY route is
       gated by the approved DE Scrollcraft Experience Plan at
       scrollcraft/EXPERIENCE-PLAN.md. No page code, no material production,

@@ -246,3 +246,62 @@ here:
   expectations rather than disabling them.
 - Levels C and D never receive Scrollcraft.
 - Joe holds merge, deploy and approval authority at every gate.
+
+## 09 · Review corrections (2026-09-02)
+
+Joe's review of the live `/v2`, the PR #178 before/after, the mobile
+captures and the six plates: "promising system, not ready to merge
+unchanged." Release decision: PR #178 stays a draft; no merge, no kie.ai
+spend. What changed in response, and what is now a rule:
+
+**Fixed on PR #178.**
+
+1. "Client proof" showed DE Desk, DE's own product. The section eyebrow is
+   now "How DE delivers"; the capture is titled as DE's own product; real
+   client evidence remains the reviews feed only.
+2. The trust strip promised "response within one business day" while the
+   report said no response-time claims were added. The strip now says
+   "Response targets are published in our SLA." The hero's pre-existing
+   line keeps its basis (SLA standard tier: next business day). Every
+   claim on `/` and `/v2` is now listed with its basis in
+   `docs/CLAIMS-REGISTER.md`; unsupported ones are marked for Joe.
+3. Classification badges read as internal production language. Disclosure
+   stays visible but in plain words: "Illustration", "Example, not a client
+   report", "Real, details removed", "Live data". The code stays on
+   `data-classification` for governance and tests.
+4. Diagrams too dense and small on mobile: narrow layouts step the type up
+   (14 px labels, 10.5 px codes), widen nodes, and show one stage per
+   viewport. The persuasive job moves to asset families (see
+   `scrollcraft/ASSET-PLAN.md` §0); a diagram explains one mechanism beside
+   a frame, never carries the hero.
+
+**Rules for Version C and the flagships.**
+
+5. `/v2` is not the primary homepage. Its length and concept density suit a
+   "Why DE" story, sales explainer, or campaign experience. Proposal for
+   Joe: keep `/v2` noindex as the Version B record; the rebuilt homepage
+   (P5) is short; a "Why DE" route inherits the story grammar at Level B.
+6. Conversion is available in the first viewport and at the close of every
+   chapter, never only at the end.
+7. Lead with the six protection domains; the fourteen domains appear only
+   in the "range" moment, after the buying decision has been simplified.
+8. Desktop length budget for the primary homepage: eight viewport-heights,
+   not fourteen.
+9. Statistics carry source and year from `cyberAwarenessFacts.ts` and a
+   footnote link; service-level claims quote the SLA tier.
+10. Of the six Graphite Illumination plates, `peakground` and `ink` remain
+    as atmospheric support; the other four are retired from hero roles.
+11. No kie.ai credit is spent until the asset's row in
+    `scrollcraft/ASSET-PLAN.md` (page, buyer purpose, composition, crops,
+    conversion role, route) is approved.
+
+**The diagram system's reusable business use cases** (the part the review
+asked to preserve):
+
+| Surface | Diagrams | What it needs next |
+| --- | --- | --- |
+| Homepage and service pages | all five, static beside copy; state-driven in flagships | mobile step (done); one idea per frame |
+| Cyber Risk Assessment deliverables | the inspection, layered protection (paper tone) | a real deliverable template that embeds the paper-tone SVG |
+| Sales explanations | one environment, the cadence, coverage depth | a static PNG/SVG export command for decks and email |
+| Proposals and SOWs | coverage depth, the cadence (paper tone) | the same export, plus a "scope" variant that names the package chosen |
+| Client reviews (QBR) | the cadence, layered protection with the client's own six layers via `data.layers` | a review template; never client telemetry in the figure |

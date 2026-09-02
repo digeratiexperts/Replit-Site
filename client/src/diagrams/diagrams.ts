@@ -125,11 +125,12 @@ function boundarySvg(x: number, y: number, w: number, h: number, label: string, 
   );
 }
 
-function gateSvg(pt: Pt, label: string, at: number): string {
+function gateSvg(pt: Pt, label: string, at: number, anchor: "start" | "end" = "start"): string {
+  const tx = anchor === "end" ? pt.x - 10 : pt.x + 10;
   return (
     `<g class="dg-gate" data-dg-at="${at}">` +
     `<circle cx="${pt.x}" cy="${pt.y}" r="5"/>` +
-    `<text class="dg-code" x="${pt.x + 10}" y="${pt.y + 4}">${esc(label)}</text></g>`
+    `<text class="dg-code" x="${tx}" y="${pt.y + 4}" text-anchor="${anchor}">${esc(label)}</text></g>`
   );
 }
 
@@ -140,12 +141,27 @@ function defs(): string {
   );
 }
 
+/**
+ * Plain-language disclosure shown beside the title (2026-09-02 review). The
+ * classification itself stays machine-readable on the figure's
+ * data-classification attribute; the visible copy is a phrase a visitor
+ * understands rather than an internal production code.
+ */
+const DISCLOSURE: Record<Exclude<Classification, "FACTUAL">, string> = {
+  LIVE: "Live",
+  SANITIZED_REAL: "Real, details removed",
+  EXAMPLE: "Example, not a client report",
+  ILLUSTRATIVE: "Illustration",
+};
+
 function wrap(meta: DiagramMeta, body: string, viewBox: string, opts: Required<Pick<RenderOptions, "layout" | "tone" | "state" | "caption">> & { id: string }): string {
   const { stage, p } = stageOf(opts.state, meta.stages.length);
-  const classLabel = meta.classification === "FACTUAL" ? meta.label : `${meta.classification.replace("_", " ")} · ${meta.label}`;
+  const disclosure = meta.classification === "FACTUAL"
+    ? meta.label.charAt(0).toUpperCase() + meta.label.slice(1)
+    : DISCLOSURE[meta.classification];
   return (
-    `<figure class="dg dg--${opts.tone} dg--${opts.layout}" id="${esc(opts.id)}" data-diagram="${meta.id}" data-dg-stage="${stage}" data-dg-stages="${meta.stages.length}" style="--dg-p:${p.toFixed(3)}">` +
-    (opts.caption ? `<figcaption class="dg-head"><span class="dg-title">${esc(meta.title)}</span><span class="dg-telemetry">${esc(classLabel)}</span></figcaption>` : "") +
+    `<figure class="dg dg--${opts.tone} dg--${opts.layout}" id="${esc(opts.id)}" data-diagram="${meta.id}" data-classification="${meta.classification}" data-dg-stage="${stage}" data-dg-stages="${meta.stages.length}" style="--dg-p:${p.toFixed(3)}">` +
+    (opts.caption ? `<figcaption class="dg-head"><span class="dg-title">${esc(meta.title)}</span><span class="dg-telemetry">${esc(disclosure)}</span></figcaption>` : "") +
     `<svg viewBox="${viewBox}" role="img" aria-label="${esc(meta.title)}: ${esc(meta.stages[stage])}" preserveAspectRatio="xMidYMid meet">${defs()}${body}</svg>` +
     (opts.caption ? `<p class="dg-source">${esc(meta.source)}</p>` : "") +
     `</figure>`
@@ -200,14 +216,17 @@ const ENVIRONMENT_META: DiagramMeta = {
 };
 function renderEnvironment(o: Required<RenderOptions>): string {
   const pos = o.layout === "wide" ? ENV_WIDE : ENV_NARROW;
-  const nodes = ENV_NODES.map((n) => nodeSvg({ ...n, at: 0 }, pos[n.id])).join("");
-  const edges = ENV_EDGES.map(([a, b]) => edgeSvg(pos[a], pos[b], 1)).join("");
+  // narrow: wider nodes so 14px labels ("Backup & recovery") keep one line on a phone
+  const w = o.layout === "wide" ? NODE_W : 150;
+  const nodes = ENV_NODES.map((n) => nodeSvg({ ...n, at: 0 }, pos[n.id], w)).join("");
+  const edges = ENV_EDGES.map(([a, b]) => edgeSvg(pos[a], pos[b], 1, false, w)).join("");
   const frame = o.layout === "wide"
     ? boundarySvg(24, 44, 552, 348, "SECURITY OPERATIONS · 24/7", 2)
     : boundarySvg(16, 18, 328, 384, "SECURITY OPERATIONS · 24/7", 2);
   const gates = o.layout === "wide"
     ? gateSvg({ x: 366, y: 76 }, "MFA", 2) + gateSvg({ x: 366, y: 324 }, "RESTORE DRILL", 2)
-    : gateSvg({ x: 326, y: 40 }, "MFA", 2) + gateSvg({ x: 246, y: 340 }, "RESTORE DRILL", 2);
+    // narrow: the drill gate sits on the perimeter under the backup node, label to its left, so nothing crosses the frame
+    : gateSvg({ x: 335, y: 60 }, "MFA", 2) + gateSvg({ x: 300, y: 402 }, "RESTORE DRILL", 2, "end");
   const vb = o.layout === "wide" ? "0 0 600 420" : "0 0 360 420";
   return wrap(ENVIRONMENT_META, frame + edges + nodes + gates, vb, o);
 }
