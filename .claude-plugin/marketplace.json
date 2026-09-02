@@ -1,0 +1,14 @@
+{
+  "name": "de-agent-skills",
+  "owner": { "name": "Digerati Experts", "url": "https://github.com/digeratiexperts" },
+  "metadata": { "description": "Digerati Experts agent skills. Install once per project to get every DE skill.", "version": "1.0.0" },
+  "plugins": [
+    {
+      "name": "de-skills",
+      "source": "./plugins/de-skills",
+      "description": "Nano Banana 2 images, Excalidraw visuals and diagrams, scrollcraft, frontend-design, video-to-website, web-design-rules, skill-builder, WAT framework, Trigger.dev builder and reference.",
+      "version": "1.0.0",
+      "category": "productivity"
+    }
+  ]
+}
