@@ -81,6 +81,9 @@ claims:
       hero CTA locators the smoke gate asserts left untouched. Joe's
       2026-09-02 review: keep #178 draft, no merge, no kie.ai spend;
       corrections applied (see scrollcraft/EXPERIENCE-PLAN.md §09,
+      docs/CLAIMS-REGISTER.md, scrollcraft/ASSET-PLAN.md). The version
+      archive shipped to production separately via PR #181 (merged
+      1ad9bb4); this branch reconciled against it. Original text:
       docs/CLAIMS-REGISTER.md, scrollcraft/ASSET-PLAN.md).
       FREEZE (2026-09-01, Joe): Scrollcraft implementation on ANY route is
       gated by the approved DE Scrollcraft Experience Plan at
