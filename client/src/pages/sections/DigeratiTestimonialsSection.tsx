@@ -291,22 +291,22 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
             <EvidenceFrame
               classification="SANITIZED_REAL"
               title="How DE delivers support: DE Desk, built into digeratiexperts.com"
-              subtitle="A capture of DE's own product, not a client's. Clients reach support, tools, and sign-in from the site itself."
+              subtitle="A capture of DE's own product, not a client's. Visitors open DE Desk from the site's bottom bar to report a possible incident, open a ticket, or reach client tools."
               status="informational"
               statusLabel="DE's own product"
-              sourceNote="Captured from the live site; no client data shown."
+              sourceNote="Captured from the site's own support surface; no client data shown."
               variant="dark"
               className="h-full"
             >
               <div className="flex justify-center">
                 <img
-                  src="/images/evidence/de-desk-support.webp"
-                  alt="DE Desk support surface as it appears on digeratiexperts.com, showing the support entry points"
-                  width={390}
-                  height={844}
+                  src="/images/evidence/de-desk-shell.webp"
+                  alt="DE Desk as it opens on digeratiexperts.com: incident reporting and support, with a possible security incident path and the common help topics"
+                  width={880}
+                  height={1520}
                   loading="lazy"
                   decoding="async"
-                  className="max-h-[420px] w-auto rounded-lg border border-de-hairline"
+                  className="max-h-[600px] w-auto rounded-lg border border-de-hairline"
                   data-testid="img-proof-de-desk"
                 />
               </div>
