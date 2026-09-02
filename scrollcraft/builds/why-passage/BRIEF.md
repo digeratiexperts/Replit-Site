@@ -274,34 +274,65 @@ That is the direction for the next revision, and it is a real redesign of acts
 
 ---
 
-## Unresolved defects in the current build
+## Defects in the current build
 
-**1 · The close does not hold. The page ends on empty scroll.**
+**1 · The close did not hold. FIXED, 2026-09-02, timing and travel only.**
 
-Measured on the desktop harness run at 1440x900 against `dc9470a`: frames 39 and
-40 of 40 have a mean luminance of **6.69 / 255** and contain nothing but the
-fixed site bar, the course line and the bearing gauge reading `360° UNDERWAY`.
-The closing mark, "PROTECT. EMPOWER. SUCCEED.", has scrolled out of frame above.
-The page therefore ends on roughly one and a half viewports of nothing.
-
-This violates a hard rule of the skill itself:
+As recorded against `dc9470a`: frames 39 and 40 of 40 at 1440x900 had a mean
+luminance of **6.69 / 255** and contained nothing but the fixed site bar, the
+course line and the bearing gauge reading `360° UNDERWAY`. The closing mark,
+"PROTECT. EMPOWER. SUCCEED.", had left the frame, and the page ended on roughly
+one and a half viewports of nothing, against the skill's own hard rule:
 
 > *"An ending that trails off, fades out, or just becomes a footer → The close
 > resolves and holds. The last feeling is the one they carry."*
 
-Probable cause: the final act is `pin` at span 1.4, and the pinned stage's
-content finishes before the act's scroll range does, so the remaining travel
-plays out over an empty stage. The same class of failure as the opener
-over-scroll fixed in `11868ce`, at the other end of the page. The harness cannot
-flag it, because there are no cues in that range to measure against — it is only
-visible in the contact sheet or by measuring frame luminance.
+Measured cause, two parts, neither guessed:
 
-Not fixed in this build. It needs the close to hold its last frame rather than
-travel past it.
+- Every cue in the closing act was a two-value window (`0.02 0.95` … `0.44
+  0.99`). The engine fades a window out over its last 30%, so the refusals were
+  gone by p=0.95 and the close by p=0.99. At the bottom of the document p=1, so
+  the final frame was empty by construction.
+- The closing column is taller than the pinned stage: 994px in a 900px stage at
+  1440x900, **1239px in an 844px stage at 390x844**. The stage is
+  `overflow: clip` and centres the column, so the top and bottom were cut at
+  every scroll position. On a phone the closing mark sat below the stage at
+  **every** position: it was never visible at 390, not only at the end.
+
+The fix, in Joe's terms "scroll/pin timing only", with no change to copy,
+styling, order or structure:
+
+- Every cue in the act is now a single value (enter, then hold to the end of
+  the page): `0.02`, `0.04`, `0.10`, `0.30`, `0.44`.
+- The column travels under the pin by exactly its overflow, top-aligned at p=0
+  and bottom-aligned at p=1, so the close is the last frame at every viewport
+  height. The overflow (`--pg-over`) is measured by the page script on load,
+  resize and font load; when the column fits, it is 0 and nothing moves. The
+  engine's own `--sc-p` drives the transform. The span went from 1.4 to 1.6 so
+  that on a phone the column moves no faster than the finger.
+
+Verified with instant scrolling to the exact bottom of the document
+(`scrollHeight - innerHeight`), reading computed opacity and bounding boxes:
+
+| Viewport | Overflow | Final frame (p=1) |
+|---|---|---|
+| 1440x900 | 94px | h2 (partly), all five refusals, note, mark, signature, all at opacity 1 |
+| 390x844 | 395px | refusals 3–5, note, mark (y 721–758), signature (769–794), all at opacity 1 |
+| 390x844, reduced motion | 395px | same as above |
+| 1440x1200 | 0px | column centred, nothing moves, everything at opacity 1 |
+
+No console warnings or page errors at any of the four. Everything before the
+closing act is byte-identical.
 
 **2 · The lateral pan act carries more vertical space than it needs.**
 Cosmetic, not a defect.
 
-**3 · No real-phone verification.** Headless Chrome cannot reproduce iOS
-scrolling or Low Power Mode. This page has no video, so the usual clip-lifecycle
-risk is absent, but touch scrolling over a rotated stage is genuinely untested.
+**3 · No real-phone verification. This is the remaining manual QA gate.**
+Headless Chrome at 390x844 is not a phone: it cannot reproduce iOS scrolling,
+the collapsing toolbar (`100svh` is honoured, but the fix above depends on the
+measured stage height, which a toolbar changes on the fly), Low Power Mode, or
+touch scrolling over a rotated stage. The eight-block lateral rail in act 5 and
+the closing column's travel in act 7 are the two things to check on a real
+device before this passage is judged: scroll the rail sideways with a thumb,
+then scroll to the very end and confirm the mark holds. This environment has
+no device farm; the check is Joe's or a reviewer's.

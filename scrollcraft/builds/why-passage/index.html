@@ -201,6 +201,11 @@ html,body{overflow-x:clip}
 .pg-close .sig{margin-top:18px;font-family:var(--util);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;
   color:var(--sc-ink-soft)}
 .pg-note{margin-top:26px;font-size:13px;color:var(--sc-ink-soft);max-width:64ch;line-height:1.62}
+/* The closing column travels under the pin by exactly its overflow: top-aligned
+   at p=0, bottom-aligned at p=1, so the close is the last frame at every
+   viewport height. --pg-over is measured by the page script and is 0 when the
+   column fits, in which case nothing moves and the column stays centred. */
+.pg-termstage .pg-wrap{transform:translate3d(0,calc((0.5 - var(--sc-p,0)) * var(--pg-over,0px)),0);will-change:transform}
 @media(max-width:640px){
   .pg-wp{grid-template-columns:40px 1fr}
   .pg-term{grid-template-columns:1fr;gap:6px}
@@ -401,15 +406,19 @@ html,body{overflow-x:clip}
     </div>
   </section>
 
-  <!-- 7 · COMMITMENT — pin. The refusals, then the close holds. -->
-  <section data-sc-act="pin" data-sc-span="1.4" data-sc-drift="#08040f">
+  <!-- 7 · COMMITMENT — pin. The refusals, then the close holds.
+       Every cue here is a single value: enter, then hold to the end of the
+       page. The column is taller than a phone's viewport, so it travels under
+       the pin by exactly its overflow (--pg-over, measured below) and the
+       close is the last frame at every viewport height. -->
+  <section data-sc-act="pin" data-sc-span="1.6" data-sc-drift="#08040f">
     <div data-sc-stage class="pg-termstage">
       <div class="pg-wrap">
-        <p class="pg-eyebrow" data-sc-cue="0.02 0.95">Before you choose us</p>
-        <h2 data-sc-cue="0.04 0.95" style="font-family:var(--sc-font-display);font-weight:500;
+        <p class="pg-eyebrow" data-sc-cue="0.02">Before you choose us</p>
+        <h2 data-sc-cue="0.04" style="font-family:var(--sc-font-display);font-weight:500;
           font-size:clamp(22px,3.6vw,38px);letter-spacing:-.025em;margin:0 0 26px;max-width:23ch">
           The parts most providers leave out of the brochure.</h2>
-        <dl style="margin:0" data-sc-cue="0.10 0.95">
+        <dl style="margin:0" data-sc-cue="0.10">
           <div class="pg-term"><dt>We may pause your work</dt>
             <dd>When required access, approvals, standards or prerequisites are incomplete,
             DE can pause, defer, limit or reschedule. Sequencing is not negotiable, because
@@ -428,11 +437,11 @@ html,body{overflow-x:clip}
             <dd>DE runs the technology around people and money. Employment, payroll,
             benefits, tax and legal decisions stay with you and your qualified providers.</dd></div>
         </dl>
-        <p class="pg-note" data-sc-cue="0.30 0.95">Every one of these is published because a
+        <p class="pg-note" data-sc-cue="0.30">Every one of these is published because a
           boundary you can read is worth more than a promise you cannot verify. Unsupported
           conditions, exceptions and material risks are documented rather than hidden.</p>
 
-        <div class="pg-close" data-sc-cue="0.44 0.99">
+        <div class="pg-close" data-sc-cue="0.44">
           <div class="mark">PROTECT. <i>EMPOWER.</i> SUCCEED.</div>
           <div class="sig">Your technology. Working as one ecosystem.</div>
         </div>
@@ -540,6 +549,22 @@ ScrollCraft.mount(document.body);
     paint(b.dataset.r);
   });
   paint("handle");
+
+  /* ── the close: the column travels under the pin by its overflow ──────
+     Measured, not guessed: the refusals column is taller than a phone's
+     viewport, and a pinned stage clips. --pg-over feeds the transform on
+     .pg-termstage .pg-wrap; the engine's --sc-p drives it. */
+  var term = document.querySelector(".pg-termstage"),
+      termWrap = term && term.querySelector(".pg-wrap"),
+      termAct = term && term.closest("[data-sc-act]");
+  function measureTerm(){
+    if (!termWrap || !termAct) return;
+    var over = Math.max(0, termWrap.offsetHeight - term.clientHeight);
+    termAct.style.setProperty("--pg-over", over + "px");
+  }
+  measureTerm();
+  addEventListener("resize", measureTerm, {passive:true});
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measureTerm);
 })();
 </script>
 </body>
