@@ -77,11 +77,14 @@ claims:
       - .claude/skills/skill-builder/**
       - .claude/skills/web-design-rules/**
       - .claude/skills/wat-framework/**
+      - .claude/skills/trigger-dev/**
+      - .claude/skills/trigger-ref/**
+      - .mcp.json
       - CLAUDE.md
     status: active
     started: 2026-09-02
     note: >-
-      Vendors eight Claude Code project skills requested by Joe. No production
+      Vendors ten Claude Code project skills requested by Joe. No production
       client/ or server/ paths. Disjoint from issue #167 / PR #168
       (scripts/kie-assets.mjs); the kie.ai scripts here accept both
       KIE_AI_API_KEY and KIE_API_KEY and write candidates under

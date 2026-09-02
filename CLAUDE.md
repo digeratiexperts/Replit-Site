@@ -28,5 +28,9 @@ Each vendored skill carries an `UPSTREAM.md` with provenance, local deviations a
 | `/skill-builder` | "help me build a skill" | Discovery interview, build and audit of skills | `.claude/skills/<name>/` |
 | `/web-design-rules` | standalone page / mockup, match a reference image | Craft rules + localhost screenshot loop for pages outside `client/` | isolated experiment dir |
 | `/wat-framework` | automation / scraper / data pipeline, "WAT" | Workflows-Agents-Tools operating pattern for automation projects | project's own `workflows/`, `tools/`, `.tmp/` |
+| `/trigger-dev` | automate a process, cron job, poller on Trigger.dev | Beginner workflow-builder rules for Trigger.dev SDK v4 (build in a dedicated Trigger.dev project, not this repo) | that project's `src/trigger/` |
+| `/trigger-ref` | writing Trigger.dev task code | SDK v4 code reference | none |
+
+The Trigger.dev MCP server is declared in the root `.mcp.json`; enable it only when working on Trigger.dev automations.
 
 Generated images are ILLUSTRATIVE candidates until they pass `design/IMAGERY.md` review; only optimized derivatives go under `client/public/images/`.
