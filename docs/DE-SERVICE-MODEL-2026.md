@@ -181,25 +181,44 @@ block pairs a **claim** with a **boundary**. The house tagline is
 
 ---
 
-## Discrepancies found, unresolved
+## Discrepancies — resolved from the repository
+
+**The six protection domains (resolved).** `ProtectionCommandDeck.tsx` ships
+exactly six, and they are the authoritative list:
+
+| # | Domain | Maps to |
+|---|---|---|
+| 1 | Identity & Access | Lane 02 + cyber block "identity + access" |
+| 2 | Endpoint Protection | Cyber block "endpoint" |
+| 3 | Email & Collaboration | Cyber block "email + collab" |
+| 4 | Network & Connectivity | Lane 04 + cyber block "network" |
+| 5 | Data & Recovery | Lane 05 |
+| 6 | Governance & Compliance Support | Lane 09 |
+
+Important: the six are **not** a subset of the cybersecurity architecture's
+eight blocks. They are a different cut — a *buying-decision* taxonomy that
+pulls two domains (Data & Recovery, Governance & Compliance) from other lanes
+and folds four cyber blocks (browser + web, detection + response, human risk,
+risk + exposure) underneath the remaining four rather than surfacing them. Use
+the six to structure a decision; use the eight to explain the security
+architecture once the decision is being made.
+
+## Discrepancies — still open
 
 1. **Twelve lanes vs fourteen domains.** This material says "Twelve capability
    lanes." `scrollcraft/EXPERIENCE-PLAN.md` and `docs/CLAIMS-REGISTER.md` both
-   say DE operates **fourteen domains**. Different taxonomies, or has one
-   superseded the other?
-2. **Which six protection domains?** EXPERIENCE-PLAN §09 rule 7 says lead with
-   "the six protection domains." The cybersecurity architecture here has
-   **eight** blocks (identity+access, endpoint, email+collab, browser+web,
-   network, detection+response, human risk, risk+exposure). Which six?
-3. **2024 vs 2026 client view.** `Downloaded__Client_View…` is headed "WHAT YOU
+   say DE operates **fourteen domains** — but **no file in the repository
+   enumerates the fourteen**. It is referenced, never listed. Either the twelve
+   lanes supersede it, or the fourteen exist only outside the repo. Needs Joe.
+2. **2024 vs 2026 client view.** `Downloaded__Client_View…` is headed "WHAT YOU
    GET IN DE's 2024's OFFERING" and knows only **two** ecosystems (Office,
    Business). The 2026 model has four. Treat the 2024 sheet as superseded
    except for its feature vocabulary.
-4. **Named vendors.** `2026_Workplace_1.docx` names JumpCloud, Intune,
+3. **Named vendors.** `2026_Workplace_1.docx` names JumpCloud, Intune,
    Autopilot, Atakama, Teams Calling as the standard build. The 2026 public
    disclosure rule keeps vendor mechanics internal. Reading this as an
    **internal** build sheet, not public content, until confirmed.
-5. **Assessment as a door.** Joe describes four visitor choices (ProActive,
+4. **Assessment as a door.** Joe describes four visitor choices (ProActive,
    Co-Managed, Standalone, Cyber Security Risk Assessment). The material has
    three doors, with co-managed inside Door 01, standalone under Door 02, and
    assessment as a *stage* rather than a door. The site's decision architecture
