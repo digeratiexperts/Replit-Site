@@ -21,7 +21,8 @@ description: Generate hyper-realistic, tightly controlled images with the Nano B
 >   asset. Anything for digeratiexperts.com must pass `design/IMAGERY.md`,
 >   Visual System v2 and the rendered-component check before an optimized
 >   derivative lands under `client/public/images/`. The DE-branded connector
->   `scripts/kie-assets.mjs` (issue #167 / PR #168, `design/KIE-AI-ASSETS.md`)
+>   `scripts/kie-assets.mjs` (issue #167 / PR #178's sibling PR #168, with
+>   `design/KIE-AI-ASSETS.md`; both exist only once that PR merges)
 >   is the alternative route when brand art-direction should be enforced
 >   automatically; this skill is the JSON-prompt methodology route.
 > - **Parallel runs.** When several images are requested, launch the

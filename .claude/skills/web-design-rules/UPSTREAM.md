@@ -9,9 +9,10 @@
 ## Local deviations from the upload
 
 Frontmatter (`name`, `description`) and a labelled DE note were added at the
-top. The note scopes the rules to standalone pages, maps the author's
-`serve.mjs` / `screenshot.mjs` / Puppeteer workflow onto this repository's
-scrollcraft server and Playwright, and points brand-asset lookup at DE's real
+top. The note scopes the rules to standalone pages, replaces the author's
+`serve.mjs` / `screenshot.mjs` / Puppeteer workflow with two dependency-light
+helpers in `scripts/` (a static server and a Playwright screenshot tool that
+write the same `temporary screenshots/screenshot-N.png` files), and points brand-asset lookup at DE's real
 locations. The original rules text is verbatim below the note.
 
 ## External-service boundary

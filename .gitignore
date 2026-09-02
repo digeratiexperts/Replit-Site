@@ -6,6 +6,8 @@ vite.config.ts.*
 *.tar.gz
 .env
 .env.*
+# the template is safe to track (no values)
+!.env.example
 *.pem
 *.key
 id_rsa
@@ -69,3 +71,6 @@ scrollcraft/builds/*/out/
 
 # Claude Code session worktrees (local working copies, never repository content)
 .claude/worktrees/
+
+# web-design-rules screenshot helper output (regenerated per run)
+temporary screenshots/

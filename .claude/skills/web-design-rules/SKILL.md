@@ -14,13 +14,14 @@ description: Reference rules for building a standalone HTML page or mockup with 
 >   Vite/React app under `client/`, where `AGENTS.md`, `.cursorrules` section
 >   9A and `design/UI-STYLE-RULES.md` win (locked palette and Space Grotesk /
 >   Inter / Oxanium type stack; no Tailwind CDN in production).
-> - **Local server and screenshots.** The `serve.mjs`, `screenshot.mjs`,
->   Puppeteer paths and `temporary screenshots/` folder below belong to the
->   author's machine and do not exist here. Use
->   `node .claude/skills/scrollcraft/scripts/serve.mjs --root <dir> --port 4500`
->   to serve, and Playwright with the preinstalled Chromium (or
->   `.claude/skills/scrollcraft/scripts/shoot.mjs`) to screenshot into the
->   build's `lab/` folder, which is gitignored. Curated evidence goes to
+> - **Local server and screenshots.** The author's `serve.mjs`, `screenshot.mjs`
+>   and Puppeteer paths below are replaced by two working helpers in this skill:
+>   `node .claude/skills/web-design-rules/scripts/serve.mjs --root <dir> --port 3000`
+>   serves a folder, and
+>   `node .claude/skills/web-design-rules/scripts/screenshot.mjs http://localhost:3000 [label] [--width 390]`
+>   saves `temporary screenshots/screenshot-N[-label].png` (auto-incremented) using
+>   the project's `playwright-core` and the installed Chromium. Keep
+>   `temporary screenshots/` out of commits; curated evidence goes to
 >   `artifacts/visual-qa/`. Verify at 390 / 768 / 1440.
 > - **Brand assets.** Check `design/BRAND.md`, `client/public/images/` and
 >   `assets/` rather than a `brand_assets/` folder.

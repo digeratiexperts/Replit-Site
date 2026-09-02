@@ -80,6 +80,10 @@ claims:
       - .claude/skills/trigger-dev/**
       - .claude/skills/trigger-ref/**
       - .mcp.json
+      - .agents/skills/**
+      - .env.example
+      - .gitignore
+      - AGENTS.md
       - CLAUDE.md
     status: active
     started: 2026-09-02
