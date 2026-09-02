@@ -6,6 +6,8 @@ vite.config.ts.*
 *.tar.gz
 .env
 .env.*
+# the template is safe to track (no values)
+!.env.example
 *.pem
 *.key
 id_rsa
@@ -72,3 +74,5 @@ scrollcraft/builds/*/out/
 
 # diagram-system review gallery build output
 scrollcraft/diagrams/lab/
+# web-design-rules screenshot helper output (regenerated per run)
+temporary screenshots/
