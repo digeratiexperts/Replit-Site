@@ -5,6 +5,13 @@
   (`name: excalidraw-visuals`) was installed; a second, personal variant of the
   skill (`name: visualizations`, with the author's own brand-asset rules) was
   uploaded alongside and intentionally not installed.
+- Revised 2026-09-02 (second pass): `AI Website Skills.rar` was supplied, and
+  diffing it against this directory showed the `visualizations` variant is a
+  **newer revision** of the same skill, not merely a personal fork. Four
+  sections were back-ported from it (see "Back-ported from the newer variant"
+  below). The distributable's `name`, DE paths and DE note are kept; the
+  variant's own paths, `.env` URL mapping and Claude-specific brand asset are
+  not adopted.
 - Installed for: Claude Code project skill discovery (`/excalidraw-visuals`).
 - Audited: 2026-09-02
 
@@ -39,6 +46,42 @@ operational `scripts/` folder or the ChatGPT Kie connector from PR #168:
 - Output path changed from `projects/excalidraw-visuals/` to
   `artifacts/kie-ai/excalidraw/` to sit beside the other kie.ai candidates.
 - A labelled DE note was added after the frontmatter in `SKILL.md`.
+
+## Back-ported from the newer variant (2026-09-02, second pass)
+
+Source: `AI Website Skills/Excalidraw Style Images/SKILL.md` in the supplied
+`.rar` (17,105 B; `name: visualizations`). The four blocks below are verbatim
+from it. Prose around them is DE-adapted.
+
+| Section | Change | Verbatim |
+|---|---|---|
+| `## Style Prefixes (LOCKED)` | Replaces the single light prefix; adds Dark Mode | both prefixes |
+| `## Step 4: Build the Prompt` | Revised template + "Critical rules for element descriptions" | template block |
+| `## Golden Example` | New; worked exemplar plus the patterns it demands | whole block |
+| `## Brand Assets` + `### Logo Prompt Rules` | New; adapted, see below | logo-placement block |
+
+**This changes generated output.** The revised light prefix is not a superset of
+the old one: handwriting is messier, outlines wobblier, fills are solid and flat,
+and each shape's border now comes from its own fill colour family instead of a
+uniform dark gray (#495057). Visuals generated before this revision will not
+match visuals generated after it. A dated note in `SKILL.md` says so.
+
+Adaptations in the brand-asset section, all of which correct upstream text that
+would not work here:
+
+- Upstream resolves `--input` paths to URLs through `.env` variables
+  (`brand-assets/Claude.png` -> `CLAUDE_URL`). The vendored script uploads local
+  files to kie.ai directly, so repository paths are passed as-is and no mapping
+  is documented.
+- Upstream's asset table lists `brand-assets/Claude.png`, which is not vendored
+  here. The table points at `client/public/logo.png`; the logo-placement prompt
+  block is parameterised as `[LOGO NAME]`.
+- Upstream lists ten aspect ratios. `scripts/generate-visual.cjs` validates
+  `16:9`, `1:1`, `4:5` and exits on anything else, so `SKILL.md` states the
+  three and says the wider list does not apply.
+
+No script, key handling, endpoint or binary asset changed in this pass; it is
+documentation only.
 
 ## External-service boundary
 
