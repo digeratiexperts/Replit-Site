@@ -12,6 +12,7 @@ import { ExitIntentPopup } from "@/components/ExitIntentPopup";
 import { StickyCTABar } from "@/components/StickyCTABar";
 import { SiteBottomBar } from "@/components/SiteBottomBar";
 import { MarketingChrome } from "@/components/MarketingChrome";
+import { VersionFrame } from "@/pages/versions/VersionFrame";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { PageLoadingSkeleton } from "@/components/LoadingSkeleton";
 import { AnnouncerProvider } from "@/components/AccessibleAnnouncer";
@@ -150,6 +151,13 @@ const BookingPage = lazy(() => import("@/pages/BookingPage"));
 const ContactPage = lazy(() => import("@/pages/Contact"));
 const DigeratiHomepage = lazy(() => import("@/pages/DigeratiHomepage").then((m) => ({ default: m.DigeratiHomepage })));
 
+// Homepage versions: a frozen, reachable copy of every homepage the site has
+// had or is considering (client/src/pages/versions/README.md). Reference only.
+const VersionsIndex = lazy(() => import("@/pages/versions/VersionsIndex"));
+const VersionTwoForward = lazy(() => import("@/pages/versions/VersionTwoForward"));
+const HomepageV1 = lazy(() => import("@/pages/versions/v1/DigeratiHomepage").then((m) => ({ default: m.DigeratiHomepage })));
+const HomepageV3 = lazy(() => import("@/pages/versions/v3/DigeratiHomepage").then((m) => ({ default: m.DigeratiHomepage })));
+
 const WarehouseGate = lazy(() => import("@/pages/store/WarehouseGate"));
 const PublicStoreCheckout = lazy(() => import("@/pages/store/PublicStoreCheckout"));
 
@@ -167,7 +175,33 @@ function Router() {
           <DigeratiHomepage />
         </Suspense>
       )} />
-      
+
+      {/* Homepage versions — reference archive, noindex, not in navigation */}
+      <Route path="/versions" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <VersionsIndex />
+        </Suspense>
+      )} />
+      <Route path="/version-1" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <VersionFrame n={1}>
+            <HomepageV1 />
+          </VersionFrame>
+        </Suspense>
+      )} />
+      <Route path="/version-2" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <VersionTwoForward />
+        </Suspense>
+      )} />
+      <Route path="/version-3" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <VersionFrame n={3}>
+            <HomepageV3 />
+          </VersionFrame>
+        </Suspense>
+      )} />
+
       {/* Solutions Pages */}
       <Route path="/solutions" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>

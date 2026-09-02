@@ -418,6 +418,13 @@ app.use(
   }),
 );
 
+// Homepage version archive (client/src/pages/versions/README.md): version 2
+// is the static Version B build above, so its numbered URL forwards there.
+app.get("/version-2", (_req, res) => {
+  res.setHeader("X-Robots-Tag", "noindex");
+  res.redirect(302, "/v2");
+});
+
 function listEndpoints(): Array<{ method: string; path: string }> {
   const routes: Array<{ method: string; path: string }> = [];
   const stack: any[] = (app as any)?._router?.stack || [];

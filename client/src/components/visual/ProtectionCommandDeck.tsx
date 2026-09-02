@@ -169,8 +169,12 @@ export const protectionDomains: ProtectionDomain[] = [
   },
 ];
 
-export const ProtectionCommandDeck: React.FC = () => {
+export const ProtectionCommandDeck: React.FC<{ onDomainChange?: (id: string) => void }> = ({ onDomainChange }) => {
   const [selectedId, setSelectedId] = useState("identity");
+  const selectDomain = (id: string) => {
+    setSelectedId(id);
+    onDomainChange?.(id);
+  };
   const activeDomain = protectionDomains.find((domain) => domain.id === selectedId) ?? protectionDomains[0];
   const DomainIcon = activeDomain.icon;
 
@@ -193,7 +197,7 @@ export const ProtectionCommandDeck: React.FC = () => {
             <button
               key={domain.id}
               type="button"
-              onClick={() => setSelectedId(domain.id)}
+              onClick={() => selectDomain(domain.id)}
               aria-pressed={isSelected}
               className={`flex min-h-11 items-center gap-2 rounded-lg border px-3.5 py-2 font-mono text-xs font-semibold transition-colors ${
                 isSelected
