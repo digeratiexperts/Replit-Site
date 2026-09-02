@@ -1,6 +1,6 @@
 import express, { type Express, type Request, type Response, NextFunction } from "express";
 import { storage } from "./storage";
-import { randomBytes, createHash } from "crypto";
+import { randomBytes, randomInt, createHash } from "crypto";
 import rateLimit from "express-rate-limit";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -36,6 +36,7 @@ import {
   getUser as portalAuthGetUser,
   hasUser as portalAuthHasUser,
   setUser as portalAuthSetUser,
+  removeUserKeys as portalAuthRemoveUserKeys,
   listUniqueUsers as portalAuthListUsers,
   getClient as portalAuthGetClient,
   setClient as portalAuthSetClient,
@@ -162,6 +163,16 @@ function clearPortalAuthCookies(res: Response) {
 
 // Utility function for generating IDs
 const randomId = () => randomBytes(16).toString('hex');
+
+// HTML-escape user-supplied strings interpolated into server-rendered HTML
+// (e.g. the order receipt). CSP allows inline scripts, so escaping is the guard.
+const escapeHtml = (value: unknown): string =>
+  String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 
 // Types
 interface AuthenticatedRequest extends Request {
@@ -2777,7 +2788,7 @@ export async function registerRoutes(app: Express) {
         const now = Date.now();
 
         if (user.mfaMethod === 'email') {
-          const code = String(Math.floor(100000 + Math.random() * 900000));
+          const code = String(randomInt(100000, 1000000));
           mfaChallenges.set(challengeToken, {
             userId: user.id,
             email: user.email,
@@ -2965,7 +2976,7 @@ export async function registerRoutes(app: Express) {
           message: "Scan the QR code with your authenticator app, then confirm with a code.",
         });
       } else {
-        const code = String(Math.floor(100000 + Math.random() * 900000));
+        const code = String(randomInt(100000, 1000000));
         const setupToken = randomId();
         mfaPendingSetups.set(setupToken, { userId: user.id, secret: code, createdAt: Date.now() });
 
@@ -3148,8 +3159,11 @@ export async function registerRoutes(app: Express) {
         if (portalUsers.has(nextEmail)) {
           return res.status(400).json({ message: "Email already in use" });
         }
+        const previousEmail = user.email;
         user.email = nextEmail;
         user.emailVerified = false;
+        // Drop the old email from the index so it can no longer authenticate.
+        portalAuthRemoveUserKeys(user.id, [previousEmail]);
       }
       portalUsers.set(user.email, user);
       if (user.username) portalUsers.set(user.username, user);
@@ -4140,7 +4154,7 @@ export async function registerRoutes(app: Express) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Receipt - ${order.orderNumber}</title>
+  <title>Receipt - ${escapeHtml(order.orderNumber)}</title>
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 0 auto; padding: 40px 20px; color: #333; }
     .header { text-align: center; margin-bottom: 40px; }
@@ -4172,7 +4186,7 @@ export async function registerRoutes(app: Express) {
   <div class="order-info">
     <div>
       <div class="label">Order Number</div>
-      <div class="value">${order.orderNumber}</div>
+      <div class="value">${escapeHtml(order.orderNumber)}</div>
     </div>
     <div>
       <div class="label">Order Date</div>
@@ -4202,7 +4216,7 @@ export async function registerRoutes(app: Express) {
     <tbody>
       ${lineItems.map((item: any) => `
         <tr>
-          <td>${item.name || "Item"}<br><small style="color:#666">SKU: ${item.sku || "N/A"}</small></td>
+          <td>${escapeHtml(item.name || "Item")}<br><small style="color:#666">SKU: ${escapeHtml(item.sku || "N/A")}</small></td>
           <td class="text-right">${item.quantity || 1}</td>
           <td class="text-right">$${parseFloat(item.unitPrice || "0").toFixed(2)}</td>
           <td class="text-right">$${parseFloat(item.total || "0").toFixed(2)}</td>
@@ -4228,12 +4242,12 @@ export async function registerRoutes(app: Express) {
 
   <div class="billing">
     <h3>Billing Information</h3>
-    <div>${order.billingName || "N/A"}</div>
-    ${order.billingCompany ? `<div>${order.billingCompany}</div>` : ""}
-    ${order.billingEmail ? `<div>${order.billingEmail}</div>` : ""}
-    ${billingAddress?.street ? `<div>${billingAddress.street}</div>` : ""}
+    <div>${escapeHtml(order.billingName || "N/A")}</div>
+    ${order.billingCompany ? `<div>${escapeHtml(order.billingCompany)}</div>` : ""}
+    ${order.billingEmail ? `<div>${escapeHtml(order.billingEmail)}</div>` : ""}
+    ${billingAddress?.street ? `<div>${escapeHtml(billingAddress.street)}</div>` : ""}
     ${billingAddress?.city || billingAddress?.state || billingAddress?.zipCode ? `
-      <div>${billingAddress.city || ""}${billingAddress.city && billingAddress.state ? ", " : ""}${billingAddress.state || ""} ${billingAddress.zipCode || ""}</div>
+      <div>${escapeHtml(billingAddress.city || "")}${billingAddress.city && billingAddress.state ? ", " : ""}${escapeHtml(billingAddress.state || "")} ${escapeHtml(billingAddress.zipCode || "")}</div>
     ` : ""}
   </div>
 

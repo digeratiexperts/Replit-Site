@@ -382,6 +382,23 @@ export function setUser(user: PortalAuthUser): void {
   void upsertUserDb(user);
 }
 
+/**
+ * Drop stale index keys (e.g. a previous email) that no longer point at the
+ * user after a profile change, so the old address can't still authenticate.
+ * Only removes a key when it currently resolves to this same user id.
+ */
+export function removeUserKeys(userId: string, keys: Array<string | null | undefined>): void {
+  for (const key of keys) {
+    if (!key) continue;
+    for (const variant of [key, key.toLowerCase()]) {
+      const existing = usersByKey.get(variant);
+      if (existing && existing.id === userId) {
+        usersByKey.delete(variant);
+      }
+    }
+  }
+}
+
 export function listUniqueUsers(): PortalAuthUser[] {
   const seen = new Set<string>();
   const out: PortalAuthUser[] = [];

@@ -31,6 +31,13 @@ export default function PortalLogin() {
   const [mfaMethod, setMfaMethod] = useState<"totp" | "email">("totp");
   const [mfaMessage, setMfaMessage] = useState("");
   const [turnstileToken, setTurnstileToken] = useState("");
+  // Remounting the widget issues a fresh single-use token after a failed
+  // attempt; without this the second submit re-sends a spent token.
+  const [turnstileKey, setTurnstileKey] = useState(0);
+  const resetTurnstile = () => {
+    setTurnstileToken("");
+    setTurnstileKey((k) => k + 1);
+  };
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [zohoConfigured, setZohoConfigured] = useState<boolean | null>(null);
@@ -165,6 +172,7 @@ export default function PortalLogin() {
 
       if (!response.ok) {
         setError(data.message || "Login failed");
+        resetTurnstile();
         return;
       }
 
@@ -183,6 +191,7 @@ export default function PortalLogin() {
       navigate(marketplaceReturnTo(readQueryParam("returnTo")));
     } catch (err) {
       setError("Connection error. Please try again.");
+      resetTurnstile();
     } finally {
       setLoading(false);
     }
@@ -318,7 +327,7 @@ export default function PortalLogin() {
                     </a>
                   </div>
 
-                  <TurnstileWidget onVerify={setTurnstileToken} />
+                  <TurnstileWidget key={turnstileKey} onVerify={setTurnstileToken} />
 
                   <Button
                     type="submit"
