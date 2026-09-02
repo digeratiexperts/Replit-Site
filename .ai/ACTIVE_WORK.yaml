@@ -83,7 +83,11 @@ claims:
       corrections applied (see scrollcraft/EXPERIENCE-PLAN.md §09,
       docs/CLAIMS-REGISTER.md, scrollcraft/ASSET-PLAN.md). The version
       archive shipped to production separately via PR #181 (merged
-      1ad9bb4); this branch reconciled against it.
+      1ad9bb4); #178 merged 1ec1457 and is live. The branch restarted from
+      that main for the kie.ai workflow lane (PR #183): key alias, model
+      registry, spend guards, provenance manifest, docs/kie/KIE-RULES.md.
+      kie.ai spend: NONE without Joe's approval and cap in the same message;
+      image models only; the first proposal is scrollcraft/KIE-FIRST-GENERATION.md.
       FREEZE (2026-09-01, Joe): Scrollcraft implementation on ANY route is
       gated by the approved DE Scrollcraft Experience Plan at
       scrollcraft/EXPERIENCE-PLAN.md. No page code, no material production,

@@ -172,6 +172,11 @@ project root pointing at it and nothing moves.
    first-class route, not a fallback. Confirm balance with
    `node <skill>/scripts/kie.mjs probe`. A still costs cents and a 5s clip costs
    more; a six-act page with two clips is a small spend, not a large one.
+   **In this repository the spend rules in `docs/kie/KIE-RULES.md` apply:**
+   no paid call without Joe's approval and cap in the same message
+   (`--approved`, `--cap`), image models only, no automatic retry, provenance
+   in `manifest.json`, candidates never published without review. Show what a
+   call would send with `--dry-run` before asking for approval.
 2. A brand kit if one exists (colours, logo, type, existing product shots). If
    the brand has a folder in this repo, read it before generating anything, and
    obey its hard rules. A brand that forbids invented numbers means no stat
