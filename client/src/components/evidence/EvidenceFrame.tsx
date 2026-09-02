@@ -25,23 +25,26 @@ const classificationConfig: Record<
   EvidenceClassification,
   { label: string; badgeClass: string; icon: React.ComponentType<{ className?: string }> }
 > = {
+  // Plain-language disclosure (2026-09-02 review): the classification stays
+  // machine-readable on the badge's data attribute; the visible copy reads as
+  // a sentence a visitor understands, not an internal production code.
   LIVE: {
-    label: "LIVE DATA",
+    label: "Live data",
     badgeClass: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
     icon: Activity,
   },
   SANITIZED_REAL: {
-    label: "SANITIZED REAL",
+    label: "Real, details removed",
     badgeClass: "bg-de-raised text-white/80 border-white/15",
     icon: Database,
   },
   EXAMPLE: {
-    label: "EXAMPLE",
+    label: "Example, not a client",
     badgeClass: "bg-amber-500/10 text-amber-400 border-amber-500/30",
     icon: Info,
   },
   ILLUSTRATIVE: {
-    label: "ILLUSTRATIVE",
+    label: "Illustration",
     badgeClass: "bg-[#D3126A]/10 text-[#F04C97] border-[#D3126A]/30",
     icon: ShieldCheck,
   },
@@ -84,8 +87,9 @@ export const EvidenceFrame: React.FC<EvidenceFrameProps> = ({
       >
         <div className="flex flex-wrap items-center gap-2.5">
           <span
-            className={`inline-flex items-center gap-1.5 rounded border px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider ${classMeta.badgeClass}`}
+            className={`inline-flex items-center gap-1.5 rounded border px-2.5 py-0.5 text-[11px] font-semibold ${classMeta.badgeClass}`}
             data-testid="evidence-classification-badge"
+            data-classification={classification}
           >
             <ClassIcon className="h-3 w-3 shrink-0" aria-hidden="true" />
             <span>{classMeta.label}</span>

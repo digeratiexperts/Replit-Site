@@ -69,3 +69,6 @@ scrollcraft/builds/*/out/
 
 # Claude Code session worktrees (local working copies, never repository content)
 .claude/worktrees/
+
+# diagram-system review gallery build output
+scrollcraft/diagrams/lab/
