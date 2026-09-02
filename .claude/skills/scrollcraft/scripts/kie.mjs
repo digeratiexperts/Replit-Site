@@ -44,15 +44,18 @@ function findEnv(start) {
   }
   return null;
 }
+// KIE_AI_API_KEY is the canonical name; KIE_API_KEY is accepted because the
+// Windows setup script Joe runs locally (setup-kie.ps1) exports that name.
+const KEY_NAMES = ["KIE_AI_API_KEY", "KIE_API_KEY"];
 function loadKey() {
-  if (process.env.KIE_AI_API_KEY) return process.env.KIE_AI_API_KEY;
+  for (const name of KEY_NAMES) if (process.env[name]) return process.env[name];
   const envPath = findEnv(process.cwd());
-  if (!envPath) throw new Error("KIE_AI_API_KEY not set and no .env found walking up from " + process.cwd());
+  if (!envPath) throw new Error("KIE_AI_API_KEY (or KIE_API_KEY) not set and no .env found walking up from " + process.cwd());
   for (const line of fs.readFileSync(envPath, "utf8").split(/\r?\n/)) {
-    const m = line.match(/^\s*KIE_AI_API_KEY\s*=\s*(.+?)\s*$/);
+    const m = line.match(/^\s*(?:KIE_AI_API_KEY|KIE_API_KEY)\s*=\s*(.+?)\s*$/);
     if (m) return m[1].replace(/^["']|["']$/g, "");
   }
-  throw new Error("KIE_AI_API_KEY not found in " + envPath);
+  throw new Error("KIE_AI_API_KEY (or KIE_API_KEY) not found in " + envPath);
 }
 const KEY = loadKey();
 const H = { "Content-Type": "application/json", Authorization: `Bearer ${KEY}` };
