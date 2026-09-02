@@ -1,0 +1,6 @@
+{"t":"2026-09-02T09:35:35.056Z","step":"key","KIE_AI_API_KEY":"missing","KIE_API_KEY":"missing"}
+{"t":"2026-09-02T09:35:35.368Z","step":"host","url":"https://api.kie.ai/","http":403}
+{"t":"2026-09-02T09:35:35.539Z","step":"host","url":"https://kieai.redpandaai.co/","http":403}
+{"t":"2026-09-02T09:35:35.756Z","step":"host","url":"https://tempfile.redpandaai.co/","http":403}
+{"t":"2026-09-02T09:35:36.041Z","step":"host","url":"https://docs.kie.ai/","http":403}
+{"t":"2026-09-02T09:35:36.041Z","step":"abort","reason":"no key in environment"}
