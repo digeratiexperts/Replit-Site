@@ -1,0 +1,14 @@
+{"t":"2026-09-02T05:17:14.672Z","step":"key","KIE_AI_API_KEY":"present(32)","KIE_API_KEY":"present(32)"}
+{"t":"2026-09-02T05:17:14.960Z","step":"host","url":"https://api.kie.ai/","http":404,"error":"Not Found"}
+{"t":"2026-09-02T05:17:15.276Z","step":"host","url":"https://kieai.redpandaai.co/","http":200}
+{"t":"2026-09-02T05:17:15.473Z","step":"host","url":"https://tempfile.redpandaai.co/","http":403}
+{"t":"2026-09-02T05:17:15.572Z","step":"host","url":"https://docs.kie.ai/","http":403}
+{"t":"2026-09-02T05:17:15.710Z","step":"credit-before","http":200,"code":200,"msg":"success","credit":80}
+{"t":"2026-09-02T05:17:15.818Z","step":"model","model":"gpt-image-2-text-to-image","http":200,"code":500,"msg":"This field is required","taskId":null}
+{"t":"2026-09-02T05:17:15.917Z","step":"model","model":"nano-banana-2","http":200,"code":500,"msg":"This field is required","taskId":null}
+{"t":"2026-09-02T05:17:16.019Z","step":"model","model":"google/imagen4-ultra","http":200,"code":500,"msg":"This field is required","taskId":null}
+{"t":"2026-09-02T05:17:16.126Z","step":"model","model":"google/imagen4-fast","http":200,"code":500,"msg":"prompt is required","taskId":null}
+{"t":"2026-09-02T05:17:16.237Z","step":"model","model":"google/imagen4","http":200,"code":500,"msg":"This field is required","taskId":null}
+{"t":"2026-09-02T05:17:16.337Z","step":"model","model":"flux-2/pro-text-to-image","http":200,"code":500,"msg":"prompt is required","taskId":null}
+{"t":"2026-09-02T05:17:16.441Z","step":"model","model":"seedream/5-pro-text-to-image","http":200,"code":500,"msg":"This field is required","taskId":null}
+{"t":"2026-09-02T05:17:16.539Z","step":"credit-after","http":200,"code":200,"credit":80}
