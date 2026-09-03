@@ -1,148 +1,187 @@
 /**
- * Experience v1 — the glue between the passage and the world.
+ * Experience v1 — the glue between the story and the world.
  *
- * The engine (scrollcraft.js) pins the acts and cues the type. This file turns
- * the scroll position into ONE continuous timeline t ∈ [0, 4) for the world in
- * scene.js, so the four acts are states of the same environment rather than
- * four scenes. Inside a pinned act, p 0..1 maps to [i, i + 0.85]; the one
- * viewport where one stage slides out and the next slides in maps to
- * [i + 0.85, i + 1], so the world keeps moving through the seam.
+ * Two presentations of the same markup:
  *
- * Fallbacks: before the WebGL library has loaded, without WebGL, on low-power
- * devices, and under reduced motion, the stage shows stills rendered from the
- * same world (assets/stills), stepped by t.
+ *   flow   phones (≤ 767 px), reduced motion, no JavaScript. The three
+ *          movements read as a page: copy, then a still rendered from the
+ *          world. No pinning, nothing hidden, nothing animated.
+ *   pin    wide screens with motion allowed. The engine (scrollcraft.js) pins
+ *          ONE act; its progress p ∈ [0, 1] drives the movement windows (hard
+ *          cuts at 0.30 and 0.62, so every scroll position shows exactly one
+ *          movement at full strength) and ONE continuous timeline t for the
+ *          world in scene.js: movement 1 → t 0..1, movement 2 → t 1..2,
+ *          movement 3 → t 2.4..3.9. After the pin the world holds its last
+ *          state behind "Where to begin".
  *
- * ?t=2.6 renders that timeline value alone (used to render the stills).
+ * A movement that is not on screen is inert, so the keyboard never lands on a
+ * control the reader cannot see; if focus does reach one, its movement is
+ * brought on screen.
+ *
+ * Fallbacks in pin mode: before the WebGL library has loaded, without WebGL,
+ * and on low-power devices, the stage shows stills rendered from the same
+ * world (assets/stills), stepped by t. ?t=2.6 renders that timeline value
+ * alone (used to render the stills).
  */
 (function () {
   'use strict';
+  var doc = document.documentElement;
+  var params = new URLSearchParams(location.search);
+  var stillT = params.has('t') ? parseFloat(params.get('t')) : null;
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var narrowMQ = matchMedia('(max-width: 767px)');
+  var clamp01 = function (v) { return v < 0 ? 0 : v > 1 ? 1 : v; };
+
+  /* ---------------------------------------------------------- presentation */
+  if (stillT === null && (reduce || narrowMQ.matches)) {
+    doc.classList.add('x-flow');
+    // the pinned presentation needs a fresh layout if the window later grows
+    if (!reduce) narrowMQ.addEventListener('change', function (e) { if (!e.matches) location.reload(); });
+    return;
+  }
+  doc.classList.add('x-pin');
+  if (stillT === null) {
+    ScrollCraft.mount(document.body);
+    narrowMQ.addEventListener('change', function (e) { if (e.matches) location.reload(); });
+  }
+
   var worldEl = document.getElementById('world');
   var canvas = document.getElementById('stage');
   var poster = document.getElementById('poster');
   var labelsEl = document.getElementById('labels');
-  var stateEl = document.getElementById('state');
-  var stateText = document.getElementById('state-text');
-  var acts = Array.prototype.slice.call(document.querySelectorAll('[data-x-act]'));
-  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var params = new URLSearchParams(location.search);
-  var stillT = params.has('t') ? parseFloat(params.get('t')) : null;
+  var pin = document.querySelector('[data-x-pin]');
   var webgl = (function () { try { var c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch (e) { return false; } })();
   var lowPower = (navigator.deviceMemory && navigator.deviceMemory < 3) || (navigator.connection && navigator.connection.saveData);
-  var useStills = stillT === null && (reduce || !webgl || lowPower);
-  var TOTAL = acts.length;
-  var SEAM = 0.85;
+  var useStills = stillT === null && (!webgl || lowPower);
 
-  /* ---------------------------------------------------------------- timeline */
-  var geo = [];
-  function layout() {
-    geo = acts.map(function (el) {
-      var r = el.getBoundingClientRect();
-      return { top: r.top + scrollY, height: r.height };
+  /* -------------------------------------------------------------- movements */
+  // [p from, p to, t from, t to]
+  // movement 3 starts at t 2.4 so the correction (2.45–2.88) answers the
+  // "one owner" heading within a third of a viewport of scroll
+  var M = [[0, 0.30, 0, 1.0], [0.30, 0.62, 1.0, 2.0], [0.62, 1.0, 2.4, 3.9]];
+  var groups = Array.prototype.slice.call(pin.querySelectorAll('[data-x-m]')).map(function (el) {
+    return { el: el, from: parseFloat(el.getAttribute('data-x-from')), to: parseFloat(el.getAttribute('data-x-to')), on: null };
+  });
+  var geo = { top: 0, height: 0 };
+  function layout() { var r = pin.getBoundingClientRect(); geo.top = r.top + scrollY; geo.height = r.height; }
+  function travel() { return Math.max(geo.height - innerHeight, 1); }
+  function progress() { return clamp01(((scrollY || pageYOffset) - geo.top) / travel()); }
+  function timeline(p) {
+    for (var i = 0; i < M.length; i++) {
+      var m = M[i];
+      if (p <= m[1] || i === M.length - 1) return m[2] + (m[3] - m[2]) * clamp01((p - m[0]) / (m[1] - m[0]));
+    }
+    return 0;
+  }
+  function setGroups(p) {
+    groups.forEach(function (g) {
+      var on = p >= g.from && (p < g.to || g.to >= 1);
+      if (on === g.on) return;
+      g.on = on;
+      g.el.inert = !on;
+      g.el.setAttribute('aria-hidden', on ? 'false' : 'true');
     });
   }
-  function timeline() {
-    var y = scrollY || pageYOffset, vh = innerHeight;
-    if (!geo.length) return 0;
-    if (y <= geo[0].top) return 0;
-    for (var i = 0; i < geo.length; i++) {
-      var g = geo[i], pinEnd = g.top + g.height - vh, next = i + 1 < geo.length ? geo[i + 1].top : g.top + g.height;
-      if (y < pinEnd) return i + SEAM * Math.max(0, (y - g.top) / Math.max(pinEnd - g.top, 1));
-      if (y < next) return i + SEAM + (1 - SEAM) * Math.min(1, (y - pinEnd) / Math.max(next - pinEnd, 1));
-    }
-    return TOTAL - 0.001;
-  }
+  // keyboard: focus inside a movement that is off screen brings that movement on screen
+  document.addEventListener('focusin', function (e) {
+    var g = e.target && e.target.closest ? e.target.closest('[data-x-m]') : null;
+    if (!g) return;
+    var p = progress(), from = parseFloat(g.getAttribute('data-x-from')), to = parseFloat(g.getAttribute('data-x-to'));
+    if (p >= from && (p < to || to >= 1)) return;
+    scrollTo({ top: Math.round(geo.top + (from + 0.01) * travel()), behavior: 'auto' });
+  });
 
-  /* --------------------------------------------------------------- readout */
-  function readout(t, s) {
-    var st, txt;
-    if (t < 1) { st = 'dawn'; txt = '7:40 · Tuesday'; }
-    else if (t < 1.9) { st = 'exposed'; txt = 'what’s underneath'; }
-    else if (t < 2.45) { st = 'drift'; txt = 'heading <b>348°</b>'; }
-    else if (t < 2.9) { st = 'de'; txt = 'heading <b>' + (s ? s.heading : 348) + '°</b>'; }
-    else { st = 'level'; txt = 'heading <b>360°</b> · on course'; }
-    if (stateEl.dataset.s !== st) stateEl.dataset.s = st;
-    if (stateText.dataset.txt !== txt) { stateText.dataset.txt = txt; stateText.innerHTML = txt; }
-  }
-
-  /* ---------------------------------------------------------------- poster */
+  /* ------------------------------------------------------------------ poster */
   var posterImgs = Array.prototype.slice.call(poster.querySelectorAll('img'));
-  function posterFor(t) { return t < 1 ? 0 : t < 2 ? 1 : t < 2.45 ? 2 : t < 3 ? 3 : 4; }
+  function posterFor(t) { return t < 1 ? 0 : t < 2.3 ? 1 : 2; }
   function showPoster(t) {
     var k = posterFor(t);
     posterImgs.forEach(function (img, i) { img.classList.toggle('on', i === k); });
   }
 
-  /* ---------------------------------------------------------------- labels */
+  /* ------------------------------------------------------------------ labels */
+  // Only names that explain what DE maps and what it finds. No telemetry.
   var LABELS = [
     { key: 'identity', text: 'identity', from: 1.1, to: 2.42 },
     { key: 'devices', text: 'devices', from: 1.17, to: 2.42 },
-    { key: 'email', text: 'email', from: 1.25, to: 2.42, m: true },
-    { key: 'data', text: 'data', from: 1.3, to: 2.42, m: true },
+    { key: 'email', text: 'email', from: 1.25, to: 2.42 },
+    { key: 'data', text: 'data · backups', from: 1.3, to: 2.42 },
     { key: 'network', text: 'network', from: 1.36, to: 2.42 },
-    { key: 'applications', text: 'applications', from: 1.41, to: 2.42, m: true },
+    { key: 'applications', text: 'applications', from: 1.41, to: 2.42 },
     { key: 'customers', text: 'customers', from: 1.47, to: 2.42 },
-    { key: 'vendor0', text: 'vendor', from: 1.52, to: 2.42, cls: 'vendor', m: true },
-    { key: 'vendor1', text: 'vendor', from: 1.56, to: 2.42, cls: 'vendor', m: true },
+    { key: 'vendor0', text: 'vendor', from: 1.52, to: 2.42, cls: 'vendor' },
+    { key: 'vendor1', text: 'vendor', from: 1.56, to: 2.42, cls: 'vendor' },
     { key: 'vendor2', text: 'vendor · carrier', from: 1.6, to: 2.42, cls: 'vendor' },
     { key: 'exc0', text: 'backup untested', from: 1.78, to: 2.62, cls: 'amber' },
-    { key: 'exc1', text: 'unpatched', from: 1.83, to: 2.66, cls: 'amber', m: true },
-    { key: 'exc2', text: 'shared mailbox', from: 1.88, to: 2.7, cls: 'amber', m: true },
+    { key: 'exc1', text: 'unpatched', from: 1.83, to: 2.66, cls: 'amber' },
+    { key: 'exc2', text: 'shared mailbox', from: 1.88, to: 2.7, cls: 'amber' },
     { key: 'exc3', text: 'guest network open', from: 1.93, to: 2.74, cls: 'amber' },
-    { key: 'de', html: '<b>DE</b> · taking the heading', from: 2.58, to: 3.35, cls: 'de' },
+    { key: 'de', html: '<b>Digerati Experts</b> · one owner', from: 2.62, to: 3.9, cls: 'de' },
   ];
   var labelNodes = LABELS.map(function (l) {
     var el = document.createElement('div');
-    el.className = 'x-label' + (l.cls ? ' ' + l.cls : '') + (l.m ? ' m-hide' : '');
+    el.className = 'x-label' + (l.cls ? ' ' + l.cls : '');
     if (l.html) el.innerHTML = l.html; else el.textContent = l.text;
     labelsEl.appendChild(el); return el;
   });
   var pt = { x: 0, y: 0, behind: false };
+  function copyGuard() {
+    // labels never sit under the copy column
+    for (var i = 0; i < groups.length; i++) {
+      if (!groups[i].on) continue;
+      var c = groups[i].el.querySelector('.x-copy');
+      if (c) return c.getBoundingClientRect().right + 24;
+    }
+    return 0;
+  }
   function placeLabels(t, world) {
-    var w = innerWidth, h = innerHeight;
+    var w = innerWidth, h = innerHeight, guard = copyGuard();
     LABELS.forEach(function (l, i) {
       var el = labelNodes[i];
       var on = t >= l.from && t <= l.to;
       var a = world.anchors[l.key];
       if (!on || !a) { if (el.style.opacity !== '0') el.style.opacity = '0'; return; }
       world.project(a, pt);
-      var vis = !pt.behind && pt.x > 12 && pt.x < w - 12 && pt.y > 60 && pt.y < h - 40;
+      var half = el.offsetWidth / 2;
+      var vis = !pt.behind && pt.x - half > guard && pt.x + half < w - 12 && pt.y > 70 && pt.y < h - 24;
       el.style.transform = 'translate(' + pt.x.toFixed(1) + 'px,' + pt.y.toFixed(1) + 'px) translate(-50%,-100%)';
       var fade = Math.min(1, (t - l.from) / 0.06, (l.to - t) / 0.08);
       el.style.opacity = vis ? Math.max(0, fade).toFixed(2) : '0';
     });
   }
 
-  /* ------------------------------------------------------------------ boot */
+  /* -------------------------------------------------------------------- boot */
   layout();
   addEventListener('resize', function () { layout(); if (world) world.resize(); }, { passive: true });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(layout);
   addEventListener('load', layout);
+  if (stillT === null) setGroups(progress());
 
-  var world = null, lastT = -1, lastTime = 0, running = false;
+  var world = null, lastTime = 0, running = false;
   // frame accounting for the prototype report: window.__xStats = { n, ms }
   var stats = { n: 0, ms: 0 }; window.__xStats = stats;
 
   function frame(now) {
     running = false;
-    var t = stillT !== null ? stillT : timeline();
+    var p = stillT !== null ? 0 : progress();
+    var t = stillT !== null ? stillT : timeline(p);
     var dt = lastTime ? Math.min(0.05, (now - lastTime) / 1000) : 0.016; lastTime = now;
-    var onScreen = stillT !== null || scrollY < geo[geo.length - 1].top + geo[geo.length - 1].height;
-    if (!onScreen) { lastT = t; return; }
+    var onScreen = stillT !== null || scrollY < geo.top + geo.height;
+    if (stillT === null) setGroups(p);
+    if (!onScreen) return;
     var t0 = performance.now();
-    var s = world.update(t, dt);
+    world.update(t, dt);
     world.render();
     stats.n++; stats.ms += performance.now() - t0;
     placeLabels(t, world);
-    readout(t, s);
-    lastT = t;
-    if (stillT !== null) { document.documentElement.setAttribute('data-still-ready', '1'); return; }
+    if (stillT !== null) { doc.setAttribute('data-still-ready', '1'); return; }
     schedule();
   }
   function schedule() { if (!running) { running = true; requestAnimationFrame(frame); } }
 
   function startStills() {
     worldEl.classList.remove('live');
-    var tick = function () { var t = timeline(); showPoster(t); readout(t, null); };
+    var tick = function () { var p = progress(); setGroups(p); showPoster(timeline(p)); };
     addEventListener('scroll', tick, { passive: true }); tick();
   }
 
@@ -150,7 +189,7 @@
 
   // Stills carry the first paint; the world takes over once the library and
   // the scene have loaded and rendered their first frame.
-  showPoster(timeline());
+  showPoster(timeline(progress()));
   // The single-file artifact build inlines scene.js as a module that announces
   // itself on window.__sceneModule; the served build imports it lazily.
   function loadScene() {
@@ -162,11 +201,11 @@
     return import('./scene.js');
   }
   loadScene().then(function (mod) {
-    var isPhone = innerWidth < 640;
-    world = mod.createWorld(canvas, { maxDpr: isPhone ? 1.25 : 1.5, shadows: !isPhone });
-    if (stillT !== null) document.documentElement.setAttribute('data-still', '1');
+    var portrait = innerHeight > innerWidth;
+    world = mod.createWorld(canvas, { maxDpr: portrait ? 1.25 : 1.5, shadows: !portrait });
+    if (stillT !== null) doc.setAttribute('data-still', '1');
     world.resize();
-    world.update(stillT !== null ? stillT : timeline(), 0.016);
+    world.update(stillT !== null ? stillT : timeline(progress()), 0.016);
     world.render();
     worldEl.classList.add('live');
     addEventListener('scroll', schedule, { passive: true });

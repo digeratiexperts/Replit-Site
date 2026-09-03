@@ -1,9 +1,11 @@
 /**
- * Render the poster stills from the world itself (asset bible S01–S05).
+ * Render the poster stills from the world itself (asset bible S01–S03).
  *
- * Serves the build, opens ?t=<value> for each beat, waits for the world to
+ * Serves the build, opens ?t=<value> for each movement, waits for the world to
  * render that single frame, screenshots the canvas, and encodes WebP with the
- * repo's ffmpeg. Reproducible: the same t values always give the same frames.
+ * repo's ffmpeg. Two shapes: landscape (s0N, the poster behind the pinned
+ * story and the figure on wide flow pages) and portrait (m0N, the figure on
+ * phones). Reproducible: the same t values always give the same frames.
  *
  *   node scrollcraft/builds/experience-v1/tools/render-stills.mjs
  *
@@ -19,25 +21,28 @@ const BASE = process.env.BASE || "http://127.0.0.1:4501/";
 const OUT = path.resolve("scrollcraft/builds/experience-v1/assets/stills");
 const FFMPEG = process.env.FFMPEG || "/root/.cache/scrollcraft/node_modules/ffmpeg-static/ffmpeg";
 const BEATS = [
-  ["s01", 0.55], // the door: disconnected
-  ["s02", 1.62], // what's underneath
-  ["s03", 2.28], // drifting, 348°
-  ["s04", 2.78], // corrected, DE entering
-  ["s05", 3.45], // DE sees the whole environment
+  ["01", 0.45], // movement 1: the whole floor, nothing quite lined up
+  ["02", 1.6],  // movement 2: glass floor, relationships, weak points
+  ["03", 3.6],  // movement 3: level, joined, one boundary
 ];
+const SHAPES = [["s", 1600, 1000], ["m", 800, 1000]];
 mkdirSync(OUT, { recursive: true });
 const browser = await chromium.launch({ executablePath: process.env.CHROME_BIN, args: ["--use-gl=angle", "--use-angle=swiftshader", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist"] });
-const ctx = await browser.newContext({ viewport: { width: 1600, height: 1000 }, deviceScaleFactor: 1 });
-const page = await ctx.newPage();
-for (const [name, t] of BEATS) {
-  await page.goto(`${BASE}?t=${t}`, { waitUntil: "load", timeout: 60000 });
-  await page.waitForSelector("html[data-still-ready]", { state: "attached", timeout: 30000 });
-  await page.waitForTimeout(250);
-  const png = path.join(OUT, `${name}.png`);
-  await page.locator("#stage").screenshot({ path: png });
-  const webp = path.join(OUT, `${name}.webp`);
-  execFileSync(FFMPEG, ["-y", "-loglevel", "error", "-i", png, "-c:v", "libwebp", "-q:v", "78", "-compression_level", "6", webp]);
-  unlinkSync(png);
-  console.log(`${name}  t=${t}  ${(statSync(webp).size / 1024).toFixed(1)} KB`);
+for (const [prefix, width, height] of SHAPES) {
+  const ctx = await browser.newContext({ viewport: { width, height }, deviceScaleFactor: 1 });
+  const page = await ctx.newPage();
+  for (const [n, t] of BEATS) {
+    await page.goto(`${BASE}?t=${t}`, { waitUntil: "load", timeout: 60000 });
+    await page.waitForSelector("html[data-still-ready]", { state: "attached", timeout: 30000 });
+    await page.waitForTimeout(250);
+    const name = `${prefix}${n}`;
+    const png = path.join(OUT, `${name}.png`);
+    await page.locator("#stage").screenshot({ path: png });
+    const webp = path.join(OUT, `${name}.webp`);
+    execFileSync(FFMPEG, ["-y", "-loglevel", "error", "-i", png, "-c:v", "libwebp", "-q:v", "78", "-compression_level", "6", webp]);
+    unlinkSync(png);
+    console.log(`${name}  t=${t}  ${width}x${height}  ${(statSync(webp).size / 1024).toFixed(1)} KB`);
+  }
+  await ctx.close();
 }
 await browser.close();

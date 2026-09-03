@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Digerati Experts · You lead the business. We lead the technology.</title>
-<meta name="description" content="Enter a working business. Watch what is underneath it become visible, see that it has been drifting, and watch the same world straighten as DE takes the heading.">
+<title>Digerati Experts · Your environment isn't broken. It's been drifting.</title>
+<meta name="description" content="Digerati Experts maps the people, devices, cloud services, vendors and risks behind your business, then gives every part an owner, a boundary and a direction. Start with a Cyber Risk Assessment.">
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23050312'/><circle cx='16' cy='16' r='6' fill='none' stroke='%23D3126A' stroke-width='2'/></svg>">
 <link rel="stylesheet" href="scrollcraft.css">
@@ -20,122 +20,153 @@
   --sc-canvas:#050312;
   --sc-surface:#151217;
   --sc-ink:#f2eff5;
-  --sc-ink-soft:#9c94a8;
+  --sc-ink-soft:#b3abc1;
   --sc-accent:#D3126A;
-  --sc-accent-ink:#050312;
+  --sc-accent-ink:#ffffff;
   --sc-font-display:"Space Grotesk",system-ui,sans-serif;
   --sc-font-text:"Inter",system-ui,sans-serif;
   --util:"Oxanium","Space Grotesk",system-ui,sans-serif;
-  --hair:rgba(255,255,255,.10);
+  --hair:rgba(255,255,255,.12);
   --amber:#F2A13A;
+  --gutter:clamp(20px,6vw,72px);
 }
 html,body{background:var(--sc-canvas);color:var(--sc-ink);overflow-x:clip}
 
-/* ── the stage: one fixed world behind every act ─────────────────────────── */
+/* ── skip link: the story is optional for a keyboard user ───────────────── */
+.x-skip{position:fixed;left:16px;top:-80px;z-index:70;background:var(--sc-accent);color:#fff;padding:10px 14px;
+  font:600 13px/1 var(--sc-font-text);text-decoration:none;border-radius:4px}
+.x-skip:focus,.x-skip:focus-visible{top:16px;outline:2px solid #fff;outline-offset:2px}
+
+/* ── the world: one fixed scene behind the pinned story ─────────────────── */
 .x-world{position:fixed;inset:0;z-index:0;pointer-events:none;background:var(--sc-canvas)}
+html:not(.x-pin) .x-world{display:none}
 .x-world canvas{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity 700ms ease}
 .x-world.live canvas{opacity:1}
 .x-poster{position:absolute;inset:0}
 .x-poster img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 600ms ease}
 .x-poster img.on{opacity:1}
 .x-world.live .x-poster{opacity:0;transition:opacity 700ms ease 200ms}
-/* the grade: a vignette and a whisper of grain, so the render reads as material, not as a viewport */
 .x-grade{position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(120% 90% at 50% 45%,transparent 45%,rgba(5,3,18,.55) 100%)}
-.x-grade::after{content:"";position:absolute;inset:0;opacity:.07;mix-blend-mode:overlay;
+  background:radial-gradient(120% 90% at 60% 45%,transparent 50%,rgba(5,3,18,.4) 100%)}
+.x-grade::after{content:"";position:absolute;inset:0;opacity:.06;mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
 .x-labels{position:absolute;inset:0;overflow:hidden}
-.x-label{position:absolute;left:0;top:0;transform:translate(-50%,-100%);font-family:var(--util);font-size:10.5px;letter-spacing:.2em;
-  text-transform:uppercase;color:var(--sc-ink-soft);opacity:0;white-space:nowrap;transition:opacity 380ms ease;padding-bottom:12px}
-.x-label::after{content:"";position:absolute;left:50%;bottom:0;width:1px;height:10px;background:var(--hair)}
+/* labels name what DE maps; they sit on a small dark plate so they read over any part of the scene */
+.x-label{position:absolute;left:0;top:0;transform:translate(-50%,-100%);font-family:var(--util);font-size:11px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--sc-ink);opacity:0;white-space:nowrap;transition:opacity 320ms ease;
+  background:rgba(5,3,18,.74);padding:4px 8px 3px;border-radius:3px;margin-bottom:12px}
+.x-label::after{content:"";position:absolute;left:50%;top:100%;width:1px;height:12px;background:rgba(255,255,255,.28)}
 .x-label.amber{color:var(--amber)}
-.x-label.vendor{color:rgba(156,148,168,.7);letter-spacing:.16em;font-size:9.5px}
-.x-label.de{color:var(--sc-ink);letter-spacing:.16em}
+.x-label.vendor{color:var(--sc-ink-soft)}
 .x-label.de b{color:var(--sc-accent);font-weight:600}
-@media(max-width:640px){.x-label.m-hide{display:none}}
-
-/* ── acts: transparent pinned stages over the world ─────────────────────── */
-main{position:relative;z-index:1}
-[data-sc-stage]{background:transparent}
-.x-stage{display:flex;align-items:flex-end;padding:0 clamp(20px,6vw,72px) clamp(64px,12vh,120px)}
-.x-stage.top{align-items:flex-start;padding-top:clamp(84px,16vh,150px)}
-.x-copy{max-width:min(44ch,100%)}
-.x-copy.right{margin-left:auto}
-.x-eyebrow{font-family:var(--util);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--sc-ink-soft);
-  display:flex;align-items:center;gap:9px;margin:0 0 16px}
-.x-eyebrow::before{content:"";width:22px;height:1px;background:var(--sc-accent);flex:none}
-.x-line{font-family:var(--sc-font-display);font-weight:500;letter-spacing:-.025em;line-height:1.08;margin:0;
-  font-size:clamp(26px,3.9vw,50px);text-wrap:balance;text-shadow:0 2px 24px rgba(5,3,18,.75)}
-.x-line em{font-style:normal;color:var(--sc-ink-soft)}
-.x-line + .x-line{margin-top:.55em}
-.x-sub{margin:18px 0 0;max-width:44ch;color:var(--sc-ink-soft);font-family:var(--sc-font-text);font-size:clamp(14px,1.45vw,17px);line-height:1.55;
-  text-shadow:0 1px 14px rgba(5,3,18,.85)}
-.x-time{font-family:var(--util);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--sc-ink-soft);margin:0 0 12px}
-.x-time b{color:var(--sc-ink);font-weight:600;font-variant-numeric:tabular-nums}
-.x-quote{font-family:var(--sc-font-display);font-weight:500;letter-spacing:-.03em;line-height:1.06;margin:0;
-  font-size:clamp(30px,4.8vw,64px);text-wrap:balance;text-shadow:0 2px 30px rgba(5,3,18,.8)}
-.x-said{margin:16px 0 0;font-family:var(--util);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--sc-ink-soft)}
-.x-payoff{font-family:var(--sc-font-display);font-weight:600;letter-spacing:-.03em;line-height:1.02;margin:0;
-  font-size:clamp(32px,5.6vw,76px);text-shadow:0 4px 40px rgba(5,3,18,.8)}
-.x-payoff em{font-style:normal;display:block;color:var(--sc-ink-soft);font-weight:500}
 
 /* ── page furniture ─────────────────────────────────────────────────────── */
-.x-bar{position:fixed;top:0;left:0;right:0;z-index:42;display:flex;align-items:center;justify-content:space-between;
-  padding:14px clamp(16px,4vw,40px)}
+.x-bar{position:fixed;top:0;left:0;right:0;z-index:42;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:14px var(--gutter);background:linear-gradient(rgba(5,3,18,.85),rgba(5,3,18,0))}
+html:not(.x-pin) .x-bar{position:sticky;background:rgba(5,3,18,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--hair)}
 .x-bar .mk{display:block;line-height:0}
 .x-bar .mk img{display:block;height:30px;width:auto}
-@media(max-width:560px){.x-bar .mk img{height:26px}}
-.x-cta{font-family:var(--util);font-size:11px;letter-spacing:.14em;text-transform:uppercase;border:1px solid var(--hair);
-  padding:9px 15px;color:var(--sc-ink);text-decoration:none;background:rgba(5,3,18,.55);backdrop-filter:blur(6px);
+@media(max-width:560px){.x-bar .mk img{height:24px}}
+.x-cta{font-family:var(--util);font-size:11px;letter-spacing:.14em;text-transform:uppercase;border:1px solid rgba(255,255,255,.28);
+  padding:10px 14px;color:var(--sc-ink);text-decoration:none;background:rgba(5,3,18,.55);white-space:nowrap;border-radius:3px;
   transition:border-color .18s ease,background .18s ease}
-.x-cta:hover,.x-cta:focus-visible{border-color:var(--sc-accent);background:rgba(211,18,106,.12)}
-.x-cta.primary{border-color:var(--sc-accent);background:rgba(211,18,106,.16)}
+.x-cta:hover,.x-cta:focus-visible{border-color:var(--sc-accent);background:rgba(211,18,106,.16)}
 .x-cta .short{display:none}
 @media(max-width:560px){.x-cta .long{display:none}.x-cta .short{display:inline}}
-/* the instrument: the heading readout, 348° until the world corrects */
-.x-state{position:fixed;right:clamp(16px,4vw,40px);bottom:22px;z-index:41;font-family:var(--util);font-size:10px;letter-spacing:.18em;
-  text-transform:uppercase;color:var(--sc-ink-soft);display:flex;gap:10px;align-items:center;pointer-events:none;
-  background:rgba(5,3,18,.7);backdrop-filter:blur(8px);border:1px solid var(--hair);padding:7px 12px}
-.x-state b{color:var(--sc-ink);font-weight:600;font-variant-numeric:tabular-nums}
-.x-state i{width:6px;height:6px;border-radius:50%;background:var(--sc-ink-soft);transition:background .3s ease}
-.x-state[data-s="dawn"] i{background:#ffb27a}
-.x-state[data-s="exposed"] i{background:#8fa0ff}
-.x-state[data-s="drift"] i{background:var(--amber)}
-.x-state[data-s="de"] i{background:var(--sc-accent)}
-.x-state[data-s="level"] i{background:#f2eff5}
-@media(max-width:560px){.x-state{bottom:14px;right:14px;padding:6px 10px}}
 
-/* the close after the coda: on the page, not the stage */
-.x-close{position:relative;z-index:1;background:var(--sc-canvas);padding:clamp(56px,10vh,110px) clamp(20px,6vw,72px) clamp(72px,12vh,140px)}
+/* the one control that matters */
+.x-btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 22px;border-radius:4px;
+  background:var(--sc-accent);color:#fff;font:600 15px/1.2 var(--sc-font-display);letter-spacing:-.005em;text-decoration:none;
+  box-shadow:0 10px 30px -10px rgba(211,18,106,.7);transition:background .18s ease,transform .18s ease}
+.x-btn:hover{background:#e51f78}
+.x-btn:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.x-btn.big{min-height:60px;padding:16px 30px;font-size:18px}
+.x-btn:active{transform:translateY(1px)}
+
+/* ── type ───────────────────────────────────────────────────────────────── */
+.x-eyebrow{font-family:var(--util);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--sc-ink-soft);
+  display:flex;align-items:center;gap:9px;margin:0 0 16px}
+.x-eyebrow::before{content:"";width:22px;height:1px;background:var(--sc-accent);flex:none}
+.x-line{font-family:var(--sc-font-display);font-weight:500;letter-spacing:-.025em;line-height:1.06;margin:0;
+  font-size:clamp(28px,3.8vw,50px);text-wrap:balance}
+h1.x-line{font-size:clamp(31px,4.3vw,56px)}
+.x-line em{font-style:normal;color:var(--sc-ink-soft)}
+.x-dek{margin:18px 0 0;max-width:46ch;color:var(--sc-ink);font-family:var(--sc-font-text);font-size:clamp(16px,1.35vw,19px);line-height:1.5;text-wrap:pretty}
+.x-act-cta{margin:26px 0 0}
+.x-sub{margin:16px 0 0;max-width:46ch;color:var(--sc-ink-soft);font-family:var(--sc-font-text);font-size:clamp(15px,1.25vw,17px);line-height:1.55;text-wrap:pretty}
+.x-sub strong{color:var(--sc-ink);font-weight:500}
+.x-quote{font-family:var(--sc-font-display);font-weight:500;letter-spacing:-.03em;line-height:1.08;margin:22px 0 0;
+  font-size:clamp(24px,3vw,40px);text-wrap:balance}
+.x-said{margin:12px 0 0;font-family:var(--util);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--sc-ink-soft)}
+
+/* ── the story ─────────────────────────────────────────────────────────────
+   Default presentation is document flow: phones, reduced motion, and no
+   JavaScript all read the same three movements as a page. experience.js adds
+   html.x-pin on wide, motion-allowed screens, which turns the same markup into
+   one pinned stage over the world. */
+main{position:relative;z-index:1}
+.x-act{position:relative}
+.x-stage{position:relative;padding:clamp(28px,5vh,52px) var(--gutter) 0}
+.x-m{position:relative;max-width:62rem;margin:0 auto;padding:0 0 clamp(44px,7vh,80px)}
+.x-m + .x-m{border-top:1px solid var(--hair);padding-top:clamp(36px,6vh,60px)}
+.x-copy{max-width:min(48ch,100%)}
+.x-still{margin:28px 0 0}
+.x-still img{width:100%;height:auto;border-radius:8px;border:1px solid var(--hair);background:#0a0718}
+html:not(.x-pin) [data-sc-cue]{opacity:1!important;transform:none!important}
+
+/* the stage pins: declared here as well as in the engine's device CSS, because
+   the flow rule above (.x-stage{position:relative}) would otherwise win the cascade */
+html.x-pin .x-stage{position:sticky;top:0;height:100vh;height:100svh;padding:0;overflow:clip}
+/* the scrim sits under the copy column only; the world keeps the right two thirds */
+html.x-pin .x-stage::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:linear-gradient(90deg,rgba(5,3,18,.93) 0%,rgba(5,3,18,.8) 30%,rgba(5,3,18,.38) 52%,rgba(5,3,18,0) 70%)}
+html.x-pin .x-m{position:absolute;inset:0;z-index:1;max-width:none;margin:0;display:flex;align-items:center;
+  padding:clamp(76px,10vh,110px) var(--gutter) clamp(40px,8vh,80px);border:0;pointer-events:none}
+html.x-pin .x-copy{max-width:min(48ch,100%);width:100%}
+@media(max-width:1023px){html.x-pin .x-copy{max-width:min(42ch,100%)}}
+html.x-pin .x-still{display:none}
+/* a movement that is not on screen is inert (experience.js) and does not paint */
+html.x-pin .x-m[inert]{visibility:hidden}
+/* before the engine's first read, the opening movement is already there */
+html.x-pin:not(.sc-ready) [data-x-m="1"] [data-sc-cue]{opacity:1}
+
+/* ── where to begin: on the page, after the story ───────────────────────── */
+.x-close{position:relative;z-index:1;background:var(--sc-canvas);border-top:1px solid var(--hair);
+  padding:clamp(56px,10vh,110px) var(--gutter) clamp(56px,9vh,96px)}
+html.x-pin .x-close{box-shadow:0 -60px 120px rgba(5,3,18,.95)}
 .x-close .wrap{width:min(1060px,100%);margin-inline:auto}
-.x-close .x-line{font-size:clamp(24px,3.4vw,42px)}
-.x-who{margin:14px 0 0;max-width:60ch;font-family:var(--util);font-size:11px;letter-spacing:.12em;text-transform:uppercase;line-height:1.8;color:var(--sc-ink-soft)}
-.x-doors{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:34px}
-@media(max-width:760px){.x-doors{grid-template-columns:1fr}}
-.x-door{border-top:1px solid var(--hair);padding:18px 0 0;text-decoration:none;color:inherit}
-.x-door b{display:block;font-family:var(--sc-font-display);font-weight:500;font-size:19px;letter-spacing:-.02em;margin-bottom:6px}
-.x-door span{color:var(--sc-ink-soft);font-family:var(--sc-font-text);font-size:14px;line-height:1.5}
-.x-foot{margin-top:56px;font-family:var(--util);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--sc-ink-soft);line-height:1.8}
+.x-close .x-line{font-size:clamp(26px,3.6vw,46px)}
+.x-note{margin:14px 0 0;font-family:var(--sc-font-text);font-size:14px;color:var(--sc-ink-soft)}
+.x-paths{margin-top:52px;padding-top:26px;border-top:1px solid var(--hair)}
+.x-paths ul{list-style:none;margin:8px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:8px 28px}
+@media(max-width:760px){.x-paths ul{grid-template-columns:1fr}}
+.x-paths a{display:block;text-decoration:none;color:inherit;padding:12px 0;border-radius:4px}
+.x-paths a b{display:block;font-family:var(--sc-font-display);font-weight:500;font-size:17px;letter-spacing:-.01em;margin-bottom:4px}
+.x-paths a span{color:var(--sc-ink-soft);font-family:var(--sc-font-text);font-size:14px;line-height:1.5}
+.x-paths a:hover b{color:var(--sc-accent)}
+.x-who{margin:44px 0 0;max-width:64ch;font-family:var(--util);font-size:11px;letter-spacing:.12em;text-transform:uppercase;line-height:1.8;color:var(--sc-ink-soft)}
+.x-foot{position:relative;z-index:1;background:var(--sc-canvas);padding:20px var(--gutter) 36px;
+  font-family:var(--util);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--sc-ink-soft);line-height:1.8}
+.x-foot p{margin:0;width:min(1060px,100%);margin-inline:auto}
 .x-foot a{color:inherit}
 
 /* still-render mode: the world alone, for the poster frames */
-html[data-still] main,html[data-still] .x-bar,html[data-still] .x-state,html[data-still] .x-close,html[data-still] .x-labels{display:none}
+html[data-still] main,html[data-still] .x-bar,html[data-still] .x-skip,html[data-still] .x-foot,html[data-still] .x-labels{display:none}
 html[data-still] .x-world canvas{transition:none}
 
 @media(prefers-reduced-motion:reduce){
-  .x-label,.x-poster img,.x-world.live .x-poster,.x-world canvas{transition:none}
+  .x-label,.x-poster img,.x-world.live .x-poster,.x-world canvas,.x-skip,.x-btn{transition:none}
 }
 </style>
 </head>
 <body data-sc-mode="acts">
+<a class="x-skip" href="#begin">Skip the story, go to the assessment</a>
 
 <div class="x-world" id="world" aria-hidden="true">
   <div class="x-poster" id="poster">
     <img src="assets/stills/s01.webp" alt="" class="on" data-t="0">
     <img src="assets/stills/s02.webp" alt="" data-t="1">
     <img src="assets/stills/s03.webp" alt="" data-t="2">
-    <img src="assets/stills/s04.webp" alt="" data-t="3">
-    <img src="assets/stills/s05.webp" alt="" data-t="4">
   </div>
   <canvas id="stage"></canvas>
   <div class="x-grade"></div>
@@ -144,82 +175,98 @@ html[data-still] .x-world canvas{transition:none}
 
 <header class="x-bar">
   <a class="mk" href="https://digeratiexperts.com/" aria-label="Digerati Experts home"><img src="assets/logo.webp" alt="Digerati Experts" width="212" height="57"></a>
-  <a class="x-cta primary" href="https://digeratiexperts.com/book"><span class="long">Understand your environment</span><span class="short">Start here</span></a>
+  <a class="x-cta" href="https://digeratiexperts.com/book"><span class="long">Cyber Risk Assessment</span><span class="short">Assessment</span></a>
 </header>
-<div class="x-state" id="state" data-s="dawn"><i></i><span id="state-text">7:40 · Tuesday</span></div>
 
-<main>
+<main id="main">
 
-  <!-- ACT 1 · IT isn't broken. It's disconnected. -->
-  <section data-sc-act="pin" data-sc-span="1.6" data-x-act="1">
+  <!-- One pinned act, three movements. p is the pin's own progress (0..1).
+       Movement windows are hard-edged (rIn 0, rOut 0 at the boundaries) so
+       every scroll position shows exactly one movement at full strength; lines
+       inside a movement accumulate and hold to its end. -->
+  <section class="x-act" data-sc-act="pin" data-sc-span="4" data-x-pin aria-label="The story">
     <div data-sc-stage class="x-stage">
-      <div class="x-copy right">
-        <p class="x-time"><b>7:40</b> · Tuesday · a practice, a firm, an office like yours</p>
-        <h1 class="x-line">Everything is here.</h1>
-        <p class="x-line" data-sc-cue="0.28"><em>People, computers, email, cloud, phones, files, network, vendors.</em></p>
-        <p class="x-sub" data-sc-cue="0.50">It all works. Just not as one.</p>
-        <p class="x-sub" data-sc-cue="0.72">Which is usually why you're here: an insurance form with hard questions, a message that almost worked, a rule you now have to meet, a vendor nobody owns, or a renewal you're not sure about.</p>
+
+      <!-- Movement 1 · unmanaged complexity -->
+      <div class="x-m" data-x-m="1" data-x-from="0" data-x-to="0.30">
+        <div class="x-copy">
+          <p class="x-eyebrow" data-sc-cue="0 0.30 0 0">Digerati Experts · Arizona</p>
+          <h1 class="x-line" data-sc-cue="0 0.30 0 0">Your environment isn't broken. <em>It's been drifting.</em></h1>
+          <p class="x-dek" data-sc-cue="0 0.30 0 0">Digerati Experts maps the people, devices, cloud services, vendors and risks behind your business. Then it gives every part an owner, a boundary and a direction.</p>
+          <p class="x-act-cta" data-sc-cue="0 0.30 0 0"><a class="x-btn" href="https://digeratiexperts.com/book">Start with a Cyber Risk Assessment</a></p>
+          <p class="x-sub" data-sc-cue="0.09 0.30 0.2 0">Which is usually why you're here: an insurance form with hard questions, a message that almost worked, a rule you now have to meet, a vendor nobody owns, or a renewal you're not sure about.</p>
+          <p class="x-sub" data-sc-cue="0.18 0.30 0.2 0"><strong>Everything works. Just not as one.</strong></p>
+        </div>
+        <figure class="x-still">
+          <picture>
+            <source media="(max-width:767px)" srcset="assets/stills/m01.webp" width="800" height="1000">
+            <img src="assets/stills/s01.webp" width="1600" height="1000" alt="A small office drawn as a model: six desks with lit screens, a few people as points of light, three glass slabs for cloud systems above the floor, nothing quite lined up.">
+          </picture>
+        </figure>
       </div>
+
+      <!-- Movement 2 · visible relationships -->
+      <div class="x-m" data-x-m="2" data-x-from="0.30" data-x-to="0.62">
+        <div class="x-copy">
+          <p class="x-eyebrow" data-sc-cue="0.30 0.62 0 0">What's underneath</p>
+          <h2 class="x-line" data-sc-cue="0.30 0.62 0 0">Underneath, everything depends on everything.</h2>
+          <p class="x-dek" data-sc-cue="0.30 0.62 0 0">Identity, devices, email, data, network, applications, customers.</p>
+          <p class="x-sub" data-sc-cue="0.37 0.62 0.16 0">Then the vendors, the dependencies between systems, the boundaries that were never drawn, and the exceptions nobody owns: a backup that was never tested, a machine that was never patched, a shared mailbox, an open guest network.</p>
+          <p class="x-sub" data-sc-cue="0.46 0.62 0.16 0"><strong>Nobody is steering the whole thing.</strong></p>
+        </div>
+        <figure class="x-still">
+          <picture>
+            <source media="(max-width:767px)" srcset="assets/stills/m02.webp" width="800" height="1000">
+            <img src="assets/stills/s02.webp" width="1600" height="1000" alt="The same office seen from above with its floor turned to glass: threads run from each person to a device and up to the cloud, dashed lines cross between systems, and four amber rings mark weak points.">
+          </picture>
+        </figure>
+      </div>
+
+      <!-- Movement 3 · Digerati direction -->
+      <div class="x-m" data-x-m="3" data-x-from="0.62" data-x-to="1">
+        <div class="x-copy">
+          <p class="x-eyebrow" data-sc-cue="0.62 1 0 0">Digerati direction</p>
+          <h2 class="x-line" data-sc-cue="0.62 1 0 0">One owner for the whole environment.</h2>
+          <p class="x-dek" data-sc-cue="0.62 1 0 0">Same people, same devices, same business. Now every part has an owner, a boundary and a direction, and one team is accountable for all of it.</p>
+          <p class="x-sub" data-sc-cue="0.70 1 0.14 0"><strong>You lead the business. We lead the technology.</strong></p>
+          <blockquote class="x-quote" data-sc-cue="0.79 1 0.14 0">We do not promise outcomes before we understand the environment.</blockquote>
+          <p class="x-said" data-sc-cue="0.79 1 0.14 0">The operating principle · Digerati Experts</p>
+        </div>
+        <figure class="x-still">
+          <picture>
+            <source media="(max-width:767px)" srcset="assets/stills/m03.webp" width="800" height="1000">
+            <img src="assets/stills/s03.webp" width="1600" height="1000" alt="The same office, now level: desks on a grid, every thread joined, the weak points gone, and a single magenta boundary drawn around the whole floor.">
+          </picture>
+        </figure>
+      </div>
+
     </div>
   </section>
 
-  <!-- ACT 2 · Complexity becomes visible -->
-  <section data-sc-act="pin" data-sc-span="2.0" data-x-act="2">
-    <div data-sc-stage class="x-stage">
-      <div class="x-copy">
-        <p class="x-eyebrow" data-sc-cue="0.04">What's underneath</p>
-        <h2 class="x-line" data-sc-cue="0.06" data-sc-kinetic="words">Identity. Devices. Email. Data. Network. Applications. Customers.</h2>
-        <p class="x-line" data-sc-cue="0.44"><em>Then dependencies. Vendors. Boundaries. Exceptions.</em></p>
-        <p class="x-sub" data-sc-cue="0.66">Oh. That's my company.</p>
-        <p class="x-sub" data-sc-cue="0.84">Nobody is steering the whole thing.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ACT 3 · The heading is wrong -->
-  <section data-sc-act="pin" data-sc-span="2.4" data-x-act="3">
-    <div data-sc-stage class="x-stage top">
-      <div class="x-copy">
-        <p class="x-eyebrow" data-sc-cue="0.04">The heading is wrong</p>
-        <h2 class="x-line" data-sc-cue="0.06">This environment isn't broken. <em>It's been drifting.</em></h2>
-        <blockquote class="x-quote" style="margin-top:.9em" data-sc-cue="0.36" data-sc-kinetic="lines">We do not promise outcomes before we understand the environment.</blockquote>
-        <p class="x-said" data-sc-cue="0.42">The operating principle · Digerati Experts</p>
-        <p class="x-payoff" style="margin-top:.8em" data-sc-cue="0.74">You lead the business.<em>We lead the technology.</em></p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ACT 4 · DE sees the whole environment (first frame only) -->
-  <section data-sc-act="pin" data-sc-span="1.4" data-x-act="4">
-    <div data-sc-stage class="x-stage">
-      <div class="x-copy right">
-        <p class="x-eyebrow" data-sc-cue="0.10">Digerati Experts</p>
-        <h2 class="x-line" data-sc-cue="0.14">DE sees the whole environment.</h2>
-        <p class="x-sub" data-sc-cue="0.40">Same people. Same devices. Same business. Now every part has a place, a relationship, a boundary and a direction.</p>
-        <p class="x-sub" data-sc-cue="0.62">The next states of this world, assess → understand → design → stabilize → secure → operate → improve, are the rest of the storyboard. This is where the prototype stops.</p>
-      </div>
+  <section class="x-close" id="begin" aria-labelledby="begin-h">
+    <div class="wrap">
+      <p class="x-eyebrow">Where to begin</p>
+      <h2 id="begin-h" class="x-line">Start by understanding what you have.</h2>
+      <p class="x-dek">A Cyber Risk Assessment inspects the environment you just walked through: identity, devices, email, backups and how the business actually operates. The findings are yours whether or not you ever sign anything else.</p>
+      <p class="x-act-cta"><a class="x-btn big" href="https://digeratiexperts.com/book">Start with a Cyber Risk Assessment</a></p>
+      <p class="x-note">Pick a time. No obligation. We recommend a fit only after we have looked.</p>
+      <nav class="x-paths" aria-labelledby="paths-h">
+        <p id="paths-h" class="x-eyebrow">Other ways in</p>
+        <ul>
+          <li><a href="https://digeratiexperts.com/solutions/proactive-ecosystem"><b>Handle our IT</b><span>ProActive Ecosystem or Co-Managed: DE responsible for the broader environment.</span></a></li>
+          <li><a href="https://digeratiexperts.com/solutions"><b>Solve a business need</b><span>A bounded portion of the environment, solved properly.</span></a></li>
+          <li><a href="https://digeratiexperts.com/store"><b>Client marketplace</b><span>An already-understood environment, adding capabilities.</span></a></li>
+        </ul>
+      </nav>
+      <p class="x-who">Digerati Experts works with healthcare practices, law firms, accounting and finance firms, real estate brokerages, nonprofits, professional services firms and animal hospitals across Arizona.</p>
     </div>
   </section>
 
 </main>
 
-<section class="x-close" aria-labelledby="close-h">
-  <div class="wrap">
-    <p class="x-eyebrow">Where to begin</p>
-    <h2 id="close-h" class="x-line">Start by understanding what you have.</h2>
-    <p class="x-sub">A Cyber Risk Assessment inspects the environment you just walked through. The findings are yours whether or not you ever sign anything else. Assess first; then choose the relationship.</p>
-    <p class="x-who">DE works with healthcare practices, law firms, accounting and finance firms, real estate brokerages, nonprofits, professional services firms and animal hospitals across Arizona.</p>
-    <div class="x-doors">
-      <a class="x-door" href="https://digeratiexperts.com/solutions/proactive-ecosystem"><b>Handle our IT</b><span>ProActive Ecosystem or Co-Managed: DE responsible for the broader environment.</span></a>
-      <a class="x-door" href="https://digeratiexperts.com/solutions"><b>Solve a business need</b><span>A bounded portion of the environment, solved properly, through a curated solution family.</span></a>
-      <a class="x-door" href="https://digeratiexperts.com/store"><b>Client marketplace</b><span>An already-understood environment, adding capabilities.</span></a>
-    </div>
-    <p class="x-foot">Flagship prototype · Experience v1 · Acts 1–3 and the first frame of Act 4 · one code-built world, no photography, no generated imagery · <a href="https://digeratiexperts.com/scrollcraft/">review lab</a></p>
-  </div>
-</section>
+<footer class="x-foot"><p>Digerati Experts · a prototype published for review, not indexed · <a href="https://digeratiexperts.com/">digeratiexperts.com</a></p></footer>
 
 <script src="scrollcraft.js"></script>
-<script>ScrollCraft.mount(document.body);</script>
 <script src="experience.js"></script>
 </body>
 </html>

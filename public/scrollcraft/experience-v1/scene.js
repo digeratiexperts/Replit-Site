@@ -28,7 +28,7 @@ const rnd = (seed) => { const x = Math.sin(seed * 12.9898 + 78.233) * 43758.5453
 const r2 = (seed) => rnd(seed) * 2 - 1;
 
 const C = {
-  canvas: 0x050312, floor: 0x0e0b19, wall: 0x0b0816, desk: 0x1b1728, closet: 0x181430,
+  canvas: 0x050312, floor: 0x2a2450, wall: 0x1c1636, desk: 0x3a3262, closet: 0x2a2450,
   screen: 0xcfd8ff, warm: 0xffb27a, violet: 0x5b45e0, magenta: 0xd3126a, amber: 0xf2a13a,
   ink: 0xf2eff5, cool: 0x8fa0ff, thread: 0xb9c4ff,
 };
@@ -134,30 +134,30 @@ export function createWorld(canvas, opts = {}) {
   renderer.setPixelRatio(Math.min(devicePixelRatio || 1, opts.maxDpr || 1.5));
   renderer.setClearColor(C.canvas, 1);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.0;
+  renderer.toneMappingExposure = 1.45;
   renderer.shadowMap.enabled = !!opts.shadows;
   renderer.shadowMap.type = THREE.PCFShadowMap;
 
   const scene = new THREE.Scene();
-  scene.fog = new THREE.Fog(C.canvas, 14, 30);
+  scene.fog = new THREE.Fog(C.canvas, 20, 44);
   scene.environment = roomEnvironment();
-  scene.environmentIntensity = 0.55;
+  scene.environmentIntensity = 0.85;
   const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 80);
   const world = new THREE.Group(); scene.add(world);
 
   /* lights */
-  const sun = new THREE.DirectionalLight(C.warm, 2.4); sun.position.set(-7, 4.5, 2.5); sun.target.position.set(1, 0, -1);
+  const sun = new THREE.DirectionalLight(C.warm, 3.2); sun.position.set(-7, 4.5, 2.5); sun.target.position.set(1, 0, -1);
   scene.add(sun, sun.target);
   if (opts.shadows) { sun.castShadow = true; sun.shadow.mapSize.set(1024, 1024); const s = sun.shadow.camera; s.left = -9; s.right = 9; s.top = 8; s.bottom = -8; s.near = 1; s.far = 30; sun.shadow.bias = -0.0008; }
-  const ambient = new THREE.AmbientLight(C.violet, 0.28); scene.add(ambient);
-  const hemi = new THREE.HemisphereLight(0x2a2340, 0x05030f, 0.45); scene.add(hemi);
+  const ambient = new THREE.AmbientLight(C.violet, 0.6); scene.add(ambient);
+  const hemi = new THREE.HemisphereLight(0x4a4270, 0x14102a, 1.3); scene.add(hemi);
   const closetLight = new THREE.PointLight(C.cool, 0, 7, 2); closetLight.position.set(5.2, 1.6, -3.4); scene.add(closetLight);
   const deLight = new THREE.PointLight(C.magenta, 0, 9, 2); deLight.position.set(0, 2.2, 0); scene.add(deLight);
   // a warm practical near the door so the opening frame has a lit foreground
   const doorLight = new THREE.PointLight(0xffc48a, 6, 9, 2); doorLight.position.set(1.2, 2.4, 3.2); scene.add(doorLight);
 
   /* floor, walls, window */
-  const floorMat = new THREE.MeshStandardMaterial({ color: C.floor, roughness: 0.42, metalness: 0.35, envMapIntensity: 0.7, transparent: true, opacity: 1 });
+  const floorMat = new THREE.MeshStandardMaterial({ color: C.floor, roughness: 0.62, metalness: 0.12, envMapIntensity: 0.9, transparent: true, opacity: 1 });
   const floor = new THREE.Mesh(new THREE.PlaneGeometry(14, 9), floorMat); floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; world.add(floor);
   const wallMat = new THREE.MeshStandardMaterial({ color: C.wall, roughness: 0.95, transparent: true, opacity: 1 });
   const farWall = new THREE.Mesh(new THREE.PlaneGeometry(14, 3.2), wallMat); farWall.position.set(0, 1.6, -4.5); world.add(farWall);
@@ -168,30 +168,17 @@ export function createWorld(canvas, opts = {}) {
   const horizon = new THREE.Mesh(new THREE.PlaneGeometry(40, 0.03), new THREE.MeshBasicMaterial({ color: C.cool, transparent: true, opacity: 0.0, blending: THREE.AdditiveBlending, depthWrite: false }));
   horizon.position.set(0, 0.9, -10.5); world.add(horizon);
 
-  /* door frame at the near end */
-  const frameMat = new THREE.MeshStandardMaterial({ color: 0x2a2440, roughness: 0.6 });
-  // the door is at the right end of the near wall: the camera has just come
-  // through it, so it sits behind and beside the opening frame, not across it
-  [[2.88, 1.1, 4.55, 0.06, 2.2, 0.06], [4.32, 1.1, 4.55, 0.06, 2.2, 0.06], [3.6, 2.2, 4.55, 1.5, 0.06, 0.06]].forEach(([x, y, z, w, h, d]) => {
-    const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), frameMat); m.position.set(x, y, z); world.add(m);
-  });
+  // No door frame, chairs, keyboards or phones: since Joe's 2026-09-03 verdict
+  // the world leans deliberately abstract, a lit model of a business rather
+  // than a furniture render.
 
   /* desks: base grid + per-desk disorder */
   const DESKS = [[-3.6, -1.5], [0, -1.5], [3.6, -1.5], [-3.6, 1.2], [0, 1.2], [3.6, 1.2]];
   const deskMat = new THREE.MeshStandardMaterial({ color: C.desk, roughness: 0.38, metalness: 0.2, envMapIntensity: 0.8 });
   const legMat = new THREE.MeshStandardMaterial({ color: 0x110e1c, roughness: 0.6, metalness: 0.3 });
   const standMat = new THREE.MeshStandardMaterial({ color: 0x0c0a14, roughness: 0.5, metalness: 0.4 });
-  const chairMat = new THREE.MeshStandardMaterial({ color: 0x1f1a30, roughness: 0.7, metalness: 0.1 });
-  const keysMat = new THREE.MeshStandardMaterial({ color: 0x2a2540, roughness: 0.6, metalness: 0.2 });
   const screenTex = screenTexture();
-  const chair = (x, z, ry) => {
-    const g = new THREE.Group();
-    const seat = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.06, 0.46), chairMat); seat.position.y = 0.48; seat.castShadow = true; g.add(seat);
-    const back = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.5, 0.05), chairMat); back.position.set(0, 0.76, 0.21); back.castShadow = true; g.add(back);
-    const post = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.45, 8), legMat); post.position.y = 0.24; g.add(post);
-    const foot = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.26, 0.02, 12), legMat); foot.position.y = 0.02; g.add(foot);
-    g.position.set(x, 0, z); g.rotation.y = ry; return g;
-  };
+  // A desk is a plinth: one slab on two blades and a lit screen with a bezel.
   const desks = DESKS.map(([x, z], i) => {
     const g = new THREE.Group(); g.userData = { x, z, dx: 0.38 * r2(i + 1), dz: 0.3 * r2(i + 11), ry: 0.16 * r2(i + 21) };
     const top = new THREE.Mesh(new THREE.BoxGeometry(1.7, 0.05, 0.86), deskMat); top.position.y = 0.74; top.castShadow = top.receiveShadow = true; g.add(top);
@@ -203,10 +190,7 @@ export function createWorld(canvas, opts = {}) {
     const screenMat = new THREE.MeshBasicMaterial({ map: screenTex, transparent: true, opacity: 0.0 });
     const screen = new THREE.Mesh(new THREE.PlaneGeometry(0.6, 0.36), screenMat); screen.position.set(0, 1.16, -0.2); screen.rotation.x = -0.1; g.add(screen);
     const bezel = new THREE.Mesh(new THREE.BoxGeometry(0.66, 0.42, 0.025), standMat); bezel.position.set(0, 1.16, -0.214); bezel.rotation.x = -0.1; g.add(bezel);
-    const keys = new THREE.Mesh(new THREE.BoxGeometry(0.44, 0.02, 0.15), keysMat); keys.position.set(0, 0.775, 0.12); g.add(keys);
-    const phone = new THREE.Mesh(new THREE.BoxGeometry(0.075, 0.012, 0.15), new THREE.MeshBasicMaterial({ color: 0x1b1a2a })); phone.position.set(0.62, 0.775, 0.2); phone.rotation.y = 0.3; g.add(phone);
-    g.add(chair(0, 0.72, Math.PI));
-    g.userData.screen = screenMat; g.userData.phone = phone.material;
+    g.userData.screen = screenMat;
     world.add(g); return g;
   });
   const deskScreenAnchor = (i) => { const v = new THREE.Vector3(0, 1.13, -0.2); return desks[i].localToWorld(v); };
@@ -214,7 +198,6 @@ export function createWorld(canvas, opts = {}) {
   /* meeting table, closet, access point */
   const table = new THREE.Mesh(new THREE.BoxGeometry(2.3, 0.05, 1.05), deskMat); table.position.set(0.3, 0.74, -3.3); table.castShadow = table.receiveShadow = true; world.add(table);
   const tableBase = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.7, 0.5), legMat); tableBase.position.set(0.3, 0.36, -3.3); world.add(tableBase);
-  [[-0.5, -2.62, Math.PI], [0.9, -2.62, Math.PI], [-0.5, -3.98, 0], [0.9, -3.98, 0]].forEach(([x, z, ry]) => world.add(chair(x, z, ry)));
   const closet = new THREE.Mesh(new THREE.BoxGeometry(0.85, 2.0, 0.6), new THREE.MeshStandardMaterial({ color: C.closet, roughness: 0.5, metalness: 0.2 })); closet.position.set(5.6, 1.0, -3.95); closet.castShadow = true; world.add(closet);
   const switchMat = new THREE.MeshBasicMaterial({ color: C.cool, transparent: true, opacity: 0.15 });
   const sw = new THREE.Mesh(new THREE.PlaneGeometry(0.5, 0.08), switchMat); sw.position.set(5.6, 1.35, -3.64); world.add(sw);
@@ -242,8 +225,8 @@ export function createWorld(canvas, opts = {}) {
   });
 
   /* cloud slabs: present from the first frame, misaligned */
-  const slabMat = new THREE.MeshStandardMaterial({ color: C.cool, roughness: 0.2, metalness: 0.1, transparent: true, opacity: 0.16, depthWrite: false });
-  const edgeMat = new THREE.LineBasicMaterial({ color: C.cool, transparent: true, opacity: 0.55 });
+  const slabMat = new THREE.MeshStandardMaterial({ color: C.cool, roughness: 0.2, metalness: 0.1, transparent: true, opacity: 0.22, depthWrite: false });
+  const edgeMat = new THREE.LineBasicMaterial({ color: C.cool, transparent: true, opacity: 0.7 });
   const SLABS = [{ x: -3.6, name: 'email' }, { x: 0, name: 'apps' }, { x: 3.6, name: 'system' }];
   const slabs = SLABS.map((s, i) => {
     const g = new THREE.Group(); g.userData = { x: s.x, y: 3.35, z: -0.15, dy: 0.5 * r2(i + 31), rx: 0.11 * r2(i + 41), rz: 0.09 * r2(i + 51), dx: 0.25 * r2(i + 61), name: s.name };
@@ -312,9 +295,9 @@ export function createWorld(canvas, opts = {}) {
 
   /* ----------------------------------------------------- camera keyframes */
   const KEYS = [
-    [0.0, [1.7, 1.55, 5.4], [-0.9, 1.0, -1.6]],
-    [0.9, [1.8, 1.7, 3.6], [-0.7, 0.95, -2.0]],
-    [1.35, [3.6, 3.6, 5.9], [0.2, 1.2, -0.6]],
+    [0.0, [3.3, 2.7, 5.9], [0.3, 0.9, -1.0]],   // the establishing view: the whole floor, three-quarter, slightly low
+    [0.9, [3.9, 3.5, 6.3], [0.2, 1.0, -0.9]],
+    [1.35, [4.6, 4.8, 7.1], [0.2, 1.2, -0.6]],
     [1.95, [5.7, 6.5, 7.6], [0.0, 1.3, -0.4]],
     [2.45, [5.7, 6.5, 7.6], [0.0, 1.3, -0.4]],
     [3.05, [5.2, 5.9, 6.9], [0.0, 1.3, -0.3]],
@@ -326,8 +309,12 @@ export function createWorld(canvas, opts = {}) {
     const [ta, pa, la] = KEYS[i], [tb, pb, lb] = KEYS[i + 1];
     const k = smooth((t - ta) / (tb - ta));
     camPos.set(...pa).lerp(tmpA.set(...pb), k); camLook.set(...la).lerp(tmpB.set(...lb), k);
-    if (portrait()) { // further back and higher so the whole floor fits a phone; the copy lives in the lower third
-      tmpA.copy(camPos).sub(camLook).multiplyScalar(1.55); camPos.copy(camLook).add(tmpA); camPos.y *= 1.12; camLook.y += 0.35;
+    if (portrait()) { // further back and higher so the whole floor fits a portrait frame
+      tmpA.copy(camPos).sub(camLook).multiplyScalar(1.3); camPos.copy(camLook).add(tmpA); camLook.y += 0.1;
+    } else {
+      // the copy owns the left column on a wide screen: look left of the
+      // room's centre so the room itself sits in the right two thirds
+      camLook.x -= 1.6;
     }
   }
 
@@ -375,10 +362,9 @@ export function createWorld(canvas, opts = {}) {
     /* screens flicker on through act 1, then hold; the closet lights in act 2 */
     desks.forEach((g, i) => {
       // the first screens are already on in the frame at rest; the rest wake as the camera moves
-      const on = ramp(t, i * 0.025 - 0.05, i * 0.025 + 0.04);
+      const on = 1; // every screen is lit from the first frame: the establishing view shows the whole floor
       const flick = t < 0.5 ? 0.85 + 0.15 * Math.abs(Math.sin(idleClock * 23 + i * 7)) : 1;
       g.userData.screen.opacity = on * flick * lerp(0.92, 0.7, glass);
-      g.userData.phone.color.setHex(0x1b1a2a).lerp(new THREE.Color(0x6a78c0), 0.35 * on * (0.5 + 0.5 * Math.sin(idleClock * 0.7 + i)));
     });
     switchMat.opacity = lerp(0.12, 0.9, reveal) ; closetLight.intensity = lerp(0, 5, reveal) * (1 - 0.3 * disorder);
     horizon.material.opacity = lerp(0, 0.55, ramp(t, 1.2, 1.5));
@@ -387,7 +373,7 @@ export function createWorld(canvas, opts = {}) {
     floorMat.opacity = lerp(1, 0.34, glass); floorMat.color.setHex(C.floor).lerp(new THREE.Color(0x121734), glass);
     wallMat.opacity = lerp(1, 0.2, glass); windowMat.opacity = lerp(1, 0.55, glass);
     vaultMat.opacity = lerp(0, 0.36, ramp(t, 1.2, 1.4)); vaultEdges.material.opacity = lerp(0, 0.85, ramp(t, 1.2, 1.4));
-    slabMat.opacity = lerp(0.12, 0.2, reveal); edgeMat.opacity = lerp(0.45, 0.7, reveal);
+    slabMat.opacity = lerp(0.18, 0.26, reveal); edgeMat.opacity = lerp(0.6, 0.85, reveal);
 
     /* threads: draw in layers, stop short while disordered, close when the world corrects */
     const close = 1 - disorder;
@@ -438,11 +424,11 @@ export function createWorld(canvas, opts = {}) {
     /* light: dawn → exposed → level and clean */
     const exposed = ramp(t, 1.0, 1.5);
     sun.color.setHex(C.warm).lerp(new THREE.Color(0x9fb0ff), exposed).lerp(new THREE.Color(0xffe6d2), settle);
-    sun.intensity = lerp(3.0, 1.3, exposed) + settle * 1.0;
-    ambient.intensity = 0.42 + 0.1 * exposed;
-    hemi.intensity = lerp(0.7, 0.45, exposed);
+    sun.intensity = lerp(3.8, 2.0, exposed) + settle * 1.2;
+    ambient.intensity = 0.62 + 0.15 * exposed;
+    hemi.intensity = lerp(1.4, 1.0, exposed);
     deLight.intensity = 9 * de * (1 - settle * 0.7); deLight.position.set(people[1].position.x - 1.2, 2.4, people[1].position.z + 0.6);
-    renderer.toneMappingExposure = lerp(1.0, 0.9, exposed) + 0.15 * settle;
+    renderer.toneMappingExposure = lerp(1.45, 1.25, exposed) + 0.2 * settle;
 
     /* camera and heading */
     cameraAt(t);
