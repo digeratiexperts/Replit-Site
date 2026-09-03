@@ -17,8 +17,8 @@ const trustItems = [
   {
     icon: ShieldCheck,
     code: "01 / CYBERSECURITY FIRST",
-    title: "Six domains, one accountable team.",
-    body: "Identity, endpoints, email, network, backup and recovery, security operations.",
+    title: "Eight blocks, one accountable team.",
+    body: "Identity and access, endpoint, email and collaboration, browser and web, network, detection and response, human risk. Risk and exposure runs continuously beneath.",
   },
   {
     icon: CheckCircle2,
