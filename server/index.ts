@@ -435,6 +435,13 @@ app.use(
   }),
 );
 
+// Experience v1 (Joe, 2026-09-03: "published to another page until I approve
+// it"): the flagship prototype lives in the lab; this is its speakable address.
+app.get("/experience-v1", (_req, res) => {
+  res.setHeader("X-Robots-Tag", "noindex");
+  res.redirect(302, "/scrollcraft/experience-v1/");
+});
+
 // Homepage version archive (client/src/pages/versions/README.md): version 2
 // is the static Version B build above, so its numbered URL forwards there.
 app.get("/version-2", (_req, res) => {

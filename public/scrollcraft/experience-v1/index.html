@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Digerati Experts · You lead the business. We lead the technology.</title>
+<meta name="description" content="Enter a working business. Watch what is underneath it become visible, see that it has been drifting, and watch the same world straighten as DE takes the heading.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23050312'/><circle cx='16' cy='16' r='6' fill='none' stroke='%23D3126A' stroke-width='2'/></svg>">
+<link rel="stylesheet" href="scrollcraft.css">
+<link rel="modulepreload" href="assets/vendor/three.core.min.js">
+<link rel="modulepreload" href="assets/vendor/three.module.min.js">
+<style>
+@font-face{font-family:"Space Grotesk";src:url("assets/fonts/space-grotesk-latin.woff2") format("woff2");font-weight:400 700;font-display:swap}
+@font-face{font-family:"Inter";src:url("assets/fonts/inter-latin.woff2") format("woff2");font-weight:400 600;font-display:swap}
+@font-face{font-family:"Oxanium";src:url("assets/fonts/oxanium-latin.woff2") format("woff2");font-weight:400 600;font-display:swap}
+
+:root{
+  /* DE brand floor: design/BRAND.md. Locked, not chosen here. */
+  --sc-canvas:#050312;
+  --sc-surface:#151217;
+  --sc-ink:#f2eff5;
+  --sc-ink-soft:#9c94a8;
+  --sc-accent:#D3126A;
+  --sc-accent-ink:#050312;
+  --sc-font-display:"Space Grotesk",system-ui,sans-serif;
+  --sc-font-text:"Inter",system-ui,sans-serif;
+  --util:"Oxanium","Space Grotesk",system-ui,sans-serif;
+  --hair:rgba(255,255,255,.10);
+  --amber:#F2A13A;
+}
+html,body{background:var(--sc-canvas);color:var(--sc-ink);overflow-x:clip}
+
+/* ── the stage: one fixed world behind every act ─────────────────────────── */
+.x-world{position:fixed;inset:0;z-index:0;pointer-events:none;background:var(--sc-canvas)}
+.x-world canvas{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity 700ms ease}
+.x-world.live canvas{opacity:1}
+.x-poster{position:absolute;inset:0}
+.x-poster img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 600ms ease}
+.x-poster img.on{opacity:1}
+.x-world.live .x-poster{opacity:0;transition:opacity 700ms ease 200ms}
+/* the grade: a vignette and a whisper of grain, so the render reads as material, not as a viewport */
+.x-grade{position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(120% 90% at 50% 45%,transparent 45%,rgba(5,3,18,.55) 100%)}
+.x-grade::after{content:"";position:absolute;inset:0;opacity:.07;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+.x-labels{position:absolute;inset:0;overflow:hidden}
+.x-label{position:absolute;left:0;top:0;transform:translate(-50%,-100%);font-family:var(--util);font-size:10.5px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--sc-ink-soft);opacity:0;white-space:nowrap;transition:opacity 380ms ease;padding-bottom:12px}
+.x-label::after{content:"";position:absolute;left:50%;bottom:0;width:1px;height:10px;background:var(--hair)}
+.x-label.amber{color:var(--amber)}
+.x-label.vendor{color:rgba(156,148,168,.7);letter-spacing:.16em;font-size:9.5px}
+.x-label.de{color:var(--sc-ink);letter-spacing:.16em}
+.x-label.de b{color:var(--sc-accent);font-weight:600}
+@media(max-width:640px){.x-label.m-hide{display:none}}
+
+/* ── acts: transparent pinned stages over the world ─────────────────────── */
+main{position:relative;z-index:1}
+[data-sc-stage]{background:transparent}
+.x-stage{display:flex;align-items:flex-end;padding:0 clamp(20px,6vw,72px) clamp(64px,12vh,120px)}
+.x-stage.top{align-items:flex-start;padding-top:clamp(84px,16vh,150px)}
+.x-copy{max-width:min(44ch,100%)}
+.x-copy.right{margin-left:auto}
+.x-eyebrow{font-family:var(--util);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--sc-ink-soft);
+  display:flex;align-items:center;gap:9px;margin:0 0 16px}
+.x-eyebrow::before{content:"";width:22px;height:1px;background:var(--sc-accent);flex:none}
+.x-line{font-family:var(--sc-font-display);font-weight:500;letter-spacing:-.025em;line-height:1.08;margin:0;
+  font-size:clamp(26px,3.9vw,50px);text-wrap:balance;text-shadow:0 2px 24px rgba(5,3,18,.75)}
+.x-line em{font-style:normal;color:var(--sc-ink-soft)}
+.x-line + .x-line{margin-top:.55em}
+.x-sub{margin:18px 0 0;max-width:44ch;color:var(--sc-ink-soft);font-family:var(--sc-font-text);font-size:clamp(14px,1.45vw,17px);line-height:1.55;
+  text-shadow:0 1px 14px rgba(5,3,18,.85)}
+.x-time{font-family:var(--util);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--sc-ink-soft);margin:0 0 12px}
+.x-time b{color:var(--sc-ink);font-weight:600;font-variant-numeric:tabular-nums}
+.x-quote{font-family:var(--sc-font-display);font-weight:500;letter-spacing:-.03em;line-height:1.06;margin:0;
+  font-size:clamp(30px,4.8vw,64px);text-wrap:balance;text-shadow:0 2px 30px rgba(5,3,18,.8)}
+.x-said{margin:16px 0 0;font-family:var(--util);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--sc-ink-soft)}
+.x-payoff{font-family:var(--sc-font-display);font-weight:600;letter-spacing:-.03em;line-height:1.02;margin:0;
+  font-size:clamp(32px,5.6vw,76px);text-shadow:0 4px 40px rgba(5,3,18,.8)}
+.x-payoff em{font-style:normal;display:block;color:var(--sc-ink-soft);font-weight:500}
+
+/* ── page furniture ─────────────────────────────────────────────────────── */
+.x-bar{position:fixed;top:0;left:0;right:0;z-index:42;display:flex;align-items:center;justify-content:space-between;
+  padding:14px clamp(16px,4vw,40px)}
+.x-bar .mk{display:block;line-height:0}
+.x-bar .mk img{display:block;height:30px;width:auto}
+@media(max-width:560px){.x-bar .mk img{height:26px}}
+.x-cta{font-family:var(--util);font-size:11px;letter-spacing:.14em;text-transform:uppercase;border:1px solid var(--hair);
+  padding:9px 15px;color:var(--sc-ink);text-decoration:none;background:rgba(5,3,18,.55);backdrop-filter:blur(6px);
+  transition:border-color .18s ease,background .18s ease}
+.x-cta:hover,.x-cta:focus-visible{border-color:var(--sc-accent);background:rgba(211,18,106,.12)}
+.x-cta.primary{border-color:var(--sc-accent);background:rgba(211,18,106,.16)}
+.x-cta .short{display:none}
+@media(max-width:560px){.x-cta .long{display:none}.x-cta .short{display:inline}}
+/* the instrument: the heading readout, 348° until the world corrects */
+.x-state{position:fixed;right:clamp(16px,4vw,40px);bottom:22px;z-index:41;font-family:var(--util);font-size:10px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--sc-ink-soft);display:flex;gap:10px;align-items:center;pointer-events:none;
+  background:rgba(5,3,18,.7);backdrop-filter:blur(8px);border:1px solid var(--hair);padding:7px 12px}
+.x-state b{color:var(--sc-ink);font-weight:600;font-variant-numeric:tabular-nums}
+.x-state i{width:6px;height:6px;border-radius:50%;background:var(--sc-ink-soft);transition:background .3s ease}
+.x-state[data-s="dawn"] i{background:#ffb27a}
+.x-state[data-s="exposed"] i{background:#8fa0ff}
+.x-state[data-s="drift"] i{background:var(--amber)}
+.x-state[data-s="de"] i{background:var(--sc-accent)}
+.x-state[data-s="level"] i{background:#f2eff5}
+@media(max-width:560px){.x-state{bottom:14px;right:14px;padding:6px 10px}}
+
+/* the close after the coda: on the page, not the stage */
+.x-close{position:relative;z-index:1;background:var(--sc-canvas);padding:clamp(56px,10vh,110px) clamp(20px,6vw,72px) clamp(72px,12vh,140px)}
+.x-close .wrap{width:min(1060px,100%);margin-inline:auto}
+.x-close .x-line{font-size:clamp(24px,3.4vw,42px)}
+.x-who{margin:14px 0 0;max-width:60ch;font-family:var(--util);font-size:11px;letter-spacing:.12em;text-transform:uppercase;line-height:1.8;color:var(--sc-ink-soft)}
+.x-doors{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:34px}
+@media(max-width:760px){.x-doors{grid-template-columns:1fr}}
+.x-door{border-top:1px solid var(--hair);padding:18px 0 0;text-decoration:none;color:inherit}
+.x-door b{display:block;font-family:var(--sc-font-display);font-weight:500;font-size:19px;letter-spacing:-.02em;margin-bottom:6px}
+.x-door span{color:var(--sc-ink-soft);font-family:var(--sc-font-text);font-size:14px;line-height:1.5}
+.x-foot{margin-top:56px;font-family:var(--util);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--sc-ink-soft);line-height:1.8}
+.x-foot a{color:inherit}
+
+/* still-render mode: the world alone, for the poster frames */
+html[data-still] main,html[data-still] .x-bar,html[data-still] .x-state,html[data-still] .x-close,html[data-still] .x-labels{display:none}
+html[data-still] .x-world canvas{transition:none}
+
+@media(prefers-reduced-motion:reduce){
+  .x-label,.x-poster img,.x-world.live .x-poster,.x-world canvas{transition:none}
+}
+</style>
+</head>
+<body data-sc-mode="acts">
+
+<div class="x-world" id="world" aria-hidden="true">
+  <div class="x-poster" id="poster">
+    <img src="assets/stills/s01.webp" alt="" class="on" data-t="0">
+    <img src="assets/stills/s02.webp" alt="" data-t="1">
+    <img src="assets/stills/s03.webp" alt="" data-t="2">
+    <img src="assets/stills/s04.webp" alt="" data-t="3">
+    <img src="assets/stills/s05.webp" alt="" data-t="4">
+  </div>
+  <canvas id="stage"></canvas>
+  <div class="x-grade"></div>
+  <div class="x-labels" id="labels"></div>
+</div>
+
+<header class="x-bar">
+  <a class="mk" href="https://digeratiexperts.com/" aria-label="Digerati Experts home"><img src="assets/logo.webp" alt="Digerati Experts" width="212" height="57"></a>
+  <a class="x-cta primary" href="https://digeratiexperts.com/book"><span class="long">Understand your environment</span><span class="short">Start here</span></a>
+</header>
+<div class="x-state" id="state" data-s="dawn"><i></i><span id="state-text">7:40 · Tuesday</span></div>
+
+<main>
+
+  <!-- ACT 1 · IT isn't broken. It's disconnected. -->
+  <section data-sc-act="pin" data-sc-span="1.6" data-x-act="1">
+    <div data-sc-stage class="x-stage">
+      <div class="x-copy right">
+        <p class="x-time"><b>7:40</b> · Tuesday · a practice, a firm, an office like yours</p>
+        <h1 class="x-line">Everything is here.</h1>
+        <p class="x-line" data-sc-cue="0.28"><em>People, computers, email, cloud, phones, files, network, vendors.</em></p>
+        <p class="x-sub" data-sc-cue="0.50">It all works. Just not as one.</p>
+        <p class="x-sub" data-sc-cue="0.72">Which is usually why you're here: an insurance form with hard questions, a message that almost worked, a rule you now have to meet, a vendor nobody owns, or a renewal you're not sure about.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACT 2 · Complexity becomes visible -->
+  <section data-sc-act="pin" data-sc-span="2.0" data-x-act="2">
+    <div data-sc-stage class="x-stage">
+      <div class="x-copy">
+        <p class="x-eyebrow" data-sc-cue="0.04">What's underneath</p>
+        <h2 class="x-line" data-sc-cue="0.06" data-sc-kinetic="words">Identity. Devices. Email. Data. Network. Applications. Customers.</h2>
+        <p class="x-line" data-sc-cue="0.44"><em>Then dependencies. Vendors. Boundaries. Exceptions.</em></p>
+        <p class="x-sub" data-sc-cue="0.66">Oh. That's my company.</p>
+        <p class="x-sub" data-sc-cue="0.84">Nobody is steering the whole thing.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACT 3 · The heading is wrong -->
+  <section data-sc-act="pin" data-sc-span="2.4" data-x-act="3">
+    <div data-sc-stage class="x-stage top">
+      <div class="x-copy">
+        <p class="x-eyebrow" data-sc-cue="0.04">The heading is wrong</p>
+        <h2 class="x-line" data-sc-cue="0.06">This environment isn't broken. <em>It's been drifting.</em></h2>
+        <blockquote class="x-quote" style="margin-top:.9em" data-sc-cue="0.36" data-sc-kinetic="lines">We do not promise outcomes before we understand the environment.</blockquote>
+        <p class="x-said" data-sc-cue="0.42">The operating principle · Digerati Experts</p>
+        <p class="x-payoff" style="margin-top:.8em" data-sc-cue="0.74">You lead the business.<em>We lead the technology.</em></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACT 4 · DE sees the whole environment (first frame only) -->
+  <section data-sc-act="pin" data-sc-span="1.4" data-x-act="4">
+    <div data-sc-stage class="x-stage">
+      <div class="x-copy right">
+        <p class="x-eyebrow" data-sc-cue="0.10">Digerati Experts</p>
+        <h2 class="x-line" data-sc-cue="0.14">DE sees the whole environment.</h2>
+        <p class="x-sub" data-sc-cue="0.40">Same people. Same devices. Same business. Now every part has a place, a relationship, a boundary and a direction.</p>
+        <p class="x-sub" data-sc-cue="0.62">The next states of this world, assess → understand → design → stabilize → secure → operate → improve, are the rest of the storyboard. This is where the prototype stops.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<section class="x-close" aria-labelledby="close-h">
+  <div class="wrap">
+    <p class="x-eyebrow">Where to begin</p>
+    <h2 id="close-h" class="x-line">Start by understanding what you have.</h2>
+    <p class="x-sub">A Cyber Risk Assessment inspects the environment you just walked through. The findings are yours whether or not you ever sign anything else. Assess first; then choose the relationship.</p>
+    <p class="x-who">DE works with healthcare practices, law firms, accounting and finance firms, real estate brokerages, nonprofits, professional services firms and animal hospitals across Arizona.</p>
+    <div class="x-doors">
+      <a class="x-door" href="https://digeratiexperts.com/solutions/proactive-ecosystem"><b>Handle our IT</b><span>ProActive Ecosystem or Co-Managed: DE responsible for the broader environment.</span></a>
+      <a class="x-door" href="https://digeratiexperts.com/solutions"><b>Solve a business need</b><span>A bounded portion of the environment, solved properly, through a curated solution family.</span></a>
+      <a class="x-door" href="https://digeratiexperts.com/store"><b>Client marketplace</b><span>An already-understood environment, adding capabilities.</span></a>
+    </div>
+    <p class="x-foot">Flagship prototype · Experience v1 · Acts 1–3 and the first frame of Act 4 · one code-built world, no photography, no generated imagery · <a href="https://digeratiexperts.com/scrollcraft/">review lab</a></p>
+  </div>
+</section>
+
+<script src="scrollcraft.js"></script>
+<script>ScrollCraft.mount(document.body);</script>
+<script src="experience.js"></script>
+</body>
+</html>

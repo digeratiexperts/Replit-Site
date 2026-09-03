@@ -72,6 +72,27 @@ claims:
       The eight-block correction (PR #189) is re-cut against these restored
       files afterwards. The new experience is published on its own page
       (/experience-v1 -> /scrollcraft/experience-v1/) until Joe approves it.
+  - id: de-experience-v1
+    owner: claude
+    subsystem: flagship-creative-reset
+    branch: claude/de-experience-v1
+    base_sha: 80ce2f47a43bcf99f3a5545a525f17a8ee30ccb5
+    files:
+      - scrollcraft/experience-v1/**
+      - scrollcraft/builds/experience-v1/**
+    status: active
+    started: 2026-09-03
+    note: >-
+      Joe's 2026-09-02/03 creative reset for the DE flagship (Phases 0-5 of
+      the Next-Generation Website Build Plan): story first, one persistent
+      visual world transformed by scroll, no generated asset without a
+      storyboard role, zero kie.ai spend. Planning documents committed;
+      the flagship prototype (canonical Acts 1-3 plus the first frame of
+      Act 4) is paused at the draft stage until Joe reads
+      scrollcraft/experience-v1/186-VS-STORYBOARD.md. Isolated under
+      scrollcraft/; no client/, server/ or shared/ files; production is
+      never replaced without Joe's explicit approval after Quality Gate A.
+      The 2026-09-01 Scrollcraft freeze stands for every other route.
   - id: de-site-v2-scrollcraft
     owner: claude
     subsystem: site-v2-experiment
