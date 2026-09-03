@@ -31,6 +31,9 @@
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   var narrowMQ = matchMedia('(max-width: 767px)');
   var clamp01 = function (v) { return v < 0 ? 0 : v > 1 ? 1 : v; };
+  // scene.js lives beside this script, wherever the page that loads it lives
+  // (the lab page, or the site's /experience route)
+  var SCENE_URL = document.currentScript && document.currentScript.src ? new URL('scene.js', document.currentScript.src).href : './scene.js';
 
   /* ---------------------------------------------------------- presentation */
   if (stillT === null && (reduce || narrowMQ.matches)) {
@@ -163,6 +166,7 @@
 
   function frame(now) {
     running = false;
+    if (!pin.isConnected) return; // the site navigated away from the page
     var p = stillT !== null ? 0 : progress();
     var t = stillT !== null ? stillT : timeline(p);
     var dt = lastTime ? Math.min(0.05, (now - lastTime) / 1000) : 0.016; lastTime = now;
@@ -181,7 +185,7 @@
 
   function startStills() {
     worldEl.classList.remove('live');
-    var tick = function () { var p = progress(); setGroups(p); showPoster(timeline(p)); };
+    var tick = function () { if (!pin.isConnected) return; var p = progress(); setGroups(p); showPoster(timeline(p)); };
     addEventListener('scroll', tick, { passive: true }); tick();
   }
 
@@ -198,7 +202,7 @@
       document.addEventListener('x-scene', function () { resolve(window.__sceneModule); }, { once: true });
       setTimeout(function () { if (!window.__sceneModule) reject(new Error('scene module did not load')); }, 20000);
     });
-    return import('./scene.js');
+    return import(SCENE_URL);
   }
   loadScene().then(function (mod) {
     var portrait = innerHeight > innerWidth;

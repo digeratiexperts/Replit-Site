@@ -156,6 +156,7 @@ const DigeratiHomepage = lazy(() => import("@/pages/DigeratiHomepage").then((m) 
 const VersionsIndex = lazy(() => import("@/pages/versions/VersionsIndex"));
 const VersionTwoForward = lazy(() => import("@/pages/versions/VersionTwoForward"));
 const HomepageV1 = lazy(() => import("@/pages/versions/v1/DigeratiHomepage").then((m) => ({ default: m.DigeratiHomepage })));
+const ExperienceInSite = lazy(() => import("@/pages/ExperienceInSite"));
 const HomepageV3 = lazy(() => import("@/pages/versions/v3/DigeratiHomepage").then((m) => ({ default: m.DigeratiHomepage })));
 
 const WarehouseGate = lazy(() => import("@/pages/store/WarehouseGate"));
@@ -173,6 +174,13 @@ function Router() {
       <Route path="/" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <DigeratiHomepage />
+        </Suspense>
+      )} />
+
+      {/* Experience v1 in the site's own chrome — review only, noindex, not in navigation */}
+      <Route path="/experience" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <ExperienceInSite />
         </Suspense>
       )} />
 

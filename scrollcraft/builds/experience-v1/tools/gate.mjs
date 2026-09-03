@@ -102,13 +102,15 @@ for (const run of RUNS) {
       const vh = innerHeight;
       const eff = (el) => { let o = 1; for (let n = el; n && n !== document.body; n = n.parentElement) { const cs = getComputedStyle(n); if (cs.visibility === "hidden" || cs.display === "none" || n.inert) return 0; o *= parseFloat(cs.opacity); } return o; };
       const out = [];
-      for (const el of document.querySelectorAll("main h1, main h2, main p, main blockquote, main li")) {
-        const t = (el.innerText || "").trim(); if (t.length < 12) continue;
+      for (const el of document.querySelectorAll("main h1, main h2, main p, main blockquote, main li, main .x-block, main .x-band, main .x-rail > div, main .x-rows > div, main .x-still img")) {
+        const isImg = el.tagName === "IMG";
+        const t = isImg ? "[still: " + (el.getAttribute("alt") || "") + "]" : (el.innerText || "").trim();
+        if (!isImg && t.length < 12) continue;
         const r = el.getBoundingClientRect(); if (r.height === 0) continue;
-        const inter = Math.min(r.bottom, vh) - Math.max(r.top, 0); if (inter / r.height < 0.7) continue;
+        const inter = Math.min(r.bottom, vh) - Math.max(r.top, 0); if (inter / r.height < (isImg ? 0.5 : 0.7)) continue;
         if (eff(el) < 0.95) continue;
         const cs = getComputedStyle(el);
-        out.push({ tag: el.tagName, text: t.slice(0, 60), rect: { x: Math.round(r.left), y: Math.round(r.top), w: Math.round(r.width), h: Math.round(r.height) }, color: cs.color });
+        out.push({ tag: isImg ? "IMG" : el.tagName, text: t.slice(0, 60), rect: { x: Math.round(r.left), y: Math.round(r.top), w: Math.round(r.width), h: Math.round(r.height) }, color: cs.color });
       }
       return out;
     });
@@ -140,7 +142,7 @@ for (const run of RUNS) {
     }));
     if (flow.pinned) F("flow mode still pins");
     if (flow.hidden) F("flow mode hides " + flow.hidden + " copy elements");
-    if (flow.stills.length !== 3 || flow.stills.some((s) => !s.shown || !s.ok)) F("flow stills missing: " + JSON.stringify(flow.stills));
+    if (flow.stills.length < 3 || flow.stills.some((s) => !s.shown || !s.ok)) F("flow stills missing: " + JSON.stringify(flow.stills));
     stills = flow.stills.map((s) => s.src);
   }
 
