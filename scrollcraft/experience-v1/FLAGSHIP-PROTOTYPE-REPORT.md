@@ -244,3 +244,27 @@ the current record; this revision is the response to the two lowest
 (usability 3, readiness 2) and to the artwork verdict, and it asks him to
 re-score the published page rather than claiming numbers of its own. The
 page stays `noindex, nofollow`.
+
+### Revision 3 · 2026-09-03 · the rest of the plan, shown with the site
+
+Joe: "finish the rest of the plan and show it all together with the entire
+upgraded site … show me it with the site is what I meant, not all by itself."
+
+- **Acts 5–10 and the final frame** now follow the three-movement story on
+  the page, as the evidence layer under the story: the eight blocks (seven
+  parts of the environment and Risk & Exposure as the continuous eighth),
+  the operating cadence (assess → understand → design → stabilize → secure →
+  operate → improve), the customer in command, the assessment (what is
+  inspected, what you receive, what happens next, one dominant control),
+  the three ways in with the canonical service names, the refusals, and the
+  final frame: the same world, level, held behind the last screen (a still
+  in flow mode).
+- **Shown with the site.** `/experience` is a React route that wraps the
+  same static build in the site's own MegaMenu and footer: it fetches the
+  build's HTML, keeps the story, drops the build's bar and footer, rewrites
+  asset paths and loads the engine and the glue exactly as the standalone
+  page does. `/experience-v1` now forwards there; the standalone page stays
+  at `/scrollcraft/experience-v1/`. Both are `noindex`; the homepage is
+  untouched.
+- **Not upgraded:** every other page of the site is as it was. This revision
+  adds one review route and changes one redirect.

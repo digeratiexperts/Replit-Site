@@ -436,10 +436,12 @@ app.use(
 );
 
 // Experience v1 (Joe, 2026-09-03: "published to another page until I approve
-// it"): the flagship prototype lives in the lab; this is its speakable address.
+// it", then "show me it with the site"): the speakable address forwards to the
+// React route that wraps the story in the site's own menu and footer; the
+// standalone build stays at /scrollcraft/experience-v1/ for the lab.
 app.get("/experience-v1", (_req, res) => {
   res.setHeader("X-Robots-Tag", "noindex");
-  res.redirect(302, "/scrollcraft/experience-v1/");
+  res.redirect(302, "/experience");
 });
 
 // Homepage version archive (client/src/pages/versions/README.md): version 2
