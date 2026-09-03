@@ -86,13 +86,21 @@ claims:
       Joe's 2026-09-02/03 creative reset for the DE flagship (Phases 0-5 of
       the Next-Generation Website Build Plan): story first, one persistent
       visual world transformed by scroll, no generated asset without a
-      storyboard role, zero kie.ai spend. Planning documents committed;
-      the flagship prototype (canonical Acts 1-3 plus the first frame of
-      Act 4) is paused at the draft stage until Joe reads
-      scrollcraft/experience-v1/186-VS-STORYBOARD.md. Isolated under
-      scrollcraft/; no client/, server/ or shared/ files; production is
-      never replaced without Joe's explicit approval after Quality Gate A.
-      The 2026-09-01 Scrollcraft freeze stands for every other route.
+      storyboard role, zero kie.ai spend. Planning documents and the
+      flagship prototype merged (PR #191) and published on its own page,
+      /experience-v1 -> /scrollcraft/experience-v1/, noindex. Joe's
+      2026-09-03 verdict (concept 7, copy 8, visual 4, usability 3,
+      readiness 2): conversion and accessibility surgery before any more
+      scenes. Revision 2 (branch claude/experience-v1-surgery): one pinned
+      act with hard-cut movements so no scroll stop is blank, document
+      flow on phones and under reduced motion, inert off-screen movements
+      for the keyboard, the thesis and one assessment control on screen
+      one, the journey cut to about 5 vh, telemetry removed, the world
+      leaned abstract with exposure raised, and tools/gate.mjs as the
+      release gate. Act 4 onward is not built. Isolated under scrollcraft/
+      and public/scrollcraft/; no client/, server/ or shared/ files;
+      production is never replaced without Joe's explicit approval. The
+      2026-09-01 Scrollcraft freeze stands for every other route.
   - id: de-site-v2-scrollcraft
     owner: claude
     subsystem: site-v2-experiment

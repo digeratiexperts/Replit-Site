@@ -160,3 +160,87 @@ improvement over the current direction is real for Acts 2–4.
 
 Money gate closed, PR #184 draft, Version 4 parked, 14 domains unresolved,
 `HTTPS_PROXY` parked: all unchanged.
+
+---
+
+## Revision 2 · 2026-09-03 · Joe's verdict and the surgery
+
+Joe reviewed the published page (`/experience-v1`) in live Chrome and scored
+it: concept and storytelling 7/10, copy and positioning 8/10, visual finish
+4/10, usability and conversion 3/10, production readiness 2/10. "Do not
+promote this as a finished customer experience yet." His instruction: fix
+usability before adding any scene, cut the journey by 35–50 %, lead with the
+positioning, make the assessment the unmistakable conclusion, finish the
+artwork or lean deliberately abstract, and do not build the rest of Act 4
+until a buyer can answer three questions in fifteen seconds. "The right next
+move is conversion and accessibility surgery, not more cinematic polish."
+This revision is that surgery, nothing else.
+
+### What he found, what caused it, what changed
+
+| Joe's finding | Cause in revision 1 | Revision 2 |
+| --- | --- | --- |
+| Blank dark screens at normal scroll positions, on desktop and mobile | Four pinned stages; copy faded in and out inside cue windows, and the seam where one stage slid out and the next slid in had no copy at all; on phones the copy was also under the scene | **One pinned act, three movements.** Movement windows are hard-edged (cue ramps of 0 at the boundaries), so every scroll position shows exactly one movement at full strength; lines inside a movement accumulate and hold to its end. The gate below stops every 10 % of a viewport from the first pixel to the last and fails on any stop without readable copy. |
+| Mobile substantially worse, "an unfinished animation timeline" | Desktop pinning squeezed into a phone | **Flow mode** at ≤ 767 px, under reduced motion, and without JavaScript: the same markup reads as a document, copy then a still rendered from the world (portrait stills for phones), no pinning, nothing hidden. The world and its library are never loaded there. |
+| Keyboard focus lands on controls far outside the viewport | Hidden copy stayed focusable | Movements that are not on screen are **inert**; if focus reaches one anyway, its movement is brought on screen. A skip link goes straight to the assessment. The gate tabs through the page and fails on any focus outside the viewport. |
+| The opening is vague; the strongest line arrives too late | "Everything is here" led; the drift line was in Act 3 | **Screen one is the thesis:** "Your environment isn't broken. It's been drifting." with the mapping dek Joe wrote and one primary control, "Start with a Cyber Risk Assessment". The credible triggers he liked follow within a quarter of a viewport of scroll. |
+| Artwork reads as greybox previs; telemetry adds atmosphere, not understanding | Furniture-level geometry in low light; a heading readout, a time stamp, decorative labels | **Leaned deliberately abstract:** chairs, keyboards, phones and the door frame removed; a desk is a plinth with a lit screen; exposure, materials and light raised (floor and desks now read as surfaces, not holes). The heading readout, the time stamp and "the heading is wrong" are gone. The remaining labels name what DE maps (identity, devices, email, data and backups, network, applications, customers, vendors) and what it finds (backup untested, unpatched, shared mailbox, guest network open), on plates, never under the copy. |
+| Eight viewport-heights before the decision point | Four pins, ≈ 7.4 vh, plus the close | One pin of 4 vh; the page is ≈ 5.0–5.4 vh; the decision section starts at ≈ 4.1–4.7 vh; the first assessment control is at 0 vh. |
+| The ending contradicts its own advice | Three equal doors plus a header action plus a lab link | "Start by understanding what you have." with **one dominant assessment button**; three quiet secondary paths beneath it; the header control is a small outline; the lab link is gone. |
+| Publicly admits it is unfinished | "This is where the prototype stops" in the story | The story no longer narrates its own edge. A one-line footer states the page is a review prototype, because it still is and it stays `noindex`. |
+
+Not done, by Joe's instruction: no scene after the first frame of Act 4.
+
+### The fifteen-second test (screen one, before any scroll)
+
+| Question | Where it is answered |
+| --- | --- |
+| What does Digerati Experts do? | The dek: maps the people, devices, cloud services, vendors and risks behind the business, then gives every part an owner, a boundary and a direction. |
+| Why might I need it? | The H1 (drift, not breakage) and, a quarter-viewport later, the reasons people come: an insurance form, a message that almost worked, a rule, a vendor nobody owns, a renewal. |
+| What should I do next? | "Start with a Cyber Risk Assessment", the one filled control on the screen, repeated as the page's only conclusion. |
+
+Whether a practice manager, a firm partner or a broker actually answers all
+three in fifteen seconds is Joe's call to make with real people; the page now
+puts the answers on the first screen instead of at the end.
+
+### The release gate
+
+`tools/gate.mjs` runs the build at 1440×900, 768×1024, 390×844 and 360×800,
+plus 1440×900 and 390×844 under reduced motion, and fails on: any scroll stop
+(every 10 % of a viewport, first to last pixel) without readable copy; any
+keyboard focus outside the viewport or on an inert control; horizontal
+overflow; a first screen without the thesis H1 and a visible, tappable
+assessment control; flow mode that still pins, hides copy or lacks its
+stills; missing landmarks or more than one h1; console errors; and a
+contrast proxy under 4.5:1 for copy over the world (the text colour against
+the darker fifth of the pixels behind the line). It writes screenshots and
+`report.json` under `lab/gate/` (gitignored).
+
+Run of 2026-09-03 (headless Chromium, software GL):
+
+| Run | Mode | Page | Decision point | Stops | Focus stops | Contrast proxy | Result |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 1440×900 | pin, world live 3.1 s | 5.03 vh | 4.37 vh | 42 | 9 | ≥ 9.2 | pass |
+| 768×1024 | pin, world live 1.0 s | 4.92 vh | 4.30 vh | 41 | 9 | ≥ 9.1 | pass |
+| 390×844 | flow | 5.12 vh | 4.05 vh | 43 | 9 | n/a | pass |
+| 360×800 | flow | 5.36 vh | 4.24 vh | 45 | 9 | n/a | pass |
+| 1440×900 reduced motion | flow | 5.36 vh | 4.69 vh | 45 | 9 | n/a | pass |
+| 390×844 reduced motion | flow | 5.12 vh | 4.05 vh | 43 | 9 | n/a | pass |
+
+The gate earned its keep during the surgery itself: its first run caught a
+cascade bug of mine (a flow-mode rule un-pinned the stage on wide screens)
+as 24 blank stops per pinned run, and a skip link that stayed off screen
+under keyboard focus. Both are fixed and re-run.
+
+**Still manual, still open:** Safari and WebKit (not installed here), a real
+GPU's frame rate, a real phone's touch scrolling, and the booking flow beyond
+the link. The assessment control targets `/book`, the site's Cyber Risk
+Assessment booking page; that page is the site's, not this build's.
+
+### Status after revision 2
+
+Quality Gate A stands as answered above for the mechanism. Joe's scores are
+the current record; this revision is the response to the two lowest
+(usability 3, readiness 2) and to the artwork verdict, and it asks him to
+re-score the published page rather than claiming numbers of its own. The
+page stays `noindex, nofollow`.
