@@ -35,6 +35,7 @@ let headOut = head
 for (const f of ["space-grotesk-latin", "inter-latin", "oxanium-latin"]) {
   headOut = headOut.replace(`assets/fonts/${f}.woff2`, lit(dataUri(`assets/fonts/${f}.woff2`, "font/woff2")));
 }
+body = body.replace("assets/logo.webp", lit(dataUri("assets/logo.webp", "image/webp")));
 for (let i = 1; i <= 5; i++) {
   body = body.replace(`assets/stills/s0${i}.webp`, lit(dataUri(`assets/stills/s0${i}.webp`, "image/webp")));
 }

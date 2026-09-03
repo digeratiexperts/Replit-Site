@@ -3,6 +3,24 @@
 Version 1, 2026-09-03. Written after the teardown, before the storyboard. Joe
 should be able to read this and know what the site is trying to become.
 
+## 0 · The audience leads (Joe, 2026-09-03)
+
+DE works with small businesses: healthcare practices, law firms, accounting
+and finance firms, real estate brokerages, nonprofits, professional services
+firms, animal hospitals (the industries the site already serves). They come
+for a reason: an insurance application or renewal with hard questions; a
+message that almost worked, or an incident; a rule they now have to meet
+(HIPAA, IRS/FTC, ABA expectations, wire-fraud exposure); tools and vendors
+nobody owns; a managed-IT package to compare; downtime that cost them.
+
+**Nothing we create may distract from who they are and why they are here.
+That takes precedence over everything, including design; it leads design.**
+Every act, line and object is checked against one question: does a practice
+manager, a firm partner, a broker or an executive director recognise
+themselves and their reason faster because of this? If not, it goes. The
+real DE logo, as the site's header renders it, is the mark on every surface;
+never a typed substitute.
+
 ## 1 · Thesis
 
 **Your business is one system. We operate it that way.**

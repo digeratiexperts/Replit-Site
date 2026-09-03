@@ -82,8 +82,9 @@ main{position:relative;z-index:1}
 /* ── page furniture ─────────────────────────────────────────────────────── */
 .x-bar{position:fixed;top:0;left:0;right:0;z-index:42;display:flex;align-items:center;justify-content:space-between;
   padding:14px clamp(16px,4vw,40px)}
-.x-bar .mk{font-family:var(--sc-font-display);font-weight:700;font-size:13px;letter-spacing:.02em;color:var(--sc-ink);text-decoration:none}
-.x-bar .mk span{color:var(--sc-accent)}
+.x-bar .mk{display:block;line-height:0}
+.x-bar .mk img{display:block;height:30px;width:auto}
+@media(max-width:560px){.x-bar .mk img{height:26px}}
 .x-cta{font-family:var(--util);font-size:11px;letter-spacing:.14em;text-transform:uppercase;border:1px solid var(--hair);
   padding:9px 15px;color:var(--sc-ink);text-decoration:none;background:rgba(5,3,18,.55);backdrop-filter:blur(6px);
   transition:border-color .18s ease,background .18s ease}
@@ -108,6 +109,7 @@ main{position:relative;z-index:1}
 .x-close{position:relative;z-index:1;background:var(--sc-canvas);padding:clamp(56px,10vh,110px) clamp(20px,6vw,72px) clamp(72px,12vh,140px)}
 .x-close .wrap{width:min(1060px,100%);margin-inline:auto}
 .x-close .x-line{font-size:clamp(24px,3.4vw,42px)}
+.x-who{margin:14px 0 0;max-width:60ch;font-family:var(--util);font-size:11px;letter-spacing:.12em;text-transform:uppercase;line-height:1.8;color:var(--sc-ink-soft)}
 .x-doors{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:34px}
 @media(max-width:760px){.x-doors{grid-template-columns:1fr}}
 .x-door{border-top:1px solid var(--hair);padding:18px 0 0;text-decoration:none;color:inherit}
@@ -141,7 +143,7 @@ html[data-still] .x-world canvas{transition:none}
 </div>
 
 <header class="x-bar">
-  <a class="mk" href="https://digeratiexperts.com/" aria-label="Digerati Experts">DIGERATI <span>EXPERTS</span></a>
+  <a class="mk" href="https://digeratiexperts.com/" aria-label="Digerati Experts home"><img src="assets/logo.webp" alt="Digerati Experts" width="212" height="57"></a>
   <a class="x-cta primary" href="https://digeratiexperts.com/book"><span class="long">Understand your environment</span><span class="short">Start here</span></a>
 </header>
 <div class="x-state" id="state" data-s="dawn"><i></i><span id="state-text">7:40 · Tuesday</span></div>
@@ -152,11 +154,11 @@ html[data-still] .x-world canvas{transition:none}
   <section data-sc-act="pin" data-sc-span="1.6" data-x-act="1">
     <div data-sc-stage class="x-stage">
       <div class="x-copy right">
-        <p class="x-time"><b>7:40</b> · Tuesday · inside the business</p>
+        <p class="x-time"><b>7:40</b> · Tuesday · a practice, a firm, an office like yours</p>
         <h1 class="x-line">Everything is here.</h1>
-        <p class="x-line" data-sc-cue="0.30"><em>People, computers, email, cloud, phones, files, network, vendors.</em></p>
-        <p class="x-sub" data-sc-cue="0.56">It all works. Just not as one.</p>
-        <p class="x-sub" data-sc-cue="0.78">Your business doesn't lack technology. Its pieces stopped working as one.</p>
+        <p class="x-line" data-sc-cue="0.28"><em>People, computers, email, cloud, phones, files, network, vendors.</em></p>
+        <p class="x-sub" data-sc-cue="0.50">It all works. Just not as one.</p>
+        <p class="x-sub" data-sc-cue="0.72">Which is usually why you're here: an insurance form with hard questions, a message that almost worked, a rule you now have to meet, a vendor nobody owns, or a renewal you're not sure about.</p>
       </div>
     </div>
   </section>
@@ -206,6 +208,7 @@ html[data-still] .x-world canvas{transition:none}
     <p class="x-eyebrow">Where to begin</p>
     <h2 id="close-h" class="x-line">Start by understanding what you have.</h2>
     <p class="x-sub">A Cyber Risk Assessment inspects the environment you just walked through. The findings are yours whether or not you ever sign anything else. Assess first; then choose the relationship.</p>
+    <p class="x-who">DE works with healthcare practices, law firms, accounting and finance firms, real estate brokerages, nonprofits, professional services firms and animal hospitals across Arizona.</p>
     <div class="x-doors">
       <a class="x-door" href="https://digeratiexperts.com/solutions/proactive-ecosystem"><b>Handle our IT</b><span>ProActive Ecosystem or Co-Managed: DE responsible for the broader environment.</span></a>
       <a class="x-door" href="https://digeratiexperts.com/solutions"><b>Solve a business need</b><span>A bounded portion of the environment, solved properly, through a curated solution family.</span></a>

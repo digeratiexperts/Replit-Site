@@ -7,7 +7,17 @@ attributes are the implementation plan. Version 1 (a living-business →
 threat → response arc from the Sept 2 plan) is superseded; its event beat
 survives as an optional moment inside Act 5.
 
-Governing principle: **prefer transformation over replacement.** Acts 1–10 are
+Governing principle before all others (Joe, 2026-09-03): **the audience leads
+design.** DE's visitors are small businesses (healthcare practices, law
+firms, accounting and finance firms, real estate brokerages, nonprofits,
+professional services firms, animal hospitals) who came for a reason (an
+insurance form, a message that almost worked, a rule to meet, a vendor
+nobody owns, a renewal, a package to compare). Nothing in any act may
+distract from who they are and why they are here. Act 1 names both before
+anything else; the close names the businesses DE serves; the real DE logo is
+the mark.
+
+Second principle: **prefer transformation over replacement.** Acts 1–10 are
 states of the same visual system. The opening fragments become the
 architecture; the architecture becomes the security model; the security model
 becomes the operating environment; the environment becomes the assessment; the
@@ -55,7 +65,7 @@ Act 4.** Nothing beyond is built until Quality Gate A passes.
 | **Scroll behavior** | Pinned, span 1.6 vh. The visitor scrolls *deeper into the problem*: a slow dolly down the aisle, not a cut to another section. |
 | **Motion behavior** | Screens flicker on; the walker crosses and sits; phones glow briefly; the disorder is static (nothing jitters), only the camera moves. |
 | **Required assets** | W01–W05, W09 (slabs present from the first frame, misaligned). Code. |
-| **Text required** | "7:40 · Tuesday" · "Everything is here." · "People, computers, email, cloud, phones, files, network, vendors." · "It all works. Just not as one." · "Your business doesn't lack technology. Its pieces stopped working as one." |
+| **Text required** | "7:40 · Tuesday · a practice, a firm, an office like yours" · "Everything is here." · "People, computers, email, cloud, phones, files, network, vendors." · "It all works. Just not as one." · "Which is usually why you're here: an insurance form with hard questions, a message that almost worked, a rule you now have to meet, a vendor nobody owns, or a renewal you're not sure about." |
 | **Technical approach** | Per-object disorder offsets (deterministic, seeded) applied at `disorder = 1`; camera roll of −1.2° via the camera up-vector; threads pre-built with gap fractions. |
 | **Mobile adaptation** | Camera further back and higher so the floor fits portrait; copy in the lower third; the dolly becomes a gentle rise. |
 | **Exit transition** | The camera begins to rise; the floor starts to turn to glass. |
