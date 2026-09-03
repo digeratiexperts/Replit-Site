@@ -30,9 +30,9 @@ export const HOMEPAGE_VERSIONS: HomepageVersion[] = [
   {
     n: 1,
     path: "/version-1",
-    title: "Production homepage until 2026-09-02",
+    title: "Production homepage until 2026-09-02, restored 2026-09-03",
     date: "2026-09-02",
-    status: "Was live at / until version 3 shipped",
+    status: "Live at / again from 2026-09-03 (Joe's direction: the homepage before the Scrollcraft-era sections)",
     summary:
       "The homepage as it ships on main: reference hero with four trust cards, sourced stats, the Six Domains command deck, four process cards, reviews and outcome tiles, team cards, package tiers, compliance marks, the assessment island, contact.",
     kind: "react",
@@ -55,7 +55,7 @@ export const HOMEPAGE_VERSIONS: HomepageVersion[] = [
     path: "/version-3",
     title: "Diagram-system sections",
     date: "2026-09-02",
-    status: "Live at / from 2026-09-02 (PR #178)",
+    status: "Was live at / from 2026-09-02 (PR #178) to 2026-09-03; retired from / at Joe's direction, kept here for reference",
     summary:
       "The nine service sections rebuilt on the DE diagram system: one environment, layered protection, the operating cadence, coverage depth, the inspection; plain-language disclosure; How DE delivers; SLA line; mobile step.",
     kind: "react",
