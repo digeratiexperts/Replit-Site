@@ -8,15 +8,17 @@ import type { LucideIcon } from "lucide-react";
 import { revealInitial, revealInView, revealTransition, revealViewport } from "@/lib/animations";
 import { ProtectionCommandDeck, protectionDomains } from "@/components/visual/ProtectionCommandDeck";
 
-/** The deck's six domains as the six layers of the protection diagram, in deck order. */
-const deckLayers = [
-  { code: "01", label: "Identity", answers: "credential theft" },
-  { code: "02", label: "Endpoint", answers: "malware" },
-  { code: "03", label: "Email", answers: "phishing" },
-  { code: "04", label: "Network", answers: "lateral movement" },
-  { code: "05", label: "Recovery", answers: "ransomware encryption" },
-  { code: "06", label: "Compliance", answers: "audit & insurance requirements" },
-];
+/**
+ * The deck's eight cybersecurity blocks as the layers of the protection
+ * diagram, in deck order. One source of truth: the deck. Risk & Exposure is
+ * marked continuous there and draws as the band beneath the seven rings.
+ */
+const deckLayers = protectionDomains.map((domain, index) => ({
+  code: String(index + 1).padStart(2, "0"),
+  label: domain.shortName,
+  answers: domain.answers,
+  continuous: domain.continuous,
+}));
 
 const steps: {
   number: number;
@@ -83,11 +85,12 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
                     What we protect
                   </p>
                   <h2 className="mb-4 font-heading text-3xl font-semibold tracking-[-0.02em] text-[#1A1228] md:text-4xl">
-                    Six domains. One accountable operating model.
+                    Eight blocks. One accountable operating model.
                   </h2>
                   <p className="text-lg leading-relaxed text-[#3A3448]">
-                    Protection is layered around the business, and each layer answers a specific
-                    class of threat. Select a domain below to see how we operate it.
+                    Protection is layered around the business, and each block answers a specific
+                    class of threat. Risk and exposure runs continuously beneath the other seven.
+                    Select a block below to see how we operate it.
                   </p>
                 </motion.div>
                 <div className="lg:col-span-7">
@@ -102,7 +105,7 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
                 </div>
               </div>
 
-              {/* Interactive Six Domains Protection Command Deck */}
+              {/* Interactive eight-block protection command deck */}
               <div id="protection-stack">
                 <ProtectionCommandDeck
                   onDomainChange={(id) => setDomainIndex(Math.max(0, protectionDomains.findIndex((d) => d.id === id)))}

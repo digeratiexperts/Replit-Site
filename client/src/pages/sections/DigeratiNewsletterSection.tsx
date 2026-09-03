@@ -14,7 +14,7 @@ const chipClass =
 const cityChipClass =
   "inline-flex h-full min-h-12 w-full items-center justify-center rounded-lg border bg-transparent px-4 py-5 text-lg font-medium text-white/80 transition-colors hover:border-[#D3126A] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-surface)] sm:min-h-16 md:min-h-20 md:text-xl";
 
-/** What compliance support produces. Grounded in the six-domain model's governance domain. */
+/** What compliance support produces. Compliance is capability lane 09 (Governance & Compliance Support), not one of the eight cybersecurity blocks. */
 const complianceOutputs = [
   { code: "01", title: "Control mapping", body: "Framework requirements mapped to the controls you actually run." },
   { code: "02", title: "Evidence collation", body: "Technical evidence packaged for questionnaires, reviews, and insurers." },

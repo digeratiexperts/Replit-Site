@@ -46,6 +46,38 @@ claims:
       - package.json
     status: active
     started: 2026-08-31
+  - id: de-eight-block-correction
+    owner: claude
+    subsystem: homepage-protection-model
+    branch: claude/eight-block-correction
+    base_sha: 80ce2f47a43bcf99f3a5545a525f17a8ee30ccb5
+    files:
+      - client/src/components/visual/ProtectionCommandDeck.tsx
+      - client/src/pages/sections/DigeratiHowWeProtectSection.tsx
+      - client/src/pages/sections/ReferenceHeroSection.tsx (trust strip item 01 only)
+      - client/src/pages/sections/DigeratiNewsletterSection.tsx (one comment)
+      - client/src/diagrams/diagrams.ts
+      - client/src/diagrams/diagrams.css
+      - client/src/diagrams/diagrams.test.ts
+      - client/src/components/evidence/evidencePrimitives.test.ts
+      - client/src/pages/GenericServicePage.tsx (one ProofChip)
+      - client/src/pages/solutions/ProActiveEcosystemPage.tsx (one ProofChip)
+      - client/src/pages/solutions/SolutionsIndex.tsx (one ProofChip)
+      - design/PROOF_SYSTEM.md
+      - docs/CLAIMS-REGISTER.md
+    status: active
+    started: 2026-09-02
+    note: >-
+      Joe-routed, small, content-only: the live homepage presented the stale
+      six-domain protection model. The current architecture is eight
+      cybersecurity blocks (docs/DE-SERVICE-MODEL-2026.md on PR #185), Risk &
+      Exposure retained as the continuous visibility layer. Updates the
+      protection deck, the layered-protection and one-environment diagrams,
+      and every copy string that named six. Not a homepage redesign; the 14
+      internal domains stay unenumerated. Carved out of de-site-v2-scrollcraft
+      (which lists these files) with that claim's owner's consent (same agent);
+      the frozen version snapshots under client/src/pages/versions/ are
+      untouched by design.
   - id: de-site-v2-scrollcraft
     owner: claude
     subsystem: site-v2-experiment
