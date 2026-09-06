@@ -1,0 +1,46 @@
+name: Verify live homepage challenger
+
+on:
+  push:
+    branches:
+      - chatgpt/homepage-challenger-preview
+
+permissions:
+  contents: read
+
+jobs:
+  verify-live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - name: Render and verify challenger
+        shell: bash
+        run: |
+          node <<'NODE'
+          const { chromium } = require('playwright');
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+            const response = await page.goto('https://digeratiexperts.com/homepage-challenger', { waitUntil: 'networkidle', timeout: 60000 });
+            if (!response || response.status() !== 200) throw new Error(`HTTP ${response?.status()}`);
+            const title = await page.title();
+            const body = await page.locator('body').innerText();
+            const robots = await page.locator('meta[name="robots"]').getAttribute('content');
+            if (!title.includes('Homepage Challenger Preview')) throw new Error(`Unexpected title: ${title}`);
+            if (!body.includes('Know where your IT and security stand.')) throw new Error('Compact challenger CTA did not render');
+            if (!body.includes('Security Updates') || !body.includes('Digerati Journal')) throw new Error('Resource handoff rail did not render');
+            if (!robots || !robots.toLowerCase().includes('noindex')) throw new Error(`Missing noindex: ${robots}`);
+            console.log(`PASS title=${title}`);
+            console.log(`PASS robots=${robots}`);
+            console.log('PASS compact CTA rendered');
+            console.log('PASS Security Updates + Digerati Journal rail rendered');
+            await browser.close();
+          })().catch((err) => { console.error(err); process.exit(1); });
+          NODE
