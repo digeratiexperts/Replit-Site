@@ -49,7 +49,7 @@ export const DigeratiCTASectionChallenger = (): JSX.Element => {
     <section className="de-dark-well relative py-5 md:py-7" aria-labelledby="challenger-cta-heading">
       <div className="mx-auto max-w-[var(--de-canvas)] px-3 sm:px-4 lg:px-6">
         <motion.div
-          className="relative overflow-hidden rounded-2xl border border-white/12 bg-[#120d1b] px-5 py-6 shadow-2xl shadow-black/20 sm:px-7 md:px-8 md:py-7"
+          className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#120d1b] px-5 py-6 shadow-2xl shadow-black/20 sm:px-7 md:px-8 md:py-7"
           initial={prefersReducedMotion ? false : revealInitial}
           whileInView={revealInView}
           viewport={revealViewport}
@@ -68,7 +68,7 @@ export const DigeratiCTASectionChallenger = (): JSX.Element => {
               >
                 Know where your IT and security stand.
               </h2>
-              <p className="mt-2 max-w-xl text-sm leading-6 text-white/68 sm:text-base">
+              <p className="mt-2 max-w-xl text-sm leading-6 text-white/70 sm:text-base">
                 Start with a practical Cyber Risk Assessment, or talk directly with Digerati Experts about your environment.
               </p>
 
@@ -83,14 +83,14 @@ export const DigeratiCTASectionChallenger = (): JSX.Element => {
                 </button>
                 <a
                   href={PRIMARY_PHONE.telHref}
-                  className="inline-flex items-center gap-1.5 font-medium text-white/65 transition-colors hover:text-white"
+                  className="inline-flex items-center gap-1.5 font-medium text-white/60 transition-colors hover:text-white"
                 >
                   <Phone className="h-3.5 w-3.5" aria-hidden="true" />
                   {PRIMARY_PHONE.display}
                 </a>
                 <a
                   href="#contact"
-                  className="font-medium text-white/65 underline-offset-4 transition-colors hover:text-white hover:underline"
+                  className="font-medium text-white/60 underline-offset-4 transition-colors hover:text-white hover:underline"
                 >
                   Send a message below
                 </a>
@@ -103,7 +103,7 @@ export const DigeratiCTASectionChallenger = (): JSX.Element => {
               </label>
               <div className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto]">
                 <div className="relative">
-                  <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-white/45" aria-hidden="true" />
+                  <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-white/50" aria-hidden="true" />
                   <Input
                     ref={emailRef}
                     id="homepage-challenger-cta-email"
@@ -118,7 +118,7 @@ export const DigeratiCTASectionChallenger = (): JSX.Element => {
                       setEmail(event.target.value);
                       if (fieldError) setFieldError(null);
                     }}
-                    className="h-12 border-white/15 bg-white/[0.06] pl-11 text-[16px] text-white placeholder:text-white/35 hover:border-white/25 focus-visible:border-[#D3126A] focus-visible:ring-[#D3126A]/40"
+                    className="h-12 border-white/20 bg-white/[0.06] pl-11 text-[16px] text-white placeholder:text-white/40 hover:border-white/30 focus-visible:border-[#D3126A] focus-visible:ring-[#D3126A]/40"
                     data-testid="input-challenger-cta-email"
                   />
                 </div>
@@ -136,7 +136,7 @@ export const DigeratiCTASectionChallenger = (): JSX.Element => {
                   {fieldError}
                 </p>
               ) : (
-                <p className="mt-2 text-xs leading-5 text-white/42">
+                <p className="mt-2 text-xs leading-5 text-white/40">
                   Assessment-led recommendations. Final scope is confirmed after we see the environment.
                 </p>
               )}
