@@ -1,5 +1,7 @@
+import { useEffect } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { HelmetProvider } from "react-helmet-async";
+import { useLocation } from "wouter";
 import { queryClient } from "@/lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -19,6 +21,14 @@ import { DigeratiHomepageChallenger } from "./DigeratiHomepageChallenger";
 
 function ChallengerContent() {
   useGlobalShortcuts();
+  const [location] = useLocation();
+
+  useEffect(() => {
+    const path = location.split("?")[0].split("#")[0].replace(/\/+$/, "") || "/";
+    if (path !== "/homepage-challenger") {
+      window.location.assign(location);
+    }
+  }, [location]);
 
   return (
     <AnnouncerProvider>
