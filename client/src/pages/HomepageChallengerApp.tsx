@@ -24,6 +24,11 @@ function ChallengerContent() {
   const [location] = useLocation();
 
   useEffect(() => {
+    document.documentElement.classList.add("de-marketing-canvas");
+    return () => document.documentElement.classList.remove("de-marketing-canvas");
+  }, []);
+
+  useEffect(() => {
     const path = location.split("?")[0].split("#")[0].replace(/\/+$/, "") || "/";
     if (path !== "/homepage-challenger") {
       window.location.assign(location);
