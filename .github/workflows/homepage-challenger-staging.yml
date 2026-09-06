@@ -1,0 +1,74 @@
+name: Homepage challenger staging preview
+
+on:
+  push:
+    branches:
+      - chatgpt/homepage-challenger-preview
+
+permissions:
+  contents: read
+
+concurrency:
+  group: de-staging-homepage-challenger
+  cancel-in-progress: true
+
+jobs:
+  deploy-staging:
+    name: Deploy challenger to staging VPS
+    runs-on: [self-hosted, Linux, X64, de-production, website-prod]
+    timeout-minutes: 30
+
+    steps:
+      - name: Assert staging target and deploy review branch
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          SITE=/home/staging.digeratiexperts.com
+          SERVICE=digeratiexperts-staging
+          BRANCH=chatgpt/homepage-challenger-preview
+
+          test -d "$SITE" || {
+            echo "::error::Staging site directory is missing: $SITE"
+            exit 1
+          }
+
+          DEPLOY="$SITE/current/deploy/vps/deploy.sh"
+          test -f "$DEPLOY" || {
+            echo "::error::Canonical staging deploy script is missing: $DEPLOY"
+            exit 1
+          }
+
+          LOAD_STATE="$(systemctl show -p LoadState --value "$SERVICE" 2>/dev/null || true)"
+          test "$LOAD_STATE" = "loaded" || {
+            echo "::error::$SERVICE is not loaded on this runner host"
+            exit 1
+          }
+
+          SITE_USER="$(stat -c '%U' "$SITE")"
+          test -n "$SITE_USER" && test "$SITE_USER" != "UNKNOWN" || {
+            echo "::error::Could not determine staging site owner"
+            exit 1
+          }
+
+          echo "Staging site user: $SITE_USER"
+          echo "Review branch: $BRANCH"
+
+          if [ "$(id -u)" = "0" ]; then
+            sudo -u "$SITE_USER" bash -lc "DEPLOY_BRANCH=$BRANCH bash $DEPLOY staging"
+          elif [ "$(id -un)" = "$SITE_USER" ]; then
+            bash -lc "DEPLOY_BRANCH=$BRANCH bash $DEPLOY staging"
+          elif sudo -n -u "$SITE_USER" true 2>/dev/null; then
+            sudo -n -u "$SITE_USER" bash -lc "DEPLOY_BRANCH=$BRANCH bash $DEPLOY staging"
+          else
+            echo "::error::Runner cannot execute staging deploy as $SITE_USER"
+            exit 1
+          fi
+
+      - name: Verify staging review deployment
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS --max-time 15 http://127.0.0.1:3200/healthz
+          curl -fsS --max-time 20 https://staging.digeratiexperts.com/healthz
+          curl -fsSI --max-time 20 https://staging.digeratiexperts.com/ | head -n 1
