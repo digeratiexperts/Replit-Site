@@ -4,15 +4,15 @@ import { SiteBottomBar } from "@/components/SiteBottomBar";
 import { useSEO } from "@/hooks/useSEO";
 import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/JsonLd";
 
-// Import all section components
-// Keep ModernHeroSection in the repository as the preserved previous homepage hero.
+// Canonical homepage sections are reused so the challenger is a true copy of
+// the current experience, not a disconnected mockup. Challenger-only pieces
+// live beside them and can be swapped independently after review.
 import { ReferenceHeroSection } from "./sections/ReferenceHeroSection";
 import { DigeratiAlertBanner } from "./sections/DigeratiAlertBanner";
 import { DigeratiServicesSection } from "./sections/DigeratiServicesSection";
 import { DigeratiHowWeProtectSection } from "./sections/DigeratiHowWeProtectSection";
 import { DigeratiLeadFormSection } from "./sections/DigeratiLeadFormSection";
 import { DigeratiWhatWeTackleSection } from "./sections/DigeratiWhatWeTackleSection";
-import { DigeratiThreatsInsightsSection } from "./sections/DigeratiThreatsInsightsSection";
 import { DigeratiAIAssistanceSection } from "./sections/DigeratiAIAssistanceSection";
 import { DigeratiIndustriesSection } from "./sections/DigeratiIndustriesSection";
 import { DigeratiPricingSection } from "./sections/DigeratiPricingSection";
@@ -20,30 +20,31 @@ import { DigeratiTestimonialsSection } from "./sections/DigeratiTestimonialsSect
 import { HomepageProofSection } from "./sections/HomepageProofSection";
 import { DigeratiMeetExpertsSection } from "./sections/DigeratiMeetExpertsSection";
 import { DigeratiFAQSection } from "./sections/DigeratiFAQSection";
-import { DigeratiCTASection } from "./sections/DigeratiCTASection";
 import { DigeratiNewsletterSection } from "./sections/DigeratiNewsletterSection";
-// PremiumCTASection removed - keeping only one CTA section
 import { DigeratiContactSection } from "./sections/DigeratiContactSection";
 import { DigeratiEnhancedFooterSection } from "./sections/DigeratiEnhancedFooterSection";
 import { DigeratiStatsSection } from "./sections/DigeratiStatsSection";
 import { DigeratiTrustPhotoSection } from "./sections/DigeratiTrustPhotoSection";
+import { DigeratiCTASectionChallenger } from "./sections/DigeratiCTASectionChallenger";
+import { DigeratiResourceRailChallenger } from "./sections/DigeratiResourceRailChallenger";
 
-// Live digeratexperts.com story order.
-// Extra working-branch sections stay on-page with showInNav:false.
+// Challenger story order.
+// The current production homepage remains untouched on main. This branch moves
+// buying-decision content forward, moves generic urgency/statistics later, and
+// collapses duplicated trust/team storytelling into one continuous chapter.
 const homepageSections: { id: string; label: string; theme: 'dark' | 'light'; showInNav?: boolean }[] = [
   { id: 'hero', label: 'Home', theme: 'dark' },
-  { id: 'stats', label: 'Why DE', theme: 'dark' },
   { id: 'challenges', label: 'Problems', theme: 'light', showInNav: false },
   { id: 'services', label: 'How It Works', theme: 'dark' },
+  { id: 'pricing', label: 'Packages', theme: 'dark' },
   { id: 'protection', label: 'Protect', theme: 'light', showInNav: false },
   { id: 'testimonials', label: 'Proof', theme: 'dark', showInNav: false },
-  { id: 'trust', label: 'Trust', theme: 'light', showInNav: false },
-  { id: 'team', label: 'Team', theme: 'dark', showInNav: false },
+  { id: 'trust', label: 'Why DE', theme: 'light', showInNav: false },
   { id: 'industries', label: 'Industries', theme: 'dark' },
-  { id: 'pricing', label: 'Packages', theme: 'dark' },
-  { id: 'insights', label: 'Insights', theme: 'dark', showInNav: false },
+  { id: 'operations', label: 'Operations', theme: 'dark', showInNav: false },
+  { id: 'stats', label: 'Risk', theme: 'dark', showInNav: false },
   { id: 'faq', label: 'FAQ', theme: 'light', showInNav: false },
-  { id: 'cta', label: 'Next step', theme: 'light', showInNav: false },
+  { id: 'cta', label: 'Next step', theme: 'dark', showInNav: false },
   { id: 'contact', label: 'Contact', theme: 'dark' },
 ];
 
@@ -56,86 +57,89 @@ export const DigeratiHomepage = (): JSX.Element => {
 
   return (
     <FullPageScrollProvider sections={homepageSections} enableOnMobile={false}>
-      {/* Existing homepage story/content remains intact; this pass changes the hero presentation only. */}
       <div className="de-dark-well min-h-screen bg-[#050312] pb-8">
         <OrganizationJsonLd />
         <WebSiteJsonLd />
-        {/* Navigation — chat lives in App MarketingChrome sitewide */}
         <MegaMenu />
         <SiteBottomBar />
 
-        {/* Home — reference-style presentation, existing legacy hero remains preserved in source. */}
+        {/* 1. Establish the offer and the immediate next step. */}
         <ScrollSectionAuto id="hero" chapter>
           <ReferenceHeroSection />
           <DigeratiAlertBanner />
         </ScrollSectionAuto>
 
-        {/* Why DE */}
-        <ScrollSectionAuto id="stats" chapter>
-          <DigeratiStatsSection />
-        </ScrollSectionAuto>
-
-        {/* Problems */}
+        {/* 2. Start with the prospect's problems, not generic industry statistics. */}
         <ScrollSectionAuto id="challenges">
           <DigeratiWhatWeTackleSection />
         </ScrollSectionAuto>
 
-        {/* How it works */}
+        {/* 3. Explain how a prospect can engage DE. */}
         <ScrollSectionAuto id="services" chapter>
           <DigeratiServicesSection />
         </ScrollSectionAuto>
 
-        {/* What we protect + how */}
+        {/* 4. Show the operating-model fit while intent is high. */}
+        <ScrollSectionAuto id="pricing" chapter>
+          <DigeratiPricingSection />
+        </ScrollSectionAuto>
+
+        {/* Pricing tools remain at /proactive-ecosystem-pricing#pricing-tools. */}
+
+        {/* 5. Explain the control surface behind those operating models. */}
         <ScrollSectionAuto id="protection">
           <DigeratiHowWeProtectSection />
         </ScrollSectionAuto>
 
-        {/* Proof — honest shells (no fabricated quotes) */}
+        {/* 6. Prove it before adding more company narrative. */}
         <ScrollSectionAuto id="testimonials">
           <DigeratiTestimonialsSection />
           <HomepageProofSection />
         </ScrollSectionAuto>
 
+        {/* 7. One continuous trust chapter instead of separate trust/team resets. */}
         <ScrollSectionAuto id="trust">
           <DigeratiTrustPhotoSection />
-        </ScrollSectionAuto>
-
-        <ScrollSectionAuto id="team">
           <DigeratiMeetExpertsSection />
         </ScrollSectionAuto>
 
-        {/* Industries */}
+        {/* 8. Show who the model is designed to support. */}
         <ScrollSectionAuto id="industries" chapter>
           <DigeratiIndustriesSection />
         </ScrollSectionAuto>
 
-        {/* Packages — fit-based operating models */}
-        <ScrollSectionAuto id="pricing" chapter>
-          <DigeratiPricingSection />
-        </ScrollSectionAuto>
-
-        {/* Pricing tools relocated to /proactive-ecosystem-pricing#pricing-tools */}
-
-        {/* Insights + AI teasers — full versions live on Resources */}
-        <ScrollSectionAuto id="insights">
-          <DigeratiThreatsInsightsSection />
+        {/* 9. Operational differentiation: technology surfaces signals; people own outcomes. */}
+        <ScrollSectionAuto id="operations">
           <DigeratiAIAssistanceSection />
         </ScrollSectionAuto>
 
+        {/*
+          Recent Threats & Insights no longer duplicates a live feed on the homepage.
+          The live stream stays fully available at /resources/security-updates and
+          broader editorial guidance stays at /resources/blog.
+        */}
+        <DigeratiResourceRailChallenger />
+
+        {/* 10. Urgency/statistics now support an understood offer instead of interrupting it. */}
+        <ScrollSectionAuto id="stats">
+          <DigeratiStatsSection />
+        </ScrollSectionAuto>
+
+        {/* Existing Cyber Risk Assessment form is intentionally unchanged. */}
         <DigeratiLeadFormSection />
 
-        {/* FAQ before Next step — live cleanness */}
+        {/* Existing FAQ and newsletter capture are intentionally unchanged. */}
         <ScrollSectionAuto id="faq" chapter>
           <DigeratiFAQSection />
           <DigeratiNewsletterSection />
         </ScrollSectionAuto>
 
-        {/* Next step */}
+        {/* Compact next-step band; email capture behavior remains intact. */}
         <ScrollSectionAuto id="cta">
-          <DigeratiCTASection />
+          <DigeratiCTASectionChallenger />
         </ScrollSectionAuto>
 
-        {/* Contact */}
+        {/* Existing bottom Get in Touch form remains untouched for later review. */}
         <ScrollSectionAuto id="contact" chapter className="scroll-mt-20">
           <DigeratiContactSection />
           <DigeratiEnhancedFooterSection />
