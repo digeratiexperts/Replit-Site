@@ -1,6 +1,5 @@
 import { MegaMenu } from "@/components/MegaMenu";
 import { FullPageScrollProvider, ScrollSectionAuto } from "@/components/FullPageScroll";
-import { SiteBottomBar } from "@/components/SiteBottomBar";
 import { useSEO } from "@/hooks/useSEO";
 
 import { ReferenceHeroSection } from "./sections/ReferenceHeroSection";
@@ -59,7 +58,6 @@ export const DigeratiHomepageChallenger = (): JSX.Element => {
     <FullPageScrollProvider sections={challengerSections} enableOnMobile={false}>
       <div className="de-dark-well min-h-screen bg-[#050312] pb-8">
         <MegaMenu />
-        <SiteBottomBar />
 
         <ScrollSectionAuto id="hero" chapter>
           <ReferenceHeroSection />
